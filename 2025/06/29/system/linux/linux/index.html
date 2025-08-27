@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2025/06/29/system/linux/linux/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux入门">
+<meta property="og:url" content="http://example.com/2025/06/29/system/linux/linux/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-06-29T10:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-27T06:57:08.739Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="system">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Linux入门 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">42</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Linux入门</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-06-29 18:00</span>
+        <span class="mobile">2025-06-29 18:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-08-27 14:57:08</span>
+            <span class="mobile">2025-08-27 14:57:08</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/system/">system</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>10 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="Linux-目录结构"><a href="#Linux-目录结构" class="headerlink" title="Linux 目录结构"></a>Linux 目录结构</h2><p>与 Windows 使用多个盘符（C:、D:）不同，Linux 采用单一的树状目录结构。整个文件系统从一个根目录 / 开始，所有其他文件和目录都挂载在这个根目录下。这个结构遵循文件系统层次化标准 (FHS)。</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>名称</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/</td>
+<td>Root</td>
+<td>根目录，整个文件系统的起点，所有目录的父目录。</td>
+</tr>
+<tr>
+<td>/bin</td>
+<td>Binaries</td>
+<td>存放所有用户都能使用的基本命令（二进制文件），如 ls, cp, cat。</td>
+</tr>
+<tr>
+<td>/sbin</td>
+<td>System Binaries</td>
+<td>存放只有系统管理员（root用户）才能使用的系统管理命令，如 reboot, fdisk。</td>
+</tr>
+<tr>
+<td>/etc</td>
+<td>Etcetera</td>
+<td>存放系统和各种程序的配置文件。几乎所有服务的配置都在这里。</td>
+</tr>
+<tr>
+<td>/home</td>
+<td>Home</td>
+<td>用户主目录。每个普通用户在这里都有一个自己的文件夹，如 /home/ziyipei。</td>
+</tr>
+<tr>
+<td>/root</td>
+<td>Root</td>
+<td>系统管理员（root用户）的主目录。</td>
+</tr>
+<tr>
+<td>/dev</td>
+<td>Devices</td>
+<td>存放设备文件。在 Linux 中，所有硬件设备（如硬盘、键盘）都以文件的形式存在于此。</td>
+</tr>
+<tr>
+<td>/var</td>
+<td>Variable</td>
+<td>存放经常变化的文件，如日志文件 (/var/log)、缓存文件 (/var/cache)。</td>
+</tr>
+<tr>
+<td>/tmp</td>
+<td>Temporary</td>
+<td>存放临时文件，系统重启后这里的文件通常会被清空。</td>
+</tr>
+<tr>
+<td>/usr</td>
+<td>Unix System Resources</td>
+<td>存放用户安装的应用程序、库文件和文档。这是系统中最大的目录之一。</td>
+</tr>
+<tr>
+<td>/boot</td>
+<td>Boot</td>
+<td>存放启动 Linux 系统所需的文件，包括 Linux 内核本身和引导加载程序 (GRUB)。</td>
+</tr>
+<tr>
+<td>/lib</td>
+<td>Libraries</td>
+<td>存放系统和程序运行所必需的共享库文件。</td>
+</tr>
+<tr>
+<td>/opt</td>
+<td>Optional</td>
+<td>用于存放可选的第三方软件包，比如手动安装的商业软件（如 Google Chrome）。</td>
+</tr>
+<tr>
+<td>/mnt, /media</td>
+<td>Mount</td>
+<td>用于临时挂载外部设备，如 U 盘、移动硬盘、光驱等。</td>
+</tr>
+</tbody></table>
+<h2 id="常见命令汇总"><a href="#常见命令汇总" class="headerlink" title="常见命令汇总"></a>常见命令汇总</h2><p>Linux 的强大之处在于其命令行界面 (CLI)。命令的基本格式为：command [options] [arguments]。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ls</td>
+<td>列出目录内容</td>
+<td>ls -l（长格式显示），ls -a（显示隐藏文件）</td>
+</tr>
+<tr>
+<td>cd</td>
+<td>切换目录</td>
+<td>cd /home/ziyipei，cd ..（返回上一级）</td>
+</tr>
+<tr>
+<td>pwd</td>
+<td>显示当前工作目录的绝对路径</td>
+<td>pwd</td>
+</tr>
+<tr>
+<td>mkdir</td>
+<td>创建新目录</td>
+<td>mkdir documents</td>
+</tr>
+<tr>
+<td>rm</td>
+<td>删除文件或目录</td>
+<td>rm file.txt，rm -r directory（递归删除目录）</td>
+</tr>
+<tr>
+<td>cp</td>
+<td>复制文件或目录</td>
+<td>cp source.txt destination.txt</td>
+</tr>
+<tr>
+<td>mv</td>
+<td>移动或重命名文件/目录</td>
+<td>mv old_name.txt new_name.txt</td>
+</tr>
+<tr>
+<td>touch</td>
+<td>创建空文件或更新文件时间戳</td>
+<td>touch new_file.txt</td>
+</tr>
+<tr>
+<td>cat</td>
+<td>查看文件全部内容</td>
+<td>cat /etc/hosts</td>
+</tr>
+<tr>
+<td>less, more</td>
+<td>分页查看文件内容</td>
+<td>less /var/log/syslog</td>
+</tr>
+<tr>
+<td>head, tail</td>
+<td>查看文件开头/结尾部分</td>
+<td>tail -n 20 file.txt（查看最后20行）</td>
+</tr>
+<tr>
+<td>grep</td>
+<td>在文件中搜索指定文本</td>
+<td>grep "error" /var/log/syslog</td>
+</tr>
+<tr>
+<td>sudo</td>
+<td>以管理员权限执行命令</td>
+<td>sudo apt update</td>
+</tr>
+<tr>
+<td>history</td>
+<td>查看历史命令及执行指定历史命令</td>
+<td>history，!序号（执行历史指令的指定序号的一条）</td>
+</tr>
+</tbody></table>
+<h2 id="常用终端快捷键"><a href="#常用终端快捷键" class="headerlink" title="常用终端快捷键"></a>常用终端快捷键</h2><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tab</td>
+<td>自动补全命令、文件名或目录名（最重要、最常用）。</td>
+</tr>
+<tr>
+<td>Ctrl + C</td>
+<td>强制中断并终止当前正在运行的程序。</td>
+</tr>
+<tr>
+<td>Ctrl + L</td>
+<td>清空屏幕，效果等同于 clear 命令。</td>
+</tr>
+<tr>
+<td>Ctrl + D</td>
+<td>退出当前的 Shell 会话，或表示输入结束 (EOF)。</td>
+</tr>
+<tr>
+<td>Ctrl + A</td>
+<td>将光标移动到命令行的开头。</td>
+</tr>
+<tr>
+<td>Ctrl + E</td>
+<td>将光标移动到命令行的结尾。</td>
+</tr>
+<tr>
+<td>Ctrl + R</td>
+<td>反向搜索历史命令。</td>
+</tr>
+<tr>
+<td>上/下方向键</td>
+<td>浏览之前输入过的历史命令。</td>
+</tr>
+<tr>
+<td>Ctrl + Z</td>
+<td>将当前前台运行的进程暂停并放到后台。</td>
+</tr>
+<tr>
+<td>Ctrl + U</td>
+<td>清除从光标位置到行首的所有字符。</td>
+</tr>
+<tr>
+<td>Ctrl + K</td>
+<td>清除从光标位置到行尾的所有字符。</td>
+</tr>
+</tbody></table>
+<h2 id="Linux内核"><a href="#Linux内核" class="headerlink" title="Linux内核"></a>Linux内核</h2><p>Linux 内核是操作系统的核心，它是一个宏内核（Monolithic Kernel）架构的实现。其根本职责是作为硬件资源的唯一仲裁者和软件服务的提供者，为上层用户空间应用程序提供一个统一、抽象和安全的执行环境。</p>
+<p>内核的所有功能可以被逻辑地划分为如下几个相互协作的核心子系统。</p>
+<h3 id="进程管理-Process-Management"><a href="#进程管理-Process-Management" class="headerlink" title="进程管理 (Process Management)"></a>进程管理 (Process Management)</h3><p>进程管理子系统的核心目标是高效且公平地在多个并发任务之间共享 CPU 资源。</p>
+<ul>
+<li><p>核心抽象与数据结构</p>
+<ul>
+<li><p>进程 (Process)：不仅仅是一个“运行中的程序”，而是一个执行上下文的完整体现。在内核中，每个进程由一个 task_struct 结构体描述，它包含了进程状态、调度信息、内存映射、打开的文件描述符、凭证等所有必要信息。</p>
+</li>
+<li><p>线程 (Thread)：是 CPU 调度的基本单位。Linux 内核实际上没有严格区分进程和线程，它们都由 task_struct 表示。通过 clone() 系统调用创建线程时，可以使其与父进程共享地址空间、文件描述符等资源，因此线程也被称为“轻量级进程”。</p>
+</li>
+</ul>
+</li>
+<li><p>进程调度器 (Process Scheduler)<br>调度器是决定下一个在 CPU 上运行哪个任务的逻辑核心。主要的策略有下面三种:</p>
+<ul>
+<li><p>SCHED_OTHER (或 SCHED_NORMAL): 这是为普通分时进程设计的默认策略。在现代 Linux 内核中，它由完全公平调度器 (Completely Fair Scheduler, CFS) 实现。</p>
+<ul>
+<li>CFS 核心思想：它摒弃了传统的时间片（timeslice）概念，致力于为每个任务提供“理想的、无限精确的多任务 CPU”。它使用一个红黑树 (Red-Black Tree) 来组织所有可运行的任务，每次总是选择虚拟运行时间（vruntime）最小的任务来执行，从而达到近乎完美的公平性。</li>
+</ul>
+</li>
+<li><p>SCHED_FIFO (First-In, First-Out)：这是一种实时（Real-time）调度策略。它没有时间片。一旦一个 FIFO 任务获得 CPU，它会一直运行，直到它主动阻塞（如等待 I/O）、主动调用 sched_yield() 放弃 CPU，或者被一个更高优先级的实时任务抢占。</p>
+</li>
+<li><p>SCHED_RR (Round-Robin)：这是另一种实时调度策略。它与 FIFO 类似，但增加了时间片的概念。当一个 RR 任务的时间片用完后，如果同优先级队列中还有其他任务，它将被移动到队列末尾，让其他任务有机会运行。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="内存管理-Memory-Management"><a href="#内存管理-Memory-Management" class="headerlink" title="内存管理 (Memory Management)"></a>内存管理 (Memory Management)</h3><p>内存管理子系统的目标是高效、安全地管理系统的物理内存（RAM），并为每个进程提供独立的虚拟地址空间。其核心机制与组件如下：</p>
+<ul>
+<li><p>虚拟内存 (Virtual Memory)：这是现代操作系统的基石。内核为每个进程提供一个巨大、私有且连续的虚拟地址空间（例如，在 64 位系统上是 256TB）。这带来了几个好处：</p>
+<ul>
+<li><p>进程隔离：一个进程的内存访问不会干扰到其他进程或内核。</p>
+</li>
+<li><p>简化编程：程序员无需关心物理内存的碎片化和具体位置。</p>
+</li>
+<li><p>高效利用物理内存：通过按需分页 (Demand Paging)，只有在进程实际访问某块内存时，内核才会将其从磁盘加载到物理内存中。</p>
+</li>
+</ul>
+</li>
+<li><p>内存管理单元 (MMU)：这是一个硬件组件，负责将进程访问的虚拟地址实时地翻译成物理地址。内核的主要工作就是设置和管理 MMU 使用的页表 (Page Tables)。</p>
+</li>
+<li><p>物理内存分配器：</p>
+<ul>
+<li><p>伙伴系统 (Buddy System)：这是内核管理物理页帧（Page Frame）的核心算法。它将所有空闲的物理内存页组织成 2 的幂次方大小的块（1, 2, 4, 8, … 页），能够高效地分配和回收连续的物理内存块，但容易产生内部碎片。</p>
+</li>
+<li><p>Slab 分配器 (Slab Allocator)：它构建在伙伴系统之上，用于解决小对象的内存分配问题。Slab 维护着常用内核对象（如 inode, dentry, task_struct）的缓存池，避免了反复初始化和销毁对象的开销，并大大减少了内存碎片。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="虚拟文件系统-Virtual-File-System-VFS"><a href="#虚拟文件系统-Virtual-File-System-VFS" class="headerlink" title="虚拟文件系统 (Virtual File System, VFS)"></a>虚拟文件系统 (Virtual File System, VFS)</h3><p>VFS 是一个至关重要的抽象层，其目标是为用户空间程序提供一个统一、标准的文件操作接口，屏蔽底层具体文件系统的实现差异。</p>
+<p>VFS 定义了一个通用文件模型，主要由四个核心对象组成：</p>
+<ul>
+<li><p>超级块 (Superblock)：代表一个已挂载的文件系统实例，存储该文件系统的元信息（如文件系统类型、块大小等）。</p>
+</li>
+<li><p>索引节点 (Inode)：代表一个具体的文件或目录。它包含了文件的所有元数据，如权限、所有者、大小、时间戳以及指向数据块的指针，但不包含文件名。</p>
+</li>
+<li><p>目录项 (Dentry)：代表一个目录条目，它将一个文件名与一个 Inode 关联起来，形成文件路径。Dentry 缓存（dcache）极大地加速了路径查找过程。</p>
+</li>
+<li><p>文件对象 (File Object)：代表一个由进程打开的文件。它存储了文件指针（读写位置）、访问模式等与特定进程相关的信息。</p>
+</li>
+</ul>
+<p>工作机制：当一个应用程序执行 open(“/path/to/file”) 系统调用时，VFS 会利用 dentry 缓存解析路径，找到每一级目录和最终文件的 inode，然后创建一个文件对象并返回一个文件描述符给应用程序。所有后续的 read(), write() 等操作都会通过这个文件对象，由 VFS 路由到具体文件系统（如 ext4, XFS, NFS）提供的实现函数上。</p>
+<h3 id="网络协议栈-Networking-Stack"><a href="#网络协议栈-Networking-Stack" class="headerlink" title="网络协议栈 (Networking Stack)"></a>网络协议栈 (Networking Stack)</h3><p>网络协议栈的目标是实现标准化的网络协议，使得 Linux 系统能够与世界各地的其他计算机进行通信。其核心架构与数据结构为：</p>
+<ul>
+<li><p>BSD 套接字接口 (BSD Socket API)：为应用程序提供了一套标准的网络编程接口（如 socket(), bind(), connect() 等），使其可以忽略底层网络实现的复杂性。</p>
+</li>
+<li><p>分层架构：Linux 网络栈在逻辑上严格分层，与 TCP/IP 模型类似，主要包括：</p>
+<ul>
+<li><p>系统调用接口层：将用户空间的网络操作转换为内核操作。</p>
+</li>
+<li><p>协议无关层：如 Socket 层。</p>
+</li>
+<li><p>传输层：实现 TCP 和 UDP 协议。</p>
+</li>
+<li><p>网络层：实现 IP 协议，负责路由和数据包转发。</p>
+</li>
+<li><p>链路层/设备驱动层：与物理网络硬件（如网卡）交互。</p>
+</li>
+</ul>
+</li>
+<li><p>套接字缓冲区 (Socket Buffer, sk_buff)：这是网络栈中最核心的数据结构。一个 sk_buff 代表一个在网络栈中流动的数据包。当数据包从上层向下层传递时，各层协议会将自己的头部（Header）添加到 sk_buff 中；反之，当数据包从下层向上层传递时，各层会剥离自己的头部并进行处理。</p>
+</li>
+</ul>
+<h3 id="进程间通信-Inter-Process-Communication-IPC"><a href="#进程间通信-Inter-Process-Communication-IPC" class="headerlink" title="进程间通信 (Inter-Process Communication, IPC)"></a>进程间通信 (Inter-Process Communication, IPC)</h3><p>由于进程之间地址空间是隔离的，IPC 子系统提供了多种机制，允许进程之间进行数据交换和同步。</p>
+<ul>
+<li><p>管道 (Pipes) 和命名管道 (FIFO)：提供半双工的字节流通信，是父子进程或有亲缘关系进程间通信的常用方式。</p>
+</li>
+<li><p>信号 (Signals)：一种异步通知机制，用于向进程发送一个事件发生的信号（如 SIGKILL, SIGTERM）。</p>
+</li>
+<li><p>System V IPC：一组传统的 IPC 机制，包括：</p>
+<ul>
+<li><p>消息队列 (Message Queues)：允许进程以消息的形式进行通信，克服了信号传递信息量少的缺点。</p>
+</li>
+<li><p>信号量 (Semaphores)：一个计数器，用于控制多个进程对共享资源的访问，是经典的同步工具。</p>
+</li>
+<li><p>共享内存 (Shared Memory)：允许两个或多个进程共享同一块物理内存。这是最快的 IPC 方式，因为它避免了内核的数据拷贝。</p>
+</li>
+</ul>
+</li>
+<li><p>POSIX IPC：对 System V IPC 的改进和标准化。</p>
+</li>
+<li><p>套接字 (Sockets)：特别是Unix 域套接字 (Unix Domain Sockets)，它在同一台主机上的进程间通信效率很高，并提供了与网络套接字一致的 API。</p>
+</li>
+</ul>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/system/">#system</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/07/01/ai/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CNN/%E6%84%9F%E7%9F%A5%E6%9C%BA/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">感知机</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/06/28/tools/gdb/gdb/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">GDB介绍及应用</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">Linux入门</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-text">Linux 目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB"><span class="nav-text">常见命令汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-text">常用终端快捷键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E5%86%85%E6%A0%B8"><span class="nav-text">Linux内核</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-Process-Management"><span class="nav-text">进程管理 (Process Management)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86-Memory-Management"><span class="nav-text">内存管理 (Memory Management)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-Virtual-File-System-VFS"><span class="nav-text">虚拟文件系统 (Virtual File System, VFS)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E6%A0%88-Networking-Stack"><span class="nav-text">网络协议栈 (Networking Stack)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1-Inter-Process-Communication-IPC"><span class="nav-text">进程间通信 (Inter-Process Communication, IPC)</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        42 posts in total
+                    </span>
+                    
+                        <span>
+                            88.9k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

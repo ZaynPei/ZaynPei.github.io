@@ -1,0 +1,40 @@
+/* 只调整正文和标题，不影响导航栏 */
+html, body {
+  font-family: "LXGW WenKai", sans-serif !important;
+}
+.post-content, .article-content, .content {
+  font-size: 18px !important;
+  font-family: "LXGW WenKai", sans-serif !important;
+  font-weight: 400;
+}
+
+.post-content h1,
+.article-content h1,
+.content h1 {
+  font-size: 2.2em !important;
+  font-weight: 700;
+}
+.post-content h2,
+.article-content h2,
+.content h2 {
+  font-size: 1.7em !important;
+  font-weight: 600;
+}
+.post-content h3,
+.article-content h3,
+.content h3 {
+  font-size: 1.3em !important;
+  font-weight: 600;
+}
+.post-content h4,
+.article-content h4,
+.content h4,
+.post-content h5,
+.article-content h5,
+.content h5,
+.post-content h6,
+.article-content h6,
+.content h6 {
+  font-size: 1.1em !important;
+  font-weight: 500;
+}
