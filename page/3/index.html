@@ -729,7 +729,7 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
@@ -737,7 +737,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">42</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">46</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -769,7 +769,7 @@ mjx-container[display="true"] + br {
 </div>
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
@@ -777,7 +777,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">42</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">46</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -792,6 +792,386 @@ mjx-container[display="true"] + br {
 			<div class="main-content">
 				<div class="home-content-container">
     <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/08/08/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/4/">
+                            Search -- Local Search
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            局部搜索 (Local Search)概述与前几讲（如A*搜索）不同，局部搜索算法解决的是另一类问题。在之前的搜索中，我们不仅关心是否能到达目标，还关心如何到达，即找到一条完整的路径 。
+然而，在很多问题中，我们只关心最终的解决方案状态，而不关心到达该状态的具体步骤 。
+局部搜索 (Local Search) 就是为这类问题设计的。它不维护从起点开始的路径，而是从一个完整的、可能是随机的配置...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Aug 08 2025 22:00:00 GMT+0800">
+                
+                    2025-08-08
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CS188/">CS188</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/08/08/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/4/">Read more<span class="seo-reader-text">Search -- Local Search</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/08/08/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/3/">
+                            Search -- Informed Search - A* and Heuristics
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            无信息搜索（如UCS）虽然能保证找到最优解，但它像是在黑暗中摸索，会向所有方向均匀扩展，效率低下。如果我们能给智能体一些关于“目标大概在哪个方向”的提示，搜索就能变得更高效。这种提示就是启发式 (Heuristics)。
+启发式 (Heuristics)启发式是一个函数 h(n)，它接收一个状态 n 作为输入，输出一个对“从状态 n 到达目标的剩余成本”的估计值。
+启发式的来源：松弛问题 (...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Aug 08 2025 12:00:00 GMT+0800">
+                
+                    2025-08-08
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CS188/">CS188</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/08/08/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/3/">Read more<span class="seo-reader-text">Search -- Informed Search - A* and Heuristics</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/08/04/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/2/">
+                            Search -- State Spaces, Uninformed Search
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            为了让一个理性的规划智能体能够行动，我们首先需要一种数学化的方式来描述它所处的环境 。搜索问题 (Search Problem) 的核心就是：给定智能体当前的状态，如何以最优的方式找到一条路径，到达满足其目标的新状态 。
+搜索问题的形式化定义一个搜索问题由以下六个核心要素构成 ：
+
+状态空间 (State Space)：在一个特定世界中所有可能状态的集合 。
+行动集合 (Actions)：在...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Aug 04 2025 12:00:00 GMT+0800">
+                
+                    2025-08-04
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CS188/">CS188</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/08/04/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/2/">Read more<span class="seo-reader-text">Search -- State Spaces, Uninformed Search</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/08/03/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/1/">
+                            Intro to AI, Rational Agents
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            第一章笔记是该课程的开篇介绍, 核心是定义什么是智能体 (Agent) 以及智能体所处的环境 (Environment)
+智能体 (Agents)AI的中心问题是创建一个理性的智能体 (rational agent) 。理性智能体是一个拥有目标或偏好，并试图执行一系列行动以期在这些目标下获得最佳（或最优）期望结果的实体 。
+
+智能体的“理性”并非指无所不知或完美，而是在其知识范围内做出最优的...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sun Aug 03 2025 12:00:00 GMT+0800">
+                
+                    2025-08-03
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/AI/">AI</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CS188/">CS188</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/08/03/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/1/">Read more<span class="seo-reader-text">Intro to AI, Rational Agents</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/07/31/algorithms/TwoPointers/">
+                            双指针
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            什么是双指针法？(What is the Two-Pointers Technique?)双指针（Two Pointers）是一种算法设计思想，它通过在数据结构（通常是数组或链表）上维护两个指针，并让它们以一定的规则移动，从而协同完成任务。
+
+这里的“指针”并非 C/C++ 中的内存地址指针，而更多是指索引 (index) 或迭代器 (iterator)，用来标记数据序列中的位置。
+
+核心目...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Thu Jul 31 2025 12:00:00 GMT+0800">
+                
+                    2025-07-31
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/Pointer/">Pointer</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/07/31/algorithms/TwoPointers/">Read more<span class="seo-reader-text">双指针</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
         
             <li class="home-article-item">
 
@@ -1188,327 +1568,6 @@ mjx-container[display="true"] + br {
                 </div>
             </li>
         
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/07/01/ai/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0ML/%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/">
-                            聚类算法
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            聚类算法的目标是在没有预先定义类别的情况下，将数据集划分为若干个有意义的群组, 使得同一类中的数据点彼此相似，而不同类中的数据点差异较大。
-K-均值聚类 (K-Means Clustering)K-means 聚类是一种非常流行且基础的 无监督学习 (Unsupervised Learning) 算法。它的主要目标是将一个给定的数据集根据数据点之间的相似性，自动划分为 K 个不同的 簇 (C...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Jul 01 2025 13:00:00 GMT+0800">
-                
-                    2025-07-01
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/ML/">ML</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2025/07/01/ai/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0ML/%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/">Read more<span class="seo-reader-text">聚类算法</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/07/01/ai/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0ML/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/">
-                            分类算法
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            分类算法的目标是构建一个模型，用于将新的、未见过的数据点分配到预定义的类别中。
-逻辑回归 (Logistic Regression)
-尽管它的名字中带有”回归”二字，但逻辑回归实际上是一种用于分类的监督学习算法，尤其在处理二分类问题时表现出色。
-
-逻辑回归是一种预测分析，它通过分析现有数据（自变量），来预测一个离散的、分类型的结果（因变量）。最常见的应用是二分类问题，例如预测一封邮件是否为垃...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Jul 01 2025 13:00:00 GMT+0800">
-                
-                    2025-07-01
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/ML/">ML</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2025/07/01/ai/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0ML/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/">Read more<span class="seo-reader-text">分类算法</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/07/01/ai/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0ML/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/">
-                            评估指标
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            KL散度KL散度（Kullback-Leibler Divergence），也常被称为相对熵（Relative Entropy），是信息论和数理统计中一种重要的度量方式。它用于衡量两个概率分布之间的差异性。
-通俗地讲，KL散度可以告诉我们：当我们用一个近似的概率分布  来模拟一个真实的概率分布  时，会产生多少信息的损失。换句话说，它衡量的是用分布  来代替分布  所付出的“代价”。
-
-KL...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Jul 01 2025 13:00:00 GMT+0800">
-                
-                    2025-07-01
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/ML/">ML</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2025/07/01/ai/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0ML/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/">Read more<span class="seo-reader-text">评估指标</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/07/01/ai/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CNN/%E6%84%9F%E7%9F%A5%E6%9C%BA/">
-                            感知机
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            感知机 (Perceptron) 是二分类的线性分类模型，属于判别模型。
-感知机模型感知机模型由以下几个部分组成：
-
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Jul 01 2025 13:00:00 GMT+0800">
-                
-                    2025-07-01
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/NN/">NN</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2025/07/01/ai/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CNN/%E6%84%9F%E7%9F%A5%E6%9C%BA/">Read more<span class="seo-reader-text">感知机</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/07/01/misc/Fintech/%E6%99%BA%E8%83%BD%E6%8A%95%E9%A1%BE/">
-                            智能投顾
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            等权重投资组合（Equal Weight Portfolio, EW）等权重投资组合是一种简单的投资策略，它将资金平均分配给所有可用的资产。这意味着每个资产在投资组合中的权重是相同的。其根本原则是 “民主化”，即投资组合中的每一只股票或资产都拥有相同的”投票权”或重要性，无论这家公司的规模有多大（市值高低）、股价是高是低。
-
-    运作方式：一个简单的例子 
-    
-      假设你有...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Jul 01 2025 13:00:00 GMT+0800">
-                
-                    2025-07-01
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/Fintech/">Fintech</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Fintech/misc/">misc</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/misc/">misc</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/Fintech/">Fintech</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/07/01/misc/Fintech/%E6%99%BA%E8%83%BD%E6%8A%95%E9%A1%BE/">Read more<span class="seo-reader-text">智能投顾</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
     </ul>
 
     <div class="home-paginator px-7 py-5">
@@ -1541,11 +1600,11 @@ KL...
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        42 posts in total
+                        46 posts in total
                     </span>
                     
                         <span>
-                            90.5k words in total
+                            106.4k words in total
                         </span>
                     
                 </p>
