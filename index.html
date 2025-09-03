@@ -751,7 +751,7 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
@@ -759,7 +759,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">46</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">47</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -791,7 +791,7 @@ mjx-container[display="true"] + br {
 </div>
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
@@ -799,7 +799,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">46</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">47</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -814,6 +814,84 @@ mjx-container[display="true"] + br {
 			<div class="main-content">
 				<div class="home-content-container">
     <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/03/lang/CPP/%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+                            字符串
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            std::string 是 C++ 标准库中用于处理字符串的类，位于  头文件中，命名空间为 std
+
+在 C++ 中，强烈建议使用 string 类表示字符串，因为它是真正的字符串类型。而在 C 语言中实际上没有字符串类型，只是用字符数组和字符指针来模拟字符串，而且后者不太安全
+
+
+char* (C 风格字符串)：本身没有成员函数，不能使用 .size() 或 .length()。要获取其...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Sep 03 2025 18:00:00 GMT+0800">
+                
+                    2025-09-03
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/cpp/">cpp</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/03/lang/CPP/%E5%AD%97%E7%AC%A6%E4%B8%B2/">Read more<span class="seo-reader-text">字符串</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
         
             <li class="home-article-item">
 
@@ -1385,83 +1463,6 @@ $$
                 </div>
             </li>
         
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/16/">
-                            Particle Filtering, Utility Theory(16)
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            我们已经学习了隐马尔可夫模型（HMMs），但当状态空间变得非常大或连续时，精确的前向算法在计算上变得不可行。粒子滤波提供了一种强大的近似推理方法来解决这个问题, 是HMMs的“采样”版本。。
-粒子滤波粒子滤波的核心目标是，在一个动态系统中，根据一系列带噪音的、不完整的观测数据，实时地、近似地追踪一个我们无法直接看到的隐藏状态。
-它专门用于解决那些状态空间巨大或连续的问题，例如：
-
-机器人定位...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Aug 26 2025 22:00:00 GMT+0800">
-                
-                    2025-08-26
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/16/">Read more<span class="seo-reader-text">Particle Filtering, Utility Theory(16)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
     </ul>
 
     <div class="home-paginator px-7 py-5">
@@ -1494,11 +1495,11 @@ $$
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        46 posts in total
+                        47 posts in total
                     </span>
                     
                         <span>
-                            106.4k words in total
+                            107.7k words in total
                         </span>
                     
                 </p>
