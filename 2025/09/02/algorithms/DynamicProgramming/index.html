@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-02T14:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-02T13:45:45.012Z">
+<meta property="article:modified_time" content="2025-09-03T15:37:16.419Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="algorithms">
 <meta property="article:tag" content="动态规划">
@@ -704,7 +704,7 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">17</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
@@ -712,7 +712,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">46</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">67</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -749,7 +749,7 @@ mjx-container[display="true"] + br {
 				<div class="author flex items-center">
 					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
 					
-					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
 					
 				</div>
 				<div class="meta-info">
@@ -763,8 +763,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-02 21:45:45</span>
-            <span class="mobile">2025-09-02 21:45:45</span>
+            <span class="desktop">2025-09-03 23:37:16</span>
+            <span class="mobile">2025-09-03 23:37:16</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -806,12 +806,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.1k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>3 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>6 Mins</span>
         </span>
     
     
@@ -868,6 +868,81 @@ mjx-container[display="true"] + br {
 <p><strong>第四步：确定遍历顺序</strong></p>
 <p>根据状态转移方程，我们需要确定计算 dp 数组的顺序, 也就是决定循环是从前向后还是从后向前，或者对于二维数组是逐行还是逐列。</p>
 <p>遍历顺序必须保证，在计算 dp[i] 时，所有它所依赖的状态（如 dp[i-1]）都已经计算出来了。这通常意味着从小规模的问题向大规模问题进行迭代。</p>
+<h3 id="两种模式"><a href="#两种模式" class="headerlink" title="两种模式"></a>两种模式</h3><p>动态规划 (Dynamic Programming, DP) 的核心是将一个大问题分解成若干个子问题，并存储子问题的解以避免重复计算。它主要有两种实现方式：</p>
+<ul>
+<li><p>自顶向下 (Top-Down) DP：通常通过 递归 + 记忆化 来实现。</p>
+</li>
+<li><p>自底向上 (Bottom-Up) DP：通常通过 迭代 + 表格 来实现。</p>
+</li>
+</ul>
+<ol>
+<li>自顶向下 (Top-Down) 动态规划 — 记忆化搜索</li>
+</ol>
+<p>这种方法也称为 记忆化搜索 (Memoization)。核心思想是从我们最终要求解的<strong>大问题出发</strong>，通过<strong>递归</strong>函数去解决它。如果在这个过程中遇到了一个子问题，我们先检查是否已经计算过这个子问题（即“记忆”里有没有）。</p>
+<p>如果计算过，直接从“记忆”中取出答案; 如果没有计算过，就递归地去解决这个子问题，并将计算出的结果存入“记忆”中，以备后用。</p>
+<p>这个过程就像是从树的顶部（根节点，即原始问题）开始，向下探索到树的底部（叶子节点，即最小的子问题）。</p>
+<ol start="2">
+<li>自底向上 (Bottom-Up) 动态规划 — 表格法</li>
+</ol>
+<p>这种方法也称为 表格法 (Tabulation)。核心思想完全反过来，我们不从大问题开始，而是从能够直接求解的、<strong>最小的子问题开始</strong>。然后利用这些小问题的解，像搭积木一样，一步步地构建出更大问题的解，直到最终解决了我们想要的那个大问题。</p>
+<p>这个过程通常用一个数组或矩阵（我们称之为 dp 表）来完成，通过迭代（for循环）的方式，按照从小到大的顺序填充表格。</p>
+<table>
+<thead>
+<tr>
+<th>特征 (Feature)</th>
+<th>自顶向下 (Top-Down)</th>
+<th>自底向上 (Bottom-Up)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>实现方式</td>
+<td>递归 + 记忆化 (Memoization)</td>
+<td>迭代 + 表格法 (Tabulation)</td>
+</tr>
+<tr>
+<td>思路方向</td>
+<td>从 大问题 分解到 小问题</td>
+<td>从 小问题 构建到 大问题</td>
+</tr>
+<tr>
+<td>子问题计算</td>
+<td>按需计算：只计算解决最终问题所必需的子问题。</td>
+<td>计算所有：通常会计算出所有可能的子问题的解。</td>
+</tr>
+<tr>
+<td>代码直观性</td>
+<td>通常更符合人类的直觉，因为其逻辑直接遵循问题的递归定义。</td>
+<td>可能需要更仔细地设计循环和状态转移的顺序。</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>可能会因递归深度过大导致栈溢出。函数调用有一定开销。</td>
+<td>没有递归开销，通常性能略好一些。</td>
+</tr>
+</tbody></table>
+<h3 id="例题1-最长递增子序列"><a href="#例题1-最长递增子序列" class="headerlink" title="例题1: 最长递增子序列"></a>例题1: 最长递增子序列</h3><p>给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。</p>
+<p>子序列是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的子序列。</p>
+<p>示例 1：</p>
+<ul>
+<li>输入：nums = [10,9,2,5,3,7,101,18]</li>
+<li>输出：4, 因为最长递增子序列是 [2,3,7,101]，因此长度为 4 。</li>
+</ul>
+<p>示例 2：</p>
+<ul>
+<li>输入：nums = [0,1,0,3,2,3]</li>
+<li>输出：4, 因为最长递增子序列是 [0,1,2,3]，因此长度为 4 。</li>
+</ul>
+<p>示例 3：</p>
+<ul>
+<li>输入：nums = [7,7,7,7,7,7,7]</li>
+<li>输出：1, 因为最长递增子序列是 [7]，因此长度为 1 。</li>
+</ul>
+<details class="green" data-header-exclude>
+    <summary><i class="fa-solid fa-chevron-right"></i>答案及分析 </summary>
+    <div class="content markdown-body">
+      
+    </div>
+  </details>
 
 		</div>
 
@@ -906,7 +981,7 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/01/web/OSI/">
+				<a class="next" rel="next" href="/2025/09/01/web/Computer%20Network/OSI/">
 					<span class="title flex justify-center items-center">
 						<span class="post-nav-title-item truncate max-w-48">OSI model</span>
 						<span class="post-nav-item">Next posts</span>
@@ -930,7 +1005,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">动态规划(Dynamic Programming)</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="nav-text">适用条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="nav-text">解题步骤</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="nav-text">适用条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="nav-text">解题步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%A8%A1%E5%BC%8F"><span class="nav-text">两种模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E9%A2%981-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97"><span class="nav-text">例题1: 最长递增子序列</span></a></li></ol>
 
 	</div>
 </div>
@@ -959,11 +1034,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        46 posts in total
+                        67 posts in total
                     </span>
                     
                         <span>
-                            107.6k words in total
+                            140k words in total
                         </span>
                     
                 </p>

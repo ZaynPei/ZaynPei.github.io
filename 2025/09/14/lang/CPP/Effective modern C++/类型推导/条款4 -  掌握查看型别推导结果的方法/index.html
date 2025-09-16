@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/14/lang/cpp/effective modern c++/类型推导/条款4 -  掌握查看型别推导结果的方法/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="条款4：掌握查看型别推导结果的方法">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE4%20-%20%20%E6%8E%8C%E6%8F%A1%E6%9F%A5%E7%9C%8B%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC%E7%BB%93%E6%9E%9C%E7%9A%84%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-09-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-14T07:02:43.672Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="language">
+<meta property="article:tag" content="CPP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            条款4：掌握查看型别推导结果的方法 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">17</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">67</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">条款4：掌握查看型别推导结果的方法</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-09-14</span>
+        <span class="mobile">2025-09-14</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-09-14 15:02:43</span>
+            <span class="mobile">2025-09-14 15:02:43</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/language/">language</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/CPP/">CPP</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.5k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>13 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h3 id="typeid介绍"><a href="#typeid介绍" class="headerlink" title="typeid介绍"></a>typeid介绍</h3><p>typeid 是一个 C++ 内置的运算符（就像 sizeof 或 decltype 一样）, 是 C++ <strong>运行时类型识别</strong>（Runtime Type Information, RTTI）机制的核心组成部分。它允许你的程序在代码运行时查询一个对象的动态类型（Dynamic Type）, 当然也可以进行静态类型的查询。</p>
+<blockquote>
+<p>RTTI 并非没有代价（它会给对象增加额外的开销，主要是虚函数表 vtable 中的类型信息指针），因此大多数 C++ 编译器允许你通过选项（如 GCC/Clang 的 -fno-rtti）来禁用它。如果 RTTI 被禁用，typeid 在某些情况下（尤其是多态类型）将无法按预期工作。</p>
+</blockquote>
+<p>具体来说, 它可以用于获取一个类型或一个表达式的类型信息。它有两种使用形式：</p>
+<ul>
+<li>typeid(Type)：直接传递一个类型名称, 如<code>std::cout &lt;&lt; (typeid(int).name()) &lt;&lt; std::endl;   // 输出 "int" </code>。</li>
+<li>typeid(expression)：传递一个表达式（例如一个变量名）,下面主要考虑这一点 。</li>
+</ul>
+<p>不过, typeid 的真正威力体现在它处理**多态（Polymorphic）**类型时的能力。一个类如果拥有至少一个 virtual 函数，它就是多态类型。</p>
+<ol>
+<li>情况一：非多态类型（或静态类型查询）</li>
+</ol>
+<p>当你对一个非多态类型（如 int、struct，或没有虚函数的类），或者对一个指针（ptr）本身（而不是它指向的内容 *ptr），或者对一个类型名称使用 typeid 时，它返回的是静态类型（Static Type）。</p>
+<p>静态类型是对象在编译时被声明的类型。这个操作是在编译期完成的。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line">std::string s = <span class="string">"hello"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这些都是静态类型查询</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(<span class="type">int</span>).<span class="built_in">name</span>()) &lt;&lt; std::endl;   <span class="comment">// 输出 "int" (或其修饰名)</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(x).<span class="built_in">name</span>()) &lt;&lt; std::endl;     <span class="comment">// x 是 int，输出 "int"</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(s).<span class="built_in">name</span>()) &lt;&lt; std::endl;     <span class="comment">// 输出 "std::string" (或其修饰名)</span></span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>情况二：多态类型（动态类型查询）</li>
+</ol>
+<p>这是 typeid 最重要的用途。当你将 typeid 应用于一个多态类型的左值表达式（通常是对一个基类指针或引用的解引用）时，它会执行运行时查询，以确定该对象的动态类型（Dynamic Type）。</p>
+<p>动态类型是对象在内存中被创建时的“真正”类型，即其派生最深的类型 (most derived type)。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span> <span class="comment">// 必须包含此头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Base</span> {</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">foo</span><span class="params">()</span> </span>{} <span class="comment">// 关键：必须有虚函数才能成为多态类型</span></span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base {</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">override</span> </span>{}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">OtherDerived</span> : <span class="keyword">public</span> Base {</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">override</span> </span>{}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Base b_obj;</span><br><span class="line">    Derived d_obj;</span><br><span class="line">    Base* ptr_b = <span class="keyword">new</span> <span class="built_in">Derived</span>(); <span class="comment">// 基类指针，指向派生类对象</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 静态类型 vs 动态类型 ---</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. ptr_b 本身是一个指针变量，变量类型是 Base* (非多态)</span></span><br><span class="line">    <span class="comment">// 静态类型查询：</span></span><br><span class="line">    std::cout &lt;&lt; (<span class="built_in">typeid</span>(ptr_b).<span class="built_in">name</span>()) &lt;&lt; std::endl; </span><br><span class="line">    <span class="comment">// 输出: "Base *" (或其修饰名，如 "P4Base")</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. *ptr_b 是对指针的解引用，这是一个多态类型的左值</span></span><br><span class="line">    <span class="comment">// 动态类型查询：</span></span><br><span class="line">    std::cout &lt;&lt; (<span class="built_in">typeid</span>(*ptr_b).<span class="built_in">name</span>()) &lt;&lt; std::endl; </span><br><span class="line">    <span class="comment">// 输出: "Derived" (或其修饰名，如 "7Derived")</span></span><br><span class="line">    <span class="comment">// 尽管 ptr_b 是 Base*，RTTI 发现它实际指向一个 Derived 对象</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">delete</span> ptr_b;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>在这种情况下, 如果 typeid 运算符被应用于一个指向<strong>多态类型的空指针的解引用</strong>，它将抛出一个 std::bad_typeid 异常。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Base* null_b_ptr = <span class="literal">nullptr</span>;</span><br><span class="line"><span class="keyword">try</span> {</span><br><span class="line">    <span class="built_in">typeid</span>(*null_b_ptr); <span class="comment">// 试图解引用一个多态类型的空指针</span></span><br><span class="line">} <span class="built_in">catch</span> (<span class="type">const</span> std::bad_typeid&amp; e) {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Caught exception: "</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="std-type-info-类"><a href="#std-type-info-类" class="headerlink" title="std::type_info 类"></a>std::type_info 类</h3><p>std::type_info：是一个定义在 <typeinfo> 头文件中的类。前面的 typeid 运算符的返回值就是一个对 std::type_info 对象的常量引用 (const std::type_info&amp;), 这个对象中存储了关于特定类型的信息。</typeinfo></p>
+<p>C++ 标准保证对于程序中的每一种类型，都只有一个 std::type_info 对象实例与之对应。这使得我们可以安全地使用 == 和 != 来比较它们。</p>
+<p>std::type_info 类的主要成员函数包括：</p>
+<ul>
+<li>operator== 和 operator!=：用于比较两个类型是否相同, 例如<code>typeid(*ptr) == typeid(Derived)</code>。</li>
+<li>name()：返回一个 const char*，代表该类型的名称。<ul>
+<li>值得注意的是, C++ 标准没有规定这个名称的具体格式，它只要求这个名称是唯一的。在实际中，大多数编译器会返回一个“<strong>修饰过的名称</strong>”（mangled name）, 有时候并不易读（例如，7MyClass 而不是 MyClass）。</li>
+<li>这个函数主要用于调试和日志记录，不应该依赖它返回的字符串内容来进行程序逻辑判断（例如，不要写 if (strcmp(typeid(T).name(), “MyClass”) == 0)）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Boost"><a href="#Boost" class="headerlink" title="Boost"></a>Boost</h3><p>Boost 库是一个庞大、高质量、经过同行评审（peer-reviewed）且可移植的 C++ 库集合, 我们可以将其理解为 C++ 标准库的“扩展包”和“试验场”。许多在 Boost 库中经过多年开发、测试和广泛使用的组件，最终被 C++ 标准委员会采纳，并成为了 C++ 标准库的一部分, 例如: </p>
+<ul>
+<li><p>智能指针 (Smart Pointers)： C++11 中的 std::shared_ptr 和 std::weak_ptr 直接源自 Boost 中的 boost::shared_ptr。</p>
+</li>
+<li><p>线程库 (Threading)： C++11 的 std::thread, std::mutex 等多线程工具，其设计和 API 大量借鉴了 Boost.Thread 库。</p>
+</li>
+<li><p>可选值：C++17 的 std::optional 源于 boost::optional。</p>
+</li>
+<li><p>类型特征 (Type Traits)：C++11 <type_traits> 头文件中的许多工具，最早在 Boost.TypeTraits 中实现。</type_traits></p>
+</li>
+<li><p>函数对象包装器：C++11 的 std::function 源于 boost::function。</p>
+</li>
+</ul>
+<h4 id="Boost-TypeIndex"><a href="#Boost-TypeIndex" class="headerlink" title="Boost.TypeIndex"></a>Boost.TypeIndex</h4><p>Boost.TypeIndex 是 Boost 库中的一个具体组件（子库），它提供了一套可移植的、功能更强的**运行时类型识别（RTTI）**机制，旨在作为 C++ 标准 RTTI（即 typeid 操作符和 std::type_info 类）的替代品或增强版。</p>
+<h5 id="为什么需要-TypeIndex？（标准-RTTI-的问题）"><a href="#为什么需要-TypeIndex？（标准-RTTI-的问题）" class="headerlink" title="为什么需要 TypeIndex？（标准 RTTI 的问题）"></a>为什么需要 TypeIndex？（标准 RTTI 的问题）</h5><p>要理解 Boost.TypeIndex 的价值，首先必须了解 C++ 标准 typeid 的局限性：</p>
+<ul>
+<li><p>不可移植的类型名称：C++ 标准只规定 typeid(T).name() 必须返回一个字符串，但没有规定这个字符串的具体内容。在实际中，不同编译器返回的是“重整”（mangled）后的内部名称。例如，对于 std::vector<int>, GCC/Clang 可能返回类似：St6vectorIiSaIiEE, 而MSVC 可能返回类似：.NSt3__16vectorIiNS_9allocatorIiEEEE. 这种字符串对开发者来说几乎不可读，且在不同平台和编译器之间完全不一致，导致调试和日志记录非常困难。</int></p>
+</li>
+<li><p>对 RTTI 开关的依赖：typeid 的功能依赖于编译器开启 RTTI 选项。在许多高性能、游戏开发或嵌入式项目中，开发者会选择关闭 RTTI（例如在 GCC/Clang 上使用 -fno-rtti 标志）来减少二进制文件大小和潜在的虚函数表开销。而一旦 RTTI 被关闭，typeid 对多态类型（带有虚函数的类）的操作将失效（通常会导致编译错误或运行时异常），这使得依赖 typeid 的代码不具备健壮性。</p>
+</li>
+<li><p>CVR 限定符的丢失：标准的 typeid 在计算类型时，会自动忽略顶层的 const（常量）、volatile（易失）和 reference（引用）限定符（统称 CVR 限定符）。例如，typeid(int)、typeid(const int) 和 typeid(const int&amp;) 这三者返回的 std::type_info 对象是完全相同的，它们都代表 int 类型。在某些需要精确类型区分的元编程或泛型编程场景中，这是致命的缺陷。</p>
+</li>
+</ul>
+<h5 id="Boost-TypeIndex-的解决方案"><a href="#Boost-TypeIndex-的解决方案" class="headerlink" title="Boost.TypeIndex 的解决方案"></a>Boost.TypeIndex 的解决方案</h5><p>Boost.TypeIndex 通过引入核心类 boost::typeindex::type_index 来解决上述所有问题：</p>
+<ul>
+<li><p>可移植的“美化”名称 (Pretty Name)：Boost.TypeIndex 提供了 .pretty_name() 成员函数, 无论在哪个编译器上，也不论 RTTI 是否开启，它都会尽最大努力返回一个人类可读的、统一的类型名称。例如，对于 std::vector<int>，它将一致地返回字符串 “std::vector&lt;int, std::allocator<int> &gt;” （或类似的清晰形式），而不是混乱的重整名称。</int></int></p>
+</li>
+<li><p>独立于 RTTI 开关：Boost.TypeIndex 具有智能的回退机制. 如果 RTTI 开启：它在内部优先使用 typeid，以获得最高效、最准确的多态类型识别; 如果 RTTI 关闭：它会自动切换到一套基于编译时模板元编程的机制来模拟类型信息（对于非多态类型）。这使得代码无论在哪种编译配置下都能工作。</p>
+</li>
+<li><p>保留 CVR 限定符：Boost.TypeIndex 提供了两种获取类型信息的方式，以满足不同需求：</p>
+<ul>
+<li>boost::typeindex::type_id<t>()：<ul>
+<li>功能说明：这个函数模拟标准 typeid 的行为，返回去除 CVR 限定符后的基础类型。适用于需要“模糊”匹配类型的场景。</li>
+</ul>
+</t></li>
+<li>boost::typeindex::type_id_with_cvr<t>()：<ul>
+<li>功能说明：这是关键的增强功能。它返回包含 CVR 限定符的精确类型。</li>
+</ul>
+</t></li>
+<li>例如：type_id_with_cvr&lt;const int&amp;&gt;() 返回的 type_index 对象的 .pretty_name() 将是 “int const&amp;”，这与 type_id_with_cvr<int>()（返回 “int”）是截然不同的，从而允许开发者进行精确的类型区分。</int></li>
+</ul>
+</li>
+</ul>
+<h3 id="不同阶段用来查看编译器类型推导结果的技术"><a href="#不同阶段用来查看编译器类型推导结果的技术" class="headerlink" title="不同阶段用来查看编译器类型推导结果的技术"></a>不同阶段用来查看编译器类型推导结果的技术</h3><p>了解了上述内容之后, 我们可以总结出三种在软件开发不同阶段(<strong>撰写代码阶段、编译阶段和运行时阶段</strong>)用来查看编译器类型推导结果的技术。这些方法可以帮助开发者确认模板、auto 或 decltype 推导出的类型是否符合预期。</p>
+<ol>
+<li>IDE 编辑器</li>
+</ol>
+<p>在IDE的代码编辑器中，将<strong>鼠标指针悬停</strong>在变量、参数或函数上时，编辑器通常会显示该实体的推导类型 。</p>
+<p>其局限性在于, 这种方法需要代码基本处于<strong>可编译状态</strong>，因为IDE依赖<strong>内嵌的编译器前端</strong>来进行分析 。对于简单的类型（如int）显示良好，但对于复杂的类型，IDE显示的型别信息可能非常冗长且难以阅读，实用性会降低 。</p>
+<ol start="2">
+<li>编译器诊断信息</li>
+</ol>
+<p>我们可以通过故意制造一个编译错误，来迫使编译器在诊断信息中报告出它所推导出的类型 。</p>
+<p>一种方式是, 我们声明一个类模板，但不去定义它（例如 <code>template&lt;typename T&gt; class TD;</code>）。</p>
+<p>接着尝试使用你想查看的类型来具现这个模板（例如，<code>TD&lt;decltype(x)&gt; xType;</code>） 。</p>
+<p>编译器在试图创建 xType 对象时，会因为 TD 是一个不完整类型 (incomplete type) 而报错，错误信息中几乎必然会包含 T 被推导出的完整类型（例如 “aggregate ‘TD<int> xType’ has incomplete type”）。</int></p>
+<ol start="3">
+<li>运行时输出</li>
+</ol>
+<p>一种不太可靠的方法是使用typeid, 例如通过<code>typeid(x).name()</code> 来在运行时打印类型名称。然而, 根据C++标准，<code>std::type_info::name</code> 在处理类型时，会如同<strong>函数按值传递形参</strong>一样。这意味着它会忽略类型的引用（&amp;）属性，并移除顶层的 const 和 volatile 修饰符(CVR丢失)。这会导致输出错误的类型，例如，一个 const Widget* const&amp; 类型可能会被错误地报告为 const Widget*(详见条款1的情况2部分):</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模板函数定义</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个返回 std::vector 的工厂函数</span></span><br><span class="line"><span class="function">std::vector&lt;Widget&gt; <span class="title">createVec</span><span class="params">()</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用工厂函数返回值初始化 vw</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> vw = <span class="built_in">createVec</span>(); </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!vw.<span class="built_in">empty</span>()) { </span><br><span class="line">    <span class="comment">// 调用模板函数</span></span><br><span class="line">    <span class="built_in">f</span>(&amp;vw[<span class="number">0</span>]); </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span> </span></span><br><span class="line"><span class="function"></span>{ </span><br><span class="line">    <span class="keyword">using</span> std::cout; </span><br><span class="line">    cout &lt;&lt; <span class="string">"T = "</span> &lt;&lt; <span class="built_in">typeid</span>(T).<span class="built_in">name</span>() &lt;&lt; <span class="string">'\n'</span>;       <span class="comment">// 显示 T 的类型</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"param = "</span> &lt;&lt; <span class="built_in">typeid</span>(param).<span class="built_in">name</span>() &lt;&lt; <span class="string">'\n'</span>; <span class="comment">// 显示 param 的类型</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>上述结果的输出为:<code>T = class Widget const * param = class Widget const *</code><br>而显而易见, 在模板 f 中，形参 param 被声明为 const T&amp;。无论 T 被推导成什么，param 的类型都应该是在 T 的基础上增加了 const 和 &amp; 限定符（或者根据引用折叠规则）。T 和 param（即 const T&amp;）不可能是同一个类型。</p>
+<p>出现这个问题的原因就在于std::type_info::name的腐化性(丢失CVR): C++ 标准规定，typeid 在返回 name() 之前，会像**函数按值传递（pass-by-value）**那样来处理它获取到的类型。</p>
+<p>应用到我们的例子：根据原理, 我们推导出了<code>T = const Widget*</code>和<code>param = const (const Widget*) &amp;</code>. 对于 typeid(T), 它分析 const Widget*。这是一个指针类型，不是引用，它的 const 是底层的（指向 const），不是顶层的。因此，按值传递规则不会移除任何东西。</p>
+<p>但是对于 typeid(param), 它分析 const Widget* const &amp;, 首先 &amp; 被移除，类型变为 const Widget* const (一个指向 const Widget 的 const 指针)。接着因为该类型有一个顶层的 const（即指针本身的常量性）。这个 const 被移除。结果是和T一样的const Widget* 。</p>
+<h4 id="更可靠的方法-Boost-TypeIndex-："><a href="#更可靠的方法-Boost-TypeIndex-：" class="headerlink" title="更可靠的方法 (Boost.TypeIndex)："></a>更可靠的方法 (Boost.TypeIndex)：</h4><p>一个更准确的运行时解决方案是使用 Boost 库的 TypeIndex 。</p>
+<p>使用 <code>boost::typeindex::type_id_with_cvr&lt;T&gt;().pretty_name() </code> 可以获取一个包含人类可读的、精确类型表示的字符串。其名称中的 “cvr” 表明它会保留 const、volatile 和引用饰词，从而提供准确的类型信息 。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/type_index.hpp&gt;</span> <span class="comment">// 引入 Boost.TypeIndex 库</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>           </span></span><br><span class="line"><span class="keyword">using</span> std::cout; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 导入 Boost.TypeIndex 的核心函数，用于获取包含 const/volatile/&amp; 的精确类型</span></span><br><span class="line"><span class="keyword">using</span> boost::typeindex::type_id_with_cvr; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span> </span></span><br><span class="line"><span class="function"></span>{ </span><br><span class="line">    cout &lt;&lt; <span class="string">"T  = "</span> </span><br><span class="line">         &lt;&lt; <span class="built_in">type_id_with_cvr</span>&lt;T&gt;().<span class="built_in">pretty_name</span>() </span><br><span class="line">         &lt;&lt; <span class="string">'\n'</span>; </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 显示 param 的类型</span></span><br><span class="line">    <span class="comment">// 在这个函数签名中，param 的类型永远是 const T&amp;。</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"param = "</span> </span><br><span class="line">         &lt;&lt; <span class="built_in">type_id_with_cvr</span>&lt;<span class="keyword">decltype</span>(param)&gt;().<span class="built_in">pretty_name</span>() </span><br><span class="line">         &lt;&lt; <span class="string">'\n'</span>; </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> cx = <span class="number">20</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span>&amp; rx = x;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">"--- 调用 f(x) --- (x 是 int)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(x); </span><br><span class="line">    cout &lt;&lt; <span class="string">"\n--- 调用 f(cx) --- (cx 是 const int)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(cx);</span><br><span class="line">    cout &lt;&lt; <span class="string">"\n--- 调用 f(rx) --- (rx 是 const int&amp;)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(rx);</span><br><span class="line">    cout &lt;&lt; <span class="string">"\n--- 调用 f(42) --- (42 是右值)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(<span class="number">42</span>); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/language/">#language</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/CPP/">#CPP</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/14/lang/CPP/Effective%20modern%20C++/auto/%E6%9D%A1%E6%AC%BE6%20-%20%20auto%20%E6%8E%A8%E5%AF%BC%E7%9A%84%E5%9E%8B%E5%88%AB%E4%B8%8D%E7%AC%A6%E5%90%88%E8%A6%81%E6%B1%82%E6%97%B6%EF%BC%8C%E4%BD%BF%E7%94%A8%20%E5%B8%A6%E6%98%BE%E5%BC%8F%E5%9E%8B%E5%88%AB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E7%89%A9%E4%B9%A0%E6%83%AF%E7%94%A8%E6%B3%95/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">条款6：auto 推导的型别不符合要求时，使用带显式型别的初始化物习惯用法</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20%20-%20%E7%90%86%E8%A7%A3%20decltype/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">条款3：理解 decltype</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">条款4：掌握查看型别推导结果的方法</div>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#typeid%E4%BB%8B%E7%BB%8D"><span class="nav-text">typeid介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-type-info-%E7%B1%BB"><span class="nav-text">std::type_info 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Boost"><span class="nav-text">Boost</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Boost-TypeIndex"><span class="nav-text">Boost.TypeIndex</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-TypeIndex%EF%BC%9F%EF%BC%88%E6%A0%87%E5%87%86-RTTI-%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%89"><span class="nav-text">为什么需要 TypeIndex？（标准 RTTI 的问题）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Boost-TypeIndex-%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">Boost.TypeIndex 的解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E9%98%B6%E6%AE%B5%E7%94%A8%E6%9D%A5%E6%9F%A5%E7%9C%8B%E7%BC%96%E8%AF%91%E5%99%A8%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E7%BB%93%E6%9E%9C%E7%9A%84%E6%8A%80%E6%9C%AF"><span class="nav-text">不同阶段用来查看编译器类型推导结果的技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E5%8F%AF%E9%9D%A0%E7%9A%84%E6%96%B9%E6%B3%95-Boost-TypeIndex-%EF%BC%9A"><span class="nav-text">更可靠的方法 (Boost.TypeIndex)：</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        67 posts in total
+                    </span>
+                    
+                        <span>
+                            140k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>
