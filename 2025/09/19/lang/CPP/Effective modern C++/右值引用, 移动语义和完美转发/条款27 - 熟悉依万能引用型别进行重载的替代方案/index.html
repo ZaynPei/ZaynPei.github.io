@@ -123,7 +123,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://zaynpei.github.io/2025/09/13/lang/cpp/effective modern c++/类型推导/条款2 ：理解 auto 型别推导/"/>
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/19/lang/cpp/effective modern c++/右值引用, 移动语义和完美转发/条款27 - 熟悉依万能引用型别进行重载的替代方案/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -133,14 +133,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="条款2：理解 auto 型别推导">
-<meta property="og:url" content="https://zaynpei.github.io/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20%EF%BC%9A%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/index.html">
+<meta property="og:title" content="条款 27 - 熟悉依万能引用型别进行重载的替代方案">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE27%20-%20%E7%86%9F%E6%82%89%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
-<meta property="article:published_time" content="2025-09-13T04:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-13T06:23:35.749Z">
+<meta property="article:published_time" content="2025-09-19T13:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-19T12:47:27.361Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="CPP">
@@ -157,7 +157,7 @@
     
     <title>
         
-            条款2：理解 auto 型别推导 | ZaynPei&#39;s Base
+            条款 27 - 熟悉依万能引用型别进行重载的替代方案 | ZaynPei&#39;s Base
         
     </title>
 
@@ -712,7 +712,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">67</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -735,7 +735,7 @@ mjx-container[display="true"] + br {
 		<div class="article-title relative w-full">
 			
 			<div class="w-full flex items-center pt-6 justify-start">
-				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">条款2：理解 auto 型别推导</h1>
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">条款 27 - 熟悉依万能引用型别进行重载的替代方案</h1>
 			</div>
 			
 		</div>
@@ -756,15 +756,15 @@ mjx-container[display="true"] + br {
 					<div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2025-09-13 12:00</span>
-        <span class="mobile">2025-09-13 12:00</span>
+        <span class="desktop">2025-09-19 21:00</span>
+        <span class="mobile">2025-09-19 21:00</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-13 14:23:35</span>
-            <span class="mobile">2025-09-13 14:23:35</span>
+            <span class="desktop">2025-09-19 20:47:27</span>
+            <span class="mobile">2025-09-19 20:47:27</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -806,12 +806,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.2k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>99 Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>5 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>1 Mins</span>
         </span>
     
     
@@ -826,51 +826,7 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>首先我们抛出这一讲的核心思想: <strong>auto 类型推导几乎就是模板类型推导</strong>, 除了稍后会介绍到的唯一区别之外</p>
-<h3 id="两者概念性的转换"><a href="#两者概念性的转换" class="headerlink" title="两者概念性的转换"></a>两者概念性的转换</h3><p>这种对应关系可以通过一个概念性的转换来理解。例如, 对于前一讲介绍的函数模板调用：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(ParamType param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(expr); <span class="comment">// 编译器利用 expr 推导 T 和 ParamType</span></span><br></pre></td></tr></table></figure></div>
-
-<p>一个使用auto声明的变量可以被看作是<strong>这个模式的变体</strong>，其中<strong>auto扮演了模板中的T</strong>，而<strong>变量的类型修饰符（如const、&amp;等）和T一起则扮演了ParamType</strong> 。</p>
-<p>例如，以下auto声明：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="number">27</span>;</span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> cx = x;</span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span>&amp; rx = x;</span><br></pre></td></tr></table></figure></div>
-<p>在概念上，编译器为了推导它们的类型，其行为就如同<strong>为每个声明生成了一个模板并用初始化物调用它</strong>一样 ：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 概念上为推导 x 的类型可以理解为存在以下模板</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func_for_x</span><span class="params">(T param)</span></span>;</span><br><span class="line"><span class="built_in">func_for_x</span>(<span class="number">27</span>); <span class="comment">// param 的类型就是 x 的类型</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 概念上为推导 cx 的类型</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func_for_cx</span><span class="params">(<span class="type">const</span> T param)</span></span>;</span><br><span class="line"><span class="built_in">func_for_cx</span>(x); <span class="comment">// param 的类型就是 cx 的类型</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 概念上为推导 rx 的类型</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func_for_rx</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>;</span><br><span class="line"><span class="built_in">func_for_rx</span>(x); <span class="comment">// param 的类型就是 rx 的类型</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="auto的三种推导情况"><a href="#auto的三种推导情况" class="headerlink" title="auto的三种推导情况"></a>auto的三种推导情况</h3><p>因为auto类型推导与模板类型推导机制相同，条款1中划分的三种推导情况也完全适用于auto。</p>
-<ol>
-<li>情况1：类型修饰符是指针或引用（但非万能引用）</li>
-</ol>
-<p>此时推导规则与模板相同，初始化表达式的引用性和const属性会被保留。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="keyword">auto</span>&amp; rx = x; <span class="comment">// rx 是一个非万能引用 [cite: 278]</span></span><br></pre></td></tr></table></figure></div>
-
-<ol start="2">
-<li>情况2：类型修饰符是万能引用</li>
-</ol>
-<p>当使用auto&amp;&amp;时，左值和右值初始化物会被区别对待，推导出不同的类型。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span>&amp;&amp; uref1 = x;  <span class="comment">// x 是 int 且是左值, uref1 类型为 int&amp; [cite: 279]</span></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; uref3 = <span class="number">27</span>; <span class="comment">// 27 是 int 且是右值, uref3 类型为 int&amp;&amp; [cite: 279]</span></span><br></pre></td></tr></table></figure></div>
-
-<ol start="3">
-<li>情况3：类型修饰符既非指针也非引用</li>
-</ol>
-<p>此时推导规则也与模板相同，初始化表达式的引用性、const和volatile属性都会被忽略。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="number">27</span>; <span class="comment">// 情况3 (x既非指针也非引用) [cite: 276]</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> cx = x; <span class="comment">// cx 也属于情况3 [cite: 277]</span></span><br></pre></td></tr></table></figure></div>
-<p>同样地，数组和函数名在auto类型推导中也会退化成指针，除非auto被声明为引用。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">char</span> name[] = <span class="string">"R. N. Briggs"</span>;    <span class="comment">// name 的类别是 const char[13]</span></span><br><span class="line"><span class="keyword">auto</span> arr1 = name; <span class="comment">// arr1 的类别是 const char*</span></span><br><span class="line"><span class="keyword">auto</span>&amp; arr2 = name; <span class="comment">// arr2 的类别是 const char (&amp;)[13]</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">someFunc</span><span class="params">(<span class="type">int</span>, <span class="type">double</span>)</span></span>; <span class="comment">// someFunc 是个函数，类别是 void(int, double)</span></span><br><span class="line"><span class="keyword">auto</span> func1 = someFunc; <span class="comment">// func1 的类别是 void (*)(int, double)</span></span><br><span class="line"><span class="keyword">auto</span>&amp; func2 = someFunc; <span class="comment">// func2 的类别是 void (&amp;)(int, double)</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="唯一的例外：大括号初始化表达式"><a href="#唯一的例外：大括号初始化表达式" class="headerlink" title="唯一的例外：大括号初始化表达式 {}"></a>唯一的例外：大括号初始化表达式 {}</h3><p>auto类型推导和模板类型推导真正的唯一区别在于它们如何处理用大括号括起来的初始化表达式。</p>
-<p>正如在条款7中提到的, 在C++11中，有多种语法可以初始化一个int：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x1 = <span class="number">27</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">x2</span><span class="params">(<span class="number">27</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> x3 = {<span class="number">27</span>};</span><br><span class="line"><span class="type">int</span> x4{<span class="number">27</span>};</span><br></pre></td></tr></table></figure></div>
-
-<p>当把int替换为auto时，前两种写法的行为符合预期，变量被推导为int。然而，后两种使用大括号的写法，会触发一条针对auto的特殊推导规则：当用于<strong>auto声明的变量</strong>的初始化表达式是用<strong>大括号</strong>括起时，推导所得的类型就是<strong>std::initializer_list</strong> 。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x1 = <span class="number">27</span>;   <span class="comment">// 类型是 int [cite: 291]</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">x2</span><span class="params">(<span class="number">27</span>)</span></span>;  <span class="comment">// 类型是 int [cite: 293]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> x3 = {<span class="number">27</span>}; <span class="comment">// 类型是 std::initializer_list&lt;int&gt; [cite: 293]</span></span><br><span class="line"><span class="keyword">auto</span> x4{<span class="number">27</span>};  <span class="comment">// 类型是 std::initializer_list&lt;int&gt; [cite: 294]</span></span><br></pre></td></tr></table></figure></div>
-
-<p>这个特殊规则是auto独有的。如果将同样的大括号初始化物传递给一个函数模板，类型推导会失败，代码将无法通过编译; 而auto则可以</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = {<span class="number">11</span>, <span class="number">23</span>, <span class="number">9</span>}; <span class="comment">// x 的类型是 std::initializer_list&lt;int&gt; [cite: 300]</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>({<span class="number">11</span>, <span class="number">23</span>, <span class="number">9</span>}); <span class="comment">// 错误！无法为 T 推导出类型</span></span><br></pre></td></tr></table></figure></div>
-<h4 id="在lambda表达式中的特殊"><a href="#在lambda表达式中的特殊" class="headerlink" title="在lambda表达式中的特殊"></a>在lambda表达式中的特殊</h4><p>不过需要注意的是，这条关于大括号的特殊规则<strong>仅适用于auto变量声明</strong>。在C++14中，当<strong>auto被用于推导函数返回值</strong>或用于<strong>lambda表达式的形参</strong>时，它遵循的是<strong>模板类型推导</strong>的规则，而非auto的特殊规则 。</p>
-<p>因此，一个返回大括号初始化表达式的函数将无法通过编译，因为它遵循的是模板类型推导，而模板类型推导无法处理这种情况 。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++14</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">createInitList</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}; <span class="comment">// 错误！无法为 {1, 2, 3} 完成类型推导 </span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">std:: vector&lt;<span class="type">int</span>&gt; v; </span><br><span class="line"><span class="keyword">auto</span> resetV = </span><br><span class="line">    [&amp;v ](<span class="type">const</span> <span class="keyword">auto</span>&amp; newValue) { v = newValue; } ; <span class="comment">// (++14 合法)</span></span><br><span class="line">    </span><br><span class="line"><span class="built_in">resetV</span>({ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> }) ; <span class="comment">// 错误！无法为{ 1, 2, 3} 完成型别推导</span></span><br></pre></td></tr></table></figure></div>
-
-
+			<p>条款26明确指出，对万能引用进行重载是一个坏主意，因为它过于“贪婪”，会意外地匹配到许多本意是想调用其他重载函数的调用。本条款则提供了多种替代方案，让我们可以在需要区分处理不同类型的同时，安全地使用万能引用的强大功能。</p>
 
 		</div>
 
@@ -896,12 +852,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">
+				<a class="prev" rel="prev" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE29%20-%20%E5%81%87%E5%AE%9A%E7%A7%BB%E5%8A%A8%E6%93%8D%E4%BD%9C%E4%B8%8D%E5%AD%98%E5%9C%A8%E3%80%81%E6%88%90%E6%9C%AC%E9%AB%98%E3%80%81%E6%9C%AA%E4%BD%BF%E7%94%A8/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 24：区分万能引用和右值引用</span>
+						<span class="post-nav-title-item truncate max-w-48"></span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -909,9 +865,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE23%20-%20%20%E7%90%86%E8%A7%A3%20move%20%E5%92%8C%20forward/">
+				<a class="next" rel="next" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE26%20-%20%E9%81%BF%E5%85%8D%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 23：理解 std::move std::forward</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 26 - 避免依万能引用型别进行重载</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -932,8 +888,8 @@ mjx-container[display="true"] + br {
 		<div class="post-toc-wrap">
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
-		<div class="page-title">条款2：理解 auto 型别推导</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E8%80%85%E6%A6%82%E5%BF%B5%E6%80%A7%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="nav-text">两者概念性的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E7%9A%84%E4%B8%89%E7%A7%8D%E6%8E%A8%E5%AF%BC%E6%83%85%E5%86%B5"><span class="nav-text">auto的三种推导情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%94%AF%E4%B8%80%E7%9A%84%E4%BE%8B%E5%A4%96%EF%BC%9A%E5%A4%A7%E6%8B%AC%E5%8F%B7%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-text">唯一的例外：大括号初始化表达式 {}</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%89%B9%E6%AE%8A"><span class="nav-text">在lambda表达式中的特殊</span></a></li></ol></li></ol>
+		<div class="page-title">条款 27 - 熟悉依万能引用型别进行重载的替代方案</div>
+		
 
 	</div>
 </div>
@@ -962,11 +918,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        67 posts in total
+                        77 posts in total
                     </span>
                     
                         <span>
-                            140k words in total
+                            150.2k words in total
                         </span>
                     
                 </p>

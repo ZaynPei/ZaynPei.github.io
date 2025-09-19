@@ -123,7 +123,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://zaynpei.github.io/2025/09/13/lang/cpp/effective modern c++/类型推导/条款24 - 区分万能引用和右值引用/"/>
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/19/lang/cpp/effective modern c++/右值引用, 移动语义和完美转发/条款26 - 避免依万能引用型别进行重载/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -133,14 +133,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="条款 24：区分万能引用和右值引用">
-<meta property="og:url" content="https://zaynpei.github.io/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/index.html">
+<meta property="og:title" content="条款 26 - 避免依万能引用型别进行重载">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE26%20-%20%E9%81%BF%E5%85%8D%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
-<meta property="article:published_time" content="2025-09-13T08:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-14T02:06:51.286Z">
+<meta property="article:published_time" content="2025-09-19T11:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-19T12:01:00.244Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="CPP">
@@ -157,7 +157,7 @@
     
     <title>
         
-            条款 24：区分万能引用和右值引用 | ZaynPei&#39;s Base
+            条款 26 - 避免依万能引用型别进行重载 | ZaynPei&#39;s Base
         
     </title>
 
@@ -712,7 +712,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">67</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -735,7 +735,7 @@ mjx-container[display="true"] + br {
 		<div class="article-title relative w-full">
 			
 			<div class="w-full flex items-center pt-6 justify-start">
-				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">条款 24：区分万能引用和右值引用</h1>
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">条款 26 - 避免依万能引用型别进行重载</h1>
 			</div>
 			
 		</div>
@@ -756,15 +756,15 @@ mjx-container[display="true"] + br {
 					<div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2025-09-13 16:00</span>
-        <span class="mobile">2025-09-13 16:00</span>
+        <span class="desktop">2025-09-19 19:00</span>
+        <span class="mobile">2025-09-19 19:00</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-14 10:06:51</span>
-            <span class="mobile">2025-09-14 10:06:51</span>
+            <span class="desktop">2025-09-19 20:01</span>
+            <span class="mobile">2025-09-19 20:01</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -826,66 +826,27 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="回忆左值（Lvalue）和右值（Rvalue）"><a href="#回忆左值（Lvalue）和右值（Rvalue）" class="headerlink" title="回忆左值（Lvalue）和右值（Rvalue）"></a>回忆左值（Lvalue）和右值（Rvalue）</h3><p>左值（Lvalue）表示一个有名字、可寻址、在表达式结束后仍然存在的对象。其特点是：</p>
+			<p>这一讲开门见山: 将一个接受万能引用的函数或模板与其他函数进行重载，是一个非常危险的设计，因为它几乎总是会导致意想不到的行为和难以理解的编译错误。</p>
+<h2 id="核心问题：万能引用的“贪婪”"><a href="#核心问题：万能引用的“贪婪”" class="headerlink" title="核心问题：万能引用的“贪婪”"></a>核心问题：万能引用的“贪婪”</h2><p>万能引用（在模板中声明为 T&amp;&amp;）之所以危险，是因为它过于“贪婪”。根据C++的模板类型推导和重载决议规则，<strong>万能引用可以为几乎任何类型的实参生成一个精确匹配</strong> (Exact Match) 的函数实例。</p>
+<p>在重载决议中，精确匹配的优先级非常高，高于那些需要<strong>类型提升</strong>（如 short 到 int）、<strong>类型转换</strong>（如派生类到基类）或<strong>添加 const</strong> 的匹配。这意味着，一旦万能引用版本的重载成为候选，它就会像磁铁一样“吸走”大量本意是想调用其他重载版本的函数调用。</p>
+<h3 id="示例一：logAndAdd-——-万能引用与常规函数的重载"><a href="#示例一：logAndAdd-——-万能引用与常规函数的重载" class="headerlink" title="示例一：logAndAdd —— 万能引用与常规函数的重载"></a>示例一：logAndAdd —— 万能引用与常规函数的重载</h3><p>这个例子展示了最直接的问题。假设我们有一个高效的、使用万能引用的 logAndAdd 函数，同时为了方便，我们又重载了一个接受 int 索引的版本, 当我们用一个 short 类型的变量来调用它时: </p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局数据</span></span><br><span class="line">std::multiset&lt;std::string&gt; names;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载版本 1: 万能引用</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(T&amp;&amp; name)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(std::forward&lt;T&gt;(name));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载版本 2: int</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(<span class="type">int</span> idx)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(<span class="built_in">nameFromIdx</span>(idx));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">short</span> nameIdx;</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(nameIdx); <span class="comment">// 错误！调用的是万能引用版本</span></span><br></pre></td></tr></table></figure></div>
+<p>首先, 程序员的意图非常明确，short 是一个整数类型，应该调用 logAndAdd(int idx) 这个版本。而重载决议过程却不是这样的. 它会尝试下列两种匹配</p>
+<p>对于尝试匹配 logAndAdd(int)：short 到 int 的转换是类型提升 (Promotion)，这是一个合法的匹配，但不是精确匹配。</p>
+<p>而对于匹配 logAndAdd(T&amp;&amp;)：编译器可以为<strong>万能引用实例化一个版本</strong>，其中 T 被推导为 short。这个 logAndAdd(short&amp;&amp;) 的实例对于 short 类型的实参来说是精确匹配 (Exact Match)。</p>
+<p>由于精确匹配的优先级高于类型提升，编译器选择了万能引用版本的 logAndAdd。也就是说, 在万能引用版本的函数体内，代码尝试用一个 short 去构造 names（一个 std::multiset<a class="link" href="std::string">std::string<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>）中的 std::string。由于不存在从 short 到 std::string 的构造函数，代码最终在 emplace 这一步编译失败。这个错误信息通常非常复杂，因为它发生在模板的深层实例化中，让程序员难以定位问题的根源。</p>
+<h3 id="示例二：Person-构造函数-——-完美转发构造函数的危险"><a href="#示例二：Person-构造函数-——-完美转发构造函数的危险" class="headerlink" title="示例二：Person 构造函数 —— 完美转发构造函数的危险"></a>示例二：Person 构造函数 —— 完美转发构造函数的危险</h3><p>这个例子揭示了一个更微妙、更危险的问题。当一个<strong>类的构造函数被重载为万能引用</strong>时（通常被称为“完美转发构造函数”），它会“劫持”类的复制和移动机制。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 完美转发构造函数</span></span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(T&amp;&amp; n)</span> : name(std::forward&lt;T&gt;(n)) {</span>}</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(<span class="type">int</span> idx)</span> : name(nameFromIdx(idx)) {</span>}</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 编译器会自动生成复制和移动构造函数</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function">Person <span class="title">p</span><span class="params">(<span class="string">"Nancy"</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">cloneOfP</span><span class="params">(p)</span></span>; <span class="comment">// 意图是调用复制构造函数</span></span><br></pre></td></tr></table></figure></div>
+<p>当客户端代码尝试复制一个 Person 对象时, 程序员希望调用编译器生成的复制构造函数 Person(const Person&amp;)。此时重载决议过程如下：</p>
 <ul>
-<li>可以出现在赋值语句的左边：x = 5;</li>
-<li>可以取地址：&amp;x</li>
-<li>通常是变量、数组元素、对象成员等</li>
+<li><p>匹配复制构造函数：实参 p 的类型是 Person（一个非 const 左值）。为了匹配复制构造函数的参数 const Person&amp;，需要为 p 添加 const 限定符。这是一个合法的匹配，但不是精确匹配。</p>
+</li>
+<li><p>匹配完美转发构造函数：编译器可以为万能引用构造函数实例化一个版本，其中 T 被推导为 Person&amp;。这个 Person(Person&amp;) 的实例对于 Person 类型的左值实参 p 来说是精确匹配。</p>
+</li>
 </ul>
-<p>右值（Rvalue）表示一个临时值，通常在表达式中短暂存在，不能取地址。其特点是：</p>
-<ul>
-<li>只能出现在赋值语句的右边：x = 5;</li>
-<li>通常是字面量、临时对象、表达式结果</li>
-<li>不具备持久性，生命周期短</li>
-<li>可以移动（move），而不能复制（copy）</li>
-</ul>
-<p>基于此, 我们可以得到右值引用 (Rvalue Reference): T&amp;&amp;</p>
-<p>这是一种新的引用类型，用 &amp;&amp; 表示。它有一个关键特性：它只能绑定到右值（临时对象）。这使得我们可以在函数重载时区分传入的是左值还是右值：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(<span class="type">const</span> MyClass&amp; obj)</span></span>; <span class="comment">// 版本 1: 接受左值 (const引用也可以接受右值，但这是题外话)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(MyClass&amp;&amp; obj)</span></span>;      <span class="comment">// 版本 2: (C++11 新增) 只接受右值</span></span><br></pre></td></tr></table></figure></div>
-<p>更进一步地, 右值还可以继续划分: 右值 (rvalue) = 纯右值 (prvalue) + 将亡值 (xvalue)</p>
-<p>其中纯右值是没有名字的临时值或返回非引用的函数, 而将亡值特指资源即将被销毁的对象，通常是右值引用表达式即std::move(obj)或者返回T&amp;&amp;类型的函数返回值.</p>
-<h2 id="万能引用（Universal-Reference）-转发引用（Forwarding-Reference）"><a href="#万能引用（Universal-Reference）-转发引用（Forwarding-Reference）" class="headerlink" title="万能引用（Universal Reference）/ 转发引用（Forwarding Reference）"></a>万能引用（Universal Reference）/ 转发引用（Forwarding Reference）</h2><p>万能引用（转发引用）是一种特殊的引用，它既可以绑定到左值，也可以绑定到右值。它在<strong>语法上看起来与右值引用完全相同</strong>（都是使用 <strong>&amp;&amp;</strong>），但它只在非常特定的上下文中出现，并且遵循一套完全不同的类型推导规则。</p>
-<p>一个参数要成为“万能引用”，必须同时满足以下两个条件：</p>
-<ul>
-<li>必须涉及<strong>模板类型推导</strong>或者<strong>auto类型推导</strong>： 这个引用必须依赖于一个正在被推导的模板参数T或者auto。</li>
-<li>参数的声明形式必须是 <strong>T&amp;&amp;</strong>： 必须是这个<strong>精确的形式</strong>。不能有 const，也不能是其他任何形式。</li>
-</ul>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;   <span class="comment">// 没有类型推导，是右值引用</span></span><br><span class="line"></span><br><span class="line">Widget&amp;&amp; var1 = <span class="built_in">Widget</span>();  <span class="comment">// 右值引用</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; var2 = var1;    <span class="comment">// auto类型推导, 是万能引用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(std::vector&lt;T&gt;&amp;&amp; param)</span></span>;   <span class="comment">// 非精确形式, 是右值引用</span></span><br><span class="line">std: :vector&lt;<span class="type">int</span>&gt; v; </span><br><span class="line"><span class="built_in">f</span>(v); <span class="comment">// 此时会错误！不能给右值引用绑定左值</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp;&amp; param)</span></span>;   <span class="comment">// param 是个右值引用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>; <span class="comment">// 模板参数推导, 是万能引用</span></span><br><span class="line">Widget w; </span><br><span class="line"><span class="built_in">f</span>(w);               <span class="comment">// 传递左值, param为左值引用Widget&amp;</span></span><br><span class="line"><span class="built_in">f</span> (std::<span class="built_in">move</span>(w));   <span class="comment">// 传递右值, param为右值引用Widget&amp;&amp;</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="万能引用如何工作：特殊的类型推导与引用折叠"><a href="#万能引用如何工作：特殊的类型推导与引用折叠" class="headerlink" title="万能引用如何工作：特殊的类型推导与引用折叠"></a>万能引用如何工作：特殊的类型推导与引用折叠</h3><p>万能引用的“魔力”来自于它在模板类型推导中使用的特殊规则，以及 C++ 的**引用折叠（Reference Collapsing）**规则。</p>
-<p>当我们使用 <code>template&lt;typename T&gt; void func(T&amp;&amp; param)</code> 时：</p>
-<ol>
-<li>情况一：传递一个左值</li>
-</ol>
-<p>假设我们有一个左值变量：<code>MyClass widget;</code> 我们调用：<code>func(widget);</code></p>
-<pre><code>- 类型推导（关键规则）： 当一个左值（类型为 A）被传递给一个 T&amp;&amp; 形式的万能引用时，模板参数 T 被推导为 A&amp; (一个左值引用)。在本例中，T 被推导为 MyClass&amp;。
-
-- 实例化参数类型： 编译器将 T (即 MyClass&amp;) 替换回参数声明 T&amp;&amp; 中，得到(MyClass&amp;) &amp;&amp;
-
-- 引用折叠： C++ 不允许“引用的引用”。编译器使用“引用折叠”规则来简化它。折叠规则是（简单来说）：只要有 &amp; 出现，最终就折叠为 &amp;。只有当两者都是 &amp;&amp; 时，才折叠为 &amp;&amp;。
-
-    - A&amp; &amp; -&gt; A&amp;
-
-    - A&amp; &amp;&amp; -&gt; A&amp; （我们命中的规则）
-
-    - A&amp;&amp; &amp; -&gt; A&amp;
-
-    - A&amp;&amp; &amp;&amp; -&gt; A&amp;&amp; 
-
-- 最终函数签名： 折叠后，func 被实例化的版本是：`void func(MyClass&amp; param);`, 结果是函数变成了一个接受左值引用的函数，它成功地绑定到了我们传入的左值 widget 上。
-</code></pre>
-<ol start="2">
-<li>情况二：传递一个右值</li>
-</ol>
-<p>假设我们传递一个临时对象（右值）：<code>func(MyClass());</code></p>
-<pre><code>- 类型推导（关键规则）： 当一个右值（类型为 A）被传递给一个 T&amp;&amp; 形式的万能引用时，模板参数 T 被推导为 A (一个普通的、非引用的类型)。本例中，T 被推导为 MyClass。
-
-- 实例化参数类型： 编译器将 T (即 MyClass) 替换回参数声明 T&amp;&amp; 中，得到：(MyClass) &amp;&amp;，即 MyClass&amp;&amp;。
-
-- 引用折叠： 没有发生折叠
-
-最终函数签名： func 被实例化的版本是：`void func(MyClass&amp;&amp; param);`函数变成了一个接受右值引用的函数，它成功地绑定到了我们传入的右值临时对象上。
-</code></pre>
+<p>同样，精确匹配胜出。编译器选择了完美转发构造函数，而不是复制构造函数。在完美转发构造函数体内，代码尝试用 p（一个 Person 对象）来初始化 name（一个 std::string 成员）。这当然会失败，并产生一堆令人费解的错误信息。</p>
+<p>在这个例子里, 完美转发构造函数破坏了类的基本功能（复制）。它同样会劫持派生类对基类的复制和移动调用，导致继承体系出现问题。</p>
+<p>总而言之, 在设计函数和类时，应极力避免将接受万能引用的版本与其他版本进行重载。在下一讲条款27会详细介绍如何处理那些确实需要类似重载行为的场景，例如使用标签分派、static_assert 或 C++20 的 concepts 等技术来约束模板，从而安全地实现期望的功能。</p>
 
 		</div>
 
@@ -911,12 +872,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20%20-%20%E7%90%86%E8%A7%A3%20decltype/">
+				<a class="prev" rel="prev" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE27%20-%20%E7%86%9F%E6%82%89%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款3：理解 decltype</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 27 - 熟悉依万能引用型别进行重载的替代方案</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -924,9 +885,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20%EF%BC%9A%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
+				<a class="next" rel="next" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE30%20-%20%E7%86%9F%E6%82%89%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%83%85%E5%BD%A2/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款2：理解 auto 型别推导</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 30 - 熟悉完美转发的失败情形</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -947,8 +908,8 @@ mjx-container[display="true"] + br {
 		<div class="post-toc-wrap">
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
-		<div class="page-title">条款 24：区分万能引用和右值引用</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E5%BF%86%E5%B7%A6%E5%80%BC%EF%BC%88Lvalue%EF%BC%89%E5%92%8C%E5%8F%B3%E5%80%BC%EF%BC%88Rvalue%EF%BC%89"><span class="nav-text">回忆左值（Lvalue）和右值（Rvalue）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%EF%BC%88Universal-Reference%EF%BC%89-%E8%BD%AC%E5%8F%91%E5%BC%95%E7%94%A8%EF%BC%88Forwarding-Reference%EF%BC%89"><span class="nav-text">万能引用（Universal Reference）&#x2F; 转发引用（Forwarding Reference）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%EF%BC%9A%E7%89%B9%E6%AE%8A%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0"><span class="nav-text">万能引用如何工作：特殊的类型推导与引用折叠</span></a></li></ol>
+		<div class="page-title">条款 26 - 避免依万能引用型别进行重载</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E7%9A%84%E2%80%9C%E8%B4%AA%E5%A9%AA%E2%80%9D"><span class="nav-text">核心问题：万能引用的“贪婪”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%B8%80%EF%BC%9AlogAndAdd-%E2%80%94%E2%80%94-%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E4%B8%8E%E5%B8%B8%E8%A7%84%E5%87%BD%E6%95%B0%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-text">示例一：logAndAdd —— 万能引用与常规函数的重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C%EF%BC%9APerson-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E2%80%94%E2%80%94-%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%8D%B1%E9%99%A9"><span class="nav-text">示例二：Person 构造函数 —— 完美转发构造函数的危险</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -977,11 +938,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        67 posts in total
+                        77 posts in total
                     </span>
                     
                         <span>
-                            140k words in total
+                            150.2k words in total
                         </span>
                     
                 </p>

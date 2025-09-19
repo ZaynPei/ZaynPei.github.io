@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-16T06:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-16T06:21:03.374Z">
+<meta property="article:modified_time" content="2025-09-16T06:59:57.547Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="computer network">
@@ -712,7 +712,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">67</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -763,8 +763,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-16 14:21:03</span>
-            <span class="mobile">2025-09-16 14:21:03</span>
+            <span class="desktop">2025-09-16 14:59:57</span>
+            <span class="mobile">2025-09-16 14:59:57</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -830,26 +830,26 @@ mjx-container[display="true"] + br {
 <p>数据链路层的主要职责是：将物理层提供的可能出错的原始比特流，转换成对网络层来说无差错的、可靠的数据链路。</p>
 <p>为了实现这一目标，数据链路层具体包含以下几个核心功能：</p>
 <ol>
-<li>为网络层提供服务</li>
+<li><strong>为网络层提供服务</strong></li>
 </ol>
 <p>数据链路层的最基本功能是向其上层（网络层）提供服务。网络层将数据包（如 IP 数据报）向下传递给数据链路层，数据链路层负责将这些数据包可靠地从源节点传输到链路上的下一个节点（可能是最终目的地，也可能是下一个路由器）。</p>
 <ol start="2">
-<li>组帧 (Framing)</li>
+<li><strong>组帧 (Framing)</strong></li>
 </ol>
 <p>这是数据链路层最核心的功能之一，后续的 “ (二) 组帧” 会详细展开。</p>
 <p>数据链路层将来自网络层的数据包封装成帧 (Frame)。这个过程会给数据包添加一个帧头 (Header) 和一个帧尾 (Trailer)。帧头和帧尾包含了重要的控制信息, 其中帧头通常包含源和目标的物理地址（MAC 地址），以及用于同步的控制字段。帧尾通常包含差错检测码 (Error-Detection Code)，如 CRC（循环冗余校验）。</p>
 <p>通过帧头和帧尾，接收方可以明确地知道一个数据单元从哪里开始、到哪里结束。这就像给一长串字母加上标点符号和空格，使其变成有意义的句子。</p>
 <ol start="3">
-<li>差错控制 (Error Control)</li>
+<li><strong>差错控制 (Error Control)</strong></li>
 </ol>
 <p>物理信道的传输并不可靠，可能会因为噪声、干扰等因素导致比特错误（0 变成 1 或 1 变成 0）。通过在帧尾添加差错检测码（如后续 “ (三) 差错控制” 中提到的检错编码和纠错编码），接收方可以检查收到的帧是否在传输过程中出现了错误。</p>
 <p>如果检测到错误，数据链路层可以简单地丢弃这个坏帧。在提供可靠服务的协议中（如后续 “ (四) 可靠传输” 中提到的），它还可以触发重传机制，要求发送方重新发送该帧，从而保证网络层接收到的数据是正确的。</p>
 <ol start="4">
-<li>流量控制 (Flow Control)</li>
+<li><strong>流量控制 (Flow Control)</strong></li>
 </ol>
 <p>在数据传输中，发送方和接收方的处理速度可能不匹配。如果发送方发送数据的速度过快，超出了接收方的处理能力（例如，接收方的缓冲区已满），接收方必须能通知发送方“慢一点”。这可以防止数据因为接收方来不及处理而丢失。后续 “ (四) 流量控制” 中提到的滑动窗口机制 (Sliding Window) 就是实现流量控制的常用方法。</p>
 <ol start="5">
-<li>介质访问控制 (Medium Access Control, MAC)</li>
+<li><strong>介质访问控制 (Medium Access Control, MAC)</strong></li>
 </ol>
 <p>这个功能非常关键，尤其是在广播信道（如以太网、Wi-Fi）中，<strong>多个设备共享同一个传输介质</strong>。为了避免冲突，需要一个机制来协调（或仲裁）哪个设备可以在什么时间使用信道。</p>
 <p>因为如果两个或多个设备同时发送数据，它们的信号会相互干扰，导致冲突 (Collision)，使所有数据都失效。后续 “ (五) 介质访问控制” 中提到的各种协议（如 ALOHA、CSMA/CD、CSMA/CA 等）就是为了解决“谁先说”的问题，以确保信道被公平、高效地使用。</p>
@@ -878,11 +878,23 @@ mjx-container[display="true"] + br {
 		
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/18/lang/CPP/Effective%20modern%20C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E6%9D%A1%E6%AC%BE19%20-%20%E4%BD%BF%E7%94%A8%20std%20shared_ptr%20%E7%AE%A1%E7%90%86%E5%85%B7%E5%A4%87%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E8%B5%84%E6%BA%90/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">条款 19 - 使用 std::shared_ptr 管理具备共享所有权的资源</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/16/web/Computer%20Network/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">
+				<a class="next" rel="next" href="/2025/09/16/web/Wireshark/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">计算机网络体系结构</span>
+						<span class="post-nav-title-item truncate max-w-48">初识 Wireshark</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -933,11 +945,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        67 posts in total
+                        77 posts in total
                     </span>
                     
                         <span>
-                            140k words in total
+                            150.2k words in total
                         </span>
                     
                 </p>

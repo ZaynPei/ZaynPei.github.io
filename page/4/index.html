@@ -743,7 +743,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">67</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -783,7 +783,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">67</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -808,28 +808,326 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/16/">
-                            Particle Filtering, Utility Theory(16)
+                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
+                            条款1 ：理解模板型别推导
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            我们已经学习了隐马尔可夫模型（HMMs），但当状态空间变得非常大或连续时，精确的前向算法在计算上变得不可行。粒子滤波提供了一种强大的近似推理方法来解决这个问题, 是HMMs的“采样”版本。。
-粒子滤波粒子滤波的核心目标是，在一个动态系统中，根据一系列带噪音的、不完整的观测数据，实时地、近似地追踪一个我们无法直接看到的隐藏状态。
-它专门用于解决那些状态空间巨大或连续的问题，例如：
-
-机器人定位...
+                            如果一个复杂系统的用户对于该系统的运作方式一无所知，然而却对其提供的服务表示满意，这就充分说明系统设计得好。如果从这样的角度来看， C++的模板型别推导取得了极大的成功。
+模板的型别推导，是现代C++最广泛应用的特性之一 ———— auto的基础。也就是说，如果你对C++98 推导模板型别的运作方式感觉满意，那么你也会自然而然地愉快接受C++11 中推导 auto 型别的运作方式。而坏消息则...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Aug 26 2025 22:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Fri Sep 12 2025 12:00:00 GMT+0800">
                 
-                    2025-08-26
+                    2025-09-12
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">Read more<span class="seo-reader-text">条款1 ：理解模板型别推导</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/03/lang/CPP/%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+                            字符串
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            std::string 是 C++ 标准库中用于处理字符串的类，位于  头文件中，命名空间为 std
+
+在 C++ 中，强烈建议使用 string 类表示字符串，因为它是真正的字符串类型。而在 C 语言中实际上没有字符串类型，只是用字符数组和字符指针来模拟字符串，而且后者不太安全
+
+
+char* (C 风格字符串)：本身没有成员函数，不能使用 .size() 或 .length()。要获取其...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Sep 03 2025 18:00:00 GMT+0800">
+                
+                    2025-09-03
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/cpp/">cpp</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/03/lang/CPP/%E5%AD%97%E7%AC%A6%E4%B8%B2/">Read more<span class="seo-reader-text">字符串</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/02/algorithms/DynamicProgramming/">
+                            动态规划(Dynamic Programming)
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            动态规划（Dynamic Programming, DP） 是一种通过将复杂问题分解为更小的、重叠的子问题来求解的算法思想。它与分治法（Divide and Conquer）有些相似，但不同之处在于，动态规划适用于子问题重叠的场景，即不同的子问题会共享更小的子子问题。
+DP的核心思想是 “记忆化” 或 “表格法”，即计算过一次的子问题的解，就将其存储起来，避免重复计算。这是一种典型的 “空间...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Tue Sep 02 2025 22:00:00 GMT+0800">
+                
+                    2025-09-02
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/02/algorithms/DynamicProgramming/">Read more<span class="seo-reader-text">动态规划(Dynamic Programming)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/01/web/Computer%20Network/OSI/">
+                            OSI model
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            OSI 模型（Open Systems Interconnection model，开放式系统互联模型）是一个由国际标准化组织（ISO）提出的概念模型，旨在为不同计算机网络之间的通信提供一个标准的参考框架。它将复杂的通信过程划分为七个独立的、功能明确的层次（Layer）。
+这个模型的核心思想是 “分层”。每一层都负责特定的网络功能，并为其上一层提供服务，同时使用其下一层提供的服务。这种分层结...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 01 2025 22:00:00 GMT+0800">
+                
+                    2025-09-01
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/web/">web</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/computer-network/">computer network</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/01/web/Computer%20Network/OSI/">Read more<span class="seo-reader-text">OSI model</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/17/">
+                            Markov Decision Process, MDP(17)
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            强化学习任务通常使用马尔可夫决策过程（MDP）来描述。MDP 是一个为具有不确定性的序贯决策问题提供数学模型的框架。其核心在于一个智能体（Agent）与环境（Environment）的持续交互：智能体感知当前状态，执行一个动作，环境随之转移到一个新的状态，并给予智能体一个奖励。这个循环不断持续，智能体的目标是学习一个最优策略，以最大化其长期累积奖励。
+
+所谓序贯决策，指的是决策者需要连续不断...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sat Aug 30 2025 22:00:00 GMT+0800">
+                
+                    2025-08-30
                 
             </span>
         </span>
@@ -870,7 +1168,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/16/">Read more<span class="seo-reader-text">Particle Filtering, Utility Theory(16)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/17/">Read more<span class="seo-reader-text">Markov Decision Process, MDP(17)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -885,27 +1183,25 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/15/">
-                            HMMs (Forward Algorithm, Viterbi Algorithm)(15)
+                        <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/18/">
+                            Dynamic Programming for MDP (18)
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            上一讲我们学习了如何对一个状态完全可观察的、随时间演化的系统进行建模和预测。然而，在现实世界中，我们往往无法直接观察到系统的真实状态，只能通过一些间接的、带有噪声的观测来进行推断。
-这一讲的核心就是解决这个问题：当系统的真实状态是“隐藏”的时，我们如何通过一系列的观测证据来推断这个隐藏状态？ 这个强大的工具就是隐马尔可夫模型 (Hidden Markov Models - HMMs)。
-
-马...
+                            上一讲我们定义了MDP，并得到了一个核心的数学关系——贝尔曼方程 (Bellman Equation)，它描述了最优状态价值的递归性质。这一讲的核心问题是：我们如何通过计算来求解这些贝尔曼方程，从而最终找到最优策略 π*？
+由于贝尔曼方程是一组非线性的联立方程，直接求解非常困难。因此，我们采用动态规划 (Dynamic Programming) 的思想，通过迭代的方式逐步逼近最优的效用值和策...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Aug 26 2025 20:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sat Aug 30 2025 22:00:00 GMT+0800">
                 
-                    2025-08-26
+                    2025-08-30
                 
             </span>
         </span>
@@ -946,7 +1242,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/15/">Read more<span class="seo-reader-text">HMMs (Forward Algorithm, Viterbi Algorithm)(15)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/18/">Read more<span class="seo-reader-text">Dynamic Programming for MDP (18)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -961,26 +1257,28 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/08/25/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/14/">
-                            HMMs -- Markov Chains, HMMs(14)
+                        <a href="/2025/08/27/web/dns/">
+                            域名解析(DNS)
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            之前的贝叶斯网络（如警报系统）处理的是一个“快照”式的静态世界。而现实世界是不断变化的，比如天气、股票价格、机器人的位置等等。马尔可夫模型就是用来描述这种随时间演化的随机过程的经典工具。
-马尔可夫模型可以被看作是一种链式的、无限长的贝叶斯网络。它专注于表示变量在时间维度上的依赖关系。现在我们从处理静态的、一次性的概率问题，转变为处理动态的、随时间演化的概率问题中。
-马尔可夫模型 (Marko...
+                            什么是 DNS？—— 互联网的“电话簿”DNS（Domain Name System，域名系统）是互联网一项核心的服务。它最基本的功能，就是将人类易于记忆的域名（例如 www.google.com）翻译成计算机能够理解和处理的 IP 地址（例如 142.251.42.196）。
+这个过程就如同查一本巨大的电话簿：
+
+姓名（域名）：www.google.com
+电话号码（IP 地址）：142....
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Aug 25 2025 22:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
                 
-                    2025-08-25
+                    2025-08-27
                 
             </span>
         </span>
@@ -993,7 +1291,7 @@ mjx-container[display="true"] + br {
                     
                         
                         <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
+                            <a href="/categories/web/">web</a>&nbsp;
                         </li>
                     
                     
@@ -1008,12 +1306,7 @@ mjx-container[display="true"] + br {
                     
                         <li>
                             
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
+                            <a href="/tags/web/">web</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1021,7 +1314,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/08/25/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/14/">Read more<span class="seo-reader-text">HMMs -- Markov Chains, HMMs(14)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/08/27/web/dns/">Read more<span class="seo-reader-text">域名解析(DNS)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1036,25 +1329,25 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/08/25/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/13/">
-                            Bayes Nets -- Sampling(13)
+                        <a href="/2025/08/27/web/cdn/">
+                            内容分发网络（CDN）
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            上一讲我们学习了变量消除等算法，它们能精确地计算出概率查询的结果。但我们也知道，精确推理在最坏情况下是NP难的，对于非常庞大和复杂的贝叶斯网络，精确计算仍然是不可行的。
-这一讲的核心思想是：当我们无法承担精确计算的巨大代价时，我们可以退而求其次，通过生成大量随机样本来“近似”地估算概率。这种方法被称为近似推理 (Approximate Inference)，而采样 (Sampling) 是实...
+                            内容分发网络（Content Delivery Network, CDN）是一种构建在现有互联网基础之上的智能虚拟网络。它由分布在全球各地的大量边缘服务器（Edge Server）组成，旨在通过将网站内容缓存到离用户更近的服务器上，来更快速、更可靠地向用户交付内容。
+简单来说，CDN 就像一个遍布全球的“快递网络”。当您访问一个网站时，如果没有 CDN，您的请求需要直接发送到网站的“中心仓库...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Aug 25 2025 15:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
                 
-                    2025-08-25
+                    2025-08-27
                 
             </span>
         </span>
@@ -1067,7 +1360,7 @@ mjx-container[display="true"] + br {
                     
                         
                         <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
+                            <a href="/categories/web/">web</a>&nbsp;
                         </li>
                     
                     
@@ -1082,12 +1375,7 @@ mjx-container[display="true"] + br {
                     
                         <li>
                             
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
+                            <a href="/tags/web/">web</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1095,7 +1383,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/08/25/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/13/">Read more<span class="seo-reader-text">Bayes Nets -- Sampling(13)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/08/27/web/cdn/">Read more<span class="seo-reader-text">内容分发网络（CDN）</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1110,69 +1398,33 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/08/23/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/12/">
-                            Bayes Nets -- Inference(12)
+                        <a href="/2025/08/27/system/computer-architecture/chapter2/">
+                            第二章：指令系统
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            上一讲我们学会了如何用贝叶斯网络来紧凑地表示一个复杂的联合概率分布。这一讲的核心问题是：有了这个紧凑的表示，我们如何高效地进行计算，从而回答概率查询(也就是推理问题)？
+                            第二章：指令系统这里是计算机体系结构指令系统的内容。 
 
-推理问题可以分为精确推理和近似推理, 这一节我们考虑精确推理
-
-首先, 假如我们有一个完整的联合概率分布表, 只需要查表就可以得到所要的结果, 但是在贝叶斯网络的基础上, 我们有一种更智能的算法，能够在不生成完整联合分布的...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Aug 23 2025 22:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
                 
-                    2025-08-23
+                    2025-08-27
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/08/23/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/12/">Read more<span class="seo-reader-text">Bayes Nets -- Inference(12)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/08/27/system/computer-architecture/chapter2/">Read more<span class="seo-reader-text">第二章：指令系统</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1187,356 +1439,33 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/08/23/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/11/">
-                            Bayes Nets -- Bayesian Networks(11)
+                        <a href="/2025/08/27/system/computer-architecture/chapter1/">
+                            第一章：基础概念
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            上一讲(概率论基础)我们学到，只要有完整的联合概率分布，我们就能回答任何概率问题。但同时也暴露了一个致命问题：这个联合分布表的大小会随着变量数量的增加而指数级增长，在现实问题中完全不可行。
-这一讲的核心就是解决这个问题：如何利用变量间的独立性关系，来紧凑、高效地表示一个完整的联合概率分布。这个解决方案就是贝叶斯网络 (Bayesian Networks)。
-不过在介绍贝叶斯网络之前, 我们先...
+                            第一章：基础概念这里是计算机体系结构基础概念的内容。 
+
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Aug 23 2025 18:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
                 
-                    2025-08-23
+                    2025-08-27
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/08/23/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/11/">Read more<span class="seo-reader-text">Bayes Nets -- Bayesian Networks(11)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/22/system/operating-system/%E9%93%BE%E6%8E%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/">
-                            链接和加载
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            静态链接静态链接（Static Linking）是一种在程序编译后的链接阶段，将所有必需的库代码从静态库（Static Library）文件中复制到最终可执行文件中的过程。
-其核心思想是“一次性打包”。链接器在生成可执行文件时，会解析程序中所有对外部函数的调用（比如 printf()），然后从静态库文件中找到对应的函数代码，并将其直接嵌入到可执行文件内部。
-这个过程通常发生在编译的最后一步，...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Aug 22 2025 22:00:00 GMT+0800">
-                
-                    2025-08-22
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/system/">system</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/22/system/operating-system/%E9%93%BE%E6%8E%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/">Read more<span class="seo-reader-text">链接和加载</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/12/system/linux/%E7%94%A8%E6%88%B7/">
-                            用户
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            Linux 用户账户基础在 Linux 和类 Unix 系统中，大致有三类用户角色: 超级用户 (root), 普通用户 (Regular User)和系统用户 (System User).
-
-超级用户 (root) : UID 为 0, 拥有系统的最高、无限制的权限。可以执行任何操作，包括修改系统文件、管理所有用户和进程。
-普通用户 (Regular User)：UID通常从 1000 开...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Aug 12 2025 18:00:00 GMT+0800">
-                
-                    2025-08-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/system/">system</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/12/system/linux/%E7%94%A8%E6%88%B7/">Read more<span class="seo-reader-text">用户</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/12/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/6/">
-                            Games -- Expectimax, Monte Carlo Tree Search
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            这一讲涉及到的是一个更复杂、也更贴近现实的博弈世界。核心的转变是：从处理确定性的、纯粹策略对抗的博弈，转向包含随机性或机会元素 (chance) 的博弈。
-在之前的Minimax博弈中，只有两个玩家：MAX和MIN。MAX的每一个行动，MIN都会用最优的策略来回应。然而，在许多现实世界的博弈中，例如扑克或双陆棋，结果不仅仅取决于你和对手的选择，还取决于机会——比如你摸到什么牌，或者掷出什么样...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Aug 12 2025 18:00:00 GMT+0800">
-                
-                    2025-08-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/12/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/6/">Read more<span class="seo-reader-text">Games -- Expectimax, Monte Carlo Tree Search</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/12/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/7/">
-                            Logic -- Propositional Logic and Planning
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            之前的智能体（如搜索智能体）虽然能解决问题，但它们的“知识”是隐式的, 内嵌在状态表示、行动函数和启发式函数中。而从这一讲开始，我们将探索如何让智能体拥有显式的、声明式的知识，并利用这些知识进行推理
-基于知识的智能体 (Knowledge-Based Agent)它的核心组件是一个知识库 (Knowledge Base - KB)，这是一个由形式化语言写成的语句 (sentences) 的集...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Aug 12 2025 18:00:00 GMT+0800">
-                
-                    2025-08-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/12/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/7/">Read more<span class="seo-reader-text">Logic -- Propositional Logic and Planning</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/08/27/system/computer-architecture/chapter1/">Read more<span class="seo-reader-text">第一章：基础概念</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1546,7 +1475,7 @@ mjx-container[display="true"] + br {
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/3/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/3/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1574,11 +1503,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        67 posts in total
+                        77 posts in total
                     </span>
                     
                         <span>
-                            140k words in total
+                            150.2k words in total
                         </span>
                     
                 </p>
