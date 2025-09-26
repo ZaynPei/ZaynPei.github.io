@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/22/lang/cpp/现代c++/多线程/7. 异步编程模型/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异步&#x2F;并发编程模型">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/7.%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-09-22T15:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-23T07:44:32.698Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="language">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            异步/并发编程模型 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">110</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">异步/并发编程模型</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-09-22 23:00</span>
+        <span class="mobile">2025-09-22 23:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-09-23 15:44:32</span>
+            <span class="mobile">2025-09-23 15:44:32</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/language/">language</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.4k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>13 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>在C++并发编程中，核心挑战之一是在<strong>不同线程间安全、高效地传递数据</strong>。特别是当一个线程（生产者/Provider）需要将一个计算结果（值或异常）传递给另一个线程（消费者/Consumer）时。std::future, std::promise, std::packaged_task, 和 std::async 共同构成了一个异步编程模型，其设计哲学是关注点分离 (Separation of Concerns)，将任务的执行、结果的传递和线程的管理清晰地解耦。</p>
+<h2 id="核心组件：数据通信的-foundational-elements"><a href="#核心组件：数据通信的-foundational-elements" class="headerlink" title="核心组件：数据通信的 foundational elements"></a>核心组件：数据通信的 foundational elements</h2><p>std::future 和 std::promise 是实现异步数据传递最基础的两个构建块，它们分别代表了共享状态的“读取端”和“写入端”。</p>
+<h3 id="std-future：未来的凭证-读取端口"><a href="#std-future：未来的凭证-读取端口" class="headerlink" title="std::future：未来的凭证/读取端口"></a>std::future<t>：未来的凭证/读取端口</t></h3><p>std::future 是一个模板类，可以看作是一个异步结果的代理或占位符。当你启动一个异步任务时，你会立即得到一个 std::future 对象。这个对象本身并没有包含计算结果，但它承诺在未来的某个时刻，你可以通过它来获取结果。</p>
+<p>主要操作：</p>
+<ul>
+<li>get():这是 std::future 最核心的函数, 它会<strong>阻塞</strong>当前线程，<strong>直到异步任务完成并返回结果</strong>（或抛出异常）。<ul>
+<li>get() 只能被调用一次。调用后，std::future 对象的状态会变为无效。</li>
+</ul>
+</li>
+<li>wait():阻塞当前线程，直到结果可用，但不获取结果. 这个函数可以多次调用。</li>
+<li>wait_for() / wait_until():等待一段时间或等到一个指定的时间点。如果在超时前结果准备好了，它会返回 std::future_status::ready。</li>
+<li>valid():检查 std::future 对象是否与一个共享状态关联，即是否有效。在调用 get() 之后，valid() 会返回 false。</li>
+</ul>
+<p>你不能直接创建一个 std::future，它总是通过以下三种方式之一获得：</p>
+<ul>
+<li>std::promise 的 get_future() 方法。</li>
+<li>std::packaged_task 的 get_future() 方法。</li>
+<li>std::async 函数的返回值。</li>
+</ul>
+<h3 id="std-promise：一个承诺-写入端口"><a href="#std-promise：一个承诺-写入端口" class="headerlink" title="std::promise：一个承诺/写入端口"></a>std::promise<t>：一个承诺/写入端口</t></h3><p>std::promise 对象可以被看作是一个可以被写入一次的容器，它承诺在未来的某个时刻会提供一个 T 类型的值(或异常), 从而使关联的 std::future 变为就绪状态。</p>
+<p>主要操作:</p>
+<ul>
+<li>关联Future: 调用std::future<t> get_future()来创建共享状态，并返回一个与该 promise 相关联的 std::future 对象。此方法对于每个 promise 对象只能调用一次。</t></li>
+<li>设置结果:<ul>
+<li>void set_value(const T&amp; value) / void set_value(T&amp;&amp; value): 将一个值存入共享状态，并使关联的 std::future 变为就绪状态。</li>
+<li>void set_exception(std::exception_ptr p): 将一个异常存入共享状态，并使关联的 std::future 变为就绪状态。</li>
+<li>这些设置操作同样是一次性的。对同一个 promise 多次调用 set_value 或 set_exception 会抛出异常。</li>
+</ul>
+</li>
+</ul>
+<p>工作流程：</p>
+<ul>
+<li>在发起任务的线程（消费者线程）中创建一个 std::promise<t> 对象。</t></li>
+<li>消费者线程通过调用 promise.get_future() 来获取一个与之关联的 std::future<t> 对象, 并等待该 future 变为就绪状态。</t></li>
+<li>消费者线程将 std::promise 对象（通常通过移动 std::move）传递给将要执行异步任务的新线程(生产者线程)。<ul>
+<li>通常通过 std::thread 的构造函数传递 promise, 此时工作函数需要接收 promise 对象作为参数。</li>
+</ul>
+</li>
+<li>新线程执行计算，当得到结果后，调用 promise.set_value(result) 将结果存入 promise。如果发生错误，可以调用 promise.set_exception(exception_ptr) 来存入一个异常。</li>
+<li>一旦 set_value() 或 set_exception() 被调用，与之关联的 std::future 就会变为“就绪” (ready) 状态。</li>
+<li>此时，在消费者线程中对 future 调用的 get() 将会立即返回结果（或抛出异常），不再阻塞。</li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">compute_task</span><span class="params">(std::promise&lt;<span class="type">int</span>&gt; p)</span> </span>{</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Worker thread is performing calculations..."</span> &lt;&lt; std::endl;</span><br><span class="line">        std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>));</span><br><span class="line">        <span class="type">int</span> result = <span class="number">42</span>;</span><br><span class="line">        <span class="comment">// 承诺兑现，将结果放入 promise</span></span><br><span class="line">        p.<span class="built_in">set_value</span>(result); </span><br><span class="line">    } <span class="built_in">catch</span> (...) {</span><br><span class="line">        <span class="comment">// 如果发生异常，可以将异常放入 promise</span></span><br><span class="line">        p.<span class="built_in">set_exception</span>(std::<span class="built_in">current_exception</span>());</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{  <span class="comment">// 消费者线程</span></span><br><span class="line">    <span class="comment">// 1. 创建一个 promise 对象</span></span><br><span class="line">    std::promise&lt;<span class="type">int</span>&gt; p;  <span class="comment">// 这里的int是任务的返回类型</span></span><br><span class="line">    <span class="comment">// 2. 从 promise 获取 future，这是结果的“读取端”</span></span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; f = p.<span class="built_in">get_future</span>();  <span class="comment">// 连接 promise 和 future</span></span><br><span class="line">    <span class="comment">// 3. 创建一个新线程，并将 promise 的所有权转移给它</span></span><br><span class="line">    <span class="function">std::thread <span class="title">worker</span><span class="params">(compute_task, std::move(p))</span></span>;  <span class="comment">// compute_task函数需要接收promise对象作为参数</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Main thread is waiting for the result..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 4. 在主线程中调用 get() 等待结果</span></span><br><span class="line">    <span class="type">int</span> result = f.<span class="built_in">get</span>();  <span class="comment">// // 这里会阻塞，直到 worker 线程调用了 p.set_value()</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"The result from worker thread is: "</span> &lt;&lt; result &lt;&lt; std::endl;</span><br><span class="line">    worker.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>这里的main 线程创建了 promise 和 future，将 promise 移动到子线程，然后自己持有 future 等待结果; worker 线程接收 promise 对象，执行任务，最后通过 p.set_value(42) 履行承诺，这个动作会唤醒在 f.get() 处阻塞的 main 线程。</p>
+<h2 id="高级抽象：任务与结果的绑定"><a href="#高级抽象：任务与结果的绑定" class="headerlink" title="高级抽象：任务与结果的绑定"></a>高级抽象：任务与结果的绑定</h2><p>std::packaged_task 和 std::async 是在 promise/future 基础上构建的更高级抽象，它们将任务的执行与结果的传递机制更紧密地结合起来。</p>
+<h3 id="std-packaged-task：可调用对象与未来的封装"><a href="#std-packaged-task：可调用对象与未来的封装" class="headerlink" title="std::packaged_task<T(Args…)>：可调用对象与未来的封装"></a>std::packaged_task&lt;T(Args…)&gt;：可调用对象与未来的封装</h3><p>std::packaged_task 是一个模板类，它将任意<strong>可调用对象</strong> (Callable Object) 与 <strong>promise/future</strong> 机制进行封装。它的主要目的是将一个函数的执行与其返回值的异步传递自动化。其模板参数是一个函数签名，例如 int(int, double)。</p>
+<p>内部机制:</p>
+<ul>
+<li>构造: 当你用一个函数（如 my_func）创建一个 std::packaged_task&lt;T(Args…)&gt; task(my_func) 时，task 内部会创建一个 std::promise<r>。</r></li>
+<li>获取Future: 调用 task.get_future() 会返回与这个内部 promise 相关联的 std::future<r>。</r></li>
+<li>执行: packaged_task 对象本身是可调用的 (operator())。当你执行 task(args…) 时，它会调用其内部包装的函数 my_func(args…), 捕获 my_func 的返回值, 并自动使用该返回值调用内部 promise 的 set_value() 方法。如果 my_func 抛出异常，它会捕获异常并调用 set_exception()。</li>
+</ul>
+<p>工作流程：</p>
+<ul>
+<li>创建一个可调用对象（例如一个函数或 Lambda）并用这个可调用对象来初始化一个 std::packaged_task。</li>
+<li>通过 task.get_future() 获取与之关联的 std::future。</li>
+<li>将 packaged_task 对象移动到新线程。</li>
+<li>在新线程中，像普通函数一样执行这个 task 对象。</li>
+<li>任务执行完毕后，其返回值会自动被 packaged_task 捕获并传递给关联的 future。</li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个耗时的计算任务</span></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">calculate_factorial</span><span class="params">(<span class="type">int</span> n)</span> </span>{</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) {</span><br><span class="line">        res *= i;</span><br><span class="line">    }</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Task finished calculation."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 1. 将函数包装成一个 packaged_task, 模板参数是函数的签名：long long(int)</span></span><br><span class="line">    <span class="function">std::packaged_task&lt;<span class="type">long</span> <span class="title">long</span><span class="params">(<span class="type">int</span>)</span>&gt; <span class="title">task</span><span class="params">(calculate_factorial)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 从 task 获取 future</span></span><br><span class="line">    std::future&lt;<span class="type">long</span> <span class="type">long</span>&gt; f = task.<span class="built_in">get_future</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 将 task 移动到新线程</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的是 task 本身，而不是函数</span></span><br><span class="line">    <span class="function">std::thread <span class="title">worker</span><span class="params">(std::move(task), <span class="number">10</span>)</span></span>; <span class="comment">// 计算 10!</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Main thread is waiting for the factorial result..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 4. 等待并获取结果</span></span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> result = f.<span class="built_in">get</span>();</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Factorial of 10 is: "</span> &lt;&lt; result &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    worker.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>相比</p>
+<h3 id="std-async"><a href="#std-async" class="headerlink" title="std::async"></a>std::async</h3><p>std::async 是一个函数模板，用于以异步方式（可能在一个单独的线程中）启动一个任务。它将线程创建、任务执行和结果返回的所有细节都封装了起来, 相比于直接使用 std::thread，std::async 提供了一种更高层次、更方便的抽象，特别适用于那些需要<strong>从异步任务中获取返回值</strong>的场景。</p>
+<p>简单来说，std::async 做了两件事：</p>
+<ul>
+<li>启动一个可调用对象（如函数、lambda表达式）：它允许你安排一个任务去执行，而不必立即等待它完成。</li>
+<li>返回一个 std::future 对象：这个 std::future 对象是一个“未来的凭证”，它<strong>最终会持有异步任务的返回值</strong>。你可以通过这个 future 在稍后的时间点获取结果。</li>
+</ul>
+<p>这种模型被称为<strong>基于任务的并行</strong> (Task-Based Parallelism)，你关心的是“要完成什么任务”，而不是“具体要在哪个线程上完成”。</p>
+<h4 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h4><p>std::async 的基本语法如下：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt; <span class="keyword">class</span> <span class="title class_">Function</span>, <span class="keyword">class</span>... Args &gt;</span><br><span class="line">std::future&lt;std::<span class="type">result_of_t</span>&lt;std::<span class="built_in">decay_t</span>&lt;Function&gt;(std::<span class="type">decay_t</span>&lt;Args&gt;...)&gt;&gt;</span><br><span class="line">    <span class="built_in">async</span>( Function&amp;&amp; f, Args&amp;&amp;... args );</span><br><span class="line"><span class="comment">// 这里std::decay_t是类型萃取, 用于去掉引用、cv限定符和数组类型, 得到原始类型; 最终std::future的模板参数就是传入函数的返回类型</span></span><br></pre></td></tr></table></figure></div>
+<p>让我们通过一个简单的例子来理解它的工作方式: 假设我们有一个耗时的计算任务，我们不希望主线程被阻塞。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个模拟耗时计算的函数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">time_consuming_calculation</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Worker thread is calculating..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 模拟耗时2秒</span></span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>));</span><br><span class="line">    <span class="keyword">return</span> x * x;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Main thread started."</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 启动异步任务</span></span><br><span class="line">    <span class="comment">// 通过 std::async 启动 time_consuming_calculation 函数，并传递参数 5。</span></span><br><span class="line">    <span class="comment">// 这会立即返回一个 std::future&lt;int&gt; 对象。</span></span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; future_result = std::<span class="built_in">async</span>(time_consuming_calculation, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 主线程继续执行其他任务</span></span><br><span class="line">    <span class="comment">// 在异步任务执行的同时，主线程可以做别的事情。</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Main thread is doing other work while waiting for the result..."</span> &lt;&lt; std::endl;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>)); <span class="comment">// 模拟其他工作</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 获取异步任务的结果</span></span><br><span class="line">    <span class="comment">// 调用 future_result.get() 来获取结果。</span></span><br><span class="line">    <span class="comment">// 如果此时异步任务还没有完成，.get() 会阻塞当前线程，直到结果可用。</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Main thread is waiting for the result..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="type">int</span> result = future_result.<span class="built_in">get</span>(); <span class="comment">// .get() 会阻塞直到任务完成</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"The result is: "</span> &lt;&lt; result &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Main thread finished."</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>std::async(time_consuming_calculation, 5)：这行代码请求异步执行 time_consuming_calculation(5)。它可能会立即创建一个新线程来运行这个函数。</li>
+<li>std::future<int> future_result：std::async 返回一个 std::future<int> 对象。int 类型表示我们期望从异步任务中获得一个整数返回值。</int></int></li>
+<li>future_result.get()：这是关键部分。当主线程需要计算结果时，它调用 .get()。<ul>
+<li>如果此时工作线程已经计算完毕，.get() 会立即返回结果。</li>
+<li>如果工作线程仍在计算，.get() 会阻塞主线程，直到计算完成并返回结果。</li>
+<li>注意：get() 只能被调用一次。再次调用会导致未定义行为。</li>
+</ul>
+</li>
+</ul>
+<h4 id="启动策略-Launch-Policy"><a href="#启动策略-Launch-Policy" class="headerlink" title="启动策略 (Launch Policy)"></a>启动策略 (Launch Policy)</h4><p>std::async 的行为可以通过一个可选的“启动策略”参数来控制。这是一个非常重要的特性。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 明确指定启动策略</span></span><br><span class="line"><span class="keyword">auto</span> future = std::<span class="built_in">async</span>(std::launch::async, my_function);</span><br></pre></td></tr></table></figure></div>
+<p>主要的启动策略有两种：</p>
+<ul>
+<li>std::launch::async: 保证异步执行。系统必须创建一个新的线程来执行任务。当你需要真正的并行计算时，这是最常用的策略。</li>
+<li>std::launch::deferred: 延迟执行。任务不会立即在任何线程上启动。相反，它只会在返回的 std::future 对象上调用 .get() 或 .wait() 时，才会在调用 .get() 的那个线程上同步执行。用于实现惰性求值（Lazy Evaluation），即直到你真正需要结果时才进行计算。</li>
+</ul>
+<p>默认策略：std::launch::async | std::launch::deferred</p>
+<p>这是 std::async 的默认行为。它给予了标准库实现的灵活性，可以根据系统负载或其他条件自行决定是创建一个新线程（async）还是延迟执行（deferred）。然而, 这种不确定性可能导致程序行为难以预测。如果你需要保证并行性，强烈建议明确指定 std::launch::async。</p>
+<h4 id="std-async-与-std-thread-的对比"><a href="#std-async-与-std-thread-的对比" class="headerlink" title="std::async 与 std::thread 的对比"></a>std::async 与 std::thread 的对比</h4><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>std::thread</th>
+<th>std::async</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>抽象层次</td>
+<td>低层次，直接操作线程</td>
+<td>高层次，关注于”任务”</td>
+</tr>
+<tr>
+<td>返回值</td>
+<td>没有直接获取返回值的机制（需借助 std::promise 或共享变量）</td>
+<td>通过返回的 std::future 对象轻松获取返回值</td>
+</tr>
+<tr>
+<td>异常处理</td>
+<td>如果线程函数抛出异常且未被捕获，程序会调用 std::terminate 终止</td>
+<td>异常会被 std::future 捕获，并在调用 .get() 时重新抛出</td>
+</tr>
+<tr>
+<td>线程管理</td>
+<td>需要手动调用 join() 或 detach()，否则程序在 std::thread 对象析构时终止</td>
+<td>std::future 的析构函数会阻塞，直到异步任务完成，避免了线程被意外销毁</td>
+</tr>
+<tr>
+<td>系统开销</td>
+<td>总是创建一个新的操作系统线程</td>
+<td>(默认策略下) 可能不会创建新线程，由系统决定，可能更高效</td>
+</tr>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>默认选择 std::async</strong>: 对于大多数“执行一个函数并获取其结果”的场景，std::async 因其简洁、安全（自动异常传递和资源管理）而成为首选。</p>
+<p><strong>需要任务队列时选择 std::packaged_task</strong>: 当你需要将任务对象化，以便存储、传递和由通用的执行器（如线程池）稍后执行时，std::packaged_task 是正确的工具。</p>
+<p><strong>需要手动信号控制时选择 std::promise</strong>: 当结果的产生不与单个函数的返回直接对应，而是取决于复杂的逻辑或外部事件时，std::promise 提供了必要的底层控制能力。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/language/">#language</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/23/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.%20%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">线程池</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/5.%20%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">条件变量和多线程数据共享</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">异步/并发编程模型</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%80%9A%E4%BF%A1%E7%9A%84-foundational-elements"><span class="nav-text">核心组件：数据通信的 foundational elements</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-future%EF%BC%9A%E6%9C%AA%E6%9D%A5%E7%9A%84%E5%87%AD%E8%AF%81-%E8%AF%BB%E5%8F%96%E7%AB%AF%E5%8F%A3"><span class="nav-text">std::future：未来的凭证&#x2F;读取端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-promise%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%89%BF%E8%AF%BA-%E5%86%99%E5%85%A5%E7%AB%AF%E5%8F%A3"><span class="nav-text">std::promise：一个承诺&#x2F;写入端口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E6%8A%BD%E8%B1%A1%EF%BC%9A%E4%BB%BB%E5%8A%A1%E4%B8%8E%E7%BB%93%E6%9E%9C%E7%9A%84%E7%BB%91%E5%AE%9A"><span class="nav-text">高级抽象：任务与结果的绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-packaged-task%EF%BC%9A%E5%8F%AF%E8%B0%83%E7%94%A8%E5%AF%B9%E8%B1%A1%E4%B8%8E%E6%9C%AA%E6%9D%A5%E7%9A%84%E5%B0%81%E8%A3%85"><span class="nav-text">std::packaged_task&lt;T(Args…)&gt;：可调用对象与未来的封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-async"><span class="nav-text">std::async</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%AD%96%E7%95%A5-Launch-Policy"><span class="nav-text">启动策略 (Launch Policy)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#std-async-%E4%B8%8E-std-thread-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-text">std::async 与 std::thread 的对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        110 posts in total
+                    </span>
+                    
+                        <span>
+                            232.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

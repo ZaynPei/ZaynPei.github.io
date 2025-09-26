@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/21/system/linux/linux系统编程/gcc/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gcc">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gcc/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-09-21T11:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-24T01:21:13.912Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="system">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            gcc | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">110</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">gcc</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-09-21 19:00</span>
+        <span class="mobile">2025-09-21 19:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-09-24 09:21:13</span>
+            <span class="mobile">2025-09-24 09:21:13</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/system/linux/">linux</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/system/">system</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.3k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>8 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h3 id="GCC-编译的四个阶段"><a href="#GCC-编译的四个阶段" class="headerlink" title="GCC 编译的四个阶段"></a>GCC 编译的四个阶段</h3><p>一个 C 语言源文件要变成可执行文件，需要经过<strong>预处理</strong> (Preprocessing)、<strong>编译</strong> (Compilation)、<strong>汇编</strong> (Assembly) 和 <strong>链接</strong> (Linking) 这四个核心步骤。</p>
+<p>当你执行一个简单的命令 gcc hello.c -o hello 时，GCC 实际上在后台为你自动完成了所有四个步骤, 分别是:</p>
+<p><strong>第一步</strong>：<strong>预处理</strong> (Preprocessing): 这个阶段处理源代码中<strong>以 # 开头的指令</strong>。它不关心代码的语法，只是对文本进行简单的替换和处理。</p>
+<ul>
+<li>输入文件: C 源文件，例如 hello.c</li>
+<li>输出文件: 经过预处理的 C 文件，通常以 .i 为后缀，例如 <strong>hello.i</strong></li>
+<li>GCC 命令: gcc -E hello.c -o hello.i<ul>
+<li>因为这里只展示预处理, <strong>-E</strong> 选项告诉 GCC 在预处理完成后就停止，不要进行后续步骤。</li>
+<li>-o 选项指定输出文件的名称, 这里是 hello.i</li>
+</ul>
+</li>
+<li>主要工作内容：<ul>
+<li>展开宏定义: 将所有 #define 定义的宏进行文本替换。</li>
+<li>处理条件编译: 根据 #if, #ifdef, #else, #endif 等指令，选择性地保留或移除代码段。</li>
+<li>包含头文件: 将 #include 指定的头文件内容原封不动地插入到源文件中。</li>
+<li>删除注释和多余空白: 移除代码中所有的注释 (// … 和 /* … */)、不必要的空行和空白字符。</li>
+</ul>
+</li>
+</ul>
+<p>经过这个阶段，hello.i 文件会变成一个不包含任何宏、头文件引用或注释的“<strong>纯净”C代码文件</strong>。</p>
+<p><strong>第二步</strong>：<strong>编译</strong> (Compilation)<br>这是整个编译过程中<strong>最核心</strong>的阶段，它将预处理后的 C 代码<strong>翻译</strong>成<strong>特定于目标平台</strong>的<strong>汇编</strong>代码。</p>
+<ul>
+<li>输入文件: 预处理后的文件，例如 hello.i</li>
+<li>输出文件: 汇编代码文件，通常以 <strong>.s</strong> 为后缀，例如 <strong>hello.s</strong></li>
+<li>GCC 命令: gcc -S hello.i -o hello.s<ul>
+<li><strong>-S</strong> 选项告诉 GCC 在生成汇编代码后就停止。</li>
+</ul>
+</li>
+<li>主要工作内容：<ul>
+<li>词法分析: 将源代码分解成一个个独立的“记号”(tokens)，如关键字、标识符、操作符等。</li>
+<li>语法分析: 根据 C 语言的语法规则，将记号组织成一棵“语法树”，并检查是否存在语法错误（例如，括号不匹配、缺少分号等）。</li>
+<li>语义分析: 检查代码的语义是否正确（例如，类型是否匹配、变量是否已声明）。</li>
+<li>代码优化: 对生成的中间代码进行优化，以提高程序的运行速度和减小体积。</li>
+<li>生成汇编代码: 将优化后的代码转换成目标平台的汇编语言。</li>
+</ul>
+</li>
+</ul>
+<p>这个阶段涉及复杂的分析和优化过程，通常是整个流程中消耗时间和系统资源最多的部分。</p>
+<p><strong>第三步</strong> ：<strong>汇编</strong> (Assembly): 汇编阶段将人类可读的汇编代码<strong>转换</strong>成机器可以执行的<strong>二进制指令</strong>。</p>
+<ul>
+<li>输入文件: 汇编代码文件，例如 hello.s</li>
+<li>输出文件: 可重定位目标文件 (Relocatable Object File)，在 Linux/macOS 中通常以 <strong>.o</strong> 为后缀，在 Windows 中为 .obj，例如 <strong>hello.o</strong>。</li>
+<li>GCC 命令: gcc -c hello.s -o hello.o<ul>
+<li><strong>-c</strong> 选项告诉 GCC 在生成目标文件后就停止。</li>
+<li>由于汇编过程也包含了预处理和编译两个阶段，所以 <strong>-c</strong> 选项也会触发这两个阶段的执行, 也就是可以 gcc -c hello.c -o hello.o 来直接生成目标文件。</li>
+</ul>
+</li>
+<li>主要工作内容：<ul>
+<li>指令翻译: 将每一条汇编指令（如 mov, add, jmp）翻译成其对应的二进制机器码。</li>
+<li>生成目标文件: 将机器码以及符号表、重定位信息等打包成一个特定格式的目标文件（在 Linux 中通常是 ELF 格式）。此时，文件中的代码和数据地址都是相对的，而不是最终的绝对内存地址。</li>
+</ul>
+</li>
+</ul>
+<p><strong>第四步</strong>：<strong>链接</strong> (Linking): 链接是创建<strong>可执行文件</strong>的最后一步。它将<strong>多个目标文件</strong>以及程序所需的<strong>库文件</strong>（如标准库）的二进制代码(.o 文件)组合在一起。</p>
+<ul>
+<li>输入文件: 一个或多个目标文件 (.o) 和所需的库文件。</li>
+<li>输出文件: 可执行文件，在 Linux/macOS 中<strong>默认为</strong> <strong>a.out</strong>，也可以通过 <strong>-o 指定名称</strong>（如 hello）。</li>
+<li>GCC 命令: gcc hello.o -o hello<ul>
+<li>不带 -E, -S, -c 等选项时，GCC 默认执行所有四个步骤，并最终进行链接。</li>
+</ul>
+</li>
+<li>主要工作内容：<ul>
+<li>合并段: 将所有输入目标文件中的相同类型的段（如代码段 .text、数据段 .data）合并到最终可执行文件中的一个大段中。</li>
+<li>符号解析与地址回填 (重定位):<ul>
+<li>解析: 找到代码中引用的函数和变量（例如 printf 函数）在其他目标文件或库文件中的确切位置。</li>
+<li>回填: 在汇编阶段，函数调用和变量访问的地址是未知的。链接器会计算出它们在虚拟内存中的最终地址，并修改代码中的占位符，使其指向正确的内存地址。这个过程就是图片中提到的地址回填。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="gcc编译常用参数"><a href="#gcc编译常用参数" class="headerlink" title="gcc编译常用参数"></a>gcc编译常用参数</h3><p>当头文件和源码不在一个目录下时，需要指定头文件的搜索路径</p>
+<ul>
+<li><p><strong>-I</strong> 选项: 用于指定头文件的搜索路径。可以多次使用这个选项来添加多个路径。</p>
+<ul>
+<li>例如：gcc -I /path/to/headers -o hello hello.c</li>
+<li>这会告诉 GCC 在编译 hello.c 时，先去 /path/to/headers 目录下查找头文件。</li>
+</ul>
+</li>
+<li><p>-c 			只做预处理，编译，汇编。得到二进制文件</p>
+</li>
+<li><p>-g 			编译时添加调试文件，用于gdb调试</p>
+</li>
+<li><p>-Wall 		显示所有警告信息</p>
+</li>
+<li><p>-D  		向程序中“动态”注册宏定义</p>
+</li>
+<li><p>-l			指定动态库库名</p>
+</li>
+<li><p>-L			指定动态库路径</p>
+</li>
+</ul>
+<h3 id="静态库和动态库"><a href="#静态库和动态库" class="headerlink" title="静态库和动态库"></a>静态库和动态库</h3><p>静态库在文件中静态展开, 动态库在运行时才被加载到内存中<br>前者在<strong>编译时就被链接到可执行文件</strong>中, 因此内存占用大, 但是速度快; 后者<strong>在运行时才被链接到可执行文件</strong>中, 因此内存占用小, 但是速度较慢</p>
+<h4 id="静态库制作及使用"><a href="#静态库制作及使用" class="headerlink" title="静态库制作及使用"></a>静态库制作及使用</h4><p>静态库名字以lib开头，以.a结尾<br>例如：lib<strong>mylib</strong>.a</p>
+<p>静态库生成指令: ar rcs [lib名称.a] [用于生成库的.o文件]<br>ar rcs libmylib.a file1.o file2.o<br>制作静态库的步骤: </p>
+<ol>
+<li>编写静态库的源文件</li>
+<li>编译源文件生成.o文件(二进制指令), 例如: gcc -c add.c -o add.o</li>
+<li>使用ar命令将.o文件打包成静态库</li>
+</ol>
+<p>静态库的使用：gcc test.c libmylib.a -o a.out, 如果静态库和可执行文件不在同一个目录下, 则需要指定静态库的路径, 例如: gcc test.c ./lib/libmylib.a -o a.out</p>
+<p>还要注意的一点是, 静态库在引入使用时<strong>需要配套的头文件</strong>, 也就是代码最上方的#include<br>因为头文件是给编译器看的, 编译器需要根据头文件中的函数声明和变量定义来进行编译; 而静态库中的.o文件是给链接器看的, 链接器需要根据.o文件中的符号表来进行链接; </p>
+<p>如果没有头文件: 编译器会因为找不到函数的声明而报错，提示“函数未定义”或“隐式声明”(undeclared/implicit function)，导致编译失败。编译器根本不知道这个函数的存在，也就无法生成正确的目标文件 (.o)。</p>
+<blockquote>
+<p>当你从第三方获取一个库时，通常会得到 .a (或 .lib) 文件和一系列的 .h 文件，这两部分都必须正确配置到你的项目中才能成功使用。</p>
+</blockquote>
+<h4 id="动态库制作"><a href="#动态库制作" class="headerlink" title="动态库制作"></a>动态库制作</h4><p>制作动态库的步骤</p>
+<ol>
+<li><p>   编译生成<strong>位置无关的</strong>.o文件<br>gcc -c add.c -o add.o <strong>-fPIC</strong><br>使用这个参数过后，生成的函数就和位置无关，挂上@plt标识，等待动态绑定. 这里的-fPIC是Position Independent Code的缩写, 表示生成位置无关的代码, 可以被加载到任意内存地址执行.</p>
+</li>
+<li><p>   使用 gcc -shared制作动态库<br>gcc -shared -o [lib库名.so] [用于生成库的.o文件]</p>
+</li>
+<li><p>   链接可执行程序, 同时指定所使用的动态库。<br>gcc test.c -o a.out -l mymath -L ./lib -I /path/to/headers -Wl,-rpath,’$ORIGIN/lib’</p>
+</li>
+</ol>
+<ul>
+<li>-l:指定库名 </li>
+<li>-L:指定库路径, 只在链接时使用, 运行时需要通过-Wl,-rpath,’$ORIGIN/lib’指定动态库的搜索路径</li>
+<li>-I:可能会需要指定头文件的搜索路径</li>
+<li>-Wl,-rpath,’<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="45.999ex" height="2.283ex" role="img" focusable="false" viewbox="0 -759 20331.7 1009"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"/></g><g data-mml-node="mi" transform="translate(763,0)"><path data-c="1D445" d="M230 637Q203 637 198 638T193 649Q193 676 204 682Q206 683 378 683Q550 682 564 680Q620 672 658 652T712 606T733 563T739 529Q739 484 710 445T643 385T576 351T538 338L545 333Q612 295 612 223Q612 212 607 162T602 80V71Q602 53 603 43T614 25T640 16Q668 16 686 38T712 85Q717 99 720 102T735 105Q755 105 755 93Q755 75 731 36Q693 -21 641 -21H632Q571 -21 531 4T487 82Q487 109 502 166T517 239Q517 290 474 313Q459 320 449 321T378 323H309L277 193Q244 61 244 59Q244 55 245 54T252 50T269 48T302 46H333Q339 38 339 37T336 19Q332 6 326 0H311Q275 2 180 2Q146 2 117 2T71 2T50 1Q33 1 33 10Q33 12 36 24Q41 43 46 45Q50 46 61 46H67Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628Q287 635 230 637ZM630 554Q630 586 609 608T523 636Q521 636 500 636T462 637H440Q393 637 386 627Q385 624 352 494T319 361Q319 360 388 360Q466 361 492 367Q556 377 592 426Q608 449 619 486T630 554Z"/></g><g data-mml-node="mi" transform="translate(1522,0)"><path data-c="1D43C" d="M43 1Q26 1 26 10Q26 12 29 24Q34 43 39 45Q42 46 54 46H60Q120 46 136 53Q137 53 138 54Q143 56 149 77T198 273Q210 318 216 344Q286 624 286 626Q284 630 284 631Q274 637 213 637H193Q184 643 189 662Q193 677 195 680T209 683H213Q285 681 359 681Q481 681 487 683H497Q504 676 504 672T501 655T494 639Q491 637 471 637Q440 637 407 634Q393 631 388 623Q381 609 337 432Q326 385 315 341Q245 65 245 59Q245 52 255 50T307 46H339Q345 38 345 37T342 19Q338 6 332 0H316Q279 2 179 2Q143 2 113 2T65 2T43 1Z"/></g><g data-mml-node="mi" transform="translate(2026,0)"><path data-c="1D43A" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"/></g><g data-mml-node="mi" transform="translate(2812,0)"><path data-c="1D43C" d="M43 1Q26 1 26 10Q26 12 29 24Q34 43 39 45Q42 46 54 46H60Q120 46 136 53Q137 53 138 54Q143 56 149 77T198 273Q210 318 216 344Q286 624 286 626Q284 630 284 631Q274 637 213 637H193Q184 643 189 662Q193 677 195 680T209 683H213Q285 681 359 681Q481 681 487 683H497Q504 676 504 672T501 655T494 639Q491 637 471 637Q440 637 407 634Q393 631 388 623Q381 609 337 432Q326 385 315 341Q245 65 245 59Q245 52 255 50T307 46H339Q345 38 345 37T342 19Q338 6 332 0H316Q279 2 179 2Q143 2 113 2T65 2T43 1Z"/></g><g data-mml-node="mi" transform="translate(3316,0)"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"/></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(4204,0)"><g data-mml-node="mo"><path data-c="2F" d="M423 750Q432 750 438 744T444 730Q444 725 271 248T92 -240Q85 -250 75 -250Q68 -250 62 -245T56 -231Q56 -221 230 257T407 740Q411 750 423 750Z"/></g></g><g data-mml-node="mi" transform="translate(4704,0)"><path data-c="1D459" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z"/></g><g data-mml-node="mi" transform="translate(5002,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"/></g><g data-mml-node="msup" transform="translate(5347,0)"><g data-mml-node="mi"><path data-c="1D44F" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"/></g><g data-mml-node="mo" transform="translate(462,363) scale(0.707)"><path data-c="2032" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"/></g></g><g data-mml-node="mo" transform="translate(6331.2,0)"><path data-c="3A" d="M78 370Q78 394 95 412T138 430Q162 430 180 414T199 371Q199 346 182 328T139 310T96 327T78 370ZM78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"/></g><g data-mml-node="mi" transform="translate(6887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">指</text></g><g data-mml-node="mi" transform="translate(7887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">定</text></g><g data-mml-node="mi" transform="translate(8887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">动</text></g><g data-mml-node="mi" transform="translate(9887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">态</text></g><g data-mml-node="mi" transform="translate(10887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">库</text></g><g data-mml-node="mi" transform="translate(11887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">的</text></g><g data-mml-node="mi" transform="translate(12887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">搜</text></g><g data-mml-node="mi" transform="translate(13887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">索</text></g><g data-mml-node="mi" transform="translate(14887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">路</text></g><g data-mml-node="mi" transform="translate(15887,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">径</text></g><g data-mml-node="mo" transform="translate(16887,0)"><path data-c="2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"/></g><g data-mml-node="mi" transform="translate(17331.7,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">这</text></g><g data-mml-node="mi" transform="translate(18331.7,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">里</text></g><g data-mml-node="mi" transform="translate(19331.7,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">的</text></g></g></g></svg></mjx-container>ORIGIN表示可执行文件所在的目录<ul>
+<li>加上-Wl,-rpath,’$ORIGIN/lib’在可执行文件中直接指定动态库的搜索路径.</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li>   运行可执行程序./a.out<br>注意<blockquote>
+<p>运行时, 动态库需要在系统的库搜索路径中, 如果不加-Wl,-rpath,’$ORIGIN/lib’, 则需要通过设置LD_LIBRARY_PATH环境变量来指定动态库的搜索路径. 或者移动自制的动态库到系统的库搜索路径中.</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="静态库和动态库的函数地址解析"><a href="#静态库和动态库的函数地址解析" class="headerlink" title="静态库和动态库的函数地址解析"></a>静态库和动态库的函数地址解析</h4>
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/system/">#system</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Vim/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Vim</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%B8%8E%E8%AE%A4%E8%AF%86Linux/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">基本命令与认识Linux</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">gcc</div>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GCC-%E7%BC%96%E8%AF%91%E7%9A%84%E5%9B%9B%E4%B8%AA%E9%98%B6%E6%AE%B5"><span class="nav-text">GCC 编译的四个阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gcc%E7%BC%96%E8%AF%91%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="nav-text">gcc编译常用参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%BA%93%E5%92%8C%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-text">静态库和动态库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%BA%93%E5%88%B6%E4%BD%9C%E5%8F%8A%E4%BD%BF%E7%94%A8"><span class="nav-text">静态库制作及使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%88%B6%E4%BD%9C"><span class="nav-text">动态库制作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%BA%93%E5%92%8C%E5%8A%A8%E6%80%81%E5%BA%93%E7%9A%84%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90"><span class="nav-text">静态库和动态库的函数地址解析</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        110 posts in total
+                    </span>
+                    
+                        <span>
+                            232.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

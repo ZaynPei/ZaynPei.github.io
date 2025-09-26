@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-12T14:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-13T14:37:02.499Z">
+<meta property="article:modified_time" content="2025-09-19T13:50:55.707Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="CPP">
@@ -704,15 +704,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">17</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">110</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -763,8 +763,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-13 22:37:02</span>
-            <span class="mobile">2025-09-13 22:37:02</span>
+            <span class="desktop">2025-09-19 21:50:55</span>
+            <span class="mobile">2025-09-19 21:50:55</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -806,7 +806,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.3k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.4k Words</span>
         </span>
     
     
@@ -826,76 +826,74 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>移动语义 (Move Semantics) 和 完美转发 (Perfect Forwarding) 是 C++11 中引入的两个革命性特性，它们共同解决了 C++ 中长期存在的资源管理效率和泛型编程（模板）中的参数传递问题。</p>
-<h2 id="移动语义-Move-Semantics"><a href="#移动语义-Move-Semantics" class="headerlink" title="移动语义 (Move Semantics)"></a>移动语义 (Move Semantics)</h2><p>在 C++11 之前，我们只有“拷贝语义”。当我们处理包含堆内存（如指针指向的数据、文件句柄、网络套接字等）的对象时，拷贝操作（通过拷贝构造函数或拷贝赋值运算符）通常意味着“深拷贝”——即分配一块新内存，并将数据完整复制过去。</p>
+			<p><strong>移动语义</strong> (Move Semantics) 和 <strong>完美转发</strong> (Perfect Forwarding) 是 C++11 中引入的两个革命性特性，它们共同解决了 C++ 中长期存在的资源管理效率和泛型编程（模板）中的参数传递问题。</p>
+<h2 id="移动语义-Move-Semantics"><a href="#移动语义-Move-Semantics" class="headerlink" title="移动语义 (Move Semantics)"></a>移动语义 (Move Semantics)</h2><p>在 C++11 之前，我们只有“拷贝语义”。当我们处理包含<strong>堆内存</strong>（如指针指向的数据、文件句柄、网络套接字等）的对象时，拷贝操作（通过拷贝构造函数或拷贝赋值运算符）通常意味着“<strong>深拷贝</strong>”——即分配一块新内存，并将数据完整拷贝过去。</p>
 <p>考虑一个返回 std::vector<int> 的函数：</int></p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">create_large_vector</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">temp_vec</span><span class="params">(<span class="number">1000000</span>)</span></span>; <span class="comment">// 假设分配了大量数据</span></span><br><span class="line">    <span class="comment">// ... 填充数据 ...</span></span><br><span class="line">    <span class="keyword">return</span> temp_vec; <span class="comment">// [C++03] 在这里，temp_vec (左值) 将被拷贝到一个“返回值临时对象”(右值)</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// [C++03] 调用：</span></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; my_vec = <span class="built_in">create_large_vector</span>(); </span><br><span class="line"><span class="comment">// [C++03] “返回值临时对象”(右值) 又被拷贝到 my_vec 中。</span></span><br></pre></td></tr></table></figure></div>
 
-<p>在 C++03 中，这个过程涉及两次昂贵的深拷贝。但我们知道，函数内的 temp_vec 和那个“返回值临时对象”在语句结束时都将被销毁。我们其实并不需要复制它们内部的数据，我们只需要把数据（即指向堆内存的指针）转移给 my_vec 就行了。</p>
-<p>这个问题的解决方案就是移动语义. 它允许一个对象将其内部资源（如指针）的“<strong>所有权</strong>”<strong>转移</strong> (transfer) 给另一个对象，而不是复制它们。这是一种“窃取”或“掠夺”资源的方式，它之所以安全，是因为我们只对那些“即将被销毁”的对象（即右值）执行此操作。</p>
-<p>因此, 一个类现在可以定义专门处理右值参数的版本：移动构造函数: MyClass(MyClass&amp;&amp; other)和移动赋值运算符: MyClass&amp; operator=(MyClass&amp;&amp; other)</p>
+<p>在 C++03 中，这个过程涉及两次昂贵的深拷贝。但我们知道，函数内的 temp_vec 和那个“返回值临时对象”在语句结束时都将被销毁。我们其实并不需要拷贝它们内部的数据，我们只需要把数据（即指向堆内存的指针）转移给 my_vec 就行了。</p>
+<p>这个问题的解决方案就是<strong>移动语义</strong>. 它允许一个对象将其内部资源（如指针）的“<strong>所有权</strong>”<strong>转移</strong> (transfer) 给另一个对象，而不是拷贝它们。这是一种“窃取”或“掠夺”资源的方式，它之所以安全，是因为我们只对那些“<strong>即将被销毁</strong>”的对象（即<strong>右值</strong>）执行此操作。</p>
+<p>因此, 一个类现在可以定义<strong>专门处理右值参数</strong>的版本：<strong>移动构造</strong>函数: MyClass(MyClass&amp;&amp; other)和<strong>移动赋值</strong>运算符: MyClass&amp; operator=(MyClass&amp;&amp; other)</p>
 <p>它们的实现逻辑如下：</p>
 <ul>
-<li><p>窃取资源： 将 other 对象的内部资源（例如，指向数据的指针 other.data_ptr）直接复制（浅拷贝）到 this 对象（this-&gt;data_ptr = other.data_ptr）。</p>
+<li><p><strong>窃取资源</strong>： 将 other 对象的内部资源（例如，指向数据的<strong>指针</strong> other.data_ptr）直接拷贝（浅拷贝）到 this 对象（this-&gt;data_ptr = other.data_ptr）。</p>
 </li>
-<li><p>置空源对象： 将 other 对象的指针设置为 nullptr (other.data_ptr = nullptr;)。</p>
+<li><p><strong>置空源对象</strong>： 将 other <strong>原对象的指针设置为 nullptr</strong> (other.data_ptr = nullptr;)。</p>
 <ul>
-<li>这是至关重要的安全步骤。因为 other 仍然是一个有效的对象，它在作用域结束时会被析构。如果不将其指针置空，other 的析构函数会释放掉那块内存，导致 this 对象持有一个悬空指针。将其置空后，other 的析构函数调用 delete nullptr;（这是安全的），而资源的所有权已成功转移给 this。</li>
+<li>这是至关重要的安全步骤。因为 other 仍然是一个有效的对象，它在作用域结束时会被析构。<strong>如果不将其指针置空，other 的析构函数会释放掉那块内存</strong>，导致 this 对象持有一个悬空指针。将其置空后，other 的析构函数调用 <strong>delete nullptr</strong>;（这是安全的），而资源的所有权已成功转移给 this。</li>
 </ul>
 </li>
 </ul>
-<h3 id="std-move"><a href="#std-move" class="headerlink" title="std::move"></a>std::move</h3><p>对于右值, 编译器会自动调用移动构造函数或移动赋值运算符. 而对于左值, 我们不能直接将一个它传递给一个只接受右值引用的函数（如移动构造函数）。解决方法是, 使用 std::move 来显式请求移动</p>
-<p>std::move 不做任何移动操作。它仅仅是一个<strong>强制类型转换</strong>：它将其参数（无论左值还是右值）无条件地转换为一个右值引用。</p>
+<h3 id="std-move"><a href="#std-move" class="headerlink" title="std::move"></a>std::move</h3><p>对于<strong>右值</strong>, 编译器会自动调用移动构造函数或移动赋值运算符. 而对于左值, 我们不能直接将一个它传递给一个只接受右值引用的函数（如移动构造函数）。解决方法是, 使用 std::move 来<strong>显式请求移动</strong></p>
+<p>std::move 不做任何移动操作。它仅仅是一个<strong>强制类型转换</strong>：它将其参数（无论左值还是右值）<strong>无条件地转换</strong>为一个<strong>右值引用</strong>。</p>
 <p>这相当于你对编译器说：“我保证，我不再使用这个左值变量了，请你把它当作一个临时对象（右值）来处理，你可以随意窃取它的资源。”</p>
 <p>对于上述示例, 我们可以将 <code>create_large_vector</code> 函数修改为：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">create_large_vector</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">temp_vec</span><span class="params">(<span class="number">1000000</span>)</span></span>; <span class="comment">// 假设分配了大量数据</span></span><br><span class="line">    <span class="comment">// ... 填充数据 ...</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">move</span>(temp_vec); <span class="comment">// [C++11] 在这里，temp_vec (左值) 将被移动到一个“返回值临时对象”(右值), 因此不会触发深拷贝, 将 O(N) 的资源复制操作降维到 O(1) 的指针交换操作。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<h4 id="std-move后仅保证右值-不保证可移动"><a href="#std-move后仅保证右值-不保证可移动" class="headerlink" title="std::move后仅保证右值, 不保证可移动"></a>std::move后仅保证右值, 不保证可移动</h4><p>在 C++ 开发中，我们被教导“尽可能使用 const”，这是一个良好的编程习惯。同时，为了优化性能，现代 C++（遵循《Effective Modern C++》条款 41 等指导原则）建议我们利用移动语义。然而，当这两个原则被错误地结合时，可能会产生与预期不符的行为。</p>
-<p>假设我们正在编写一个 Annotation (注解) 类，它在内部存储一个字符串。根据条款 41 的建议（针对既需要复制也需要移动赋值的“sink”参数），我们采用按值传递（pass-by-value）参数，然后将其 std::move 到数据成员中，以此来高效处理左值（拷贝）和右值（移动）实参</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">create_large_vector</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">temp_vec</span><span class="params">(<span class="number">1000000</span>)</span></span>; <span class="comment">// 假设分配了大量数据</span></span><br><span class="line">    <span class="comment">// ... 填充数据 ...</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">move</span>(temp_vec); <span class="comment">// [C++11] 在这里，temp_vec (左值) 将被移动到一个“返回值临时对象”(右值), 因此不会触发深拷贝, 将 O(N) 的资源拷贝操作降维到 O(1) 的指针交换操作。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<h4 id="std-move后仅保证右值-不保证可移动"><a href="#std-move后仅保证右值-不保证可移动" class="headerlink" title="std::move后仅保证右值, 不保证可移动"></a>std::move后仅保证右值, 不保证可移动</h4><p>在 C++ 开发中，我们被教导“<strong>尽可能使用 const</strong>”，这是一个良好的编程习惯。同时，为了优化性能，现代 C++（遵循《Effective Modern C++》条款 41 等指导原则）建议我们利用<strong>移动语义</strong>。然而，当这两个原则被<strong>错误地结合</strong>时，可能会产生与预期不符的行为。</p>
+<p>假设我们正在编写一个 Annotation (注解) 类，它在内部存储一个字符串。根据条款 41 的建议（针对既需要拷贝也需要移动赋值的“sink”参数），我们采用按值传递（pass-by-value）参数，然后将其 std::move 到数据成员中，以此来高效处理左值（拷贝）和右值（移动）实参</p>
 <p>同时, 因为这个构造函数仅仅是读取 text 的值（用于移动），而不会在函数体内对其进行逻辑上的修改。遵循“尽可能使用 const”的旧习惯，我们将这个按值传递的参数标记为 const：</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Annotation</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 按值传递 text</span></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Annotation</span><span class="params">(<span class="type">const</span> std::string text)</span> </span></span><br><span class="line"><span class="function">        : value(std::move(text)) // 将 text 的内容“移动”到 value 中</span></span><br><span class="line"><span class="function">    {</span> }</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string value;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>结果是, 这段代码可以顺利地编译、链接并运行。并且，成员变量 value 最终确实包含了传入的 text 的内容。然而，一个关键的优化丢失了：text 并没有被移动，它被复制到了 value 中。</p>
-<p>我们迫切想知道, 为什么移动（Move）变成了复制（Copy）？</p>
+<p>结果是, 这段代码可以顺利地编译、链接并运行。并且，成员变量 value 最终确实包含了传入的 text 的内容。然而，一个关键的优化丢失了：text <strong>并没有被移动</strong>，它被拷贝到了 value 中。</p>
+<p>我们迫切想知道, 为什么移动（Move）变成了拷贝（Copy）？</p>
 <p>这个行为是 C++ 类型系统和重载解析 (Overload Resolution) 共同作用的结果，并且这种设计对于维持“常量正确性”至关重要。</p>
 <p>我们一步一步分析, std::move 本身不执行任何“移动”操作。它是一个无条件的类型转换工具（cast）。它的唯一工作就是将其接收的参数（通常是一个左值）强制转换为一个右值引用（rvalue reference）</p>
-<p>这里的关键点在于，当 std::move 转换一个 const 变量时，其“常量性”（const-ness）会被保留。</p>
-<p>在我们的例子中，形参 text 的类型是 const std::string（这是一个左值）; std::move(text) 的调用将其转换为右值; 转换的结果类型是：const std::string&amp;&amp; （一个指向 const std::string 的右值引用）。</p>
+<p>这里的关键点在于，<strong>当 std::move 转换一个 const 变量时，其“常量性”（const-ness）会被保留</strong>。</p>
+<p>在我们的例子中，形参 text 的类型是 const std::string（这是一个左值）; std::move(text) 的调用将其转换为右值, 转换的结果类型是const std::string&amp;&amp; （一个指向 const std::string 的右值引用）。</p>
 <p>当编译器尝试使用这个结果（一个 const 右值）来初始化成员 value (类型为 std::string) 时，它会检查 std::string 的可用构造函数，主要有两个候选者：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">string</span> { </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 1. 移动构造函数 (Move Constructor)</span></span><br><span class="line">    <span class="comment">//    它接受一个“非 const 的”右值引用 (string&amp;&amp;)</span></span><br><span class="line">    <span class="built_in">string</span>(string&amp;&amp; rhs); </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 复制构造函数 (Copy Constructor)</span></span><br><span class="line">    <span class="comment">//    它接受一个“const 的”左值引用 (const string&amp;)</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> string&amp; rhs); </span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
-<p>对于移动构造函数, 我们的参数类型是 const std::string&amp;&amp; (const 右值)。而移动构造函数需要 string&amp;&amp; (非 const 右值)。而C++ 不允许将 const 对象绑定到非 const 引用上，因为移动构造函数必须能够修改其参数（例如，将其内部指针设为 null）, 显然对一个 const 对象执行“窃取”操作是违反常量正确性的。</p>
-<p>而对于第二个拷贝构造函数, C++ 语言规则允许一个 const 左值引用（const T&amp;）绑定到一个 const 右值（const T&amp;&amp;）, 所以编译器别无选择，只能调用拷贝构造函数，导致了数据拷贝而非移动。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">string</span> { </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 1. 移动构造函数 (Move Constructor)</span></span><br><span class="line">    <span class="comment">//    它接受一个“非 const 的”右值引用 (string&amp;&amp;)</span></span><br><span class="line">    <span class="built_in">string</span>(string&amp;&amp; rhs); </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 拷贝构造函数 (Copy Constructor)</span></span><br><span class="line">    <span class="comment">//    它接受一个“const 的”左值引用 (const string&amp;)</span></span><br><span class="line">    <span class="built_in">string</span>(<span class="type">const</span> string&amp; rhs); </span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>对于移动构造函数, 我们的参数类型是 const std::string&amp;&amp; (const 右值)。而移动构造函数需要 string&amp;&amp; (非 const 右值)。而C++ <strong>不允许将 const 对象绑定到非 const 引用</strong>上，因为移动构造函数必须能够修改其参数（例如，将其内部指针设为 null）, 显然对一个 const 对象执行“窃取”操作是违反常量正确性的。</p>
+<p>而对于第二个拷贝构造函数, C++ 语言规则允许一个 <strong>const 左值引用</strong>（const T&amp;）绑定到一个 <strong>const 右值</strong>（const T&amp;&amp;）, 所以编译器别无选择，只能调用拷贝构造函数，导致了数据拷贝而非移动。</p>
 <p>这个案例带来了两个至关重要的经验：</p>
 <ol>
-<li><p>不要对计划移动的对象声明 const: 如果你希望能够从一个对象中“移出”数据（即允许该对象被修改并置于一个有效的、但未指定的状态），那么该对象本身绝对不能被声明为 const。任何对 const 对象的“移动”尝试都会悄无声息地降级为一次“复制”操作。</p>
+<li><p><strong>不要对计划移动的对象声明 const</strong>: 如果你希望能够从一个对象中“移出”数据（即允许该对象被修改并置于一个有效的、但未指定的状态），那么该对象本身绝对不能被声明为 const。任何对 const 对象的“移动”尝试都会悄无声息地<strong>降级为一次“拷贝”操作</strong>。</p>
 </li>
-<li><p>std::move 不保证“可移动性”: std::move 并不执行移动，它只负责类型转换。它告诉编译器：“请把这个对象当作右值来处理”。它不保证转换后的右值一定能匹配到移动构造函数或移动赋值运算符。如本例所示，如果源对象是 const，它最终只会匹配到复制操作。</p>
+<li><p>std::move 不保证“可移动性”: std::move <strong>并不执行移动</strong>，它只负责<strong>类型转换</strong>。它告诉编译器：“请把这个对象当作右值来处理”。它不保证转换后的右值一定能匹配到移动构造函数或移动赋值运算符。如本例所示，如果源对象是 const，它最终只会匹配到拷贝操作。</p>
 </li>
 </ol>
-<h2 id="完美转发-Perfect-Forwarding"><a href="#完美转发-Perfect-Forwarding" class="headerlink" title="完美转发 (Perfect Forwarding)"></a>完美转发 (Perfect Forwarding)</h2><p>完美转发解决的是一个在模板（泛型编程）中遇到的不同问题: 转发时的值类别丢失</p>
+<h2 id="完美转发-Perfect-Forwarding"><a href="#完美转发-Perfect-Forwarding" class="headerlink" title="完美转发 (Perfect Forwarding)"></a>完美转发 (Perfect Forwarding)</h2><p>完美转发解决的是一个在模板（泛型编程）中遇到的不同问题: <strong>转发时的值类别丢失</strong></p>
 <p>假设我们要编写一个“工厂函数”（或任何包装函数），它接受一些参数，然后用这些参数去构造另一个类型的对象（例如 std::make_unique 或 std::vector::emplace_back）。</p>
 <blockquote>
 <p>工厂函数（Factory Function）是一种封装对象创建过程的函数，它的核心目的是：将对象的构造逻辑从使用者那里抽离出来，让你通过调用一个函数来获得所需的对象，而不需要关心它是如何被创建的。</p>
 </blockquote>
 <p>我们希望：</p>
 <ul>
-<li><p>如果工厂函数收到了一个左值，它应该传递一个左值给最终的构造函数（触发拷贝）。</p>
-</li>
-<li><p>如果工厂函数收到了一个右值，它应该传递一个右值给最终的构造函数（触发移动）。</p>
-</li>
+<li>如果工厂函数<strong>收到了一个左值</strong>，它应该<strong>传递一个左值</strong>给最终的构造函数（触发拷贝）。</li>
+<li>如果工厂函数<strong>收到了一个右值</strong>，它应该<strong>传递一个右值</strong>给最终的构造函数（触发移动）。</li>
 </ul>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// process 根据参数是左值还是右值进行了重载</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">(<span class="type">const</span> Widget&amp; lvalArg)</span></span>;  <span class="comment">// 处理左值</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">(Widget&amp;&amp; rvalArg)</span></span>;        <span class="comment">// 处理右值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// logAndProcess 是一个函数模板，用于记录日志并转发参数</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndProcess</span><span class="params">(T&amp;&amp; param)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="comment">// 取得当前时间</span></span><br><span class="line">    <span class="keyword">auto</span> now = std::chrono::system_clock::<span class="built_in">now</span>(); </span><br><span class="line">    <span class="built_in">makelogEntry</span>(<span class="string">"Calling 'process'"</span>, now);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 param 完美转发给 process 函数</span></span><br><span class="line">    <span class="built_in">process</span>(std::forward&lt;T&gt;(param));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 考虑两种调用 logAndProcess 的情形，一种向其传入左值，一种向其传入右值</span></span><br><span class="line">Widget w;</span><br><span class="line"><span class="built_in">logAndProcess</span>(w);             <span class="comment">// 传入左值</span></span><br><span class="line"><span class="built_in">logAndProcess</span>(std::<span class="built_in">move</span>(w));  <span class="comment">// 传入右值</span></span><br></pre></td></tr></table></figure></div>
 
 <p>在 logAndProcess 内，形参 param 被传递给函数 process。而 process 依据其形参是左值还是右值类型进行了重载。所以我们很自然地会期望：</p>
 <ul>
-<li><p>当调用 logAndProcess 时若传入的是个左值（如 w），则该左值在被传递给 process 函数时仍被当作一个左值。</p>
-</li>
-<li><p>而当调用 logAndProcess 时若传入的是个右值（如 std::move(w)），则会调用 process 取用右值类型的那个重载版本。</p>
-</li>
+<li>当调用 logAndProcess 时若传入的是个左值（如 w），则该左值在被传递给 process 函数时仍被当作一个左值。</li>
+<li>而当调用 logAndProcess 时若传入的是个右值（如 std::move(w)），则会调用 process 取用右值类型的那个重载版本。</li>
 </ul>
 <p>但是，有一个关键规则：所有（具名的）<strong>函数形参皆为左值</strong>(即使它是右值引用类型)，param 亦不例外。</p>
+<blockquote>
+<p>一个值被传递给函数后，在函数内部它就“落地”了，有了一个具体的名字和一块内存。只要有了这两样东西，它就变成了左值，以便在函数体内稳定地使用。<br>与之不同, 函数返回值的类型情况取决于返回类型如果返回类型是非引用/右值引用, 则返回值是右值; 如果是左值引用则是左值</p>
+</blockquote>
 <p>因此，如果在 logAndProcess 函数体内只是简单地调用 process(param)，那么 process 的所有调用都会调用取用左值类型的那个重载版本（因为 param 本身是左值），即使我们传给 logAndProcess 的是一个右值。</p>
 <p>为了避免这种结果，就需要一种机制：当且仅当用来初始化 param 的实参（即传递给 logAndProcess 的实参）是一个右值时，才把 param 强制转换成右值类型。这恰恰就是 std::forward 所做的一切。</p>
-<h3 id="std-forward：有条件的类型转换"><a href="#std-forward：有条件的类型转换" class="headerlink" title="std::forward：有条件的类型转换"></a>std::forward：有条件的类型转换</h3><p>这就是为何说 std::forward 是有条件的强制类型转换：仅当它的实参（param）最初是使用一个右值完成初始化时，它才会执行向右值类型的强制类型转换。(也就是说它会”转发”实参的类型保持不变)</p>
+<h3 id="std-forward：有条件的类型转换"><a href="#std-forward：有条件的类型转换" class="headerlink" title="std::forward：有条件的类型转换"></a>std::forward：有条件的类型转换</h3><p>这就是为何说 std::forward 是<strong>有条件的强制类型转换</strong>：仅当它的实参（param）最初是使用一个右值完成初始化时，它才会执行向右值类型的强制类型转换。(也就是说它会”<strong>转发</strong>“<strong>实参的类型</strong>保持不变)</p>
 <p>你可能会疑惑，std::forward 何以知晓其参数是否通过右值完成初始化？一句话：该信息是被编码到 logAndProcess(也就是上一层的函数) 的模板形参 T 中的, 该模板参数 T 被传递给 std::forward<t> 后，随即由后者将编码的信息恢复出来，从而决定是返回一个左值引用还是右值引用。</t></p>
 <p>回到 std::forward 本身, 它有两个参数: 模板参数（尖括号里的 T）和函数实参（圆括号里的变量，比如 param）, 其中模板参数T的作用是告诉 std::forward 调用者传进来的<strong>原始实参类型</strong>是什么; 而函数实参则是要被转发的对象, 两者结合即可用模板参数还原它的原始值类别。</p>
 <h2 id="std-move-与-std-forward：语义的明确区分"><a href="#std-move-与-std-forward：语义的明确区分" class="headerlink" title="std::move 与 std::forward：语义的明确区分"></a>std::move 与 std::forward：语义的明确区分</h2><p>综上所述, std::move 和 std::forward 都是强制型别转换，唯一不同就在于 std::move 始终实施强制型别转换，而 std::forward 仅仅有时会实施。</p>
@@ -998,11 +996,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        77 posts in total
+                        110 posts in total
                     </span>
                     
                         <span>
-                            150.2k words in total
+                            232.6k words in total
                         </span>
                     
                 </p>

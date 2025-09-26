@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-16T06:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-16T06:59:57.547Z">
+<meta property="article:modified_time" content="2025-09-26T03:40:03.991Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="computer network">
@@ -704,15 +704,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">17</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">110</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -763,8 +763,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-16 14:59:57</span>
-            <span class="mobile">2025-09-16 14:59:57</span>
+            <span class="desktop">2025-09-26 11:40:03</span>
+            <span class="mobile">2025-09-26 11:40:03</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -806,12 +806,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>998 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>6k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>3 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>21 Mins</span>
         </span>
     
     
@@ -826,35 +826,208 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>数据链路层 (Data Link Layer) 是 OSI 参考模型中的第二层，位于物理层和网络层之间。物理层负责在信道上传输原始的比特流 (0 和 1)，而网络层负责在不同网络之间进行路由和转发。</p>
-<p>数据链路层的主要职责是：将物理层提供的可能出错的原始比特流，转换成对网络层来说无差错的、可靠的数据链路。</p>
-<p>为了实现这一目标，数据链路层具体包含以下几个核心功能：</p>
+			<p>数据链路层的主要功能是让帧在物理介质上可靠地传输。它位于物理层之上，网络层之下，负责将网络层传下来的数据包封装成帧，并处理帧的传输、差错检测和流量控制等问题。</p>
+<p>它使用的通信信道主要有两种:</p>
+<ul>
+<li>点对点信道 (Point-to-Point Channel)：通信双方通过专用的物理链路直接连接，数据在两点之间一对一传输。例如，串行通信、PPP协议等。</li>
+<li>广播信道 (Broadcast Channel)：多个设备共享同一物理链路，数据可以被所有连接到该链路的设备接收。例如，以太网(采用CSMA/CD协议)、Wi-Fi(采用CSMA/CA协议)等。</li>
+</ul>
+<h3 id="数据链路层的主要功能"><a href="#数据链路层的主要功能" class="headerlink" title="数据链路层的主要功能"></a>数据链路层的主要功能</h3><h4 id="数据链路层所处的地位"><a href="#数据链路层所处的地位" class="headerlink" title="数据链路层所处的地位"></a>数据链路层所处的地位</h4><p>数据链路层位于OSI模型的第二层，介于物理层和网络层之间。</p>
+<p>对下：它接收物理层提供的原始比特流服务，并需要处理这些比特流中可能出现的传输错误。</p>
+<p>对上：它向网络层提供服务，其主要作用是将源自网络层的数据包（Packet）可靠地传输到相邻节点的目标网络层。它对网络层隐藏了物理传输中的各种复杂细节和错误。</p>
+<h4 id="链路管理-Link-Management"><a href="#链路管理-Link-Management" class="headerlink" title="链路管理 (Link Management)"></a>链路管理 (Link Management)</h4><p>指的是在两个节点之间建立、维持和释放数据链路的过程。这主要用于点对点的连接。</p>
+<ul>
+<li>链路建立：通信双方通过“握手”确认彼此的状态，准备好进行数据传输。</li>
+<li>数据传输：在已建立的链路上交换数据。</li>
+<li>链路释放：通信结束后，有序地断开连接，释放资源。</li>
+</ul>
+<p>在像以太网这样的广播网络中，链路管理通常是自动且隐含的，但在广域网协议中，这是一个非常明确的步骤。</p>
+<h4 id="封装成帧与透明传输"><a href="#封装成帧与透明传输" class="headerlink" title="封装成帧与透明传输"></a>封装成帧与透明传输</h4><p>物理层传输的是一长串<strong>没有明显边界的比特流</strong>。为了让接收方能够区分数据的起点和终点，数据链路层必须将网络层传下来的数据包添加<strong>首部（Header）<strong>和</strong>尾部（Trailer）</strong>，将它们封装成一个独立的、可识别的数据单元，这个单元就是帧 (Frame)。</p>
+<p>接收方可以通过帧的头部和尾部来准确地确定一帧的开始和结束, 帧头通常包含源和目标的物理地址（MAC地址）等控制信息；帧尾通常包含用于差错校验的字段。</p>
+<p>而现在还有一个问题: 如果在帧的数据部分（即网络层的数据包）中，恰好出现了与帧尾定界符完全相同的比特组合，接收方就会错误地认为帧已经结束，导致数据解析错误。</p>
+<p>透明传输指的是，无论上层交付什么样的数据，数据链路层都有办法将其封装并成功传输，即使数据中包含了与控制信息（如帧定界符）相同的比特模式。</p>
+<p>上述问题的解决方法是, 通过字符填充 (Character Stuffing) 或 比特填充 (Bit Stuffing) 技术来实现。</p>
+<p>例如, 以比特填充为例, 假设使用 01111110 作为帧的起始和结束标志。</p>
+<p>发送方：在发送数据时，会扫描整个<strong>数据部分</strong>。一旦发现有连续的5个“1”，就立即在其后填充一个“0”。</p>
+<p>接收方：在接收数据时，同样扫描数据。一旦发现连续的5个“1”，就检查其后的比特。</p>
+<ul>
+<li>如果第6个比特是“0”，就将其删除，恢复原始数据。</li>
+<li>如果第6个比特是“1”（即组成了01111110），则判断这是一个帧定界符。</li>
+<li></li>
+</ul>
+<p>通过这种方式，确保了数据内部永远不会出现与帧定界符相同的模式，实现了透明传输。</p>
+<h4 id="流量控制-Flow-Control"><a href="#流量控制-Flow-Control" class="headerlink" title="流量控制 (Flow Control)"></a>流量控制 (Flow Control)</h4><p>指的是协调发送方和接收方的速率，防止发送速率过快而导致接收方来不及处理，造成数据丢失。</p>
+<p>流量控制是一种点对点的控制，确保发送方只在接收方确认有能力接收时才发送数据。</p>
+<blockquote>
+<p>拥塞控制: 关注的是整个网络宏观上的负载，防止网络因数据过多而瘫痪，这通常是传输层（如TCP）的职责。</p>
+</blockquote>
+<p>常见的方法有：停止-等待协议、滑动窗口协议（如后退N帧协议、选择重传协议）</p>
+<h4 id="差错检测-Error-Detection"><a href="#差错检测-Error-Detection" class="headerlink" title="差错检测 (Error Detection)"></a>差错检测 (Error Detection)</h4><p>物理链路并非绝对可靠，信号在传输过程中可能会因为噪声等因素产生差错（比特翻转，即0变1或1变0）。差错检测就是让接收方有能力发现收到的数据帧是否在传输中出现了错误。</p>
+<p>核心思想是：在发送数据时，<strong>根据原始数据计算</strong>出一个<strong>校验码 (Check Code)</strong>，并将其附加在<strong>帧的尾部</strong>一起发送。接收方收到后，用同样的方法对数据部分进行计算，比较计算结果和收到的校验码是否一致。</p>
+<p>目前使用最广泛的差错检测方法是循环冗余校验 (CRC, Cyclic Redundancy Check)。</p>
+<h3 id="组帧-Framing"><a href="#组帧-Framing" class="headerlink" title="组帧(Framing)"></a>组帧(Framing)</h3><p>组帧是数据链路层的基本任务之一。其核心目标是在一连串的比特流中，准确地标识出“帧”的开始和结束，以便接收方能够完整地提取出每一个数据单元。这个过程也称为帧同步。以下是四种经典的组帧方法。</p>
+<h4 id="字符计数法-Character-Count"><a href="#字符计数法-Character-Count" class="headerlink" title="字符计数法 (Character Count)"></a>字符计数法 (Character Count)</h4><p>这是一种概念上最简单的方法。它在<strong>帧的头部</strong>设置一个<strong>计数字段</strong>，用以标明<strong>该帧总共包含的字符（或字节）数</strong>。</p>
+<ul>
+<li>发送方：在帧首部的计数字段填入该帧的长度（例如，长度为5）。</li>
+<li>接收方：首先读取计数字段的值（读到5），然后向后数出对应数量（5个）的字符，这就构成了一个完整的帧。读取完毕后，它就知道下一字节将是下一个新帧的计数字段。</li>
+</ul>
+<p>| 5 | A | B | C | D | E | 7 | F | G | H | I | J | K |<br>  ↑ 计数字段               ↑ 计数字段</p>
+<p>致命缺点：可靠性极差。如果在传输过程中，计数字段的某一位发生了错误（例如，5（二进制00000101）因为噪声变成了7（00000111）），接收方就会错误地读取7个字符。这将导致<strong>接收方对后续所有帧的边界判断都发生错误</strong>，造成灾难性的失步，且难以恢复。因此，这种方法如今已基本不被使用。</p>
+<h4 id="字节填充法-Byte-Stuffing"><a href="#字节填充法-Byte-Stuffing" class="headerlink" title="字节填充法 (Byte Stuffing)"></a>字节填充法 (Byte Stuffing)</h4><p>使用<strong>特定的字符（字节）<strong>作为</strong>帧的起始和结束定界符</strong>，通常称为<strong>标志字节 (Flag Byte)</strong>。例如，在PPP协议中，标志字节是 01111110（十六进制为 0x7E）。</p>
+<p>这种方法容易出现的是透明传输问题：如果帧的数据部分恰好也出现了与标志字节相同的内容，就会造成混淆。解决方法同样是填充：</p>
+<ul>
+<li>发送方：在发送前扫描整个数据部分。</li>
+<li>如果数据中出现标志字节 (0x7E)，就在其前面插入一个转义字节 (0x7D)。</li>
+<li>如果数据中出现转义字节 (0x7D)，同样在其前面再插入一个转义字节。</li>
+<li>接收方：在接收时进行反向操作。当读到转义字节时，就删除这个转义字节，并<strong>将其后面的字节当作普通数据接收（无论它是什么）</strong>。当读到非转义字节的标志字节时，就认为是帧的边界。</li>
+</ul>
+<p>示例：原始数据: A | 0x7D | 0x7E | B</p>
+<p>填充后发送: FLAG | A | 0x7D | 0x7D | 0x7D | 0x7E | B | FLAG</p>
+<p>优点：比字符计数法可靠得多，解决了透明传输问题。</p>
+<p>缺点：依赖于以8位字节为单位的数据，<strong>不适用于非字符编码的数据流</strong>。</p>
+<h4 id="零比特填充法-Zero-Bit-Stuffing"><a href="#零比特填充法-Zero-Bit-Stuffing" class="headerlink" title="零比特填充法 (Zero-Bit Stuffing)"></a>零比特填充法 (Zero-Bit Stuffing)</h4><p>这是目前应用最广泛的组帧方法，它同样使用一个特定的比特模式作为帧定界符，即<strong>标志字段 01111110</strong>。只不过透明传输解决方法有所不同：</p>
+<ul>
+<li>发送方：在硬件层面扫描整个数据比特流（除标志字段外）。只要发现连续的5个“1”，就立即在后面强制插入一个“0”。</li>
+<li>接收方：同样在硬件层面扫描。只要发现连续的5个“1”，就检查其后的第6个比特。<ul>
+<li>如果第6个比特是“0”，则说明这是一个填充位，必须将其删除以还原原始数据。</li>
+<li>如果第6个比特是“1”，则说明这是一个标志字段（结合其后的“0”，构成了 …1111110），表示帧的边界。</li>
+</ul>
+</li>
+</ul>
+<p>示例：</p>
+<ul>
+<li>原始数据: …01111110…</li>
+<li>填充后发送: …011111010…</li>
+</ul>
+<p>优点：</p>
+<p>高效：由硬件执行，速度非常快。</p>
+<p>通用：完全不依赖于数据是否为8位字节的整数倍，可以处理<strong>任意长度的比特流</strong>。</p>
+<p>应用：被广泛用于HDLC、SDLC、USB等多种协议中。</p>
+<h4 id="违规编码法-Physical-Layer-Coding-Violations"><a href="#违规编码法-Physical-Layer-Coding-Violations" class="headerlink" title="违规编码法 (Physical Layer Coding Violations)"></a>违规编码法 (Physical Layer Coding Violations)</h4><p>这是一种巧妙利用<strong>物理层编码冗余性</strong>的方法。在某些物理层编码方案中，并非所有信号模式都对应有效的数据。这些“无效”或“违规”的信号模式就可以被借用来定义帧的边界。</p>
+<p>示例（以曼彻斯特编码为例）：</p>
+<ul>
+<li>有效编码：在曼彻斯特编码中，每个比特的中间时刻都必须有一次电平跳变（高→低 或 低→高）。</li>
+<li>违规编码：我们可以定义“连续高电平”和“连续低电平”这种没有中间跳变的信号模式作为帧的起始（Start）和结束（End）定界符。</li>
+</ul>
+<p>当接收方检测到这种“违规”信号时，就知道这是一个帧边界，而不是数据。</p>
+<p>优点：不需要任何填充，不增加数据载荷，实现了带外（out-of-band）的信令，效率很高, 但是不通用。</p>
+<p>应用：常用于令牌环网和一些局域网技术中。</p>
+<h3 id="差错控制-Error-Control"><a href="#差错控制-Error-Control" class="headerlink" title="差错控制 (Error Control)"></a>差错控制 (Error Control)</h3><p>差错控制是数据链路层的核心职责之一。它不仅包括我们之前提到的差错检测，还包括<strong>检测到错误后应采取的纠正措施</strong>。一个完整的差错控制机制，就是一套发现并解决数据传输错误的方法论。</p>
+<p>通常，差错控制的实现策略主要有两种：</p>
+<p><strong>自动重传请求</strong> (<strong>ARQ</strong> - Automatic Repeat reQuest)</p>
+<p>策略：接收方检测到错误后，直接<strong>丢弃</strong>这个错误的帧，然后通过一个<strong>反馈机制</strong>（如发送一个否认信息NAK，或不发送确认信息ACK）通知发送方，<strong>要求其重新发送</strong>该帧。</p>
+<p>特点：这种策略实现相对简单，额外开销小。它依赖于<strong>检错编码</strong>来发现错误。这是目前有线网络（如以太网）中最主流的策略。</p>
+<p><strong>前向纠错</strong> (<strong>FEC</strong> - Forward Error Correction)</p>
+<p>策略：接收方不仅能检测到错误，还能根据<strong>编码中包含的冗余信息</strong>，直接<strong>确定错误的位置</strong>并加以<strong>纠正</strong>，无需发送方重传。</p>
+<p>特点：这种策略实现复杂，冗余信息开销大。它依赖于<strong>纠错编码</strong>。常用于实时性要求高或单向通信（如广播）以及信道质量差、重传代价高的场景（如无线通信、卫星通信）。</p>
+<h4 id="检错编码-Error-Detecting-Codes"><a href="#检错编码-Error-Detecting-Codes" class="headerlink" title="检错编码 (Error-Detecting Codes)"></a>检错编码 (Error-Detecting Codes)</h4><p>检错编码的目标是让接收方有能力<strong>判断</strong>收到的数据是否在传输过程中发生了改变，但不能确定错误的位置。</p>
+<p>核心思想：在原始数据 k 位的后面，附加 r 位的冗余信息（校验码），构成一个 n=k+r 位的码字进行传输。这 r 位的<strong>冗余信息</strong>是<strong>根据 k 位的数据</strong>通过某种算法<strong>计算</strong>得出的。</p>
+<h5 id="奇偶校验码-Parity-Code"><a href="#奇偶校验码-Parity-Code" class="headerlink" title="奇偶校验码 (Parity Code)"></a>奇偶校验码 (Parity Code)</h5><p>是最简单的检错码。通过增加1位校验位，使得整个码字中“1”的个数为奇数或偶数。它只能检测出奇数个比特的错误，对于偶数个比特的错误则无能为力。</p>
+<p>奇检验码: 加入一位校验位，使得整个码字中“1”的个数为奇数。<br>偶检验码: 加入一位校验位，使得整个码字中“1”的个数为偶数。</p>
+<h5 id="循环冗余码-CRC-Cyclic-Redundancy-Check"><a href="#循环冗余码-CRC-Cyclic-Redundancy-Check" class="headerlink" title="循环冗余码 (CRC - Cyclic Redundancy Check)"></a>循环冗余码 (CRC - Cyclic Redundancy Check)</h5><p>这是目前应用最广泛的检错码。它利用<strong>生成多项式</strong>和<strong>模2除法</strong>，可以生成检错能力极强的校验码，尤其擅长检测计算机网络中常见的突发错误（即连续多个比特出错）。</p>
+<p>其核心思想可以概括为：在 k 位的原始数据后面，附加 r 位的校验码（也称为 帧检验序列 FCS, Frame Check Sequence），构成一个总长为 n=k+r 位的帧。这个构造过程有一个精巧的数学保证：最终生成的这个 n 位帧，作为一个二进制数，一定能被一个预先选定的、长度为 r+1 位的特定二进制数“整除”。</p>
+<p>接收方收到帧后，只需用这个约定的“除数”去除以收到的帧。如果余数为零，则认为数据正确；如果余数不为零，则说明数据在传输中已损坏。</p>
+<p>下面以一个具体的例子来说明CRC的编码和检验过程：假设数据 M = 101001, 生成多项式(除数)G = 1101, 此时 r = 3 (G的位数-1)</p>
 <ol>
-<li><strong>为网络层提供服务</strong></li>
+<li>编码过程</li>
 </ol>
-<p>数据链路层的最基本功能是向其上层（网络层）提供服务。网络层将数据包（如 IP 数据报）向下传递给数据链路层，数据链路层负责将这些数据包可靠地从源节点传输到链路上的下一个节点（可能是最终目的地，也可能是下一个路由器）。</p>
+<ul>
+<li>在数据 M 后面添加 r 个0，得到 M’ = 101001000</li>
+<li>用 M’ 除以 G，得到余数 R (这里的除法是模2除法，即不考虑进位的二进制除法, 也可以看作是按位异或操作, 只要位数够就一直做异或)</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">          110100</span><br><span class="line">1101 ) 101001000</span><br><span class="line">       1101</span><br><span class="line">       ----</span><br><span class="line">        1110</span><br><span class="line">        1101</span><br><span class="line">        ----</span><br><span class="line">          1110</span><br><span class="line">          1101</span><br><span class="line">          ----</span><br><span class="line">            1100</span><br><span class="line">            1101</span><br><span class="line">            ----</span><br><span class="line">             001 (余数, 要保留r位, 因此还要考虑前面的0)</span><br></pre></td></tr></table></figure></div>
+
 <ol start="2">
-<li><strong>组帧 (Framing)</strong></li>
+<li>附加校验码</li>
 </ol>
-<p>这是数据链路层最核心的功能之一，后续的 “ (二) 组帧” 会详细展开。</p>
-<p>数据链路层将来自网络层的数据包封装成帧 (Frame)。这个过程会给数据包添加一个帧头 (Header) 和一个帧尾 (Trailer)。帧头和帧尾包含了重要的控制信息, 其中帧头通常包含源和目标的物理地址（MAC 地址），以及用于同步的控制字段。帧尾通常包含差错检测码 (Error-Detection Code)，如 CRC（循环冗余校验）。</p>
-<p>通过帧头和帧尾，接收方可以明确地知道一个数据单元从哪里开始、到哪里结束。这就像给一长串字母加上标点符号和空格，使其变成有意义的句子。</p>
+<ul>
+<li>将余数 R = 001 附加在 M 的后面，得到最终的码字 C = 101001001</li>
+</ul>
 <ol start="3">
-<li><strong>差错控制 (Error Control)</strong></li>
+<li>检验过程</li>
 </ol>
-<p>物理信道的传输并不可靠，可能会因为噪声、干扰等因素导致比特错误（0 变成 1 或 1 变成 0）。通过在帧尾添加差错检测码（如后续 “ (三) 差错控制” 中提到的检错编码和纠错编码），接收方可以检查收到的帧是否在传输过程中出现了错误。</p>
-<p>如果检测到错误，数据链路层可以简单地丢弃这个坏帧。在提供可靠服务的协议中（如后续 “ (四) 可靠传输” 中提到的），它还可以触发重传机制，要求发送方重新发送该帧，从而保证网络层接收到的数据是正确的。</p>
+<ul>
+<li>接收方收到码字 C’ = 101001001 后，用 G 除以 C’，如果余数为0，则数据正确；否则数据有误。</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">          110100</span><br><span class="line">1101 ) 101001001</span><br><span class="line">       1101</span><br><span class="line">       ----</span><br><span class="line">        1110</span><br><span class="line">        1101</span><br><span class="line">        ----</span><br><span class="line">          1110</span><br><span class="line">          1101</span><br><span class="line">          ----</span><br><span class="line">            1100</span><br><span class="line">            1101</span><br><span class="line">            ----</span><br><span class="line">             000 (余数为0, 数据正确)</span><br></pre></td></tr></table></figure></div>
+<p>假如在传输过程中, 第3位(从左向右)发生了错误, 接收方收到的码字变为 C’ = 101101001, 此时再用 G 除以 C’:</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">          110100</span><br><span class="line">1101 ) 101101001</span><br><span class="line">       1101</span><br><span class="line">       ----</span><br><span class="line">        1110</span><br><span class="line">        1101</span><br><span class="line">        ----</span><br><span class="line">          1110</span><br><span class="line">          1101</span><br><span class="line">          ----</span><br><span class="line">            1100</span><br><span class="line">            1101</span><br><span class="line">            ----</span><br><span class="line">             101 (余数不为0, 数据有误)</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="纠错编码-Error-Correcting-Codes"><a href="#纠错编码-Error-Correcting-Codes" class="headerlink" title="纠错编码 (Error-Correcting Codes)"></a>纠错编码 (Error-Correcting Codes)</h4><p>纠错编码不仅能发现错误，还能定位错误并自动修复。</p>
+<p>核心思想是：通过<strong>增加更多的冗余位</strong>，使得码字中<strong>任意两个有效码字之间存在足够的“差异</strong>”。即使某个码字在传输中发生了少量错误，它在“<strong>形态”上依然离原始的正确码字“最近</strong>”，而离其他的有效码字“很远”，从而让接收方可以推断出原始的正确码字。</p>
+<p>在介绍具体的纠错码之前，我们需要了解一个重要概念：海明距离 (Hamming Distance)或者码距(Distance)。</p>
+<p>它的定义是指<strong>两个等长码字</strong>之间，<strong>对应位置上比特不同的位数</strong>。例如，10101 和 10011 之间的海明距离是2（第三位和第四位不同）, 这可以通过异或操作实现。在一个编码集中, 编码级的海明距离是指该编码方案中，<strong>任意两个有效码字之间海明距离的最小值</strong>。</p>
+<p>根据纠错理论, 海明距离的大小直接决定了该编码的检错和纠错能力：</p>
+<ul>
+<li>编码方案的纠错能力(c), 检错能力(d)和码距(l)的关系: l = d + c + 1, 其中 d&gt;=c (能纠错必然能检错)</li>
+<li>若要<strong>检测</strong> d 个比特的错误，则编码的海明距离(l)至少需要为 d+1。(c=0的边界情况)</li>
+<li>若要<strong>纠正</strong> t 个比特的错误，则编码的海明距离(l)至少需要为 2t+1。(d=t的边界情况)</li>
+</ul>
+<blockquote>
+<p>例如, 当海明距离为 2t+1 时，如果一个码字发生了 t 位错误，它会变成一个无效码字。但这个无效码字与原始正确码字的海明距离为 t，而与其他任何一个正确码字的海明距离都至少为 t+1。因此，接收方可以通过“选择最近的有效码字”的原则，成功纠正错误。</p>
+</blockquote>
+<p>一个典型的例子是<strong>海明码 (Hamming Code)</strong>, 它是设计最精巧的纠错编码之一，它不仅能发现错误，还能精确定位<strong>单个比特</strong>的错误位置。通过设置<strong>多个校验位</strong>，并且让<strong>每个校验位都对一组不同的数据位进行校验</strong>。这样，当某个数据位出错时，会同时导致多个校验位的值发生变化。通过观察是哪些校验位“不匹配”，就可以像查字典一样反推出是哪一位数据出错了。</p>
+<p>编码过程示例（以数据1010为例）：</p>
+<ol>
+<li>确定海明码的位数<br>若信息位有k位, 设需要r位校验位, r位校验位可以表示<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: 0;" xmlns="http://www.w3.org/2000/svg" width="2.041ex" height="1.528ex" role="img" focusable="false" viewbox="0 -675.5 901.9 675.5"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mn"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"/></g><g data-mml-node="mi" transform="translate(533,363) scale(0.707)"><path data-c="1D45F" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"/></g></g></g></g></svg></mjx-container>种状态, 且总位数为k+r, 单个比特位出错的情况有k+r种, 再加上一种正确状态, 则需满足 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: 0;" xmlns="http://www.w3.org/2000/svg" width="2.041ex" height="1.528ex" role="img" focusable="false" viewbox="0 -675.5 901.9 675.5"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mn"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"/></g><g data-mml-node="mi" transform="translate(533,363) scale(0.707)"><path data-c="1D45F" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"/></g></g></g></g></svg></mjx-container> &gt;= k + r + 1, 代入k=4, 可得r=3, 则总位数n=7<br>则海明码的位数为7位, 其中4位是数据位, 3位是校验位.</li>
+</ol>
+<ul>
+<li>数据位: d4 d3 d2 d1</li>
+<li>校验位: p3 p2 p1</li>
+<li>海明码: h7 h6 h5 h4 h3 h2 h1</li>
+</ul>
+<ol start="2">
+<li><p>确定校验位的位置<br>规定校验位 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.439ex;" xmlns="http://www.w3.org/2000/svg" width="1.878ex" height="1.439ex" role="img" focusable="false" viewbox="0 -442 830 636"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"/></g><g data-mml-node="mi" transform="translate(536,-150) scale(0.707)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"/></g></g></g></g></svg></mjx-container> 必须放在2的幂次位置 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: 0;" xmlns="http://www.w3.org/2000/svg" width="3.915ex" height="1.887ex" role="img" focusable="false" viewbox="0 -833.9 1730.6 833.9"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mn"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"/></g><g data-mml-node="TeXAtom" transform="translate(533,363) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mi"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"/></g><g data-mml-node="mo" transform="translate(345,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"/></g><g data-mml-node="mn" transform="translate(1123,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"/></g></g></g></g></g></svg></mjx-container> 上, 因此p1放在h1, p2放在h2, p3放在h4<br>此时, 海明码的位数为:<br>| h7 | h6 | h5 | h4 | h3 | h2 | h1 |<br>| d4 | p3 | d2 | <strong>p3</strong> | d1 | <strong>p2</strong> | <strong>p1</strong> |</p>
+</li>
+<li><p>分组以形成校验关系<br>每个校验位负责校验一组特定位置的数据位, 具体规则如下:<br>具体来说, 校验位根据其二进制位置的1所处位置位来决定它负责校验哪些数据位:</p>
+</li>
+</ol>
+<ul>
+<li>p1 (h1) 负责校验位置 1, 3, 5, 7 (二进制位中第1位为1的位置), 也就是这里的 h1, h3, h5, h7</li>
+<li>p2 (h2) 负责校验位置 2, 3, 6, 7 (二进制位中第2位为1的位置), 也就是这里的 h2, h3, h6, h7</li>
+<li>p3 (h4) 负责校验位置 4, 5, 6, 7 (二进制位中第3位为1的位置), 也就是这里的 h4, h5, h6, h7</li>
+</ul>
 <ol start="4">
-<li><strong>流量控制 (Flow Control)</strong></li>
+<li>计算校验位的值<br>校验位的值通过对其负责校验的数据位进行异或操作来确定:</li>
 </ol>
-<p>在数据传输中，发送方和接收方的处理速度可能不匹配。如果发送方发送数据的速度过快，超出了接收方的处理能力（例如，接收方的缓冲区已满），接收方必须能通知发送方“慢一点”。这可以防止数据因为接收方来不及处理而丢失。后续 “ (四) 流量控制” 中提到的滑动窗口机制 (Sliding Window) 就是实现流量控制的常用方法。</p>
+<ul>
+<li>p1 = d1 ⊕ d2 ⊕ d4 = 0 ⊕ 1 ⊕ 1 = 0</li>
+<li>p2 = d1 ⊕ d3 ⊕ d4 = 0 ⊕ 0 ⊕ 1 = 1</li>
+<li>p3 = d2 ⊕ d3 ⊕ d4 = 1 ⊕ 0 ⊕ 1 = 0<br>因此, 最终的海明码为: 1010010</li>
+</ul>
 <ol start="5">
-<li><strong>介质访问控制 (Medium Access Control, MAC)</strong></li>
+<li>错误检测与纠正<br>每个检验组分别利用检验位和参与检验的数据位进行异或运算, 构成r个检验方程. 如果结果全部为0, 则表示数据无误; 如果某一组方程结果为1, 则表示该组数据有误.</li>
 </ol>
-<p>这个功能非常关键，尤其是在广播信道（如以太网、Wi-Fi）中，<strong>多个设备共享同一个传输介质</strong>。为了避免冲突，需要一个机制来协调（或仲裁）哪个设备可以在什么时间使用信道。</p>
-<p>因为如果两个或多个设备同时发送数据，它们的信号会相互干扰，导致冲突 (Collision)，使所有数据都失效。后续 “ (五) 介质访问控制” 中提到的各种协议（如 ALOHA、CSMA/CD、CSMA/CA 等）就是为了解决“谁先说”的问题，以确保信道被公平、高效地使用。</p>
-<p>总结来说，数据链路层的功能就是在两个相邻节点之间的链路上，通过<strong>组帧</strong>、<strong>差错控制</strong>、<strong>流量控制</strong>和<strong>介质访问控制</strong>等手段，提供可靠的数据传输服务。</p>
-<h3 id="数据链路层的功能"><a href="#数据链路层的功能" class="headerlink" title="数据链路层的功能"></a>数据链路层的功能</h3>
+<p>假设在传输过程中, 第3位发生了错误, 接收方收到的码字变为: 1010<strong>1</strong>10, 此时在接收方不知道的情况下, 接收方重新计算校验位:</p>
+<ul>
+<li>p1’ = h1 ⊕ h3 ⊕ h5 ⊕ h7 = 0 ⊕ 1 ⊕ 1 ⊕ 1 = 1</li>
+<li>p2’ = h2 ⊕ h3 ⊕ h6 ⊕ h7 = 1 ⊕ 1 ⊕ 0 ⊕ 1 = 1</li>
+<li>p3’ = h4 ⊕ h5 ⊕ h6 ⊕ h7 = 0 ⊕ 1 ⊕ 0 ⊕ 1 = 0<br>将校验结果组合成一个二进制数, p3’p2’p1’ = 011, 并非全部是0, 说明出现了错误. 转换为十进制为3, 表示第3位出错, 接收方直接将第3位从1改回0, 成功纠正了错误.</li>
+</ul>
+<blockquote>
+<p>即使是校验位本身出错, 也能通过同样的方法定位并纠正. 校验子（Syndrome）的计算和解码过程，对所有比特一视同仁。无论是数据位还是校验位出错，都会破坏其所在校验组的平衡，从而产生一个精确指向其位置的、独一无二的校验子，使得接收方能够完美地完成定位和纠正。</p>
+</blockquote>
+<h3 id="流量控制与可靠传输"><a href="#流量控制与可靠传输" class="headerlink" title="流量控制与可靠传输"></a>流量控制与可靠传输</h3><p>在数据链路层，我们的目标是将物理层提供的原始、可能出错的比特流，转变为一条对网络层来说高效、无差错的链路。要实现这个目标，必须解决两个核心问题：</p>
+<p>流量控制 (Flow Control)：如何防止速度快的发送方用数据“淹没”速度慢的接收方？这关乎效率和协调。</p>
+<p>可靠传输 (Reliable Transmission)：如何确保发送的数据帧最终能被接收方准确无误地收到，即使在传输过程中发生了丢失或损坏？这关乎正确性和完整性。</p>
+<p>这两个问题通常使用同一套协议框架来解决，其中最核心的就是滑动窗口机制。</p>
+<h4 id="流量控制与滑动窗口机制"><a href="#流量控制与滑动窗口机制" class="headerlink" title="流量控制与滑动窗口机制"></a>流量控制与滑动窗口机制</h4><p>如果发送方发送数据的速率，超过了接收方处理数据的速率，<strong>接收方的缓冲区</strong>（缓存）就会被填满。此时，后续到达的数据帧将因为无处存放而被丢弃，从而造成数据丢失和网络资源的浪费。</p>
+<p>而我们的目标是在发送方和接收方之间建立一种协调机制，让发送方根据接收方的实际接收能力来调整自己的发送速率。</p>
+<h5 id="一个简单的起点：停止-等待协议-Stop-and-Wait"><a href="#一个简单的起点：停止-等待协议-Stop-and-Wait" class="headerlink" title="一个简单的起点：停止-等待协议 (Stop-and-Wait)"></a>一个简单的起点：停止-等待协议 (Stop-and-Wait)</h5><p>这是最简单的流量控制协议。工作方式是发送方每发送一帧后，就必须停止发送，并等待<strong>接收方返回对该帧的确认</strong>（ACK）。只有收到确认后，才能发送下一帧。</p>
+<p>优点：机制简单，天然地实现了流量控制（因为接收方不确认，发送方就不会发送）。</p>
+<p>缺点：信道利用率极低。在发送方等待确认信号返回的漫长时间里，整个信道都处于空闲状态，造成了巨大的浪费，尤其是在卫星通信这种高延迟的场景下。</p>
+<h5 id="高效的解决方案：滑动窗口协议-Sliding-Window"><a href="#高效的解决方案：滑动窗口协议-Sliding-Window" class="headerlink" title="高效的解决方案：滑动窗口协议 (Sliding Window)"></a>高效的解决方案：滑动窗口协议 (Sliding Window)</h5><p>为了克服停止-等待协议的低效，滑动窗口协议应运而生。其核心思想是允许发送方在收到确认之前，连续发送多个数据帧。</p>
+<p><strong>窗口</strong> (Window)：</p>
+<ul>
+<li>发送窗口：在<strong>发送方</strong>，维持一个允许<strong>连续发送的帧的序号范围</strong>，称为“发送窗口”。窗口内所有帧都可以被发送出去，而无需等待确认。</li>
+<li>接收窗口：在<strong>接收方</strong>，维持一个<strong>允许接收的帧的序号范围</strong>，称为“接收窗口”。</li>
+</ul>
+<p><strong>滑动</strong> (Sliding)：</p>
+<p>当发送方收到一个确认帧（例如，确认了窗口内的第一个帧）时，它就知道该帧已被成功接收，于是发送窗口就可以向前“滑动”，从而可以发送新的数据帧。</p>
+<p>当接收方成功接收并向上层交付数据后，接收窗口也会向前“滑动”，准备接收后续的数据帧。</p>
+<p>流量控制的关键在于接收窗口的大小。接收方可以通过确认帧（ACK）告诉发送方自己当前还能接收多少数据帧（即接收窗口的大小）。如果接收方缓冲区已满，它可以将接收窗口大小设为0，发送方收到这个信息后就会暂停发送，直到接收方处理完数据，重新开放窗口。这是一种非常灵活且高效的流量控制方式。</p>
+<p><img lazyload src="/images/loading.svg" data-src="/./%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/image-1.png" alt="alt text"></p>
+<h4 id="可靠传输机制"><a href="#可靠传输机制" class="headerlink" title="可靠传输机制"></a>可靠传输机制</h4>
 		</div>
 
 		
@@ -916,7 +1089,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">数据链路层</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-text">数据链路层的功能</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD"><span class="nav-text">数据链路层的主要功能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E6%89%80%E5%A4%84%E7%9A%84%E5%9C%B0%E4%BD%8D"><span class="nav-text">数据链路层所处的地位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E7%AE%A1%E7%90%86-Link-Management"><span class="nav-text">链路管理 (Link Management)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%81%E8%A3%85%E6%88%90%E5%B8%A7%E4%B8%8E%E9%80%8F%E6%98%8E%E4%BC%A0%E8%BE%93"><span class="nav-text">封装成帧与透明传输</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6-Flow-Control"><span class="nav-text">流量控制 (Flow Control)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%AE%E9%94%99%E6%A3%80%E6%B5%8B-Error-Detection"><span class="nav-text">差错检测 (Error Detection)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%B8%A7-Framing"><span class="nav-text">组帧(Framing)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E8%AE%A1%E6%95%B0%E6%B3%95-Character-Count"><span class="nav-text">字符计数法 (Character Count)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E5%A1%AB%E5%85%85%E6%B3%95-Byte-Stuffing"><span class="nav-text">字节填充法 (Byte Stuffing)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%B6%E6%AF%94%E7%89%B9%E5%A1%AB%E5%85%85%E6%B3%95-Zero-Bit-Stuffing"><span class="nav-text">零比特填充法 (Zero-Bit Stuffing)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9D%E8%A7%84%E7%BC%96%E7%A0%81%E6%B3%95-Physical-Layer-Coding-Violations"><span class="nav-text">违规编码法 (Physical Layer Coding Violations)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%AE%E9%94%99%E6%8E%A7%E5%88%B6-Error-Control"><span class="nav-text">差错控制 (Error Control)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A3%80%E9%94%99%E7%BC%96%E7%A0%81-Error-Detecting-Codes"><span class="nav-text">检错编码 (Error-Detecting Codes)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A5%87%E5%81%B6%E6%A0%A1%E9%AA%8C%E7%A0%81-Parity-Code"><span class="nav-text">奇偶校验码 (Parity Code)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%86%97%E4%BD%99%E7%A0%81-CRC-Cyclic-Redundancy-Check"><span class="nav-text">循环冗余码 (CRC - Cyclic Redundancy Check)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%A0%E9%94%99%E7%BC%96%E7%A0%81-Error-Correcting-Codes"><span class="nav-text">纠错编码 (Error-Correcting Codes)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93"><span class="nav-text">流量控制与可靠传输</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%BA%E5%88%B6"><span class="nav-text">流量控制与滑动窗口机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E8%B5%B7%E7%82%B9%EF%BC%9A%E5%81%9C%E6%AD%A2-%E7%AD%89%E5%BE%85%E5%8D%8F%E8%AE%AE-Stop-and-Wait"><span class="nav-text">一个简单的起点：停止-等待协议 (Stop-and-Wait)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%AB%98%E6%95%88%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E5%8D%8F%E8%AE%AE-Sliding-Window"><span class="nav-text">高效的解决方案：滑动窗口协议 (Sliding Window)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93%E6%9C%BA%E5%88%B6"><span class="nav-text">可靠传输机制</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -945,11 +1118,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        77 posts in total
+                        110 posts in total
                     </span>
                     
                         <span>
-                            150.2k words in total
+                            232.6k words in total
                         </span>
                     
                 </p>

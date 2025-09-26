@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-19T13:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-19T12:47:27.361Z">
+<meta property="article:modified_time" content="2025-09-20T01:25:28.281Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="CPP">
@@ -704,15 +704,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">17</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">77</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">110</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -763,8 +763,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-19 20:47:27</span>
-            <span class="mobile">2025-09-19 20:47:27</span>
+            <span class="desktop">2025-09-20 09:25:28</span>
+            <span class="mobile">2025-09-20 09:25:28</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -806,12 +806,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>99 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>5.9k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>1 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>23 Mins</span>
         </span>
     
     
@@ -827,6 +827,166 @@ mjx-container[display="true"] + br {
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
 			<p>条款26明确指出，对万能引用进行重载是一个坏主意，因为它过于“贪婪”，会意外地匹配到许多本意是想调用其他重载函数的调用。本条款则提供了多种替代方案，让我们可以在需要区分处理不同类型的同时，安全地使用万能引用的强大功能。</p>
+<h3 id="简单的替代方案"><a href="#简单的替代方案" class="headerlink" title="简单的替代方案"></a>简单的替代方案</h3><p>在介绍复杂技术之前，有几种简单的替代方法：</p>
+<ul>
+<li><p>舍弃重载，使用不同函数名：这是最简单的办法。与其重载 logAndAdd(T&amp;&amp;) 和 logAndAdd(int)，不如创建两个名字不同的函数，如 logAndAddName 和 logAndAddByIdx。这完全避免了重载决议的问题。但它的缺点是无法用于构造函数，因为构造函数的名称是固定的。</p>
+</li>
+<li><p>传递 const T&amp;：放弃完美转发，回归 C++98 的 const T&amp; 传参方式(同样可以接受左值和右值)。这种方法简单，但牺牲了完美转发带来的效率（例如，无法移动右值，也无法避免为字符串字面量等创建临时对象）。</p>
+</li>
+<li><p>传值：将参数按值传递。这在某些情况下能够提升性能，但其适用场景和利弊权衡非常复杂（条款41有详细讨论），并非一个通用的解决方案。</p>
+</li>
+</ul>
+<h3 id="标签分派-Tag-Dispatch"><a href="#标签分派-Tag-Dispatch" class="headerlink" title="标签分派 (Tag Dispatch)"></a>标签分派 (Tag Dispatch)</h3><p>标签分派是一种在<strong>编译期</strong>根据<strong>类型的某些“属性</strong>”（而非类型本身）来<strong>选择不同函数</strong>实现的技术。它通过创建一系列空的“标签”类型（通常是空结构体 struct），并利用函数重载机制，让编译器根据传入的标签类型自动选择最优或最正确的代码路径。这是一种强大且经典的模板元编程技术，可以完美解决重载问题。</p>
+<h4 id="理解标签分派"><a href="#理解标签分派" class="headerlink" title="理解标签分派"></a>理解标签分派</h4><p>为了在将标签分派和万能引用结合时不至于困惑, 我们先思考一个更自然的问题: 为何需要标签分派？</p>
+<p>我们都知道 C++标准库中的 std::advance 函数, 这个函数的作用是将一个迭代器前进 n 步。而不同容器的迭代器性能天差地别：</p>
+<ul>
+<li>随机访问迭代器 (Random Access Iterator)：例如 std::vector::iterator。它可以进行常数时间 O(1) 的跳跃，直接使用 it += n 即可。</li>
+<li>双向迭代器 (Bidirectional Iterator)：例如 std::list::iterator。它只能一步一步地前进或后退，前进 n 步需要 O(n) 的时间，即执行 n 次 ++it。</li>
+<li>前向迭代器 (Forward Iterator)：例如 std::forward_list::iterator。它只能一步一步地前进，同样需要 O(n) 的时间。</li>
+</ul>
+<p>现在，如果我们想自己实现一个泛型的 my_advance 函数，该怎么做？一个朴素的想法可能是这样的：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator, <span class="keyword">typename</span> Distance&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_advance_naive</span><span class="params">(InputIterator&amp; it, Distance n)</span> </span>{</span><br><span class="line">    <span class="comment">// 这种实现对所有迭代器都有效，但对随机访问迭代器来说效率极低！</span></span><br><span class="line">    <span class="keyword">while</span> (n &gt; <span class="number">0</span>) {</span><br><span class="line">        ++it;</span><br><span class="line">        --n;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>显然, 这个实现对于 std::vector::iterator 来说太慢了。我们希望当传入的迭代器是随机访问迭代器时，能自动调用 it += n。</p>
+<p>那我们该如何判断迭代器的类型呢？在<strong>函数体内使用 if 判断是运行时行为</strong>，并且我们无法在编译期根据这个条件选择不同的代码。而我们想要的是<strong>编译期就能确定最佳策略</strong>，<strong>没有任何运行时开销</strong>。这就是标签分派大显身手的地方。</p>
+<h5 id="标签分派的实现步骤"><a href="#标签分派的实现步骤" class="headerlink" title="标签分派的实现步骤"></a>标签分派的实现步骤</h5><p>实现标签分派通常包含以下四个步骤：</p>
+<ol>
+<li>创建标签 (Tags)</li>
+</ol>
+<p>首先，定义一组空结构体，它们的存在仅仅是为了在类型系统中作为“标签”，以区分不同的特性。对于迭代器，C++标准库已经为我们定义好了这些标签（在 <iterator> 头文件中）：</iterator></p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 位于 std 命名空间</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">input_iterator_tag</span> {};</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">output_iterator_tag</span> {};</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">forward_iterator_tag</span> : <span class="keyword">public</span> input_iterator_tag {};</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">bidirectional_iterator_tag</span> : <span class="keyword">public</span> forward_iterator_tag {};</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">random_access_iterator_tag</span> : <span class="keyword">public</span> bidirectional_iterator_tag {};</span><br><span class="line"><span class="comment">// 注意：这些标签之间有继承关系，这使得一个随机访问迭代器同时也可以被视为一个双向迭代器，依此类推。</span></span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>关联类型与标签 (Type Traits)<br>我们需要一种机制来查询一个类型（比如一个迭代器）对应的标签是什么。这就是类型萃取 (Type Traits) 的作用。</li>
+</ol>
+<p>C++标准库提供了 std::iterator_traits，它可以提取出任何迭代器的属性，其中就包括它的迭代器类别 (iterator category)。例如, std::iterator_traits&lt;std::vector<int>::iterator&gt;::iterator_category 的类型是 std::random_access_iterator_tag。</int></p>
+<ol start="3">
+<li>实现多个“工作”函数 (Worker Functions)<br>接下来，我们编写多个<strong>内部辅助函数</strong>。这些函数执行实际的工作，并且它们<strong>根据不同的标签类型进行重载</strong>。</li>
+</ol>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这是 my_advance 的内部实现，用户不直接调用</span></span><br><span class="line"><span class="keyword">namespace</span> detail {</span><br><span class="line"></span><br><span class="line"><span class="comment">// 版本1：为随机访问迭代器特化的实现</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> RandomAccessIterator, <span class="keyword">typename</span> Distance&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_advance_impl</span><span class="params">(RandomAccessIterator&amp; it, Distance n, std::random_access_iterator_tag)</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Using random access iterator implementation (O(1))\n"</span>;</span><br><span class="line">    it += n; <span class="comment">// 高效的 O(1) 操作</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 版本2：为双向迭代器特化的实现</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> BidirectionalIterator, <span class="keyword">typename</span> Distance&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_advance_impl</span><span class="params">(BidirectionalIterator&amp; it, Distance n, std::bidirectional_iterator_tag)</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Using bidirectional iterator implementation (O(n))\n"</span>;</span><br><span class="line">    <span class="keyword">if</span> (n &gt;= <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">while</span> (n-- &gt; <span class="number">0</span>) ++it;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="keyword">while</span> (n++ &lt; <span class="number">0</span>) --it;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 版本3：为输入/前向迭代器特化的实现</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator, <span class="keyword">typename</span> Distance&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_advance_impl</span><span class="params">(InputIterator&amp; it, Distance n, std::input_iterator_tag)</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Using input iterator implementation (O(n))\n"</span>;</span><br><span class="line">    <span class="comment">// (为简化，假设 n &gt;= 0)</span></span><br><span class="line">    <span class="keyword">while</span> (n-- &gt; <span class="number">0</span>) ++it;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">} <span class="comment">// namespace detail</span></span><br></pre></td></tr></table></figure></div>
+<p>我们定义了三个名为 my_advance_impl 的重载函数。它们唯一的区别是<strong>第三个参数的类型</strong>，分别是<strong>不同的迭代器标签</strong>。编译器在<strong>编译时会根据传入的标签类型，精确地选择其中一个版本</strong>。</p>
+<ol start="4">
+<li>创建“分派”函数/公开函数 (Dispatcher Function)<br>最后，我们创建一个<strong>公开的、用户调用的接口函数</strong>。这个函数<strong>不执行任何实际工作</strong>，它的唯一任务就是：获取迭代器的<strong>类型标签</strong>, 创建一个该标签类型的临时对象, 然后<strong>调用内部的“工作”函数</strong>，并将这个<strong>标签对象作为参数传进去</strong>，从而<strong>触发正确的重载</strong>。</li>
+</ol>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator, <span class="keyword">typename</span> Distance&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_advance</span><span class="params">(InputIterator&amp; it, Distance n)</span> </span>{</span><br><span class="line">    <span class="comment">// 步骤1：通过 iterator_traits 获取迭代器的类别（即标签类型）</span></span><br><span class="line">    <span class="keyword">using</span> category = <span class="keyword">typename</span> std::iterator_traits&lt;InputIterator&gt;::iterator_category;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤2 &amp; 3：调用内部实现，并传入一个标签类型的临时对象 category{}</span></span><br><span class="line">    <span class="comment">// 编译器会根据 category{} 的类型来选择正确的 my_advance_impl 重载版本</span></span><br><span class="line">    detail::<span class="built_in">my_advance_impl</span>(it, n, category{});</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>这里实现编译期决定调用的关键在于: category 是一个类型，而不是一个变量。关于类型的所有决策，都是在编译期由编译器完成的，而不是在程序运行时。</p>
+<blockquote>
+<p>当然, 在现代C++中, 我们有了更直接的工具: if constexpr (C++17), 可以在编译期进行分支判断，代码可以写在同一个函数内，更简洁; Concepts (C++20), 提供了更强大的模板约束能力，可以直接在函数声明中要求类型的属性，使得重载更加清晰。</p>
+</blockquote>
+<h4 id="logAndAdd-示例分析"><a href="#logAndAdd-示例分析" class="headerlink" title="logAndAdd 示例分析"></a>logAndAdd 示例分析</h4><div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为了处理左值引用，我们需要 std::remove_reference</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(T&amp;&amp; name)</span> </span>{</span><br><span class="line">    <span class="built_in">logAndAddImpl</span>(</span><br><span class="line">        std::forward&lt;T&gt;(name),</span><br><span class="line">        <span class="comment">// 根据 name 的类型（移除引用后）是否为整型来创建标签</span></span><br><span class="line">        std::is_integral&lt;<span class="keyword">typename</span> std::remove_reference&lt;T&gt;::type&gt;()</span><br><span class="line">    );</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现版本1：为非整型准备（标签类型为 std::false_type）</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAddImpl</span><span class="params">(T&amp;&amp; name, std::false_type)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(std::forward&lt;T&gt;(name));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现版本2：为整型准备（标签类型为 std::true_type）</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAddImpl</span><span class="params">(<span class="type">int</span> idx, std::true_type)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(<span class="built_in">nameFromIdx</span>(idx));</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>当 logAndAdd 被调用时，std::is_integral 会在编译期判断传入的参数类型是否为整型。如果传入的是 std::string，is_integral 的结果是 std::false_type，于是编译器会选择匹配 std::false_type 的 logAndAddImpl 版本。而如果传入的是 int，is_integral 的结果是 std::true_type，于是编译器会选择匹配 std::true_type 的 logAndAddImpl 版本。</p>
+<p>由于公开的 logAndAdd 函数没有被重载，从而避免了条款26中的问题。真正的重载发生在实现函数 logAndAddImpl 上，但由于其签名中包含了不同的标签类型，重载决议可以精确无误地进行。</p>
+<h3 id="类型萃取"><a href="#类型萃取" class="headerlink" title="类型萃取"></a>类型萃取</h3><p>上述代码中, 我们使用了 std::iterator_traits 来获取迭代器的类型标签, 使用 std::remove_reference 来移除引用, 这些都是<strong>类型萃取工具</strong>, 因此下面我们对此进行详细的解释, 学习这一现代C++泛型编程中不可或缺的一部分。</p>
+<p>类型萃取 (Type Traits) 是一种在<strong>编译期</strong>查询和获取<strong>一个类型（Type）的各种属性（Traits</strong>）的编程技术。你可以把它想象成一个内置于C++编译器的“类型信息查询系统”。</p>
+<p>它的核心思想是：为给定的<strong>类型 T</strong>，提供一个<strong>统一的接口</strong>（通常是一个模板类），通过这个接口，我们可以在编译期间得到关于 T 的各种信息，例如：</p>
+<ul>
+<li>这个类型是不是一个整数？（is_integral）</li>
+<li>这个类型是不是一个指针？（is_pointer）</li>
+<li>如果去掉这个类型的 const 限定符，它会是什么类型？（remove_const）</li>
+<li>两个类型是不是完全相同？（is_same）</li>
+</ul>
+<p>这些查询完全在编译期进行，<strong>不会产生任何运行时开销</strong>。编译器会利用查询结果来生成最优化的代码。</p>
+<h4 id="为什么需要类型萃取？"><a href="#为什么需要类型萃取？" class="headerlink" title="为什么需要类型萃取？"></a>为什么需要类型萃取？</h4><p>前面我们使用的“标签分派”技术就是利用了类型萃取的能力, 它可以根据类型的属性, 选择不同的实现路径, 从而实现编译期的多态。这便是类型萃取的一个重要应用场景: 在泛型编程中，我们经常需要编写一个模板函数来处理各种不同的类型。然而，不同类型往往需要不同的处理方式才能达到最佳性能或保证正确性。</p>
+<p>下面这个例子再帮助我们强化一下:<br>假设我们要写一个泛型函数 my_copy，将一个数组的元素拷贝到另一个数组。一个简单通用的实现是逐个元素拷贝:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_copy_simple</span><span class="params">(T* dest, <span class="type">const</span> T* src, <span class="type">size_t</span> n)</span> </span>{</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; n; ++i) {</span><br><span class="line">        dest[i] = src[i]; <span class="comment">// 逐个调用赋值操作符</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>这个实现是正确的，但不是最高效的。对于像 int, char, double 这样的<strong>普通旧数据类型</strong> (Plain Old Data, <strong>POD</strong>)，或者更现代的说法是<strong>可平凡拷贝的类型</strong> (Trivially Copyable Types)，它们没有复杂的构造、析构或赋值逻辑，其内存布局就是<strong>一串字节</strong>。对于这些类型，使用 C 语言的 <strong>memcpy 函数进行内存块的整体拷贝</strong>会快得多。</p>
+<p>但问题来了：我们的 my_copy 函数如何在编译期知道类型 T 是否是“可平凡拷贝的”呢？我们不能用 if (some_runtime_check)，因为这会带来运行时开销，而且我们希望为不同类型生成完全不同的机器码。这正是类型萃取要解决的问题。我们可以利用类型萃取来“<strong>询问</strong>”编译器关于类型 T 的信息：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span> <span class="comment">// C++11 之后，所有类型萃取工具都在这里</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">my_copy_optimized</span><span class="params">(T* dest, <span class="type">const</span> T* src, <span class="type">size_t</span> n)</span> </span>{</span><br><span class="line">    <span class="comment">// 在编译期查询 T 是否是可平凡拷贝的</span></span><br><span class="line">    <span class="function"><span class="keyword">if</span> <span class="title">constexpr</span> <span class="params">(std::is_trivially_copyable_v&lt;T&gt;)</span> </span>{</span><br><span class="line">        <span class="comment">// 如果是，编译器只会生成这部分代码</span></span><br><span class="line">        <span class="built_in">memcpy</span>(dest, src, n * <span class="built_in">sizeof</span>(T));</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// 如果不是，编译器只会生成这部分代码</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; n; ++i) {</span><br><span class="line">            dest[i] = src[i];</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>这里的std::is_trivially_copyable_v<t> 是一个类型萃取。它是一个编译期常量，如果 T 是可平凡拷贝的，它的值就是 true，否则是 false。而if constexpr (C++17) 指示编译器在编译时进行判断。如果条件为 true，else 分支的代码甚至不会被编译，反之亦然。这样就实现了为不同类型属性生成不同代码路径的目的。</t></p>
+<h4 id="类型萃取是如何实现的？"><a href="#类型萃取是如何实现的？" class="headerlink" title="类型萃取是如何实现的？"></a>类型萃取是如何实现的？</h4><p>类型萃取的核心机制是 模板特化 (Template Specialization)。我们通过定义一个基础模板（提供默认值），然后为我们感兴趣的特定类型提供特化版本（提供特定的值）。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_pointer</span> {</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">bool</span> value = <span class="literal">false</span>;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_pointer</span>&lt;T*&gt; { <span class="comment">// 这个 &lt;T*&gt; 就是特化</span></span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">bool</span> value = <span class="literal">true</span>;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>当编译器遇到 is_pointer<int> 时，它无法匹配特化版本 &lt;T*&gt;，所以会使用基础模板，得到 value = false。</int></p>
+<p>当编译器遇到 is_pointer&lt;int*&gt; 时，它发现这完美匹配特化版本 &lt;T*&gt;（此时 T 是 int），于是它会使用这个特化版本，得到 value = true。</p>
+<p>为了使用起来更方便（不用写 ::value），C++14之后通常会提供一个变量模板, 这样，我们就可以直接写 is_pointer_v&lt;int*&gt; 来获取 true</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">bool</span> is_pointer_v = is_pointer&lt;T&gt;::value;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="C-标准库中的类型萃取"><a href="#C-标准库中的类型萃取" class="headerlink" title="C++标准库中的类型萃取"></a>C++标准库中的类型萃取</h4><p>C++标准库在 <type_traits> 头文件中提供了极其丰富的一套工具，可以分为几大类：</type_traits></p>
+<ul>
+<li><p>主类型类别 (Primary Type Categories): 判断一个类型属于哪个大的分类。</p>
+<ul>
+<li>std::is_void<t></t></li>
+<li>std::is_integral<t> (是否为整数类型)</t></li>
+<li>std::is_floating_point<t> (是否为浮点数类型)</t></li>
+<li>std::is_array<t> (是否为数组类型)</t></li>
+<li>std::is_pointer<t> (是否为指针类型)</t></li>
+<li>std::is_class<t> (是否为类类型)</t></li>
+<li>std::is_function<t> (是否为函数类型)</t></li>
+</ul>
+</li>
+<li><p>类型属性 (Type Properties): 查询类型的具体属性。</p>
+<ul>
+<li>std::is_const<t> (是否为 const 类型)</t></li>
+<li>std::is_volatile<t> (是否为 volatile 类型)</t></li>
+<li>std::is_trivial<t> (是否为平凡类型)</t></li>
+<li>std::is_trivially_copyable<t> (是否可平凡拷贝)</t></li>
+<li>std::is_abstract<t> (是否为抽象类)</t></li>
+<li>std::is_constructible&lt;T, Args…&gt; (T是否能用Args…参数构造)</li>
+</ul>
+</li>
+<li><p>类型关系 (Type Relationships): 比较两个类型之间的关系。</p>
+<ul>
+<li>std::is_same&lt;T, U&gt; (T和U是否是同一类型)</li>
+<li>std::is_base_of&lt;Base, Derived&gt; (Base是否是Derived的基类)</li>
+<li>std::is_convertible&lt;From, To&gt; (From类型是否能隐式转换为To类型)</li>
+</ul>
+</li>
+<li><p>类型修改 (Type Modifications): 在编译期对一个类型进行“计算”，得到一个新类型。</p>
+<ul>
+<li>std::remove_const<t>::type -&gt; std::remove_const_t<t></t></t></li>
+<li>std::add_const<t>::type -&gt; std::add_const_t<t></t></t></li>
+<li>std::remove_reference<t>::type -&gt; std::remove_reference_t<t></t></t></li>
+<li>std::add_pointer<t>::type -&gt; std::add_pointer_t<t></t></t></li>
+<li>std::decay<t>::type -&gt; std::decay_t<t> (模拟按值传参时的类型退化)</t></t></li>
+</ul>
+</li>
+</ul>
+<h3 id="约束模板：std-enable-if"><a href="#约束模板：std-enable-if" class="headerlink" title="约束模板：std::enable_if"></a>约束模板：std::enable_if</h3><p>对于构造函数等无法使用标签分派的场景，我们可以使用 std::enable_if 来约束模板，这项技术是基于 <strong>SFINAE</strong>（Substitution Failure Is Not An Error，替换失败并非错误）规则。</p>
+<p>std::enable_if 可以根据一个<strong>编译期条件</strong>，来决定一个模板<strong>是否“存在</strong>”。如果条件为 false，模板就会在重载决议中被“禁用”或“移除”，编译器会假装它不存在。</p>
+<h4 id="SFINAE"><a href="#SFINAE" class="headerlink" title="SFINAE"></a>SFINAE</h4><p>SFINAE 是 “Substitution Failure Is Not An Error” 的缩写，其中文直译为**“替换失败并非错误”**。</p>
+<p>这是一个 C++ 编译器的规则，指的是在<strong>为模板进行类型推导和参数替换</strong>时，如果<strong>某个替换导致了无效的代码</strong>（例如，调用了不存在的成员函数或使用了不存在的类型），编译器<strong>不会立即报错并停止编译</strong>，而是会静默地<strong>将这个模板从重载决议的候选集中移除</strong>，然后继续<strong>尝试其他可行的重载</strong>。这个特性是实现 C++ 类型萃取（Type Traits）和许多高级模板技术的基础。</p>
+<p>我们可以拆解这个过程如下: </p>
+<ol>
+<li><p>模板实例化与替换 (Template Instantiation and Substitution)<br>当你调用一个模板函数时，编译器会根据你提供的参数推导出模板参数的具体类型。例如，调用 template<typename t> void func(T arg); 时使用 func(123)，编译器会推导出 T 是 int。然后，编译器会用 int 替换 (substitute) 模板定义中所有的 T。</typename></p>
+</li>
+<li><p>替换失败 (Substitution Failure)<br>在替换过程中，如果生成的代码在语法上是无效的，就称之为“替换失败”。常见的替换失败场景包括：</p>
+</li>
+</ol>
+<ul>
+<li>访问一个不存在的嵌套类型：例如，模板代码使用了 typename T::inner_type，但 T 被替换为 int，而 int 并没有 inner_type。</li>
+<li>调用一个不存在的成员函数：模板代码调用了 arg.foo()，但传入的参数类型没有 foo() 成员。</li>
+<li>使用了不满足 static_assert 或其他编译期断言的类型。</li>
+</ul>
+<ol start="3">
+<li>并非错误 (Is Not An Error)<br>这是 SFINAE 的关键。一个替换失败并不会让编译器立刻报错。相反，编译器会认为：“好吧，这个模板函数对于给定的参数是不可行的，我将它从候选列表中移除，看看有没有其他同名的函数或模板可以匹配这次调用。”</li>
+</ol>
+<p>如果所有的候选函数（包括普通函数和模板）都因为不匹配或 SFINAE 而被排除了，那么最终编译器才会报告一个“没有匹配的函数”的错误。</p>
+<h4 id="std-enable-if：SFINAE-的主要工具"><a href="#std-enable-if：SFINAE-的主要工具" class="headerlink" title="std::enable_if：SFINAE 的主要工具"></a>std::enable_if：SFINAE 的主要工具</h4><p>在实践中，我们很少直接依赖隐式的替换失败，而是通过一个标准库工具 std::enable_if 来主动、清晰地触发 SFINAE。</p>
+<p>std::enable_if 是一个条件编译的辅助模板。它的定义大致如下：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 B 为 true, std::enable_if&lt;B, T&gt; 会有一个名为 type 的成员，其类型为 T</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">bool</span> B, <span class="keyword">class</span> <span class="title class_">T</span> = <span class="type">void</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> enable_if {};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 特化版本：当 B 为 true 时</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">enable_if</span>&lt;<span class="literal">true</span>, T&gt; {</span><br><span class="line">    <span class="keyword">using</span> type = T;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>当第一个模板参数 B 为 true 时，std::enable_if&lt;true, T&gt; 结构体内部会有一个 type 成员。如果 B 为 false，则会匹配基础模板，而基础模板是空的，里面没有 type 成员。当我们试图访问一个不存在的 type 成员时，就会触发“替换失败”。</p>
+<p>从 C++14 开始，我们通常使用别名 std::enable_if_t&lt;B, T&gt;，它等价于 typename std::enable_if&lt;B, T&gt;::type。</p>
+<p>下面是一个例子，我们编写一个函数，使其只对整数类型（integral types）有效。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span> <span class="comment">// for std::is_integral, std::enable_if_t</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方式一：作为返回类型（最常见）</span></span><br><span class="line"><span class="comment">// 如果 T 是整数，返回类型为 void；否则，替换失败。</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">std::<span class="type">enable_if_t</span>&lt;std::is_integral_v&lt;T&gt;, <span class="type">void</span>&gt;</span><br><span class="line"><span class="built_in">process</span>(T value) {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Processing an integral value: "</span> &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方式二：作为函数参数</span></span><br><span class="line"><span class="comment">// 如果 T 是浮点数，这个重载版本才有效</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">(T value, std::<span class="type">enable_if_t</span>&lt;std::is_floating_point_v&lt;T&gt;&gt;* = <span class="literal">nullptr</span>)</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Processing a floating point value: "</span> &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">方式三：作为模板参数（C+<span class="number">+11</span>及以后）</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> = std::<span class="type">enable_if_t</span>&lt;std::is_arithmetic_v&lt;T&gt;&gt;&gt;</span><br><span class="line"><span class="type">void</span> <span class="built_in">some_other_func</span>(T value) {</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="built_in">main</span>() {</span><br><span class="line">    <span class="built_in">process</span>(<span class="number">10</span>);      <span class="comment">// 调用第一个版本，T=int, std::is_integral_v&lt;int&gt; is true</span></span><br><span class="line">    <span class="built_in">process</span>(<span class="number">3.14</span>);    <span class="comment">// 调用第二个版本，T=double, std::is_floating_point_v&lt;double&gt; is true</span></span><br><span class="line">    <span class="comment">// process("hello"); // 编译错误！两个 process 模板都因 SFINAE 被排除了</span></span><br><span class="line">                       <span class="comment">// 没有匹配的函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>当调用 process(10) 时，编译器尝试匹配两个 process 模板。对于第一个模板，T 推导为 int。std::is_integral_v<int> 是 true，所以 std::enable_if_t&lt;true, void&gt; 成功替换为 void。函数签名为 void process(int)。这是一个有效的候选。</int></p>
+<p>对于第二个模板，T 推导为 int。std::is_floating_point_v<int> 是 false，std::enable_if_t<false> 试图访问不存在的 type 成员，导致替换失败。此模板被移除。最终，只有第一个模板是唯一候选，因此被调用。</false></int></p>
+<p>当调用 process(3.14) 时，情况正好相反，第一个模板被 SFINAE 排除，第二个模板成为唯一候选。</p>
+<h4 id="SFINAE-的局限性与现代C-的演进"><a href="#SFINAE-的局限性与现代C-的演进" class="headerlink" title="SFINAE 的局限性与现代C++的演进"></a>SFINAE 的局限性与现代C++的演进</h4><p>尽管 SFINAE 非常强大，但它也有明显的缺点：</p>
+<ul>
+<li>复杂的语法：typename std::enable_if&lt;…&gt;::type 这样的代码非常冗长且不直观。</li>
+<li>糟糕的错误信息：当所有重载都因为 SFINAE 被排除时，编译器通常会给出一个非常庞大且难以理解的错误报告，因为它会列出所有尝试过的失败的模板，而不是告诉开发者“你传入的类型不满足整数的要求”。</li>
+<li>概念表达能力弱：它是一种“曲线救国”的方式来表达对模板参数的约束，而不是直接地描述。</li>
+</ul>
+<p>为了解决这些问题，现代 C++ 提供了更好的工具：</p>
+<p><strong>if constexpr</strong> (C++17): if constexpr 允许在<strong>函数体内部进行编译期分支</strong>。它不是选择不同的函数重载，而是在一个函数模板内部丢弃不符合条件的代码块。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_modern</span><span class="params">(T value)</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">if</span> <span class="title">constexpr</span> <span class="params">(std::is_integral_v&lt;T&gt;)</span> </span>{</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Integral value (if constexpr): "</span> &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> <span class="built_in">constexpr</span> (std::is_floating_point_v&lt;T&gt;) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Floating point value (if constexpr): "</span> &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// 在编译时就给出清晰的错误</span></span><br><span class="line">        <span class="built_in">static_assert</span>(std::is_arithmetic_v&lt;T&gt;, <span class="string">"process_modern only accepts arithmetic types"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>不同在于, SFINAE 在重载决议阶段起作用，用于选择哪个函数。if constexpr 在模板实例化后起作用，用于决定函数体内哪些代码被编译, 不过后者需要将逻辑聚合在一个函数内。</p>
+<p>Concepts (C++20): C++20 引入的 Concepts 是 SFINAE 的终极替代品。它允许我们直接、清晰地在模板定义上声明其参数必须满足的约束。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;concepts&gt;</span> <span class="comment">// for std::integral</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 requires 子句来约束模板参数 T</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">requires</span> std::integral&lt;T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_concepts</span><span class="params">(T value)</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Processing an integral value (concepts): "</span> &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">requires</span> std::floating_point&lt;T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_concepts</span><span class="params">(T value)</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Processing a floating point value (concepts): "</span> &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>使用requires关键字, 语法极其清晰易读。且当约束不满足时，编译器会给出非常明确的错误信息，例如：“process_concepts(std::string) failed because std::string does not satisfy the concept std::integral”。</p>
+<h4 id="回到上一条款的示例"><a href="#回到上一条款的示例" class="headerlink" title="回到上一条款的示例"></a>回到上一条款的示例</h4><p>条款26中的 Person 类，其完美转发构造函数会意外“劫持”拷贝构造函数的调用。我们的目标是：仅当传入的类型不是 Person 或其派生类时，才启用这个完美转发构造函数。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span> <span class="comment">// for std::enable_if, std::is_base_of, std::decay etc.</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 前面提到的方式三</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;</span><br><span class="line">        <span class="keyword">typename</span> T,</span><br><span class="line">        <span class="comment">// 仅当 T 不是 Person 或其派生类时，这个模板才有效</span></span><br><span class="line">        <span class="keyword">typename</span> = std::<span class="type">enable_if_t</span>&lt;</span><br><span class="line">            !std::is_base_of&lt;Person, std::<span class="type">decay_t</span>&lt;T&gt;&gt;::value</span><br><span class="line">        &gt;</span><br><span class="line">    &gt;</span><br><span class="line">    <span class="keyword">explicit</span> <span class="built_in">Person</span>(T&amp;&amp; n);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 其他构造函数</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>这里的 std::decay_t<t>用于移除类型 T 的引用和 const/volatile 限定符，得到其“纯粹”的类型; std::is_base_of&lt;Base, Derived&gt;用于判断 Base 是否为 Derived 的基类（或类型相同）。</t></p>
+<p>当尝试拷贝 Person p 时（auto clone(p);），编译器会尝试匹配完美转发构造函数，此时 T 被推导为 Person&amp;。因此std::decay_t&lt;Person&amp;&gt; 的结果是 Person, !std::is_base_of&lt;…&gt;::value 为 false。</p>
+<p>正是这个 std::enable_if_t<false> 导致了“替换失败”。根据 SFINAE 规则，这不是一个编译错误，而是简单地将这个构造函数模板从候选列表中移除。此时，唯一剩下的候选者就是编译器生成的拷贝构造函数，它被正确地选中了。</false></p>
 
 		</div>
 
@@ -857,7 +1017,7 @@ mjx-container[display="true"] + br {
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48"></span>
+						<span class="post-nav-title-item truncate max-w-48">条款 29 - 假定移动操作不存在、成本高、未使用</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -889,7 +1049,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款 27 - 熟悉依万能引用型别进行重载的替代方案</div>
-		
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="nav-text">简单的替代方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE%E5%88%86%E6%B4%BE-Tag-Dispatch"><span class="nav-text">标签分派 (Tag Dispatch)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E6%A0%87%E7%AD%BE%E5%88%86%E6%B4%BE"><span class="nav-text">理解标签分派</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE%E5%88%86%E6%B4%BE%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-text">标签分派的实现步骤</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#logAndAdd-%E7%A4%BA%E4%BE%8B%E5%88%86%E6%9E%90"><span class="nav-text">logAndAdd 示例分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96"><span class="nav-text">类型萃取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96%EF%BC%9F"><span class="nav-text">为什么需要类型萃取？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F"><span class="nav-text">类型萃取是如何实现的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-%E6%A0%87%E5%87%86%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96"><span class="nav-text">C++标准库中的类型萃取</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F%E6%A8%A1%E6%9D%BF%EF%BC%9Astd-enable-if"><span class="nav-text">约束模板：std::enable_if</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SFINAE"><span class="nav-text">SFINAE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#std-enable-if%EF%BC%9ASFINAE-%E7%9A%84%E4%B8%BB%E8%A6%81%E5%B7%A5%E5%85%B7"><span class="nav-text">std::enable_if：SFINAE 的主要工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SFINAE-%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7%E4%B8%8E%E7%8E%B0%E4%BB%A3C-%E7%9A%84%E6%BC%94%E8%BF%9B"><span class="nav-text">SFINAE 的局限性与现代C++的演进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E5%88%B0%E4%B8%8A%E4%B8%80%E6%9D%A1%E6%AC%BE%E7%9A%84%E7%A4%BA%E4%BE%8B"><span class="nav-text">回到上一条款的示例</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -918,11 +1078,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        77 posts in total
+                        110 posts in total
                     </span>
                     
                         <span>
-                            150.2k words in total
+                            232.6k words in total
                         </span>
                     
                 </p>

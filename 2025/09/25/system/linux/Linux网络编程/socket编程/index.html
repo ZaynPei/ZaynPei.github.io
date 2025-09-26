@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/25/system/linux/linux网络编程/socket编程/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Socket编程">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/25/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/socket%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-09-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-25T02:58:17.182Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Socket编程 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">110</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Socket编程</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv5</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-09-25</span>
+        <span class="mobile">2025-09-25</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-09-25 10:58:17</span>
+            <span class="mobile">2025-09-25 10:58:17</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/web/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/web/language/C/">C++</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/web/">web</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/C/">C++</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>6.2k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>24 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><h3 id="网络字节序"><a href="#网络字节序" class="headerlink" title="网络字节序"></a>网络字节序</h3><p>在计算机内存中，当一个数据类型（比如一个 32 位的整数 int）占用<strong>多个字节</strong>时，就存在一个如何排列这些字节的顺序问题，这就是字节序 (Byte Order) 或 Endianness (端序)。</p>
+<p>主要有两种字节序：</p>
+<ul>
+<li><strong>小端</strong>字节序 (Little-Endian)：将数据的<strong>低位</strong>字节存放在内存的<strong>低地址</strong>处。这是目前绝大多数<strong>本地个人电脑</strong>（如 Intel, AMD 的 x86/x64 架构）使用的方式。</li>
+<li><strong>大端</strong>字节序 (Big-Endian)：将数据的<strong>高位</strong>字节存放在内存的<strong>低地址</strong>处。这更符合人类的阅读习惯（从高位读到低位）。一些服务器、<strong>网络设备</strong>和早期的 PowerPC, MIPS 架构使用这种方式。</li>
+</ul>
+<p>举个例子：存储 16 位的整数 0x1234 (十进制的 4660)</p>
+<p>这里 0x12 是高位字节, 0x34 是低位字节。</p>
+<p>小端存储：内存低地址 -&gt; 0x34; 内存高地址 -&gt; 0x12<br>大端存储：内存低地址 -&gt; 0x12; 内存高地址 -&gt; 0x34</p>
+<p>如果只是本地数据的读取, 小端序或者大端序都可以自洽; 但是假如涉及到不同端序设备的网络通信, 双方的端序不同步会产生难以想象的后果. 为了避免这种混乱，TCP/IP 协议规定：所有在<strong>网络上传输的数据</strong>都必须统一使用<strong>大端字节序</strong>。这个统一的标准就被称为 <strong>网络字节序</strong> (Network Byte Order)。</p>
+<p><strong>操作系统</strong>提供了一套标准的函数来在这两种字节序之间进行转换：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>htons()</td>
+<td>Host to Network Short</td>
+<td>将一个 **16 位（short）**的数从主机字节序转换到网络字节序。主要用于端口号。</td>
+</tr>
+<tr>
+<td>htonl()</td>
+<td>Host to Network Long</td>
+<td>将一个 **32 位（long）**的数从主机字节序转换到网络字节序。主要用于 IPv4 地址。</td>
+</tr>
+<tr>
+<td>ntohs()</td>
+<td>Network to Host Short</td>
+<td>将一个 16 位的数从网络字节序转换到主机字节序。</td>
+</tr>
+<tr>
+<td>ntohl()</td>
+<td>Network to Host Long</td>
+<td>将一个 32 位的数从网络字节序转换到主机字节序。</td>
+</tr>
+</tbody></table>
+<p>核心原则：在发送数据前，所有非字符型数据（如端口号、IP地址整数值）都应该使用 hton*() 系列函数转换为网络字节序(操作系统在调用 hton*() 和 ntoh*() 系列函数时，会自动根据主机的字节序进行正确的转换)；在接收到数据后，应该使用 ntoh*() 系列函数转换回主机字节序再使用。</p>
+<h3 id="IP-地址转换函数"><a href="#IP-地址转换函数" class="headerlink" title="IP 地址转换函数"></a>IP 地址转换函数</h3><p>我们已经知道，IP 地址(这里还是指传统的IPv4)有两种表示格式：</p>
+<ul>
+<li>点分十进制字符串格式 (Presentation Format)：方便人类阅读，例如 “192.168.10.1”。</li>
+<li>整数格式 (Network Format)：方便计算机处理，是一个 32 位的无符号整数，并且是网络字节序。</li>
+</ul>
+<p>我们需要一组函数来在这两种格式之间进行转换, 这些函数定义在 &lt;arpa/inet.h&gt; 中:</p>
+<ul>
+<li><p>int inet_pton(int af, const char *src, void *dst);</p>
+<ul>
+<li>功能：将<strong>字符串</strong> (p) 格式的 IP 地址转换为网络 (n) <strong>整数格式</strong>。pton 即 “IP to net”。</li>
+<li>af: 地址族，AF_INET 或 AF_INET6。</li>
+<li>src: 指向 IP 地址字符串的指针。</li>
+<li>dst: 指向转换后存放结果的内存地址（例如 struct in_addr 的地址）。</li>
+<li>返回值为1代表成功; 0代表传入的src没有指向一个有效的IP地址; -1代表失败</li>
+</ul>
+</li>
+<li><p>const char *inet_ntop(int af, const void *src, char *dst, socklen_t size);</p>
+<ul>
+<li>功能：将网络 (n) <strong>整数格式</strong>的 IP 地址转换为<strong>字符串</strong> (p) 格式。ntop 即 “net to IP”。</li>
+</ul>
+</li>
+</ul>
+<h3 id="sockaddr-数据结构"><a href="#sockaddr-数据结构" class="headerlink" title="sockaddr 数据结构"></a>sockaddr 数据结构</h3><p>socket 编程接口（如 bind, connect）需要被设计成通用的，以便能够处理多种不同的网络协议（IPv4, IPv6, UNIX Domain Socket 等）。每种协议的地址结构都不同，例如：</p>
+<ul>
+<li>IPv4 地址需要：协议族、16 位端口号、32 位 IP 地址。</li>
+<li>IPv6 地址需要：协议族、16 位端口号、128 位 IP 地址，以及流信息和范围 ID。</li>
+</ul>
+<p>如果为每种协议都设计一套独立的函数，如 bind_ipv4(), bind_ipv6()，那将非常繁琐。</p>
+<p>为了解决这个问题，Socket API 设计了一个“<strong>基类”结构体 struct sockaddr</strong>。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">sockaddr</span> {</span><br><span class="line">    <span class="type">sa_family_t</span> sa_family;  <span class="comment">// 地址族 (AF_INET, AF_INET6, ...)</span></span><br><span class="line">    <span class="type">char</span>        sa_data[<span class="number">14</span>]; <span class="comment">// 存放地址数据的区域</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>这是一个通用的、但内容模糊的结构体。我们几乎从不直接填充它。它的 sa_data 区域设计得足够大，可以容纳当时最常见的地址类型。</p>
+<p>更常见的是, 我们使用专门用于 IPv4 的更清晰的 <strong>struct sockaddr_in</strong>: </p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span> <span class="comment">// 需要引入socket头文件</span></span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> {</span><br><span class="line">    <span class="type">sa_family_t</span>    sin_family; <span class="comment">// 地址族, 必须是 AF_INET</span></span><br><span class="line">    <span class="type">in_port_t</span>      sin_port;   <span class="comment">// 16位端口号 (必须是网络字节序, 因此要使用htons转换一下)</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">in_addr</span> sin_addr;   <span class="comment">// 32位IP地址结构体 (内含一个整数, 必须是网络字节序)</span></span><br><span class="line">    <span class="type">char</span>           sin_zero[<span class="number">8</span>]; <span class="comment">// 填充位, 必须全部置为0(默认不需要处理), 为了让此结构与sockaddr等长</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里 struct in_addr 内部只有一个成员：uint32_t s_addr;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>在实际使用过程中, 我们需要明确初始化sockaddr_in结构体, 根据客户端和服务端分别初始化如下:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span> <span class="comment">// for memset</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设我们已经创建好了 socket 文件描述符 fd</span></span><br><span class="line"><span class="comment">// int fd = socket(AF_INET, SOCK_STREAM, 0);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 声明一个 sockaddr_in 结构体变量</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> server_addr;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.将结构体清零</span></span><br><span class="line"><span class="built_in">memset</span>(&amp;server_addr, <span class="number">0</span>, <span class="built_in">sizeof</span>(server_addr));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 设置地址族为 IPv4</span></span><br><span class="line">server_addr.sin_family = AF_INET;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 设置服务器的端口号</span></span><br><span class="line"><span class="comment">// htons(9527) -&gt; 将端口号从主机字节序转换到网络字节序</span></span><br><span class="line">server_addr.sin_port = <span class="built_in">htons</span>(<span class="number">9527</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5. 设置服务器的 IP 地址</span></span><br><span class="line"><span class="comment">// 使用 inet_pton 将点分十进制的 IP 字符串转换为网络字节序的整数</span></span><br><span class="line"><span class="comment">// 并直接存入 server_addr.sin_addr 结构体中</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">inet_pton</span>(AF_INET, <span class="string">"192.157.22.45"</span>, &amp;server_addr.sin_addr) &lt;= <span class="number">0</span>) {</span><br><span class="line">    <span class="comment">// 转换失败处理</span></span><br><span class="line">    <span class="built_in">perror</span>(<span class="string">"inet_pton failed"</span>);</span><br><span class="line">    <span class="comment">// exit or return</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6. 现在，server_addr 已经准备就绪，可以用于 connect 函数</span></span><br><span class="line"><span class="comment">// connect(fd, (struct sockaddr *)&amp;server_addr, sizeof(server_addr));</span></span><br></pre></td></tr></table></figure></div>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span> <span class="comment">// for memset</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设我们已经创建好了 socket 文件描述符 fd</span></span><br><span class="line"><span class="comment">// int fd = socket(AF_INET, SOCK_STREAM, 0);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 声明一个 sockaddr_in 结构体变量</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> local_addr;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.【关键】将结构体清零</span></span><br><span class="line"><span class="built_in">memset</span>(&amp;local_addr, <span class="number">0</span>, <span class="built_in">sizeof</span>(local_addr));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 设置地址族为 IPv4</span></span><br><span class="line">local_addr.sin_family = AF_INET;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 设置服务器要监听的端口号</span></span><br><span class="line">local_addr.sin_port = <span class="built_in">htons</span>(<span class="number">9527</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5. 设置服务器的 IP 地址</span></span><br><span class="line"><span class="comment">// 使用 INADDR_ANY 这个宏，它代表 "0.0.0.0", 这意味着监听本机所有网络接口（如有线网卡、无线网卡）上的连接请求</span></span><br><span class="line"><span class="comment">// htonl() 将这个 32 位的地址从主机字节序转换到网络字节序</span></span><br><span class="line">local_addr.sin_addr.s_addr = <span class="built_in">htonl</span>(INADDR_ANY);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6. 现在，local_addr 已经准备就绪，可以用于 bind 函数</span></span><br><span class="line"><span class="comment">// bind(fd, (struct sockaddr *)&amp;local_addr, sizeof(local_addr));</span></span><br></pre></td></tr></table></figure></div>
+
+<h2 id="网络套接字函数"><a href="#网络套接字函数" class="headerlink" title="网络套接字函数"></a>网络套接字函数</h2><h3 id="socket模型创建流程"><a href="#socket模型创建流程" class="headerlink" title="socket模型创建流程"></a>socket模型创建流程</h3><p><img lazyload src="/images/loading.svg" data-src="/20250924225151.png"></p>
+<p>如图, 一个完整的通信流程会涉及到(至少)三个socket,其中客户端一个, 服务端两个. 客户端的比较直接, 我们主要关注服务端</p>
+<p>具体流程是, 当服务器端调用socket()函数时会产生一个监听套接字 (Listening Socket)，而accept函数会阻塞监听套接字监听客户端连接，当有客户端过来连接的时候 该函数会返回一个新的套接字, 称作已连接套接字 (Connected Socket)去和客户端连接</p>
+<p><strong>监听套接字</strong> (Listening Socket)</p>
+<ul>
+<li>创建者：socket() 函数。</li>
+<li>配置者：bind() 和 listen() 函数。</li>
+<li>核心职责：作为一个“连接工厂”，它的唯一使命是在指定的 IP:Port 上<strong>监听</strong>并接收客户端发来的连接请求（TCP协议中的 SYN 包）。</li>
+<li>数据交互：它从不参与应用层数据的收发。你永远不会对一个监听套接字使用 send() 或 recv() 函数。</li>
+<li>生命周期：通常在服务器程序启动时创建，并一直存在，直到服务器程序关闭。对于一个服务器而言，一个端口上通常只有一个监听套接字。</li>
+</ul>
+<p><strong>已连接套接字</strong> (Connected Socket)</p>
+<ul>
+<li>创建者：accept() 函数。</li>
+<li>核心职责：作为与<strong>某一个特定客户端</strong>进行<strong>通信的专属通道</strong>。所有与该客户端的应用层数据（HTTP 请求、数据库查询、聊天消息等）都通过这个套接字进行 send() 和 recv()。</li>
+<li>数据交互：它是数据传输的实际执行者。</li>
+<li>生命周期：当一个客户端连接成功时被创建，当与这个客户端的通信结束时（客户端断开或服务器主动关闭），这个套接字就会被 close() 销毁。一个繁忙的服务器会频繁地创建和销毁成百上千个这样的套接字。</li>
+</ul>
+<p>正是这种“一个监听，多个连接”的模式，构成了所有网络服务器能够高效服务于众多客户端的基础架构。</p>
+<h3 id="socket-函数"><a href="#socket-函数" class="headerlink" title="socket() 函数"></a>socket() 函数</h3><p>socket套接字本意是插座, 意味着在数据通信过程中socket必须是成对出现的(客户端和服务端)</p>
+<p>socket() 函数的作用是在操作系统内核中创建一个通信的端点，并返回一个指向该端点的<strong>文件描述符</strong> (File Descriptor)。</p>
+<p>你可以将这个过程理解为向操作系统申请一部“电话机”。这部“电话机”本身还不知道要打给谁（没有目标地址），也不知道自己的号码（没有绑定端口），但它是后续所有通信操作的基础。在类 Unix 系统（如 Linux）中，这个返回的文件描述符与其他文件（如磁盘文件、管道）的描述符一样，可以被 read(), write(), close() 等函数操作, 本质上也是一个文件。</p>
+<h4 id="函数原型-Function-Prototype-及参数和返回值"><a href="#函数原型-Function-Prototype-及参数和返回值" class="headerlink" title="函数原型 (Function Prototype)及参数和返回值"></a>函数原型 (Function Prototype)及参数和返回值</h4><p>socket() 函数通常在 C 语言的头文件 &lt;sys/socket.h&gt; 中定义。其标准原型如下：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">socket</span><span class="params">(<span class="type">int</span> domain, <span class="type">int</span> type, <span class="type">int</span> protocol)</span></span>;</span><br></pre></td></tr></table></figure></div>
+<p>这个函数接收三个整数类型的参数，并返回一个整数。</p>
+<ol>
+<li>domain：协议族<br>这个参数用于指定 Socket 使用的协议族 (Protocol Family)。它决定了通信的地址格式和底层协议的范畴。</li>
+</ol>
+<p>换句话说, 这个参数告诉操作系统你打算进行哪一类的通信，例如是基于 IPv4 的互联网通信，还是基于 IPv6，或者是仅限于本机内部的通信。</p>
+<p>常用值(主要是AF_INET)：</p>
+<ul>
+<li><p>AF_INET (Address Family Internet): 这是最常用的值，表示使用 IPv4 协议族。网络地址将由 32 位的 IPv4 地址和 16 位的端口号组成。</p>
+</li>
+<li><p>AF_INET6: 表示使用 IPv6 协议族。网络地址将由 128 位的 IPv6 地址和 16 位的端口号组成。</p>
+</li>
+<li><p>AF_UNIX (或 AF_LOCAL): 用于本机内部进程间通信 (IPC)。它不使用网络协议，而是通过文件系统中的一个特殊文件（socket 文件）来进行数据交换，效率非常高。</p>
+</li>
+</ul>
+<ol start="2">
+<li>type：套接字类型<br>这个参数用于指定 Socket 的服务类型 (Service Type)，它决定了通信的语义和行为。使用这个参数需要明确你需要的通信方式是可靠的、<strong>面向连接</strong>的（像打电话），还是快速的、<strong>无连接</strong>的（像寄明信片）。</li>
+</ol>
+<p>常用值：</p>
+<ul>
+<li><p><strong>SOCK_STREAM</strong> (Stream Socket): 流式套接字, 提供面向连接、可靠的、基于字节流的服务。它通常与 <strong>TCP</strong> 协议配合使用。</p>
+<ul>
+<li>数据传输前必须先建立连接。它保证数据传输是<strong>有序的</strong>、无差错的、无重复的。数据像水流一样，没有边界，你发送 100 字节，对方可能一次性收到 100 字节，也可能先收到 40 字节再收到 60 字节。</li>
+<li>适用场景：绝大多数应用，如网页浏览 (HTTP)、文件传输 (FTP)、邮件发送等。</li>
+</ul>
+</li>
+<li><p><strong>SOCK_DGRAM</strong> (Datagram Socket): 数据报套接字, 提供<strong>无连接</strong>、不可靠的、基于数据报的服务。它通常与 <strong>UDP</strong> 协议配合使用。</p>
+<ul>
+<li>通信前不需要建立连接。每个数据包（数据报）都是独立的，有自己的目标地址。它不保证数据能到达，也<strong>不保证到达的顺序</strong>。</li>
+<li>适用场景：对实时性要求高、能容忍少量丢包的场景，如在线游戏、视频直播、DNS 查询。</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>protocol：具体协议<br>这个参数用于指定在前两个参数确定的协议族和套接字类型下，还想进一步使用的具体协议。因为在某些协议族中，可能有多种协议支持同一种套接字类型。这个参数允许你精确指定。</li>
+</ol>
+<p>不过大部分情况下使用 0 即可：这是最常用的值。表示让操作系统根据 domain 和 type 的组合自动选择默认的协议, 等同于下列手动指定:<br><code>socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); </code>   // 创建tcp的sock<br><code>socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); </code>   // 创建udp的sock</p>
+<ol start="4">
+<li>返回值 (Return Value)</li>
+</ol>
+<p>成功时：返回一个非负整数，这个整数就是<strong>套接字描述符</strong> (Socket Descriptor)，也常被称为文件描述符。它是这个新创建的 Socket 的唯一标识。后续所有的 Socket 相关函数（如 bind(), connect(), listen() 等）都将使用这个描述符作为参数。</p>
+<p>失败时：返回 -1。同时，全局变量 errno 会被设置为一个特定的错误码，以指示失败的原因。我们可以通过 perror() 函数或 strerror(errno) 来查看具体的错误信息。常见的错误原因包括：权限不足、协议不支持、系统资源耗尽等。</p>
+<h4 id="socket-函数简单示例"><a href="#socket-函数简单示例" class="headerlink" title="socket()函数简单示例"></a>socket()函数简单示例</h4><div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span> <span class="comment">// For errno variable</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span> <span class="comment">// For strerror function</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span> tcp_socket_fd;</span><br><span class="line">    <span class="type">int</span> udp_socket_fd;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 1. 创建一个用于 IPv4 的 TCP 套接字 ---</span></span><br><span class="line">    <span class="comment">// 步骤说明：调用 socket 函数，指定协议族为 AF_INET (IPv4)，</span></span><br><span class="line">    <span class="comment">// 类型为 SOCK_STREAM (TCP)，协议让系统自动选择 (0)。</span></span><br><span class="line">    tcp_socket_fd = <span class="built_in">socket</span>(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：检查返回值。如果为 -1，则表示创建失败。</span></span><br><span class="line">    <span class="comment">// 使用 perror 可以打印出更详细的错误原因。</span></span><br><span class="line">    <span class="keyword">if</span> (tcp_socket_fd == <span class="number">-1</span>) {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"Create TCP socket failed"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    }</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"TCP socket created successfully! File Descriptor: %d\n"</span>, tcp_socket_fd);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 2. 创建一个用于 IPv4 的 UDP 套接字 ---</span></span><br><span class="line">    <span class="comment">// 步骤说明：与上面类似，只是将套接字类型改为 SOCK_DGRAM (UDP)。</span></span><br><span class="line">    udp_socket_fd = <span class="built_in">socket</span>(AF_INET, SOCK_DGRAM, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (udp_socket_fd == <span class="number">-1</span>) {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"Create UDP socket failed"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    }</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"UDP socket created successfully! File Descriptor: %d\n"</span>, udp_socket_fd);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 之后可以对这两个 socket_fd 进行 bind, connect, send, recv 等操作 ...</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 最后需要关闭套接字</span></span><br><span class="line">    <span class="comment">// close(tcp_socket_fd);</span></span><br><span class="line">    <span class="comment">// close(udp_socket_fd);</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<h3 id="bind-函数"><a href="#bind-函数" class="headerlink" title="bind()函数"></a>bind()函数</h3><p>bind 函数的作用是给套接字“绑定”一个地址。在我们之前的比喻中，socket() 函数只是创建了一个“电话机”，而 bind 函数就是向电信局申请一个具体的电话号码（IP 地址 + 端口号）并分配给这部电话机。</p>
+<p>对于服务器来说，这是一个必须的步骤，因为客户端必须知道服务器的“地址”才能发起连接。</p>
+<p>函数原型及参数解释如下:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *addr, <span class="type">socklen_t</span> addrlen)</span></span>;</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>int sockfd: 由 socket() 函数返回的套接字文件描述符。</li>
+<li>const struct sockaddr *addr: 由const可知是传入参数, 是一个指向 sockaddr 结构体的指针。这正是我们之前讨论过的“预备知识”的应用。我们通常会创建一个 struct sockaddr_in (for IPv4) 变量，填充好 sin_family, sin_port (端口) 和 sin_addr (IP 地址)，然后将其指针强制转换为 (struct sockaddr *) 再传递给 bind。</li>
+<li>socklen_t addrlen: addr 指向的地址结构体的确切大小，通常使用 sizeof(struct sockaddr_in)。</li>
+<li>返回值: 成功返回 0; 失败返回 -1，并设置全局变量 errno。常见的失败原因包括：端口已被占用 (EADDRINUSE)、没有权限绑定该地址 (EACCES)等。</li>
+</ul>
+<p>需要注意的是, bind 是服务器端专用的函数（客户端通常不需要），它在 socket() 创建套接字之后、listen() 开始监听之前被调用。</p>
+<h3 id="listen-函数"><a href="#listen-函数" class="headerlink" title="listen() 函数"></a>listen() 函数</h3><p>listen 函数的作用是让套接字进入“<strong>被动监听</strong>”模式以及设置最多同时连接数。一个普通的套接字（由 socket() 创建）既可以主动发起连接（作为客户端），也可以被动接收连接（作为服务器）。一旦调用 listen，这个套接字就从一个“主动”套接字转变为一个“被动”的、专门用于接收连接请求的监听套接字。</p>
+<p>在我们之前的比喻中，这相当于把公司的总机电话设置为“等待来电”状态，并告诉交换机系统，可以开始向这个号码派发来电了。</p>
+<p>函数原型及参数解释: </p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">listen</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">int</span> backlog)</span></span>;</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>int sockfd:: 已经被 bind() 绑定了地址的套接字文件描述符。</li>
+<li>int backlog:一个非常重要的参数，它规定了内核为这个监听套接字维护的“<strong>待处理连接队列”的最大长度</strong>。当服务器非常繁忙，来不及 accept() 新的连接时，新来的连接请求会先被放入这个队列中排队。如果队列已满，新的客户端连接请求可能会被拒绝。这个值的大小需要根据服务器的负载能力来设置，一个常见的值是 SOMAXCONN (一个由系统定义的较大值)。</li>
+<li>返回值: 成功返回 0; 失败返回 -1，并设置 errno。</li>
+</ul>
+<p>同样, listen 也是服务器端专用的函数，在 bind() 之后、accept() 之前被调用。</p>
+<h3 id="accept-函数"><a href="#accept-函数" class="headerlink" title="accept() 函数"></a>accept() 函数</h3><p>accept 函数是服务器从“待处理连接队列”中<strong>取出一个连接请求</strong>，并<strong>创建一个全新的套接字</strong>来与该客户端通信。accept 接收的 sockfd 是监听套接字，而它返回的是一个全新的已连接套接字。</p>
+<p>这是一个阻塞函数：如果队列中没有已完成的连接，程序会在这里暂停，直到有客户端连接进来为止。</p>
+<p>函数原型及参数解释:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept</span><span class="params">(<span class="type">int</span> sockfd, <span class="keyword">struct</span> sockaddr *addr, <span class="type">socklen_t</span> *addrlen)</span></span>;</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>int sockfd: 正在监听的那个监听套接字的文件描述符。</li>
+<li>struct sockaddr <em>addr (可选): 没有const, 因此很大可能(实际上也就是)传出参数, 是一个指向 sockaddr 结构体的指针，用于*<em>接收客户端的地址信息</em></em>。当函数成功返回时，内核会把发起连接的客户端的 IP 和端口填充到这个结构体中。如果你不关心客户端的地址，可以把它设为 NULL。</li>
+<li>socklen_t *addrlen (可选): 一个指向 socklen_t 变量的指针。在调用前，你需要把它指向的变量设置为 addr 指向的缓冲区的最大长度 (sizeof(struct sockaddr_in))。函数返回后，这个变量的值会变为客户端地址结构体的实际长度。如果 addr 是 NULL，这个参数也应为 NULL。</li>
+<li>返回值; 成功返回一个新的非负整数，这个整数就是<strong>新创建的已连接套接字的文件描述符</strong>。后续与该客户端的所有通信（send/recv）都将使用这个新的描述符; 失败返回 -1，并设置 errno。</li>
+</ul>
+<p>accept 也是服务器端专用的函数，通常在 listen() 之后的一个主循环中被反复调用。</p>
+<h3 id="connect-函数"><a href="#connect-函数" class="headerlink" title="connect() 函数"></a>connect() 函数</h3><p>connect 函数由客户端调用，用于<strong>向指定的服务器地址发起一个主动的连接请求</strong>。</p>
+<p>这个函数会触发 TCP 协议的三次握手过程。它也是一个阻塞函数，在三次握手成功建立连接、或者超时/失败之前，程序会一直等待。</p>
+<p>函数原型及参数解释:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *addr, <span class="type">socklen_t</span> addrlen)</span></span>;</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>int sockfd: 客户端自己的、由 socket() 创建的套接字文件描述符。</li>
+<li>const struct sockaddr *addr: 传入参数, 一个指向 sockaddr 结构体的指针，里面包含了<strong>服务器</strong>的 IP 地址和端口号。客户端必须准确地填充这个结构体，才能找到正确的服务器。</li>
+<li>socklen_t addrlen: addr 指向的服务器地址结构体的确切大小。</li>
+<li>返回值: 成功返回 0。此时 TCP 连接已成功建立; 失败返回 -1，并设置 errno。常见的失败原因包括：服务器拒绝连接 (ECONNREFUSED)、网络不可达 (ENETUNREACH)、连接超时 (ETIMEDOUT)等。</li>
+</ul>
+<p>connect 是客户端专用的函数，在 socket() 创建套-接字之后被调用。</p>
+<h3 id="Client-Server-示例"><a href="#Client-Server-示例" class="headerlink" title="Client-Server 示例"></a>Client-Server 示例</h3><p>下面是一个简单的 TCP 客户端-服务器示例，展示了如何使用上述的 socket 函数进行基本的网络通信。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>服务端</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 程序名：server.cpp，一个简单的TCP回显服务器。</span></span><br><span class="line"><span class="comment"> * 功能：接收客户端的请求报文，将其转换为大写后，再发回给客户端。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netdb.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理业务的主函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">HandleRequest</span><span class="params">(<span class="type">int</span> client_sockfd)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>)</span><br><span class="line">    {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Using: ./server port\nExample: ./server 5005\n\n"</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第1步：创建服务端的socket。</span></span><br><span class="line">    <span class="type">int</span> listen_sockfd = <span class="built_in">socket</span>(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (listen_sockfd == <span class="number">-1</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"socket"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第2步：把服务端用于通信的地址和端口绑定到socket上。</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> serv_addr;</span><br><span class="line">    <span class="built_in">memset</span>(&amp;serv_addr, <span class="number">0</span>, <span class="built_in">sizeof</span>(serv_addr));</span><br><span class="line">    serv_addr.sin_family = AF_INET;</span><br><span class="line">    serv_addr.sin_addr.s_addr = <span class="built_in">htonl</span>(INADDR_ANY); <span class="comment">// 任意ip地址</span></span><br><span class="line">    serv_addr.sin_port = <span class="built_in">htons</span>(<span class="built_in">atoi</span>(argv[<span class="number">1</span>]));     <span class="comment">// 指定端口</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">bind</span>(listen_sockfd, (<span class="keyword">struct</span> sockaddr *)&amp;serv_addr, <span class="built_in">sizeof</span>(serv_addr)) != <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"bind"</span>);</span><br><span class="line">        <span class="built_in">close</span>(listen_sockfd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第3步：把socket设置为监听模式。</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">listen</span>(listen_sockfd, <span class="number">5</span>) != <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"listen"</span>);</span><br><span class="line">        <span class="built_in">close</span>(listen_sockfd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Server is listening on port "</span> &lt;&lt; argv[<span class="number">1</span>] &lt;&lt; <span class="string">"..."</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第4步：接受客户端的连接。</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) <span class="comment">// 主循环，使服务器可以一直接收新的连接</span></span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> client_addr;</span><br><span class="line">        <span class="type">socklen_t</span> len = <span class="built_in">sizeof</span>(client_addr);</span><br><span class="line">        <span class="comment">// accept()会阻塞，直到有客户端连接上来</span></span><br><span class="line">        <span class="type">int</span> client_sockfd = <span class="built_in">accept</span>(listen_sockfd, (<span class="keyword">struct</span> sockaddr *)&amp;client_addr, &amp;len);  <span class="comment">// 当有客户端连接时，accept() 函数会把客户端的地址信息（如 IP 和端口）填充到 client_addr 结构体里, 可以用于后续日志、鉴权等操作。</span></span><br><span class="line">        <span class="keyword">if</span> (client_sockfd &lt; <span class="number">0</span>)</span><br><span class="line">        {</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">"accept"</span>);</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 继续等待下一个连接</span></span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="type">char</span> ipstr[INET_ADDRSTRLEN];</span><br><span class="line">        <span class="built_in">inet_ntop</span>(AF_INET, &amp;client_addr.sin_addr, ipstr, <span class="built_in">sizeof</span>(ipstr));</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Client "</span> &lt;&lt; ipstr &lt;&lt; <span class="string">" connected."</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用主函数处理与客户端的通信</span></span><br><span class="line">        <span class="built_in">HandleRequest</span>(client_sockfd);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在实际应用中，服务器通常不会执行到这里，除非有明确的关闭指令</span></span><br><span class="line">    <span class="built_in">close</span>(listen_sockfd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数，与客户端进行读写交互</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">HandleRequest</span><span class="params">(<span class="type">int</span> client_sockfd)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">memset</span>(buffer, <span class="number">0</span>, <span class="built_in">sizeof</span>(buffer));</span><br><span class="line">        <span class="comment">// 接收客户端的请求报文 (read)</span></span><br><span class="line">        <span class="type">ssize_t</span> bytes_received = <span class="built_in">read</span>(client_sockfd, buffer, <span class="built_in">sizeof</span>(buffer) - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (bytes_received &gt; <span class="number">0</span>)</span><br><span class="line">        {</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"Received from client: "</span> &lt;&lt; buffer &lt;&lt; std::endl;</span><br><span class="line">            <span class="comment">// 处理请求：将字符串转换为大写</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; buffer[i]; ++i)</span><br><span class="line">            {</span><br><span class="line">                buffer[i] = <span class="built_in">toupper</span>(buffer[i]);</span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 回应数据给客户端 (write)</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">write</span>(client_sockfd, buffer, <span class="built_in">strlen</span>(buffer)) &lt;= <span class="number">0</span>)</span><br><span class="line">            {</span><br><span class="line">                <span class="built_in">perror</span>(<span class="string">"write"</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            }</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"Sent to client: "</span> &lt;&lt; buffer &lt;&lt; std::endl;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (bytes_received == <span class="number">0</span>)</span><br><span class="line">        {</span><br><span class="line">            <span class="comment">// read()返回0表示客户端已关闭连接</span></span><br><span class="line">            std::cout &lt;&lt; <span class="string">"Client disconnected."</span> &lt;&lt; std::endl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        {</span><br><span class="line">            <span class="comment">// read()返回-1表示发生错误</span></span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">"read"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 结束连接 (close)</span></span><br><span class="line">    <span class="built_in">close</span>(client_sockfd);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>客户端</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 程序名：client.cpp，一个简单的TCP客户端。</span></span><br><span class="line"><span class="comment"> * 功能：向服务端发送请求，并接收服务端的回应。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netdb.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">3</span>)</span><br><span class="line">    {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Using: ./client ip port\nExample: ./client 127.0.0.1 5005\n\n"</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第1步：创建客户端的socket。</span></span><br><span class="line">    <span class="type">int</span> sockfd = <span class="built_in">socket</span>(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (sockfd == <span class="number">-1</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"socket"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第2步：向服务器发起连接请求。</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> serv_addr;</span><br><span class="line">    <span class="built_in">memset</span>(&amp;serv_addr, <span class="number">0</span>, <span class="built_in">sizeof</span>(serv_addr));</span><br><span class="line">    serv_addr.sin_family = AF_INET;</span><br><span class="line">    serv_addr.sin_port = <span class="built_in">htons</span>(<span class="built_in">atoi</span>(argv[<span class="number">2</span>])); <span class="comment">// 服务器端口</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">inet_pton</span>(AF_INET, argv[<span class="number">1</span>], &amp;serv_addr.sin_addr) &lt;= <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"inet_pton"</span>);</span><br><span class="line">        <span class="built_in">close</span>(sockfd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// connect()会阻塞，直到连接成功或失败</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">connect</span>(sockfd, (<span class="keyword">struct</span> sockaddr *)&amp;serv_addr, <span class="built_in">sizeof</span>(serv_addr)) != <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"connect"</span>);</span><br><span class="line">        <span class="built_in">close</span>(sockfd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Connected to server "</span> &lt;&lt; argv[<span class="number">1</span>] &lt;&lt; <span class="string">":"</span> &lt;&lt; argv[<span class="number">2</span>] &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第3步：与服务端通讯。</span></span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">    std::string input;</span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Enter a message (or 'exit' to quit): "</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">getline</span>(std::cin, input) &amp;&amp; input != <span class="string">"exit"</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">// 请求数据 (write)</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">write</span>(sockfd, input.<span class="built_in">c_str</span>(), input.<span class="built_in">length</span>()) &lt;= <span class="number">0</span>)</span><br><span class="line">        {</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">"write"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接收服务端的回应报文 (read)</span></span><br><span class="line">        <span class="built_in">memset</span>(buffer, <span class="number">0</span>, <span class="built_in">sizeof</span>(buffer));</span><br><span class="line">        <span class="type">ssize_t</span> bytes_received = <span class="built_in">read</span>(sockfd, buffer, <span class="built_in">sizeof</span>(buffer) - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (bytes_received &gt; <span class="number">0</span>)</span><br><span class="line">        {</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"Server response: "</span> &lt;&lt; buffer &lt;&lt; std::endl;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (bytes_received == <span class="number">0</span>)</span><br><span class="line">        {</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"Server disconnected."</span> &lt;&lt; std::endl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        {</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">"read"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        }</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"\nEnter a message (or 'exit' to quit): "</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第4步：关闭socket，结束连接。</span></span><br><span class="line">    <span class="built_in">close</span>(sockfd);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Connection closed."</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/web/">#web</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/C/">#C++</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/25/web/Computer%20Network/%E5%8D%8F%E8%AE%AE/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48"></span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/09/24/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/makefile/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Makefile</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">Socket编程</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-text">预备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%AD%97%E8%8A%82%E5%BA%8F"><span class="nav-text">网络字节序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="nav-text">IP 地址转换函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sockaddr-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">sockaddr 数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%A5%97%E6%8E%A5%E5%AD%97%E5%87%BD%E6%95%B0"><span class="nav-text">网络套接字函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#socket%E6%A8%A1%E5%9E%8B%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="nav-text">socket模型创建流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#socket-%E5%87%BD%E6%95%B0"><span class="nav-text">socket() 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B-Function-Prototype-%E5%8F%8A%E5%8F%82%E6%95%B0%E5%92%8C%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-text">函数原型 (Function Prototype)及参数和返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#socket-%E5%87%BD%E6%95%B0%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="nav-text">socket()函数简单示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind-%E5%87%BD%E6%95%B0"><span class="nav-text">bind()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#listen-%E5%87%BD%E6%95%B0"><span class="nav-text">listen() 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#accept-%E5%87%BD%E6%95%B0"><span class="nav-text">accept() 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#connect-%E5%87%BD%E6%95%B0"><span class="nav-text">connect() 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Client-Server-%E7%A4%BA%E4%BE%8B"><span class="nav-text">Client-Server 示例</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        110 posts in total
+                    </span>
+                    
+                        <span>
+                            232.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>
