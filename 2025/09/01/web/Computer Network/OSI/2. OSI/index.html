@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/01/web/computer network/osi/2. osi/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OSI model">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/01/web/Computer%20Network/OSI/2.%20OSI/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-09-01T14:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-02T13:35:26.664Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="computer network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            OSI model | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">OSI model</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-09-01 22:00</span>
+        <span class="mobile">2025-09-01 22:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-09-02 21:35:26</span>
+            <span class="mobile">2025-09-02 21:35:26</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/web/">web</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/computer-network/">computer network</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>10k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>34 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p><strong>OSI</strong> 模型（Open Systems Interconnection model，开放式系统互联模型）是一个由国际标准化组织（ISO）提出的概念模型，旨在为不同计算机网络之间的通信提供一个标准的<strong>参考框架</strong>。它将复杂的通信过程划分为七个独立的、功能明确的<strong>层次</strong>（Layer）。</p>
+<p>这个模型的核心思想是 “<strong>分层</strong>”。每一层都负责特定的网络功能，并<strong>为其上一层提供服务</strong>，同时<strong>使用其下一层提供的服务</strong>。这种分层结构使得网络协议的设计和排错变得更加简单和模块化。</p>
+<p>OSI 模型从上到下分为<strong>七个层次</strong>，每一层都有其独特的功能。数据在发送端从顶层（应用层）向下逐层封装，在接收端则从底层（物理层）向上逐层解封装。</p>
+<h2 id="第一层：物理层-Physical-Layer"><a href="#第一层：物理层-Physical-Layer" class="headerlink" title="第一层：物理层 (Physical Layer)"></a>第一层：物理层 (Physical Layer)</h2><p>物理层是 OSI 模型的最底层，它负责传输原始的<strong>比特流</strong>（Bits）。</p>
+<p>这一层处理的是最基础的物理媒介。它规定了网线、光纤、无线电波等传输介质的电气和物理特性, 如电压、接口类型、线缆规范、传输速率等。它的任务就是将上层传递下来的数字信号（0 和 1）<strong>转换</strong>成电信号、光信号或无线电信号，并<strong>在物理介质上传输</strong>。</p>
+<p>更详细来说, 物理层的目的是在物理传输介质上，实现原始比特流（raw bit stream）的透明传输</p>
+<ul>
+<li>“物理”的含义：这一层关注的是构成网络的实体部分，例如线缆、连接器、电压、光信号等，这些都是看得见、摸得着的物理设备和标准。</li>
+<li>“比特流”的含义：物理层不关心数据的内容、格式或意义。在它看来，所有数据都是一串由 0 和 1 组成的二进制序列。它的工作就是确保发送方发送的 0101 序列，接收方接收到的也是 0101 序列。</li>
+<li>“透明传输”的含义：这意味着物理层对上层（数据链路层）屏蔽了所有物理细节。数据链路层不需要关心数据是通过光纤、铜缆还是无线电波传输的，也不需要关心电压是多少、接口是什么形状。物理层为上层提供了一个统一、透明的比特流传输通道。</li>
+</ul>
+<h3 id="物理层的四大核心功能"><a href="#物理层的四大核心功能" class="headerlink" title="物理层的四大核心功能"></a>物理层的四大核心功能</h3><p>物理层的功能主要围绕着如何可靠地传输比特流来展开，具体可以分为以下四个方面：</p>
+<ol>
+<li>定义电气和物理特性</li>
+</ol>
+<p>这是物理层最基础的职责，它定义了所有与传输介质和接口相关的物理和电气规范。</p>
+<p><strong>机械特性</strong>：定义了<strong>网络接口</strong>（如网线接口）的物理形状、尺寸、引脚数量和排列方式。</p>
+<ul>
+<li>这一步是为了确保不同制造商生产的设备可以物理上相互连接。例如，我们常见的 RJ45 网线接口就是一个标准化的机械特性，保证任何一根标准的网线都能插入任何一个标准的网络端口。</li>
+</ul>
+<p><strong>电气特性</strong>：定义了在线缆的各个引脚上传输信号时的电压范围、阻抗匹配、传输速率等。</p>
+<ul>
+<li>规定信号的标准，以确保接收方能正确解读。例如，规定 +5V 代表比特 1，0V 代表比特 0。如果电压标准不统一，就会导致信号的误判。</li>
+</ul>
+<p><strong>功能特性</strong>：指明接口的各条信号线（引脚）的功能。</p>
+<ul>
+<li>这就像定义插座上哪个孔是火线，哪个是零线。例如，在网线中，规定哪几根线用于发送数据（TX），哪几根用于接收数据（RX）。</li>
+</ul>
+<p><strong>规程特性</strong>：定义了利用信号线进行比特流传输的一系列操作流程和时序关系。</p>
+<ul>
+<li>这是对信号传输过程的规定，确保数据传输的同步和协调。例如，规定了建立连接、传输数据、断开连接时，信号变化的先后顺序。</li>
+</ul>
+<ol start="2">
+<li>比特流的编码与表示</li>
+</ol>
+<p>计算机内部的数据是二进制的 0 和 1，物理层需要将这些抽象的比特<strong>转换</strong>成可以在物理介质上传输的物理信号（如电信号或光信号）, 这个过程称为编码 (Encoding)。</p>
+<p>直接用高低电平代表 1 和 0 的方式（称为不归零编码 NRZ）在长距离传输时容易出现时钟同步问题。因此，物理层采用更复杂的编码方式，如曼彻斯特编码 (Manchester Encoding)。</p>
+<ol start="3">
+<li>数据传输速率（比特率）</li>
+</ol>
+<p>物理层规定了数据在信道上的传输速率，即每秒可以传输多少个比特（bits per second, bps）。</p>
+<p>传输速率受到物理介质、编码方式和信道带宽等多种因素的限制。物理层标准会明确定义一个网络所能支持的速率，例如 10 Mbps、100 Mbps、1 Gbps。</p>
+<p>物理层还必须确保发送方和接收方以相同的速率工作，这称为比特同步 (Bit Synchronization)。如果发送方以 100 Mbps 的速率发送，而接收方以 10 Mbps 的速率接收，数据就会丢失或出错。</p>
+<ol start="4">
+<li>传输模式</li>
+</ol>
+<p>物理层定义了数据在两个设备之间传输的方向。</p>
+<ul>
+<li><p>单工 (Simplex)：数据只能在一个方向上传输。例如无线电广播、电视广播。你只能接收信号，不能发送信号给电视台。</p>
+</li>
+<li><p>半双工 (Half-Duplex)：数据可以在两个方向上传输，但在<strong>同一时刻只能有一个方向在进行</strong>。例如对讲机。一方说话时，另一方只能听，不能同时说话。</p>
+</li>
+<li><p>全双工 (Full-Duplex)：数据可以同时在两个方向上传输。例如电话通话。通话双方可以同时说话和倾听。</p>
+</li>
+</ul>
+<h3 id="物理层的常见设备和介质"><a href="#物理层的常见设备和介质" class="headerlink" title="物理层的常见设备和介质"></a>物理层的常见设备和介质</h3><p>物理层是唯一一层涉及具体物理设备的层次。常见的传输介质有同轴电缆 (Coaxial Cable), 光纤 (Fiber Optic Cable)以及无线电波 (Radio Waves, 用于 Wi-Fi)等</p>
+<p>常见的物理层设备有中继器 (Repeater):对衰减的信号进行再生和放大，然后转发出去，从而延长网络的传输距离; 集线器 (Hub)：它将从一个端口接收到的信号放大后，广播到所有其他端口等</p>
+<h2 id="第二层：数据链路层-Data-Link-Layer"><a href="#第二层：数据链路层-Data-Link-Layer" class="headerlink" title="第二层：数据链路层 (Data Link Layer)"></a>第二层：数据链路层 (Data Link Layer)</h2><p>数据链路层位于物理层之上、网络层之下，扮演着一个至关重要的“承上启下”的角色。如果说物理层负责在一段物理介质上透明地传输比特流，那么数据链路层的核心任务就是：在同一个物理网络（即一个局域网或广播域）内的相邻节点之间，提供可靠的数据传输。</p>
+<ul>
+<li><p>从“比特”到“帧”：数据链路层接收来自网络层的数据包（Packet），并将其封装成一种称为“<strong>帧</strong>” (Frame) 的结构化数据单元。帧是数据链路层传输的基本单位。这个过程好比将一堆零散的货物（比特流）打包成一个个贴好标签、有明确边界的箱子（帧），便于管理和运输。</p>
+</li>
+<li><p><strong>节点到节点</strong> (Node-to-Node)：它负责的是点对点或相邻节点之间的通信。例如，从你的电脑到你的路由器，或者从你的路由器到互联网服务提供商（ISP）的下一个设备。它不关心数据的最终目的地，只关心如何将数据可靠地送到链路上的下一个节点。</p>
+</li>
+<li><p>提供服务给网络层：它向其上层（网络层）隐藏了物理层的复杂细节。网络层只需要将数据包交给数据链路层，并指定下一个节点的地址(MAC)，数据链路层就会负责将其变成帧，并通过物理层可靠地发送出去。</p>
+</li>
+</ul>
+<h3 id="MAC"><a href="#MAC" class="headerlink" title="MAC"></a>MAC</h3><p>MAC 地址（Media Access Control Address），中文全称为“媒体访问控制地址”，也被称为物理地址（Physical Address）或硬件地址（Hardware Address）。</p>
+<p>可以把它想象成网络<strong>设备的</strong>“<strong>身份证号码</strong>”。理论上，每一块出厂的网络接口卡（NIC，无论是你的电脑网卡、手机 Wi-Fi 芯片，还是路由器的端口）都有一个全球唯一的 MAC 地址。这个地址在设备生产时就被固化（烧录）在硬件中。</p>
+<p>MAC 地址具有全球唯一性，一个标准的 MAC 地址长度为 48 位（6 个字节）。用 12 个十六进制数 来表示，例如：00:1A:2B:3C:4D:5E。</p>
+<p>一个 MAC 地址由两部分组成：前 24 位称作组织唯一标识符（OUI, Organizationally Unique Identifier）。这是由 IEEE 分配给硬件制造商的。通过查询 OUI，你可以知道这个网络设备是由哪家公司生产的。例如，00:1A:2B 可能就代表苹果公司（Apple Inc.）。</p>
+<p>而后 24 位是网络接口标识符（NIC Specific）。这部分由制造商自行分配，确保其生产的每一个设备都有一个独一无二的编号。</p>
+<p>MAC 地址工作在 OSI 模型的第二层——数据链路层 (Data Link Layer)。它的核心功能是在同一个局域网（LAN）内部进行<strong>设备寻址</strong>和数据传输。</p>
+<h3 id="五大核心功能"><a href="#五大核心功能" class="headerlink" title="五大核心功能"></a>五大核心功能</h3><p>为了实现节点间的可靠传输，数据链路层需要执行以下几个关键功能: </p>
+<ol>
+<li>封装成帧 (Framing)</li>
+</ol>
+<p>这是数据链路层的首要任务。它将来自网络层的 IP 数据包，在前后分别添加头部 (Header) 和尾部 (Trailer)，构成一个完整的帧。</p>
+<ul>
+<li><p>添加头部：头部通常包含<strong>源</strong> MAC 地址和<strong>目的</strong> MAC 地址，以及一些控制信息。这就像在包裹上贴上寄件人和收件人的本地地址。</p>
+</li>
+<li><p>添加尾部：尾部通常包含<strong>差错校验码</strong> (Frame Check Sequence, FCS)，例如循环冗余校验（CRC）码。</p>
+</li>
+<li><p>帧定界 (Frame Delimiting)：为了让接收方知道一个帧从哪里开始、到哪里结束，数据链路层会使用特殊的比特模式作为帧的起始和结束标记。</p>
+</li>
+</ul>
+<ol start="2">
+<li>物理寻址 (Physical Addressing)</li>
+</ol>
+<p>数据链路层使用 MAC 地址来标识网络中的每一个设备（如网卡）。当一个设备要向同一局域网内的另一个设备发送数据时，它会在帧的头部填入自己的源 MAC 地址和对方的目的 MAC 地址。网络中的设备（如交换机）会根据这个目的 MAC 地址来决定将帧转发到哪个端口。这好比邮递员根据门牌号（MAC 地址）来投递信件。</p>
+<ol start="3">
+<li>流量控制 (Flow Control)</li>
+</ol>
+<p>流量控制是为了防止发送速度过快的发送方淹没接收速度较慢的接收方，导致数据丢失。</p>
+<p>如果接收方的缓冲区已满，无法再处理更多的数据，它会通过数据链路层协议向发送方发送一个“暂停”信号。发送方收到信号后会暂停发送，直到接收方通知它可以继续发送。这确保了数据的平稳传输，避免了因接收方处理能力不足而造成的“数据溢出”。</p>
+<ol start="4">
+<li>差错控制 (Error Control)</li>
+</ol>
+<p>由于物理线路上的噪声或其他干扰，比特流在传输过程中可能会出错（例如 1 变成 0）。差错控制就是为了检测并可能纠正这些错误。</p>
+<p>一般的步骤如下：</p>
+<ul>
+<li><p>差错检测 (Error Detection)：发送方在生成帧时，会根据帧的数据内容计算出一个校验码 (FCS/CRC) 并附加在帧的尾部。</p>
+</li>
+<li><p>接收方收到帧后，会用同样的算法对接收到的数据进行计算，得出一个新的校验码。</p>
+</li>
+<li><p>校验码比较：接收方将新计算的校验码与帧中包含的校验码进行比较。</p>
+</li>
+<li><p>错误检测：如果两个校验码一致，说明数据在传输过程中没有出错，接收方就接受该帧。</p>
+</li>
+<li><p>差错纠正 (Error Correction)：一些更高级的数据链路层协议（如在无线通信中）不仅能检测错误，还能通过重传机制来纠正错误。例如，如果接收方检测到错误，它可以请求发送方重新发送损坏的帧。</p>
+</li>
+</ul>
+<ol start="5">
+<li>介质访问控制 (Media Access Control)</li>
+</ol>
+<p>介质访问控制决定了在同一时刻哪个设备可以使用这个共享介质来发送数据, 这是为了解决“信道争用”和“冲突”的问题。如果两个设备同时在共享介质上发送数据，它们的信号会相互干扰，导致数据损坏，这就是冲突 (Collision)。</p>
+<p>常见的控制方式是CSMA/CD (Carrier Sense Multiple Access with Collision Detection), 即载波侦听多路访问/冲突检测，主要用于有线以太网。其主要策略有三点:</p>
+<ul>
+<li><p>先听后发：发送前先侦听信道是否空闲。</p>
+</li>
+<li><p>边发边听：发送数据的同时继续侦听，以检测是否发生冲突。</p>
+</li>
+<li><p>冲突后退：一旦检测到冲突，立即停止发送，并等待一个随机时间后重试。</p>
+</li>
+</ul>
+<h3 id="数据链路层的常见设备"><a href="#数据链路层的常见设备" class="headerlink" title="数据链路层的常见设备"></a>数据链路层的常见设备</h3><p>数据链路层最重要的设备就是交换机 (Switch), 称得上是现代局域网的核心设备。</p>
+<p>我们可以把交换机看做升级版的Hub. 它内部维护着一张 MAC 地址表，记录了每个 MAC 地址所连接的端口。</p>
+<p>当交换机从一个端口收到一个帧时，它会检查帧头部的目的 MAC 地址。然后，它会在 MAC 地址表中查找这个地址，并只将该帧从对应的端口精确地转发出去，而不是像集线器那样广播到所有端口。</p>
+<p>因此, 交换机能够隔离冲突域，每个端口都是一个独立的冲突域，从而极大地提高了网络效率和性能。</p>
+<h2 id="第三层：网络层-Network-Layer"><a href="#第三层：网络层-Network-Layer" class="headerlink" title="第三层：网络层 (Network Layer)"></a>第三层：网络层 (Network Layer)</h2><p>网络层位于数据链路层之上、传输层之下。如果说数据链路层负责的是局域网内部相邻节点之间的通信，那么网络层的核心任务就是：实现数据在<strong>不同网络之间</strong>的<strong>路由</strong>和<strong>转发</strong>，为数据从源主机到目的主机提供一条端到端的路径。</p>
+<ul>
+<li><p>全局视野：网络层是第一个具有全局网络视野的层次。它不再局限于单个局域网，而是要负责数据在整个互联网（由无数个局域网组成）中的传输路径。</p>
+</li>
+<li><p>从“帧”到“包”：网络层处理的基本数据单元是“<strong>包</strong>” (Packet) 或“数据报” (Datagram)。它接收来自上层（传输层）的数据段（Segment），并为其添加一个网络层头部（Header），其中包含了关键的逻辑地址信息，从而构成了数据包。</p>
+</li>
+<li><p><strong>逻辑寻址</strong> (Logical Addressing)：网络层引入了一套与物理地址（MAC 地址）完全不同的地址体系——逻辑地址，最典型的就是我们熟知的 <strong>IP</strong> <strong>地址</strong> (Internet Protocol Address)。IP 地址为<strong>网络中的每台主机</strong>提供了一个全局唯一的、分等级的地址。</p>
+</li>
+<li><p><strong>路由</strong> (Routing)：这是网络层的核心功能。它负责根据目的主机的 IP 地址，通过特定的算法（路由协议）<strong>计算出一条从源到目的地的最佳路径</strong>，并指示数据包如何穿越一系列相互连接的网络。</p>
+</li>
+</ul>
+<h3 id="四大核心功能"><a href="#四大核心功能" class="headerlink" title="四大核心功能"></a>四大核心功能</h3><ol>
+<li>逻辑寻址 (Logical Addressing)</li>
+</ol>
+<p>为了在庞大的互联网中唯一地标识每一台主机，网络层定义了逻辑地址, 即IP地址。</p>
+<p>目前主要使用 IPv4 (32位地址，如 192.168.1.1) 和 IPv6 (128位地址)。IP 地址由两部分组成：</p>
+<ul>
+<li>网络部分 (Network ID)：标识主机所在的特定网络。</li>
+</ul>
+<blockquote>
+<p>因此，在不连接任何网络时，设备没有一个可以用来与外部通信的有效 IP 地址。</p>
+</blockquote>
+<ul>
+<li>主机部分 (Host ID)：标识该网络中的特定主机。</li>
+</ul>
+<p>当一台主机要向另一台主机发送数据时，它必须知道对方的 IP 地址。网络层会在数据包的头部封装上<strong>源 IP 地址</strong>和<strong>目的 IP 地址</strong>。这个目的 IP 地址就是数据包在整个旅程中的最终导航目标。</p>
+<blockquote>
+<p>MAC 地址是设备的固有属性，而一个能让设备与外界通信的 IP 地址，则是设备加入网络后获得的临时身份</p>
+</blockquote>
+<ol start="2">
+<li>路由 (Routing)</li>
+</ol>
+<p>路由是网络层最复杂也最重要的功能，即为数据包选择最佳的传输路径。</p>
+<p>路由器 (Router)：执行路由功能的关键设备。路由器连接着两个或多个不同的网络，其内部维护着一张路由表 (Routing Table)。</p>
+<p>路由表：这张表记录了“要去往某个目的网络，应该从哪个接口出去，并将数据包交给下一个路由器”。路由表可以由管理员静态配置 (Static Routing)，也可以通过路由协议动态学习 (Dynamic Routing)。</p>
+<p>步骤说明（数据包的旅程）：</p>
+<ul>
+<li><p>源主机创建一个数据包，包含源/目的 IP 地址。</p>
+</li>
+<li><p>数据包被发送到本地网络的默认网关（通常是一个路由器）。</p>
+</li>
+<li><p>路由器收到数据包后，会查看其头部的目的 IP 地址。</p>
+</li>
+<li><p>路由器在其路由表中查找与该目的 IP 地址最匹配的条目。</p>
+</li>
+<li><p>根据路由表中的指示，路由器将数据包从正确的接口转发给下一个路由器。</p>
+</li>
+</ul>
+<p>这个过程（查找路由表 -&gt; 转发）在路径上的每一个路由器上重复进行，直到数据包最终到达包含目的主机的那个局域网。这个过程被称为“逐跳转发” (Hop-by-Hop Forwarding)。</p>
+<ol start="3">
+<li>数据包转发与分片 (Forwarding &amp; Fragmentation)</li>
+</ol>
+<p>转发 (Forwarding)：这是路由器根据路由表做出的具体动作，即将数据包从输入端口移送到正确的输出端口。</p>
+<p>分片 (Fragmentation)：数据链路层对可传输的帧大小有一个上限，称为最大传输单元 (Maximum Transmission Unit, MTU)。例如，以太网的 MTU 通常是 1500 字节。如果要传输的网络层数据包大于 MTU，网络层就需要将这个大数据包分片 (Fragment) 成多个较小的数据包，以便它们能够装入数据链路层的帧中。</p>
+<p>步骤说明：</p>
+<ul>
+<li><p>当路由器准备转发一个数据包时，它会检查出口网络的 MTU。</p>
+</li>
+<li><p>如果数据包的大小超过了 MTU，路由器就会将其分割成多个更小的分片。</p>
+</li>
+<li><p>每个分片都会被加上自己的网络层头部，并被独立地进行路由和转发。</p>
+</li>
+<li><p>这些分片最终会在目的主机的网络层被重新组装成原始的数据包。</p>
+</li>
+</ul>
+<ol start="4">
+<li>拥塞控制与服务质量 (Congestion Control &amp; QoS)</li>
+</ol>
+<ul>
+<li><p>拥塞控制 (Congestion Control)：当网络中的数据包数量过多，超出路由器处理能力时，就会发生网络拥塞。网络层协议可以包含一些机制来检测和缓解拥塞，例如通知源主机降低发送速率。</p>
+</li>
+<li><p>服务质量 (Quality of Service, QoS)：网络层可以为不同类型的数据包提供不同的服务优先级。例如，可以优先处理对延迟敏感的实时视频流数据，而不是普通的网页浏览数据。</p>
+</li>
+</ul>
+<h3 id="关键协议和设备"><a href="#关键协议和设备" class="headerlink" title="关键协议和设备"></a>关键协议和设备</h3><p>路由器 (Router)：网络层的标志性设备。它的主要工作是连接不同的网络（如连接你的家庭局域网和互联网），并根据 IP 地址执行路由和转发。路由器能够隔离广播域，即一个网络中的广播消息不会被路由器转发到另一个网络，这对于大型网络的性能和安全至关重要。</p>
+<p>IP (Internet Protocol)：网际协议，是网络层的基石。它定义了数据包的格式（IP 头部）和地址方案，是目前互联网上使用最广泛的协议。它是一个无连接 (Connectionless) 的、不可靠 (Unreliable) 的协议，即它只负责尽力而为地转发数据包，不保证数据包一定能到达，也不保证按序到达。可靠性由上层（传输层）的 TCP 协议来保证。</p>
+<p>ARP (Address Resolution Protocol)：地址解析协议。它负责将一个已知的 IP 地址解析为对应的 MAC 地址。虽然 ARP 协议在功能上连接了网络层和数据链路层，但通常被认为是网络层协议。</p>
+<p>路由协议 (Routing Protocols)：用于在路由器之间交换路由信息，动态地构建和维护路由表。常见的有 RIP, OSPF, BGP 等。</p>
+<h2 id="第四层：传输层-Transport-Layer"><a href="#第四层：传输层-Transport-Layer" class="headerlink" title="第四层：传输层 (Transport Layer)"></a>第四层：传输层 (Transport Layer)</h2><p>传输层位于网络层之上、会话层之下，是网络协议栈中<strong>承上启下</strong>的关键一层。它在面向通信的底层（网络层及以下）和面向应用的上层之间架起了一座关键的桥梁。如果说网络层提供了主机到主机 (Host-to-Host) 的通信，那么传输层的核心任务就是：为运行在<strong>不同主机上的应用程序之间</strong>，提供<strong>端到端</strong> (End-to-End) 的逻辑通信服务。</p>
+<ul>
+<li><p>端到端 (End-to-End)：这是传输层与网络层的根本区别。网络层只关心如何将数据包送到正确的主机IP地址，但它并不知道这个数据包具体应该由这台主机上的哪个应用程序（例如浏览器、QQ还是邮件客户端）来处理。传输层则负责将数据准确地送达到指定应用程序的“门口”。</p>
+</li>
+<li><p>进程到进程 (Process-to-Process)：传输层的通信是<strong>应用程序进程之间</strong>的通信。它确保了源主机上一个应用程序发送的数据，能够被目的主机上正确的应用程序接收。</p>
+</li>
+<li><p>逻辑通信 (Logical Communication)：传输层为应用程序之间建立了一条“逻辑”上的连接通道。应用程序可以认为它们之间有一条直接的、专用的通道在通信，而无需关心底层复杂的路由、转发等网络细节。</p>
+</li>
+</ul>
+<h3 id="五大核心功能-1"><a href="#五大核心功能-1" class="headerlink" title="五大核心功能"></a>五大核心功能</h3><ol>
+<li>端口寻址 (Port Addressing)</li>
+</ol>
+<p>为了区分一台主机上同时运行的多个网络应用程序，传输层引入了<strong>端口号</strong> (Port Number) 的概念。这是一个 16 位的数字（范围从 0 到 65535），用于标识一个特定的应用程序进程。其主要分为下面三类:</p>
+<ul>
+<li><p>知名端口 (Well-known Ports)：0 - 1023，分配给特定的、标准的服务。例如，HTTP 服务的端口是 80，HTTPS 是 443，FTP 是 21。</p>
+</li>
+<li><p>注册端口 (Registered Ports)：1024 - 49151。这是 IANA (Internet Assigned Numbers Authority) 分配的端口号，用于注册非标准服务。</p>
+</li>
+<li><p>动态/私有端口 (Dynamic/Private Ports)：49152 - 65535，客户端程序通常会随机使用这个范围的端口。</p>
+</li>
+</ul>
+<p>当传输层接收到来自上层应用的数据时，会为其封装上<strong>源端口号</strong>和<strong>目的端口号</strong>。目的主机上的传输层在收到数据后，会根据目的端口号，将数据递交给绑定在该端口上的应用程序。这个 (IP地址, 端口号) 的组合，称为<strong>套接字</strong> (Socket)，它唯一地标识了<strong>网络中的一个通信端点</strong>(如162.105.146.10:80)。</p>
+<ol start="2">
+<li>分段与重组 (Segmentation and Reassembly)</li>
+</ol>
+<p>来自上层应用的数据通常很大，不适合一次性在网络中传输。传输层负责将这些大数据块分割成更小的、易于管理和传输的数据段 (Segment)。</p>
+<ul>
+<li><p>分段 (Segmentation)：在发送端，传输层将应用层数据流切割成大小合适的数据段，并为每个数据段添加<strong>传输层头部</strong>（包含端口号、序列号等信息）。</p>
+</li>
+<li><p>重组 (Reassembly)：在接收端，传输层根据数据段头部的序列号 (Sequence Number)，将接收到的多个数据段按照正确的顺序重新组合起来，恢复成原始的应用层数据流，再递交给上层应用。</p>
+</li>
+</ul>
+<ol start="3">
+<li>连接控制 (Connection Control)</li>
+</ol>
+<p>传输层可以提供两种不同模式的连接服务：面向连接和无连接。</p>
+<p>面向连接 (Connection-Oriented)：在数据传输之前，必须先在发送方和接收方之间<strong>建立一个专用的逻辑连接</strong>。传输结束后，再将连接释放。这种方式可靠性高。代表协议为TCP (Transmission Control Protocol)。</p>
+<p>而建立连接的过程, 最著名的就是 TCP 的三次握手 (Three-Way Handshake)。具体为: </p>
+<ul>
+<li><p>SYN：客户端向服务器发送一个 SYN (Synchronize) 包，请求建立连接。</p>
+</li>
+<li><p>SYN-ACK：服务器收到请求后，回复一个 SYN-ACK (Synchronize-Acknowledge) 包，表示同意建立连接。</p>
+</li>
+<li><p>ACK：客户端收到服务器的同意后，再发送一个 ACK (Acknowledge) 包进行确认。至此，连接建立成功。</p>
+</li>
+</ul>
+<p>无连接 (Connectionless)：发送数据之前不需要建立连接。发送方<strong>直接将数据段发送</strong>出去，每个数据段都是独立传输的，相互之间没有关联。这种方式简单、高效，但不可靠。代表协议为UDP (User Datagram Protocol)。</p>
+<ol start="4">
+<li>流量控制 (Flow Control)</li>
+</ol>
+<p>与数据链路层类似，传输层也提供流量控制，但它是一个端到端的流量控制。目的是防止发送方发送数据的速度过快，导致接收方的缓冲区溢出。</p>
+<p>步骤说明 (以 TCP 为例)：TCP 使用滑动窗口 (Sliding Window) 机制来实现流量控制。接收端在确认报文中会告诉发送端自己当前还有多少可用的缓冲区空间（即接收窗口大小）; 发送方根据接收端反馈的窗口大小，来动态调整自己的发送速率。如果接收窗口为 0，发送方就会暂停发送，直到窗口更新。</p>
+<ol start="5">
+<li>差错控制 (Error Control)</li>
+</ol>
+<p>网络层的 IP 协议是不可靠的，数据包在传输中可能丢失、损坏或失序。传输层（特指 TCP）负责提供端到端的差错控制，以确保数据的可靠性。</p>
+<p>其机制主要通过序列号 (Sequence Number)、确认号 (Acknowledgment Number) 和校验和 (Checksum) 来实现。步骤说明如下：</p>
+<ul>
+<li><p>差错检测：发送方和接收方都会计算数据段的校验和，以检测数据在传输过程中是否损坏。</p>
+</li>
+<li><p>确认与重传：发送方为每个发出的数据段启动一个计时器; 接收方每收到一个正确的数据段，就会发送一个确认 (ACK) 消息; 如果发送方在计时器超时之前收到了 ACK，就知道该数据段已成功送达; 如果计时器超时仍未收到 ACK（可能数据段丢失或 ACK 丢失），发送方会重新发送 (Retransmit) 该数据段。</p>
+</li>
+<li><p>确保有序：通过序列号，接收端可以检测出失序的数据段，并对其进行重新排序，保证交给应用层的数据是正确的顺序。</p>
+</li>
+</ul>
+<h2 id="第五层：会话层-Session-Layer"><a href="#第五层：会话层-Session-Layer" class="headerlink" title="第五层：会话层 (Session Layer)"></a>第五层：会话层 (Session Layer)</h2><p>会话层位于传输层之上、表示层之下。它的核心任务是：负责建立、管理和终止不同主机上应用程序之间的会-话（Session），并提供对话控制和同步功能。</p>
+<ul>
+<li>超越连接，关注“会话”：传输层（如 TCP）负责建立和维护一条可靠的连接 (Connection)，但它不关心这条连接上进行的是什么样的交互。会话层则更进一步，它管理的是两个应用程序之间<strong>一次完整的交互过程</strong>，这个过程就被称为“会-话”。会话层就像一个会议主持人或对话管理者。它确保通信双方能够有序地进行对话，决定何时开始、谁先发言、如何交替、以及何时结束</li>
+</ul>
+<p>在现代的 TCP/IP 模型中，会话层的功能往往被简化，并直接整合到了应用层协议（如 HTTP）中。因此，它是一个在理论上很重要，但在实践中不那么独立的层次。</p>
+<h3 id="三大核心功能"><a href="#三大核心功能" class="headerlink" title="三大核心功能"></a>三大核心功能</h3><ol>
+<li>会话管理 (Session Management)</li>
+</ol>
+<p>这是会话层最基本的功能，即负责在两个应用程序进程之间建立、维护和终止会话。</p>
+<ul>
+<li><p>建立会话 (Establishment)：当一个应用程序想要与另一个远程应用程序开始一次交互时，会话层会负责建立起一个会话通道。这不仅仅是建立一个传输连接，还可能包括用户认证、权限检查、协商交互参数等步骤。例如，在进行远程登录时，会话层会启动这个过程，验证用户名和密码，成功后才正式建立一个可供交互的会话。</p>
+</li>
+<li><p>维护会话 (Maintenance)：在会话期间，会话层负责保持通信的稳定。即使底层的传输连接（如 TCP 连接）因网络问题瞬时中断，会话层也可以尝试自动重新连接，从而对上层应用保持会话的连续性，做到对底层问题透明。</p>
+</li>
+<li><p>终止会话 (Termination)：当交互完成后，会话层负责“优雅地”关闭会话。它会确保所有正在进行的操作都已完成，数据都已同步，然后才释放相关资源。这避免了因突然中断连接而导致的数据不一致问题。</p>
+</li>
+</ul>
+<ol start="2">
+<li>对话控制 (Dialog Control)</li>
+</ol>
+<p>对话控制决定了两个应用程序之间的数据交换方式，即由哪一方在何时发送数据。</p>
+<p>会话层通过引入“令牌” (Token)的概念来管理对话。只有持有令牌的一方才能执行某个关键操作（如发送数据）。</p>
+<p>三种对话模式：</p>
+<ul>
+<li>单工 (Simplex)：数据只能从一方流向另一方，类似于广播。</li>
+<li>半双工 (Half-Duplex)：双方都可以发送数据，但不能同时进行。一方发送时，另一方必须接收。会话层通过令牌传递来控制发言权。</li>
+<li>全双工 (Full-Duplex)：双方可以随时同时发送和接收数据。在这种模式下，对话控制的作用较小。</li>
+</ul>
+<ol start="3">
+<li>同步 (Synchronization)</li>
+</ol>
+<p>同步是会话层一个非常重要的功能，尤其是在传输大量数据时。它允许在数据流中插入“同步点” (Synchronization Points)或“检查点” (Checkpoints)。</p>
+<p>如果在数据传输过程中发生错误或中断（例如，一个包含 1000 页的文档在传输到第 800 页时网络中断了），同步功能可以使通信恢复到最后一个已确认的同步点，而无需从头开始重新传输所有数据。</p>
+<p>步骤说明：</p>
+<ul>
+<li><p>发送方在数据流中设置同步点（例如，每传输 100 页设置一个）。</p>
+</li>
+<li><p>接收方每成功接收到一个同步点的数据，就会向发送方发送一个确认。</p>
+</li>
+<li><p>如果传输中断，双方会协商从最后一个被成功确认的同步点开始，继续传输剩余的数据（从第 701 页开始，而不是第 1 页）。</p>
+</li>
+</ul>
+<p>这对于大型文件传输、数据库事务等长时间的交互至关重要，极大地提高了传输效率和可靠性。</p>
+<blockquote>
+<p>我们之前经历的 SQL Session 便属于会话：当你连接到一个数据库时，你就建立了一个 SQL 会话。在这个会话中，你可以执行多个查询和事务。数据库系统会管理这个会话的状态、权限和事务的完整性，这正是会话层功能的体现。</p>
+</blockquote>
+<h2 id="第六层：表示层-Presentation-Layer"><a href="#第六层：表示层-Presentation-Layer" class="headerlink" title="第六层：表示层 (Presentation Layer)"></a>第六层：表示层 (Presentation Layer)</h2><p>表示层位于会话层之上、应用层之下，是处理数据“<strong>表示</strong>”问题的一个特殊层次。它的核心任务是：确保一个系统的应用层所发送的信息可以被另一个系统的应用层识别和理解。</p>
+<ul>
+<li><p>网络的“通用翻译官”：表示层的主要作用是解决<strong>不同系统之间数据表示方式的差异</strong>问题。因为不同的计算机体系结构、操作系统和编程语言可能会使用不同的内部数据格式。表示层负责将数据从发送方的“本地格式”转换为一种<strong>标准的</strong>、与平台无关的“<strong>网络通用格式</strong>”，然后在接收端再将这种通用格式<strong>转换回</strong>接收方的“本地格式”。</p>
+</li>
+<li><p>关注数据的语法和语义：与下层只关心如何传输数据不同，表示层开始关心数据本身的语法（格式）和语义（含义）。它确保数据在传输过程中不会因为格式问题而导致意义的扭曲。</p>
+</li>
+<li><p>服务提供者：它为上层（应用层）提供服务，使得应用层开发者可以专注于应用程序的逻辑，而不用担心数据的编码、加密或压缩等底层细节。</p>
+</li>
+</ul>
+<p>在现代的 TCP/IP 模型中，表示层的功能通常也和会话层一样，被整合到了应用层协议中。例如，HTTP 协议自身会定义内容类型（Content-Type），浏览器则根据这个类型来决定如何解析和显示数据（如 HTML、JSON、JPEG 等），这实际上就是表示层在发挥作用。</p>
+<h3 id="三大核心功能-1"><a href="#三大核心功能-1" class="headerlink" title="三大核心功能"></a>三大核心功能</h3><ol>
+<li>数据格式化与转换 (Data Formatting and Translation)</li>
+</ol>
+<p>这是表示层最核心的功能。它负责在不同系统的数据格式之间进行转换，确保通信双方对数据有相同的理解。其基本步骤如下:</p>
+<ul>
+<li><p>发送端：表示层获取来自应用层的数据（通常是发送方的内部格式），并将其转换（编码）成一种标准的、<strong>通用的网络数据格式</strong>（如 ASN.1 - Abstract Syntax Notation One）。</p>
+</li>
+<li><p>传输：这些标准格式的数据通过网络传输到接收端。</p>
+</li>
+<li><p>接收端：表示层接收到标准格式的数据，并将其转换（解码）成接收端应用层能够理解的内部格式。</p>
+</li>
+</ul>
+<p>通过这个“编码-传输-解码”的过程，表示层屏蔽了不同系统间的格式差异，实现了异构系统之间的透明通信。</p>
+<ol start="2">
+<li>数据加密与解密 (Data Encryption and Decryption)</li>
+</ol>
+<p>为了保证通信的安全性，表示层还负责对数据进行加密和解密，以防止数据在传输过程中被窃听或篡改。步骤说明：</p>
+<ul>
+<li><p>发送端：在数据发送到网络之前，表示层使用一个加密算法和一个密钥 (Key) 将原始的、可读的数据（明文）转换成不可读的密文。</p>
+</li>
+<li><p>接收端：接收到密文后，表示层使用一个解密算法和相应的密钥将密文恢复成原始的明文数据，然后再递交给应用层。</p>
+</li>
+</ul>
+<p>常见协议：SSL (Secure Sockets Layer) 或其后继者 TLS (Transport Layer Security) 协议通常被认为跨越了表示层和会话层。当你通过 HTTPS 访问网站时，你的浏览器和服务器之间的数据就是由 TLS 协议进行加密的，这正是表示层功能的体现。</p>
+<ol start="3">
+<li>数据压缩与解压缩 (Data Compression and Decompression)</li>
+</ol>
+<p>为了减少网络传输的数据量，提高传输效率和节省带宽，表示层可以对数据进行压缩。步骤说明：</p>
+<ul>
+<li><p>发送端：表示层使用一种压缩算法（如 Lempel-Ziv 算法）来减少数据的比特数。</p>
+</li>
+<li><p>接收端：在<strong>将数据交给应用层之前</strong>，表示层使用相应的解压缩算法将数据<strong>恢复到其原始形式</strong>。</p>
+</li>
+</ul>
+<p>这对于传输大型文件、图片、视频等多媒体数据尤其有效。常见的压缩格式如 GZIP, JPEG, MPEG 等都体现了这一功能。</p>
+<h2 id="第七层：应用层-Application-Layer"><a href="#第七层：应用层-Application-Layer" class="headerlink" title="第七层：应用层 (Application Layer)"></a>第七层：应用层 (Application Layer)</h2><p>应用层是 OSI 模型的最顶层，也是距离最终用户最近的一层。它的核心任务是：直接为用户的应用程序提供网络通信服务，并作为用户与网络之间的接口。</p>
+<ul>
+<li><p>用户的网络门户：当你使用任何需要联网的软件时，无论是浏览器、电子邮件客户端、游戏还是文件共享程序，你都是在与应用层进行直接交互。应用层负责将你的操作（如点击一个链接、发送一封邮件）转换成网络协议可以理解的请求，并发起通信过程。</p>
+</li>
+<li><p>协议的集合：应用层本身并不是一个单一的程序，而是一个<strong>包含了众多协议的集合</strong>。每个协议都是为了实现某种特定的应用功能而设计的。例如，浏览网页用 HTTP 协议，收发邮件用 SMTP 和 POP3 协议。</p>
+</li>
+<li><p>封装的终点与起点：在发送数据时，应用层是数据封装过程的起点。应用程序产生的数据在这里被首次处理，并加上应用层协议的控制信息，然后向下传递给表示层。在接收数据时，应用层是数据解封装过程的终点。从下层传递上来的数据在这里被最终解析，并呈现给用户或应用程序。</p>
+</li>
+</ul>
+<h3 id="主要功能与常见协议"><a href="#主要功能与常见协议" class="headerlink" title="主要功能与常见协议"></a>主要功能与常见协议</h3><p>与下层处理具体的数据传输细节不同，应用层的功能更加抽象和多样化，主要围绕着为应用程序提供服务展开。</p>
+<p>也就是说, 提供用户接口与服务是应用层最根本的功能。它定义了应用程序如何访问网络以及如何使用网络服务。</p>
+<p>应用层协议规定了请求和响应的格式、命令和参数。例如，HTTP 协议定义了 GET、POST 等请求方法，以及 200 OK、404 Not Found 等状态码。应用程序（如浏览器）必须按照这些规定来创建请求和解析响应。</p>
+<p>同时, 应用层包含了我们日常使用互联网时接触到的大部分协议：</p>
+<ul>
+<li><p>HTTP (Hypertext Transfer Protocol) / HTTPS (HTTP Secure)</p>
+<ul>
+<li><p>超文本传输协议，是构建万维网（World Wide Web）的基础。用于从 Web 服务器请求网页和数据，并在浏览器上显示。HTTPS 是其加密版本，提供了更安全的连接。</p>
+</li>
+<li><p>端口：80 (HTTP), 443 (HTTPS)。</p>
+</li>
+</ul>
+</li>
+<li><p>FTP (File Transfer Protocol)</p>
+<ul>
+<li><p>文件传输协议，用于在客户端和服务器之间上传和下载文件。</p>
+</li>
+<li><p>端口：20 (数据), 21 (控制)。</p>
+</li>
+</ul>
+</li>
+<li><p>DNS (Domain Name System)</p>
+<ul>
+<li><p>域名系统，是互联网的“电话簿”。负责将人类易于记忆的域名（如 <a class="link" target="_blank" rel="noopener" href="http://www.google.com)解析成机器能够识别的/">www.google.com）解析成机器能够识别的<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> IP 地址（如 142.251.1.101）。</p>
+</li>
+<li><p>端口：53。</p>
+</li>
+</ul>
+</li>
+<li><p>Telnet / SSH (Secure Shell)</p>
+<ul>
+<li><p>用于远程登录和管理服务器。Telnet 以明文传输数据，非常不安全。SSH 是其加密的替代品，提供了安全的远程命令行访问。</p>
+</li>
+<li><p>端口：23 (Telnet), 22 (SSH)。</p>
+</li>
+</ul>
+</li>
+<li><p>DHCP (Dynamic Host Configuration Protocol)</p>
+<ul>
+<li>动态主机配置协议，用于网络中的设备自动获取 IP 地址、子网掩码、默认网关等网络配置信息。</li>
+</ul>
+</li>
+</ul>
+<p>总的来说, 应用层是整个 OSI 模型的最终目的，它将底层的、复杂的数据传输能力，转化为丰富多彩、功能各异的应用程序和服务，直接呈现给最终用户。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/web/">#web</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/computer-network/">#computer network</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/02/algorithms/DynamicProgramming/DynamicProgramming/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">动态规划(Dynamic Programming)</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/17/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Markov Decision Process, MDP(17)</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">OSI model</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%B1%82%EF%BC%9A%E7%89%A9%E7%90%86%E5%B1%82-Physical-Layer"><span class="nav-text">第一层：物理层 (Physical Layer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%B1%82%E7%9A%84%E5%9B%9B%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">物理层的四大核心功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%B1%82%E7%9A%84%E5%B8%B8%E8%A7%81%E8%AE%BE%E5%A4%87%E5%92%8C%E4%BB%8B%E8%B4%A8"><span class="nav-text">物理层的常见设备和介质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E5%B1%82%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82-Data-Link-Layer"><span class="nav-text">第二层：数据链路层 (Data Link Layer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MAC"><span class="nav-text">MAC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">五大核心功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E7%9A%84%E5%B8%B8%E8%A7%81%E8%AE%BE%E5%A4%87"><span class="nav-text">数据链路层的常见设备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E5%B1%82%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%B1%82-Network-Layer"><span class="nav-text">第三层：网络层 (Network Layer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">四大核心功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%8D%8F%E8%AE%AE%E5%92%8C%E8%AE%BE%E5%A4%87"><span class="nav-text">关键协议和设备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E5%B1%82%EF%BC%9A%E4%BC%A0%E8%BE%93%E5%B1%82-Transport-Layer"><span class="nav-text">第四层：传输层 (Transport Layer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD-1"><span class="nav-text">五大核心功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E5%B1%82%EF%BC%9A%E4%BC%9A%E8%AF%9D%E5%B1%82-Session-Layer"><span class="nav-text">第五层：会话层 (Session Layer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">三大核心功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E5%B1%82%EF%BC%9A%E8%A1%A8%E7%A4%BA%E5%B1%82-Presentation-Layer"><span class="nav-text">第六层：表示层 (Presentation Layer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD-1"><span class="nav-text">三大核心功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E5%B1%82%EF%BC%9A%E5%BA%94%E7%94%A8%E5%B1%82-Application-Layer"><span class="nav-text">第七层：应用层 (Application Layer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E4%B8%8E%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE"><span class="nav-text">主要功能与常见协议</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        143 posts in total
+                    </span>
+                    
+                        <span>
+                            309.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

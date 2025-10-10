@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/01/lang/cpp/现代c++/设计/volatile和编译器优化/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Volatile 和编译器优化">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/Volatile%E5%92%8C%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-01T09:49:06.000Z">
+<meta property="article:modified_time" content="2025-10-01T12:16:30.916Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Volatile 和编译器优化 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Volatile 和编译器优化</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-01 17:49:06</span>
+        <span class="mobile">2025-10-01 17:49:06</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-01 20:16:30</span>
+            <span class="mobile">2025-10-01 20:16:30</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.5k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>13 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>编译器优化的核心目标是在不改变程序原始逻辑（即可观察行为）的前提下，对生成的<strong>机器码</strong>进行修改，以提升程序的运行效率或减小其体积。这些改进通常体现在两个方面：</p>
+<ul>
+<li>执行速度：减少程序运行所需的总时钟周期。</li>
+<li>代码体积：减小程序编译后生成的可执行文件的大小。</li>
+</ul>
+<p>GCC 提供了一系列丰富的优化选项，让开发者可以根据具体需求在编译时间、调试便利性、运行速度和代码大小之间做出权衡。</p>
+<p>具体操作是通过 <strong>-O 系列标志</strong>（Flag）来控制。你可以直接在<strong>编译命令中加入</strong>这些标志。<br>例如：<code>gcc -O2 -o main main.c</code></p>
+<h3 id="GCC-的主要优化级别"><a href="#GCC-的主要优化级别" class="headerlink" title="GCC 的主要优化级别"></a>GCC 的主要优化级别</h3><p>GCC 将大量的具体优化选项组合成了几个预设的优化级别。级别越高，启用的优化项越多，编译所需的时间也越长。</p>
+<ul>
+<li><p><strong>-O0</strong>: 不进行任何优化。这是默认的优化级别（如果你不指定任何 -O 选项）。</p>
+<ul>
+<li><p>目的：确保编译<strong>速度最快</strong>，并产生<strong>最直接</strong>、<strong>未经修改</strong>的<strong>机器码</strong>，与源代码的对应关系最强。</p>
+</li>
+<li><p>适用场景：主要用于开发和调试阶段。因为没有优化，变量的值不会被意外优化掉，代码执行顺序也和源码完全一致，使得 GDB 等调试工具可以准确地跟踪程序的每一步。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>-O1</strong>: <strong>基础级别的优化</strong>。编译器会尝试在不花费太多编译时间的情况下，执行一些基本的优化。</p>
+<ul>
+<li><p>目的：在不过分增加编译时间的前提下，提升程序性能。</p>
+</li>
+<li><p>包含的优化：例如<strong>死代码消除</strong>（Dead Code Elimination）、<strong>常量传播</strong>（Constant Propagation）等。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>-O2</strong>: 推荐的通用优化级别。它开启了几乎所有<strong>不涉及“空间换时间”或“时间换空间”权衡的优化</strong>选项。</p>
+<pre><code>- 目的：在编译时间和生成代码的性能之间取得最佳平衡。
+
+- 适用场景：软件的正式发布版本（Release Build）。这是最常用、最稳定的优化级别。
+</code></pre>
+<ul>
+<li><p><strong>-O3</strong>: 最高级别的优化。在 -O2 的基础上，开启了更多、更激进的优化，例如<strong>函数内联</strong>（Inlining）和<strong>循环展开</strong>（Loop Unrolling）等。</p>
+<ul>
+<li><p>目的：追求极致的运行速度。</p>
+</li>
+<li><p>潜在问题：编译时间显著增加; 代码体积可能变大，因为一些优化（如循环展开）会用<strong>更多的代码</strong>来换取更快的速度。在极少数情况下，激进的优化可能会导致代码<strong>缓存</strong>（Instruction Cache）<strong>命中率下降</strong>，反而使程序性能降低。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>-Os</strong>：优化代码大小（Size）。它会开启 -O2 中所有不会增加代码体积的优化项，并执行一些专门为减小代码体积设计的优化。</p>
+<ul>
+<li><p>目的：生成尽可能小的可执行文件。</p>
+</li>
+<li><p>适用场景：嵌入式系统、移动设备或其他存储空间受限的环境。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>-Ofast</strong>: 极限但可能不安全的优化。它包含了 -O3 的所有优化，并额外开启了一些<strong>可能会违反严格语言标准</strong>的优化。</p>
+<ul>
+<li><p>目的：压榨出<strong>最高的性能</strong>，不惜牺牲部分标准的符合性。</p>
+</li>
+<li><p>重要警告：这个级别最显著的特点是会启用 -ffast-math 选项，这会影响浮点数的计算精度，可能不符合 IEEE 754 标准。除非你完全理解其后果，否则不应在对浮点数精度有要求的科学计算或金融应用中使用。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>-Og</strong>: 为调试而优化的级别（Optimize for Debugging）。</p>
+<ul>
+<li><p>目的：在不严重干扰调试体验的前提下，提供一个合理的性能。它会启用一些不会影响变量跟踪和断点设置的优化。</p>
+</li>
+<li><p>适用场景：当你希望在调试时也能获得较好的程序性能，但又不想像 -O0 那样完全放弃优化时，这是一个很好的选择。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="具体的优化技术示例"><a href="#具体的优化技术示例" class="headerlink" title="具体的优化技术示例"></a>具体的优化技术示例</h3><p>下面是一些在上述优化级别中常见的具体优化技术，以帮助理解编译器在幕后做了什么。</p>
+<p><strong>常量折叠与常量传播</strong> (Constant Folding &amp; Propagation): 在<strong>编译期</strong>间直接<strong>计算</strong>出<strong>结果为常量</strong>的表达式，并用结果替换该表达式。</p>
+<p>这里编译器发现 3.14 * 10 * 10 是一个常量表达式，于是在编译时直接计算出结果 314.0。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> radius = <span class="number">10</span>;</span><br><span class="line"><span class="type">double</span> area = <span class="number">3.14</span> * radius * radius;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化后，编译器会将 area 直接替换为 314.0</span></span><br><span class="line"><span class="type">double</span> area = <span class="number">314.0</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>死代码消除</strong> (Dead Code Elimination): <strong>移除</strong>那些<strong>永远不会被执行到</strong>的代码。</p>
+<p>这里编译器发现 debug 是一个编译时常量 0，因此 if 条件永远为假，其中的代码永远不会执行。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> debug = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (debug) {</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"This is a debug message.\n"</span>);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// 优化后，编译器会移除整个 if 语句块</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>函数内联</strong> (Function Inlining): 将一个<strong>函数的调用</strong>替换为该<strong>函数体的实际代码</strong>，以消除函数调用的开销（如堆栈操作、参数传递等）。这通常在 -O2 和 -O3 中启用。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">square</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> x * x;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span> y = <span class="built_in">square</span>(<span class="number">5</span>);</span><br><span class="line">    <span class="keyword">return</span> y;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化后，编译器会将函数调用替换为函数体</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span> y = <span class="number">5</span> * <span class="number">5</span>; <span class="comment">// 直接展开函数体</span></span><br><span class="line">    <span class="keyword">return</span> y;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>尾递归优化也属于函数内联的一种特殊形式，编译器会将尾递归调用转换为循环，从而避免函数调用的开销和栈溢出风险。</p>
+</blockquote>
+<p><strong>循环展开</strong> (Loop Unrolling): 减少循环的迭代次数，但在每次迭代中执行更多的工作。这可以<strong>减少循环判断</strong>和<strong>分支</strong>的开销，并为其他优化（如<strong>指令级并行</strong>）创造机会。这通常在 -O3 中启用。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">16</span>; ++i) {</span><br><span class="line">    <span class="built_in">process</span>(data[i]);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// 优化后，编译器可能会将循环展开为</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">16</span>; i += <span class="number">4</span>) {</span><br><span class="line">    <span class="built_in">process</span>(data[i]);</span><br><span class="line">    <span class="built_in">process</span>(data[i + <span class="number">1</span>]);</span><br><span class="line">    <span class="built_in">process</span>(data[i + <span class="number">2</span>]);</span><br><span class="line">    <span class="built_in">process</span>(data[i + <span class="number">3</span>]);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="代价和权衡"><a href="#代价和权衡" class="headerlink" title="代价和权衡"></a>代价和权衡</h3><p>虽然优化能带来巨大好处，但也存在一些需要注意的代价和风险：</p>
+<ul>
+<li><p><strong>编译时间增加</strong>：优化级别越高，编译器需要做的分析和转换就越多，导致编译时间变长。</p>
+</li>
+<li><p>调试难度加大：优化会<strong>重排代码</strong>、<strong>消除变量</strong>、<strong>内联函数</strong>，这使得源码和最终执行的机器码之间的对应关系变得复杂。在 -O2 或 -O3 下调试时，你可能会发现单步执行时代码跳转不符合预期和无法打印某个变量的值等，因为它可能被优化到寄存器中，或者完全被消除了。</p>
+</li>
+<li><p>可能暴露未定义行为 (Undefined Behavior)：C/C++ 标准中一些行为是未定义的（如访问数组越界、有符号整数溢出）。在 -O0 下，这些行为可能恰好能“正常”工作，但在优化后，编译器可能会基于“这种行为永远不会发生”的假设进行优化，从而导致程序崩溃或产生非预期结果。</p>
+</li>
+<li><p>代码体积问题：<strong>-O3</strong> 等高级别优化<strong>为了速度可能会显著增加代码体积</strong>，这在某些场景下是不可接受的。</p>
+</li>
+</ul>
+<h3 id="volatile-关键字"><a href="#volatile-关键字" class="headerlink" title="volatile 关键字"></a>volatile 关键字</h3><p>volatile 是 C/C++ 语言中的一个类型限定符（type qualifier），与 const 类似。它的核心作用是告知编译器，<strong>被它修饰的变量的值随时都可能被程序本身之外的因素改变</strong>。</p>
+<p>这个“外部因素”可以是硬件（例如，一个内存映射的状态寄存器）, 操作系统, 另一个线程或者一个信号处理函数。</p>
+<p>因此，volatile 的主要目的是<strong>抑制编译器的优化</strong>，确保对该变量的<strong>每一次访问</strong>都是直接从<strong>内存</strong>中读取或写入，而<strong>不是使用寄存器中的缓存值</strong>。</p>
+<p>下面是一个简单的例子，展示了 volatile 的典型用法：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设 0x12345678 是一个硬件状态寄存器的地址</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> *status_reg = (<span class="type">unsigned</span> <span class="type">int</span> *)<span class="number">0x12345678</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等待设备就绪</span></span><br><span class="line"><span class="keyword">while</span> (*status_reg != <span class="number">0</span>) {</span><br><span class="line">    <span class="comment">// 忙等待 (busy-wait)</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设备已就绪，继续执行...</span></span><br></pre></td></tr></table></figure></div>
+<p>编译器的优化思路 (-O2 或更高)：</p>
+<ul>
+<li>分析循环：编译器看到 while 循环的条件是 *status_reg != 0。</li>
+<li>发现问题：在循环体内，没有任何代码会修改 *status_reg 指向的内存地址的值。</li>
+<li>做出假设：因此，编译器假设 *status_reg 的值永远不会改变。</li>
+<li>进行优化：它会在循环开始前，<em>*只读取一次 *status_reg 的值**并存入一个</em><em>寄存器</em>*（例如 eax）。然后，while 循环就变成了 while (eax != 0)。</li>
+</ul>
+<p>如果第一次读取的值不为 0，这将变成一个无限循环 (while(true))，即使硬件在稍后将状态寄存器的值更新为 0，程序也永远无法感知到这个变化，因为它一直在检查寄存器里的旧值。</p>
+<p>最后优化后的效果：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><figcaption><span>RISCV</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    LDR R0, [0x12345678]  ; 只读取一次状态寄存器</span><br><span class="line">.L1:</span><br><span class="line">    CMP R0, #0            ; 比较寄存器中的值</span><br><span class="line">    BNE .L1               ; 如果不为 0，继续循环</span><br></pre></td></tr></table></figure></div>
+
+<p>现在，我们把 volatile 加上。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 volatile 告诉编译器，这个地址的值随时可能改变</span></span><br><span class="line"><span class="keyword">volatile</span> <span class="type">unsigned</span> <span class="type">int</span> *status_reg = (<span class="keyword">volatile</span> <span class="type">unsigned</span> <span class="type">int</span> *)<span class="number">0x12345678</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等待设备就绪</span></span><br><span class="line"><span class="keyword">while</span> (*status_reg != <span class="number">0</span>) {</span><br><span class="line">    <span class="comment">// 忙等待</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设备已就绪，继续执行...</span></span><br></pre></td></tr></table></figure></div>
+<p>现在, 编译器看到 status_reg 指向一个 volatile 变量后会抑制优化：volatile 关键字像一个指令，告诉编译器：“不要对这个变量做任何假设！它的值随时可能从外部改变。”</p>
+<p>因此，编译器会在每一次循环中都生成从内存地址 0x12345678 重新读取值的指令。它不会将这个值缓存到寄存器中。</p>
+<p>最终生成的汇编代码可能类似于：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><figcaption><span>RISCV</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.L1:</span><br><span class="line">    LDR R0, [0x12345678]  ; 每次循环都重新读取状态寄存器</span><br><span class="line">    CMP R0, #0            ; 比较寄存器中的值</span><br><span class="line">    BNE .L1               ; 如果不为 0，继续循环</span><br></pre></td></tr></table></figure></div>
+<p>这样，当硬件更新了状态寄存器的值后，下一次循环的 mov 指令就能读取到新的值，程序就能正确地跳出循环。</p>
+<p>值得注意的是, 一个变量可以同时被 const 和 volatile 修饰，这看似矛盾，但实际上有明确的含义。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">volatile</span> <span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> *device_timer = (<span class="keyword">volatile</span> <span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> *)<span class="number">0x87654321</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>这里的 const 表示程序<strong>不能通过这个指针修改</strong> device_timer 指向的内存内容（即程序不能写入这个寄存器），而 volatile 则表示<strong>该寄存器的值可能随时被外部硬件改变</strong>，所以每次访问都必须从内存中重新读取。</p>
+<p>这个组合的完美用例是一个只读的硬件寄存器，比如一个硬件计时器或状态寄存器。我们的程序只能读取它的值，但这个值本身会由硬件自动更新。</p>
+<h4 id="const不能保证不被修改-volatile真能保证不被优化"><a href="#const不能保证不被修改-volatile真能保证不被优化" class="headerlink" title="const不能保证不被修改, volatile真能保证不被优化"></a>const不能保证不被修改, volatile真能保证不被优化</h4><p>const 关键字在 C/C++ 中表示“只读”，即通过该指针或引用<strong>不能修改</strong>它所指向的数据。然而，const 并不意味着数据本身是不可变的。数据可能会被其他途径修改，例如：</p>
+<ul>
+<li>通过非 const 指针或引用。</li>
+<li>通过硬件寄存器（如内存映射 I/O）。</li>
+<li>通过多线程中的其他线程。</li>
+<li>通过类型转换（cast）绕过 const 限定符。</li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; <span class="comment">// Output may still be 10</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; <span class="comment">// Output: 20</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>在这个例子中，我们通过类型转换（cast）绕过了 const 限定符，直接修改了 a 的值。虽然这种做法在技术上是可行的，但它违反了 const 的语义</p>
+<p>然而值得注意的是 a 的值在输出时仍然是 10，因为声明<code>const int a = 10;</code>这种做法太直接了, 即使在-o0的情况下, 编译器也会将 a 的值直接内联到代码中, 导致修改 a 的值实际上并没有影响到程序的行为。</p>
+<p>不过, 通过指针可以看到, 原先 a 的内存地址上的值确实被改成了 20。</p>
+<p>第二种情况是, 假如变量a被定义在了全局中:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; </span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>此时, 再执行会发现在运行时直接<strong>报错退出</strong>, 这是因为 a 是const的全局变量, 被放在了 .rodata 的只读数据段 (Read-Only Data Segment) 中, 试图修改它会导致<strong>访问冲突</strong> (Access Violation) 或 <strong>段错误</strong> (Segmentation Fault)。</p>
+<p>现在, 如果我们把第一种情况的 const 换成 volatile const：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; <span class="comment">// Output will be 20</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; <span class="comment">// Output: 20</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>在这个例子中，a 被声明为 volatile const，这告诉编译器 a 的值可能会被外部因素改变（例如硬件或其他线程）。因此，编译器不会对 a 进行优化，每次访问 a 时都会从内存中重新读取它的值。</p>
+<p>因此当我们通过指针修改了 a 的值后，下一次访问 a 时，编译器会重新从内存中读取它的值，这次读取到的值是 20。</p>
+<p>总结来说, const只是一种<strong>编译时的约束</strong>, 它并不能真正保证数据不被修改(像情况2那样真正的约束在于底层硬件中<strong>MMU</strong>的保护机制)。而 volatile 则是一种运行时的约束, 它确保每次访问变量时都直接从内存中读取最新的值, 从而防止编译器对其进行优化。</p>
+
+		</div>
+
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">内存分区</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/%E4%B8%89-%E4%BA%94-%E9%9B%B6%E6%B3%95%E5%88%99/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Volatile 和编译器优化</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">Volatile 和编译器优化</div>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GCC-%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E5%8C%96%E7%BA%A7%E5%88%AB"><span class="nav-text">GCC 的主要优化级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E7%9A%84%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF%E7%A4%BA%E4%BE%8B"><span class="nav-text">具体的优化技术示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E4%BB%B7%E5%92%8C%E6%9D%83%E8%A1%A1"><span class="nav-text">代价和权衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">volatile 关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#const%E4%B8%8D%E8%83%BD%E4%BF%9D%E8%AF%81%E4%B8%8D%E8%A2%AB%E4%BF%AE%E6%94%B9-volatile%E7%9C%9F%E8%83%BD%E4%BF%9D%E8%AF%81%E4%B8%8D%E8%A2%AB%E4%BC%98%E5%8C%96"><span class="nav-text">const不能保证不被修改, volatile真能保证不被优化</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        143 posts in total
+                    </span>
+                    
+                        <span>
+                            309.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

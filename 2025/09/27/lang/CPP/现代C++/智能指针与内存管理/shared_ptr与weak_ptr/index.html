@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/27/lang/cpp/现代c++/智能指针与内存管理/shared_ptr与weak_ptr/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shared_ptr与weak_ptr">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/27/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/shared_ptr%E4%B8%8Eweak_ptr/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-09-27T13:57:27.000Z">
+<meta property="article:modified_time" content="2025-09-27T15:01:03.557Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            shared_ptr与weak_ptr | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">shared_ptr与weak_ptr</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-09-27 21:57:27</span>
+        <span class="mobile">2025-09-27 21:57:27</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-09-27 23:01:03</span>
+            <span class="mobile">2025-09-27 23:01:03</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.8k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>11 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="std-shared-ptr：共享所有权的管理者"><a href="#std-shared-ptr：共享所有权的管理者" class="headerlink" title="std::shared_ptr：共享所有权的管理者"></a>std::shared_ptr：共享所有权的管理者</h2><p>std::shared_ptr 是一种拥有共享所有权的智能指针。这意味着多个 shared_ptr 实例可以共同拥有和管理同一个动态分配的对象。当最后一个指向该对象的 shared_ptr 被销毁或重置时，该对象会被自动释放。</p>
+<h3 id="核心理念：引用计数"><a href="#核心理念：引用计数" class="headerlink" title="核心理念：引用计数"></a>核心理念：引用计数</h3><p>shared_ptr 的核心机制是引用计数（Reference Counting）。它通过一个“控制块”来实现这一机制。</p>
+<p>控制块（Control Block）是一个<strong>与被管理对象分离</strong>的内存块, 存储在<strong>堆</strong>上。当第一个 shared_ptr 创建时，控制块也随之被创建。它包含以下关键信息：</p>
+<ul>
+<li>强引用计数（Strong Reference Count）：记录有多少个 shared_ptr 正指向同一个对象。</li>
+<li>弱引用计数（Weak Reference Count）：记录有多少个 weak_ptr 正在“观察”这个对象。</li>
+<li>指向被管理对象的指针。</li>
+<li>（可选）自定义删除器的指针。</li>
+</ul>
+<p>一般来说, 引用计数和控制块的工作流程如下：</p>
+<ul>
+<li>当一个新的 shared_ptr 创建或通过拷贝构造或拷贝赋值指向一个已有对象时，强引用计数 +1。</li>
+<li>当一个 shared_ptr 被销毁（例如离开作用域）、被重置（reset()）或指向其他对象时，强引用计数 -1。</li>
+<li>当<strong>强引用计数变为 0</strong> 时，shared_ptr 会自动调用删除器（默认为 delete）来释放被管理的对象。</li>
+<li>当弱引用计数和强引用计数都变为 0 时，控制块本身才会被释放。</li>
+</ul>
+<p>这种<strong>引用计数的加减</strong>还是线程安全的：shared_ptr 的引用计数增减操作是原子的，这意味着在多线程环境下，仅对 shared_ptr 对象本身进行拷贝、赋值和销毁是线程安全的，不会导致引用计数出错。但<strong>它并不保护被管理对象本身</strong>，如果<strong>多线程要修改对象内容</strong>，仍需<strong>手动加锁</strong>。</p>
+<h3 id="创建-shared-ptr"><a href="#创建-shared-ptr" class="headerlink" title="创建 shared_ptr"></a>创建 shared_ptr</h3><p>函数模板 std::make_shared 的函数原型如下:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std {</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="title">make_shared</span><span class="params">(Args&amp;&amp;... args)</span></span>;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p>T是<strong>要指向的对象的类型</strong>, args是传给T这个类<strong>构造函数的参数</strong>（如果有的话）。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span>    <span class="comment">// 存放智能指针相关</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyClass</span>() { std::cout &lt;&lt; <span class="string">"MyClass 构造"</span> &lt;&lt; std::endl; }</span><br><span class="line">    ~<span class="built_in">MyClass</span>() { std::cout &lt;&lt; <span class="string">"MyClass 析构"</span> &lt;&lt; std::endl; }</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">greet</span><span class="params">()</span> </span>{ std::cout &lt;&lt; <span class="string">"Hello!"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 推荐方式：使用 std::make_shared</span></span><br><span class="line">    <span class="comment">// 优点：1. 更高效（对象和控制块一次性分配内存） 2. 异常安全</span></span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; sp1 = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 不太推荐的方式：使用 new, 虽然最终也能通过shared_ptr安全管理, 但是会分两次（一次 new T()，一次为控制块）分配内存</span></span><br><span class="line">    <span class="function">std::shared_ptr&lt;MyClass&gt; <span class="title">sp2</span><span class="params">(<span class="keyword">new</span> MyClass())</span></span>; </span><br><span class="line">    <span class="keyword">auto</span> sp3 = sp1; <span class="comment">// 直接拷贝构造</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建完毕后, 这两个指针指向的对象都在堆上, 控制块也在堆上</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>对于std::shared_ptr, 还有一些需要了解但是不太常用的接口: </p>
+<ul>
+<li>通过 get() 方法来获取原始指针，适用于和旧版C语言库等只接受原始指针的接口交互</li>
+<li>通过 reset() 来减少一个强引用计数， 适用于提前终止对资源的管理</li>
+<li>通过use_count()来查看一个对象的引用计数。</li>
+</ul>
+<h3 id="共享所有权"><a href="#共享所有权" class="headerlink" title="共享所有权"></a>共享所有权</h3><div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个 shared_ptr</span></span><br><span class="line">std::shared_ptr&lt;MyClass&gt; sp1 = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">std::cout &lt;&lt; <span class="string">"sp1 创建后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 1</span></span><br><span class="line"></span><br><span class="line">{</span><br><span class="line">    <span class="comment">// sp2 通过拷贝 sp1 创建</span></span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; sp2 = sp1;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"sp2 创建后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 2</span></span><br><span class="line">    </span><br><span class="line">    sp2-&gt;<span class="built_in">greet</span>(); <span class="comment">// 可以像普通指针一样使用</span></span><br><span class="line">} <span class="comment">// sp2 在这里离开作用域并被销毁</span></span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">"sp2 销毁后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// sp1 在 main 函数结束时销毁，引用计数变为0，MyClass 对象被析构</span></span><br></pre></td></tr></table></figure></div>
+
+<p>优点：</p>
+<ul>
+<li>自动管理内存，有效防止内存泄漏。</li>
+<li>易于使用，可以像普通指针一样操作。</li>
+<li>明确了资源的“共享所有权”语义。</li>
+</ul>
+<p>但是, 如果只使用std::shared_ptr, 会存在一个难以察觉的陷阱: 循环引用（Circular Reference）, 这是 shared_ptr 最大的问题，也是 weak_ptr 存在的原因。</p>
+<h3 id="循环引用（Circular-Reference）"><a href="#循环引用（Circular-Reference）" class="headerlink" title="循环引用（Circular Reference）"></a>循环引用（Circular Reference）</h3><p>如下是一个双向链表的实现代码</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> {</span><br><span class="line">    <span class="type">int</span> value;</span><br><span class="line">    <span class="comment">// 错误的方式：前后指针都使用 shared_ptr</span></span><br><span class="line">    std::shared_ptr&lt;Node&gt; next;</span><br><span class="line">    std::shared_ptr&lt;Node&gt; prev;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Node</span>(<span class="type">int</span> v) : <span class="built_in">value</span>(v) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"构造函数: Node("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">    ~<span class="built_in">Node</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"析构函数: ~Node("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">create_leaky_list</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 进入 create_leaky_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建两个节点</span></span><br><span class="line">    <span class="keyword">auto</span> node1 = std::<span class="built_in">make_shared</span>&lt;Node&gt;(<span class="number">10</span>); <span class="comment">// Node(10) 的强引用计数为 1</span></span><br><span class="line">    <span class="keyword">auto</span> node2 = std::<span class="built_in">make_shared</span>&lt;Node&gt;(<span class="number">20</span>); <span class="comment">// Node(20) 的强引用计数为 1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将它们互相连接，形成双向链表</span></span><br><span class="line">    node1-&gt;next = node2; <span class="comment">// Node(20) 的强引用计数变为 2 (来自 node2 和 node1-&gt;next)</span></span><br><span class="line">    node2-&gt;prev = node1; <span class="comment">// Node(10) 的强引用计数变为 2 (来自 node1 和 node2-&gt;prev)</span></span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(10) 的引用计数: "</span> &lt;&lt; node<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(20) 的引用计数: "</span> &lt;&lt; node<span class="number">2.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 准备离开 create_leaky_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="built_in">create_leaky_list</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"\n--- create_leaky_list 函数已结束 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"程序即将退出，检查是否有析构函数被调用..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>当 create_leaky_list 函数结束时，<strong>栈上的 node1 和 node2</strong> 两个 shared_ptr 指针变量被销毁(指向的堆上的对象并没有)。node1 销毁，导致 Node(10) 的强引用计数从 2 降为 1。但不为 0，因为 Node(20)-&gt;prev 仍然指向它; node2 销毁，导致 Node(20) 的强引用计数从 2 降为 1。但不为 0，因为 Node(10)-&gt;next 仍然指向它。</p>
+<p>最终结果是, 由于两个节点(对象)的强引用计数都无法归零，它们的析构函数永远不会被调用，导致它们所占用的内存无法被释放。</p>
+<h2 id="std-weak-ptr：打破循环引用的观察者"><a href="#std-weak-ptr：打破循环引用的观察者" class="headerlink" title="std::weak_ptr：打破循环引用的观察者"></a>std::weak_ptr：打破循环引用的观察者</h2><p>std::weak_ptr 是一种<strong>非拥有型</strong>的智能指针。它像一个“观察者”，可以指向一个由 shared_ptr 管理的对象，但不会增加对象的强引用计数。</p>
+<p>也就是说, 这种指针是一种弱引用:</p>
+<ul>
+<li>weak_ptr 的存在不会影响对象的生命周期。它只是监视对象是否存在。</li>
+<li>它指向与 shared_ptr <strong>相同的控制块</strong>，并通过创建和销毁来增减控制块中的<strong>弱引用计数</strong>。</li>
+<li>你<strong>不能直接通过 weak_ptr 访问对象</strong>（<strong>没有 * 或 -&gt; 操作符</strong>），因为对象可能随时被销毁。</li>
+</ul>
+<h3 id="创建-weak-ptr-和访问对象（核心操作：lock-）"><a href="#创建-weak-ptr-和访问对象（核心操作：lock-）" class="headerlink" title="创建 weak_ptr 和访问对象（核心操作：lock()）"></a>创建 weak_ptr 和访问对象（核心操作：lock()）</h3><p>weak_ptr 只能从 shared_ptr 或另一个 weak_ptr 构造, 而不能构造一个来指向某个新对象</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="type">int</span>&gt; sp = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">10</span>);</span><br><span class="line">std::weak_ptr&lt;<span class="type">int</span>&gt; wp = sp; <span class="comment">// 从 shared_ptr 创建</span></span><br></pre></td></tr></table></figure></div>
+
+<p>weak_ptr 最重要的函数是 <strong>lock()</strong>。它会安全地检查被观察对象是否存在：</p>
+<ul>
+<li>如果对象仍然存在，lock() 会返回一个指向该对象的有效的 shared_ptr，并使对象的强引用计数 +1。</li>
+<li>如果对象已被销毁，lock() 会返回一个空的 shared_ptr。</li>
+</ul>
+<p>这种“检查并获取”的模式是原子操作，保证了线程安全。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">std::weak_ptr&lt;MyClass&gt; weak_p;</span><br><span class="line">{</span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; shared_p = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">    weak_p = shared_p; <span class="comment">// weak_p 观察 shared_p 管理的对象</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试从 weak_p 获取一个 shared_ptr</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">auto</span> sp_temp = weak_p.<span class="built_in">lock</span>()) { <span class="comment">// 看是否能够成功获取</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"对象仍然存在, 可以安全访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">        sp_temp-&gt;<span class="built_in">greet</span>();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">} <span class="comment">// shared_p 在此销毁, MyClass 对象也被析构</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// MyClass 对象已被析构, weak_p无指向, 再次尝试 lock会失败</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> sp_temp = weak_p.<span class="built_in">lock</span>()) {</span><br><span class="line">    <span class="comment">// 这段代码不会执行</span></span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"对象已被销毁, 无法访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>还有个常用的函数: std::weak_ptr::<strong>expired()</strong>, 用于判断当前 weak_ptr 是否已经失效，也就是它所观察的对象是否已经被销毁。如果返回 true, 表示对象已经被销毁，weak_ptr 不再指向有效资源; 返回 false则表示对象仍然存在，可以尝试通过 lock() 获取一个有效的 shared_ptr。</p>
+<p>结合起来上面的代码还可以修改为:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!weak_ptr.<span class="built_in">expired</span>()) {</span><br><span class="line">    weak_ptr.<span class="built_in">lock</span>()-&gt;<span class="built_in">greet</span>();</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"对象已被销毁, 无法访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="解决循环引用"><a href="#解决循环引用" class="headerlink" title="解决循环引用"></a>解决循环引用</h3><p>只需将循环引用链中的任意一环从 shared_ptr 改为 weak_ptr 即可。通常，我们会选择从属关系中的“子”指向“父”的指针(在双向链表中通常是 prev 指针)改为 weak_ptr。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">CorrectNode</span> {</span><br><span class="line">    <span class="type">int</span> value;</span><br><span class="line">    std::shared_ptr&lt;CorrectNode&gt; next;</span><br><span class="line">    <span class="comment">// 解决方案：将 prev 指针改为 weak_ptr</span></span><br><span class="line">    std::weak_ptr&lt;CorrectNode&gt; prev;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">CorrectNode</span>(<span class="type">int</span> v) : <span class="built_in">value</span>(v) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"构造函数: CorrectNode("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">    ~<span class="built_in">CorrectNode</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"析构函数: ~CorrectNode("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">create_correct_list</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 进入 create_correct_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> node1 = std::<span class="built_in">make_shared</span>&lt;CorrectNode&gt;(<span class="number">10</span>); <span class="comment">// Node(10) 强引用 = 1</span></span><br><span class="line">    <span class="keyword">auto</span> node2 = std::<span class="built_in">make_shared</span>&lt;CorrectNode&gt;(<span class="number">20</span>); <span class="comment">// Node(20) 强引用 = 1</span></span><br><span class="line"></span><br><span class="line">    node1-&gt;next = node2; <span class="comment">// Node(20) 强引用 = 2</span></span><br><span class="line">    node2-&gt;prev = node1; <span class="comment">// Node(10) 强引用不变，仍为 1 (因为 prev 是 weak_ptr)</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(10) 的引用计数: "</span> &lt;&lt; node<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(20) 的引用计数: "</span> &lt;&lt; node<span class="number">2.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 准备离开 create_correct_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="built_in">create_correct_list</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"\n--- create_correct_list 函数已结束 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"程序即将退出，检查是否有析构函数被调用..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>当 create_correct_list 函数结束时，栈上的 node1 和 node2 被销毁。因为 node1 销毁，Node(10) 的强引用计数从 1 降为 0。Node(10) 对象被析构, 导致其成员 next（一个指向 Node(20) 的 shared_ptr）被销毁。这导致 Node(20) 的强引用计数从 2 降为 1。</p>
+<p>随后，node2 销毁，Node(20) 的强引用计数从 1 降为 0。Node(20) 对象被析构。最终结果是, 所有节点都被正确地、依次地销毁。</p>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>std::shared_ptr</th>
+<th>std::weak_ptr</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>所有权</td>
+<td>拥有（共享所有权）</td>
+<td>不拥有（观察者）</td>
+</tr>
+<tr>
+<td>引用计数</td>
+<td>创建/销毁/拷贝会改变强引用计数</td>
+<td>创建/销毁/拷贝会改变弱引用计数</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>它的存在会延长对象的生命周期</td>
+<td>不影响对象的生命周期</td>
+</tr>
+<tr>
+<td>直接访问</td>
+<td>可以，通过 <code>*</code> 和 <code>-&gt;</code> 操作符</td>
+<td>不可以</td>
+</tr>
+<tr>
+<td>安全访问方式</td>
+<td>直接使用</td>
+<td>必须调用 <code>lock()</code> 获取一个临时的 shared_ptr</td>
+</tr>
+<tr>
+<td>主要用途</td>
+<td>管理具有共享所有权的动态资源</td>
+<td>1. 打破 shared_ptr 的循环引用<br>2. 实现缓存系统<br>3. 观察者模式</td>
+</tr>
+<tr>
+<td>如何创建</td>
+<td><code>std::make_shared</code> 或从原始指针构造</td>
+<td>从 shared_ptr 或其他 weak_ptr 构造</td>
+</tr>
+</tbody></table>
+<p>智能指针这种技术并不新奇，在很多语言中都是一种常见的技术，现代 C++ 将这项技术引进，在一定程度上消除了 new/delete 的滥用，是一种更加成熟的编程范式。</p>
+
+		</div>
+
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/28/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/unique_ptr%E4%B8%8Eauto_ptr/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">unique_ptr与auto_ptr</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/09/26/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AF%AD%E8%A8%80%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84%E5%BC%BA%E5%8C%96/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">面向对象</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">shared_ptr与weak_ptr</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#std-shared-ptr%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85"><span class="nav-text">std::shared_ptr：共享所有权的管理者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5%EF%BC%9A%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-text">核心理念：引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-shared-ptr"><span class="nav-text">创建 shared_ptr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83"><span class="nav-text">共享所有权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%EF%BC%88Circular-Reference%EF%BC%89"><span class="nav-text">循环引用（Circular Reference）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-weak-ptr%EF%BC%9A%E6%89%93%E7%A0%B4%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%E8%A7%82%E5%AF%9F%E8%80%85"><span class="nav-text">std::weak_ptr：打破循环引用的观察者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-weak-ptr-%E5%92%8C%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%EF%BC%88%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C%EF%BC%9Alock-%EF%BC%89"><span class="nav-text">创建 weak_ptr 和访问对象（核心操作：lock()）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-text">解决循环引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-text">总结对比</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        143 posts in total
+                    </span>
+                    
+                        <span>
+                            309.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

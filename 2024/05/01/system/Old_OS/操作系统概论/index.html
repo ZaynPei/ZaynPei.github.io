@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2024/05/01/system/old_os/操作系统概论/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统概论">
+<meta property="og:url" content="https://zaynpei.github.io/2024/05/01/system/Old_OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2024-05-01T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-27T06:57:08.775Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="system">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            操作系统概论 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">操作系统概论</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-05-01 12:00</span>
+        <span class="mobile">2024-05-01 12:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-08-27 14:57:08</span>
+            <span class="mobile">2025-08-27 14:57:08</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/system/">system</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>9.9k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>34 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="操作系统的角色和功能"><a href="#操作系统的角色和功能" class="headerlink" title="操作系统的角色和功能"></a>操作系统的角色和功能</h2><p>所谓操作系统, 就是软硬件之间的桥梁, 通过<strong>调度硬件资源更好地运行软件</strong></p>
+<ul>
+<li><p>向上（对软件）：它为应用程序（如微信、Word、游戏等）<strong>提供了一个一致的运行平台和接口</strong>。</p>
+<ul>
+<li>步骤说明：应用程序不需要知道具体硬件（比如某款特定声卡）的复杂细节，只需要向操作系统发出“播放声音”的请求，操作系统会负责将这个请求翻译给具体的硬件来执行。这极大地简化了软件开发的难度。</li>
+</ul>
+</li>
+<li><p>向下（对硬件）：它直接<strong>控制和驱动所有硬件设备</strong>，如处理器（CPU）、内存、硬盘、键盘、鼠标等。</p>
+<ul>
+<li>步骤说明：操作系统将硬件的复杂物理特性抽象成简单的逻辑功能，例如，它将硬盘上复杂的磁道和扇区抽象成我们易于理解的“文件”和“文件夹”。</li>
+</ul>
+</li>
+</ul>
+<p>我们可以将操作系统（Operating System, OS） 理解为现代数字计算机的灵魂和总指挥。它是在计算机硬件（如CPU、内存、硬盘）之上运行的最基础、最核心的系统软件。没有操作系统，我们的电脑就是一堆无法有效工作的金属和塑料。</p>
+<h2 id="操作系统核心任务：管理资源与提供服务"><a href="#操作系统核心任务：管理资源与提供服务" class="headerlink" title="操作系统核心任务：管理资源与提供服务"></a>操作系统核心任务：管理资源与提供服务</h2><h3 id="资源管理器-Resource-Manager"><a href="#资源管理器-Resource-Manager" class="headerlink" title="资源管理器 (Resource Manager)"></a>资源管理器 (Resource Manager)</h3><p>计算机的资源是有限的，比如只有一个 CPU（或者有限的核心）、固定大小的内存。当多个程序同时运行时，操作系统必须扮演一个公平且高效的“管家”。</p>
+<ul>
+<li><p>管理CPU：决定在某个瞬间，哪个程序可以使用处理器。</p>
+<ul>
+<li>目的：通过快速切换，实现宏观上的“多任务同时运行”，避免单个程序独占系统。</li>
+</ul>
+</li>
+<li><p>管理内存：为每个程序分配所需的内存空间，并在程序关闭后回收它们，确保程序之间互不干扰。</p>
+</li>
+<li><p>管理I/O设备：管理键盘输入、屏幕输出、磁盘读写等所有输入/输出操作。</p>
+</li>
+</ul>
+<h3 id="服务提供者-Service-Provider"><a href="#服务提供者-Service-Provider" class="headerlink" title="服务提供者 (Service Provider)"></a>服务提供者 (Service Provider)</h3><p>操作系统通过提供一系列基础服务，让用户和应用程序能够方便地使用计算机。</p>
+<ul>
+<li><p>文件系统管理：提供创建、读取、更新和删除文件（CRUD）的功能。</p>
+</li>
+<li><p>用户接口：提供与用户交互的方式，可以是图形用户界面（GUI），如 Windows 的桌面和窗口；也可以是命令行界面（CLI）</p>
+</li>
+<li><p>程序执行：负责将程序加载到内存中并开始运行。</p>
+</li>
+</ul>
+<h2 id="操作系统上的程序"><a href="#操作系统上的程序" class="headerlink" title="操作系统上的程序"></a>操作系统上的程序</h2><p>操作系统是连接软件和硬件的桥梁。因此想要理解操作系统，我们首先需要对操作系统的服务对象 (应用程序) 有更精确和深刻的理解</p>
+<h3 id="程序-状态机"><a href="#程序-状态机" class="headerlink" title="程序 = 状态机"></a>程序 = 状态机</h3><p>任何一个C程序，其从开始运行到结束的整个过程，都可以被严格地描述为一个状态机。</p>
+<blockquote>
+<p>状态机是拥有严格数学定义的对象。这意味着我们可以用一种精确的、无歧义的方式来描述和分析程序的行为，这种方法也称为形式化方法（Formal Methods）。</p>
+</blockquote>
+<h4 id="什么是程序的状态-State"><a href="#什么是程序的状态-State" class="headerlink" title="什么是程序的状态 (State)"></a>什么是程序的状态 (State)</h4><p>程序在任何一个瞬间的“快照”就是它的状态。这个快照必须包含所有能决定程序未来行为的信息, 即<strong>状态 = [StackFrame, StackFrame, …] + 全局变量</strong></p>
+<ul>
+<li><p>栈帧（Stack Frame）：每当一个函数被调用时，系统就会为它在调用栈上创建一个栈帧。这个栈帧里包含了该函数的所有信息，例如：</p>
+<ul>
+<li><p>函数的参数（Arguments）。</p>
+</li>
+<li><p>函数内部定义的局部变量（Local Variables）。</p>
+</li>
+<li><p>程序计数器（Program Counter, PC）：它指向当前函数中，下一条将要被执行的语句的地址。</p>
+</li>
+<li><p>返回地址（Return Address）：当函数执行完毕后，应该返回到哪里继续执行。</p>
+</li>
+</ul>
+</li>
+<li><p>全局变量（Global Variables）：它们不属于任何一个函数，在程序的整个生命周期中都存在，因此是状态的一个独立组成部分。</p>
+</li>
+</ul>
+<p>一个程序在任一时刻的精确状态，由“当前所有全局变量的值”和“整个调用栈（及其所有栈帧）的内容”共同唯一确定。</p>
+<h4 id="什么是程序的初始状态-Initial-State"><a href="#什么是程序的初始状态-Initial-State" class="headerlink" title="什么是程序的初始状态 (Initial State)"></a>什么是程序的初始状态 (Initial State)</h4><p>程序的执行必须有一个明确的起点。这个起点就是初始状态。在程序语言的层面, 可以理解为<strong>初始状态 = main 的第一条语句</strong></p>
+<ul>
+<li><p>全局变量全部为初始值：</p>
+<ul>
+<li>所有全局变量和静态变量都被赋予它们的初始值（如果代码中指定了），或者被默认初始化为零。</li>
+</ul>
+</li>
+<li><p>仅有一个 StackFrame(main, argc, argv, PC=0)：</p>
+<ul>
+<li><p>程序开始执行时，操作系统会调用 main 函数。</p>
+</li>
+<li><p>此时，调用栈上只有一个为 main 函数创建的栈帧。</p>
+</li>
+<li><p>这个栈帧里包含了传递给 main 的命令行参数 argc 和 argv。</p>
+</li>
+<li><p>PC=0 （这里的 0 是一个相对位置）意味着程序计数器指向 main 函数内部的第一条可执行语句。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>总的来说, 程序的初始状态是：所有全局变量初始化完毕，且调用栈上仅有 main 函数的栈帧，执行点位于 main 的开头。</p>
+<h4 id="什么是状态迁移-State-Transition"><a href="#什么是状态迁移-State-Transition" class="headerlink" title="什么是状态迁移 (State Transition)"></a>什么是状态迁移 (State Transition)</h4><p>状态机模型的核心在于状态如何从一个变为另一个，这就是状态迁移。</p>
+<p>总的来说, <strong>状态迁移 = 执行 frames[-1].PC 处的简单语句</strong> , 这里的 frames[-1] 指的是调用栈顶部的那个栈帧（也就是当前正在执行的函数）。.PC 则是该函数内的程序计数器。</p>
+<p>状态迁移由执行一条最基本的、不可再分的指令触发。 每执行这样一条指令，程序的状态就会发生一次微小的、确定的变化。例如：</p>
+<ul>
+<li><p>赋值操作：x = 10; 这条语句会改变变量 x 的值，导致程序状态发生变化。</p>
+</li>
+<li><p>函数调用：foo(); 这会导致一个新的栈帧（为 foo 函数）被压入调用栈的顶部，PC会跳转到 foo 函数的起始位置。这显然是一个状态迁移。</p>
+</li>
+<li><p>函数返回：return; 这会导致顶部的栈帧被弹出，PC恢复到调用该函数之前的位置。这也是一个状态迁移。</p>
+</li>
+<li><p>控制流：if-else 或循环语句会根据条件改变 PC 的值，从而改变下一条要执行的指令，引发状态迁移。</p>
+</li>
+</ul>
+<p>程序通过一条条地执行简单指令，不断地从一个状态转移到下一个状态。整个程序的执行过程，就是一条从“初始状态”出发，经过一系列“状态迁移”而形成的轨迹。</p>
+<blockquote>
+<p>这个模型是调试器（Debugger）、编译器优化（Compiler Optimization）和程序形式化验证（Formal Verification）等技术的理论基础。调试器之所以能让你“单步执行”或“设置断点”，本质上就是因为它能暂停程序的状态迁移，并让你检查当前的状态（变量值、调用栈等）。</p>
+</blockquote>
+<h3 id="如何改变外部状态"><a href="#如何改变外部状态" class="headerlink" title="如何改变外部状态"></a>如何改变外部状态</h3><p>我们之前讨论过，一个C程序可以被看作一个严谨的状态机。这个模型的“状态”由变量值和调用栈构成，而“状态迁移”由执行一条条简单的语句驱动。</p>
+<p>使用这个状态机模型，我们可以实现任何纯粹的计算（Pure Computation）。</p>
+<details class="green" data-header-exclude>
+    <summary><i class="fa-solid fa-chevron-right"></i>什么是纯粹的计算 </summary>
+    <div class="content markdown-body">
+      <p>它指的是所有操作都局限在<strong>程序内部状态</strong>中的计算。它读取程序内存中的数据，处理后，再写回程序内存中。整个过程是自包含的，与外界隔离。例如：</p>
+<ul>
+<li><p>strlen(s)：读取内存中字符串 s 的数据，计算其长度，返回一个数字。整个过程只涉及内存读取。</p>
+</li>
+<li><p>memcpy(dest, src, n)：从内存地址 src 复制 n 个字节到内存地址 dest。整个过程只是在程序自己的内存空间里移动数据。</p>
+</li>
+<li><p>sprintf(buf, “%d”, 123)：将数字 123 格式化成字符串，然后写入到程序提供的内存缓冲区 buf 中。</p>
+</li>
+</ul>
+<p>这些函数的所有行为，都可以用我们之前讨论的状态机模型完美描述。它们的执行只会改变程序内部的变量和内存，不会对计算机的其他部分产生任何直接影响。
+ </p>
+
+    </div>
+  </details>
+
+<p>然而, 仅靠程序无法实现的是<strong>改变“程序外的状态”</strong>, 例如: </p>
+<ul>
+<li>显示器上显示的内容</li>
+<li>硬盘上的文件。</li>
+<li>网络连接的状态。</li>
+<li>键盘、鼠标的输入。</li>
+<li>程序自身的生与死（由操作系统管理）。</li>
+</ul>
+<p>当你在程序中输入putchar(‘A’), 这个函数的目的不是在内存里写入字符 ‘A’，而是要让 ‘A’ 这个字符出现在屏幕上。屏幕是程序外部的物理设备，它的显示内容就是一种“程序外的状态”。</p>
+<p>同理, 当我们键入exit(0)时, 这个函数要终止程序自身的运行。一个程序如何“杀死”自己？这涉及到操作系统对进程的管理，这同样是“程序外的状态”。</p>
+<h4 id="系统调用-System-Call"><a href="#系统调用-System-Call" class="headerlink" title="系统调用 (System Call)"></a>系统调用 (System Call)</h4><p>为什么程序不能直接操作外部世界？因为这是极其危险的。如果任何程序都能随意写硬盘、控制屏幕，整个系统将陷入混乱且毫无安全可言。</p>
+<p>因此，操作系统在程序（用户空间 User Space）和系统资源/硬件（内核空间 Kernel Space）之间建立了一道不可逾越的屏障。程序运行在受限的“用户模式”下，而操作系统内核运行在拥有最高权限的“内核模式”下。</p>
+<p>当一个程序需要执行像“在屏幕上显示字符”这样超出“纯粹计算”范畴的操作时，它不能直接去做，而是必须向操作系统请求服务。这个请求服务的机制，就是系统调用。其基本过程如下：</p>
+<ol>
+<li><p><strong>调用库函数</strong>：当我们在C代码调用 putchar(‘A’)。这实际上是调用了C标准库（libc）中的一个函数。</p>
+</li>
+<li><p><strong>准备系统调用</strong>：putchar 这个库函数会将要执行的操作（例如，在Linux上是 write 系统调用）的编号和参数（要写入的字符’A’、目标是标准输出等）准备好，存放在CPU的特定寄存器中。</p>
+</li>
+<li><p><strong>触发陷阱（Trap）</strong>：库函数执行一条特殊的机器指令（例如在 x86-64 上是 syscall，在 RISC-V 上是 ecall）。这条指令会使CPU产生一个“陷阱”，中断当前程序的执行。</p>
+</li>
+<li><p><strong>切换到内核模式</strong>：CPU响应陷阱，立即将运行模式从用户模式切换到内核模式，并将控制权交给操作系统预先设定的一个“系统调用处理程序”。</p>
+</li>
+<li><p><strong>内核执行操作</strong>：操作系统内核根据程序放在寄存器里的请求编号和参数，得知程序想要“在标准输出写入字符’A’”。内核会验证这个请求的合法性，然后代替程序去执行这个操作，例如调用显卡驱动程序，最终将字符’A’显示在屏幕上。这是真正改变“程序外状态”的一步。</p>
+</li>
+<li><p><strong>返回用户模式</strong>：内核完成操作后，会将结果（如果有的话）放回寄存器，并将CPU切换回用户模式，控制权交还给程序中触发 syscall 指令之后的位置。程序继续执行，就好像什么都没发生一样，但屏幕上已经多了一个’A’。</p>
+</li>
+</ol>
+<blockquote>
+<p>像 putchar, exit, fopen, read, write 这些看似普通的标准库函数，其内部都封装了复杂的系统调用过程，它们是程序向操作系统请求服务的用户友好接口。</p>
+</blockquote>
+<h4 id="strace-system-call-trace"><a href="#strace-system-call-trace" class="headerlink" title="strace (system call trace)"></a>strace (system call trace)</h4><p>strace (system call trace)，即系统调用跟踪。它能够跟踪一个进程执行时所进行的所有系统调用（system calls）以及这些调用的参数、返回值和执行时间。</p>
+<h5 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h5><p>strace 的基本用法非常简单，你可以在想要追踪的命令前加上 strace。例如对下列的C程序代码:</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test_write.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> {</span><br><span class="line">    <span class="type">int</span> fd;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *data = <span class="string">"Hello, strace!\n"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 打开文件</span></span><br><span class="line">    fd = open(<span class="string">"output.txt"</span>, O_CREAT | O_WRONLY | O_TRUNC, <span class="number">0644</span>);</span><br><span class="line">    <span class="keyword">if</span> (fd == <span class="number">-1</span>) {</span><br><span class="line">        perror(<span class="string">"open"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 写入数据</span></span><br><span class="line">    <span class="keyword">if</span> (write(fd, data, <span class="built_in">strlen</span>(data)) == <span class="number">-1</span>) {</span><br><span class="line">        perror(<span class="string">"write"</span>);</span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭文件</span></span><br><span class="line">    <span class="keyword">if</span> (close(fd) == <span class="number">-1</span>) {</span><br><span class="line">        perror(<span class="string">"close"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Data written to output.txt\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>采取下列命令编译并执行</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc test_write.c -o test_write</span><br><span class="line">strace ./test_write</span><br></pre></td></tr></table></figure></div>
+
+<p>终端的输出结果如下</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">openat(AT_FDCWD, <span class="string">"output.txt"</span>, O_WRONLY|O_CREAT|O_TRUNC, 0644) = 3</span><br><span class="line">fstat(3, {st_mode=S_IFREG|0644, st_size=0, ...}) = 0</span><br><span class="line">write(3, <span class="string">"Hello, strace!\n"</span>, 15) = 15</span><br><span class="line">close(3) = 0</span><br><span class="line">...</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>openat(…) = 3：程序调用 openat 系统调用打开名为 output.txt 的文件。参数 O_WRONLY|O_CREAT|O_TRUNC 表示以只写、创建（如果不存在则创建）和截断（如果文件已存在则清空其内容）模式打开。返回值 3 是文件描述符。</p>
+</li>
+<li><p>write(3, “Hello, strace!\n”, 15) = 15：程序调用 write 系统调用向文件描述符 3（即 output.txt）写入 Hello, strace!\n 这段数据，共 15 个字节。返回 15 表示成功写入了 15 个字节。</p>
+</li>
+<li><p>close(3) = 0：程序调用 close 系统调用关闭文件描述符 3。返回 0 表示成功关闭。</p>
+</li>
+</ul>
+<p>通过这些输出，我们可以清晰地看到程序如何与文件系统进行交互，从而验证它的行为是否符合预期。</p>
+<details class="green" data-header-exclude>
+    <summary><i class="fa-solid fa-chevron-right"></i>观测程序运行的常用手段 </summary>
+    <div class="content markdown-body">
+      <p>调试器 (Debugger)：通常用于单步执行程序，设置断点，检查变量值，并修改程序执行流程。</p>
+<ul>
+<li>提供微观、精确的控制和观测，适合深入分析特定代码段的逻辑错误或运行时行为。它关注的是“程序在某个点上，状态是什么样的？”。</li>
+</ul>
+<p>Trace (跟踪工具，例如 strace)：记录程序执行过程中的特定事件或交互，如系统调用、函数调用、消息传递等。</p>
+<ul>
+<li>提供宏观、连续的执行流视图，帮助我们理解程序的行为序列。strace特别关注程序与操作系统之间的交互，揭示了“程序做了什么系统操作？”以及“这些操作的顺序和结果如何？”。</li>
+</ul>
+<p>Profiler (剖析器/性能分析器)：测量程序的性能指标，如函数执行时间、CPU使用率、内存占用、缓存命中率等。</p>
+<ul>
+<li>提供性能优化所需的洞察。它关注的是“程序在哪里消耗了最多的资源？”或“哪个部分是性能瓶颈？”。</li>
+</ul>
+
+    </div>
+  </details>
+
+<h3 id="理解操作系统上的应用程序"><a href="#理解操作系统上的应用程序" class="headerlink" title="理解操作系统上的应用程序"></a>理解操作系统上的应用程序</h3><p>作为用户, 我们是感受不到操作系统的, 我们只能感受到操作系统上运行的程序(进程)</p>
+<p>但是总的来看, <strong>应用程序 = 计算 + 操作系统 API</strong>. 应用程序的魔法在于，它将操作系统提供的简单、原始的API，通过大量的计算和逻辑，组合、封装、抽象成了我们所见的复杂功能。</p>
+<p>下面是一个程序的生命周期 :</p>
+<ol>
+<li><p>诞生：由 execve 设置初始状态</p>
+<ul>
+<li><p>程序不会凭空开始运行。它总是由一个已存在的进程（例如，你正在使用的命令行 shell 或者桌面环境的图标点击处理器）通过执行 execve 这个系统调用来加载和启动。</p>
+</li>
+<li><p>execve 是一个核心的系统调用，它会加载新的程序代码到内存中，清空旧的进程数据，并设置好新程序的初始状态（例如，初始化CPU寄存器，设置程序计数器PC指向入口点），准备开始执行。</p>
+</li>
+</ul>
+</li>
+<li><p>运行：计算 + 系统调用 (Syscalls)</p>
+<ul>
+<li><p>一旦开始，程序的整个生命就是一部状态机执行的历史。这个过程只由两类活动构成：</p>
+<ul>
+<li><p>计算 (Computation)：在程序内部进行的数据处理、逻辑判断等，这部分只会改变程序内部的状态。</p>
+</li>
+<li><p>系统调用 (Syscalls)：当程序需要与外部世界交互时，它必须通过系统调用向操作系统请求服务。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>常见的系统调用如下:<br>进程管理: fork (创建新进程), execve (执行新程序), exit (终止进程)。<br>文件/设备管理: open, close, read, write (对文件或设备进行读写，在Linux中“一切皆文件”，屏幕、键盘等设备也是通过这些API操作的)。<br>存储管理: mmap (内存映射，一种高效的文件I/O和进程间共享内存的方式), brk (调整程序数据段的大小以分配/释放内存)。</p>
+</blockquote>
+<ol start="3">
+<li><p>终结：调用 _exit 退出</p>
+<ul>
+<li>程序的生命最终会通过调用 _exit (在Linux中通常是 exit_group 这个系统调用) 来结束。这个调用会通知操作系统回收该程序占用的所有资源（内存、文件句柄等）。</li>
+</ul>
+</li>
+</ol>
+<h4 id="程序与操作系统的分层生态系统"><a href="#程序与操作系统的分层生态系统" class="headerlink" title="程序与操作系统的分层生态系统"></a>程序与操作系统的分层生态系统</h4><h5 id="层次一：能直接看到的程序-Applications"><a href="#层次一：能直接看到的程序-Applications" class="headerlink" title="层次一：能直接看到的程序 (Applications)"></a>层次一：能直接看到的程序 (Applications)</h5><p>这类程序是我们作为用户最熟悉的，它们是我们为了完成特定任务而主动打开并直接与之交互的软件。</p>
+<p>它们是操作系统“提供舒适抽象API”的最终消费者, 可以全面地利用操作系统提供的各种API（系统调用）来实现丰富的功能，将底层的复杂性转换成用户友好的图形界面或功能。</p>
+<p>例如开发工具Vscode, 作为集成开发环境，它需要频繁地进行文件操作（open, read, write 来读写代码文件）、进程管理（调用 gcc 或 clang 等编译器，需要 fork 和 execve）、以及网络功能（下载插件和更新，需要 socket API）。</p>
+<p>再比如日用软件Chrome浏览器是功能集大成者。它既是网络客户端（大量网络API），又是文件管理器（下载/上传），还是一个多媒体播放器（音频/视频API），甚至是一个程序平台（运行JavaScript和WebAssembly），其背后是成千上万次的系统调用。</p>
+<h5 id="层次二：能直接看到的-幕后-程序-Utilities"><a href="#层次二：能直接看到的-幕后-程序-Utilities" class="headerlink" title="层次二：能直接看到的(幕后)程序 (Utilities)"></a>层次二：能直接看到的(幕后)程序 (Utilities)</h5><p>这类程序通常没有华丽的图形界面，它们是开发者和系统管理员用来管理和操作系统的工具。普通用户可能不常接触，但它们是系统的基石。</p>
+<p>如果说Applications是OS服务的消费者，那么Utilities更像是直接操作OS所提供抽象的“钳子和扳手”。它们的功能与系统调用往往有更直接的对应关系。</p>
+<p><strong>Core Utilities(coreutils)</strong> 例如GNU Coreutils, busybox和toybox等, 它们提供了最基础的命令如 ls, cp, rm。ls 的核心是调用 readdir 来读取目录内容；cp 的核心是 read 一个文件再 write 到另一个文件。它们是系统调用的“浅层封装”。</p>
+<p>系统/工具程序如<strong>Shell(bash)</strong> 是命令行的“心脏”。它的核心循环就是：读取用户输入，然后通过 fork 创建一个子进程，再通过 execve 在子进程中执行用户指定的命令（如 ls 或 chrome）。它是操作系统的进程管理器的最直接用户界面。</p>
+<h5 id="层次三：不能直接看到的后台程序-Daemons"><a href="#层次三：不能直接看到的后台程序-Daemons" class="headerlink" title="层次三：不能直接看到的后台程序 (Daemons)"></a>层次三：不能直接看到的后台程序 (Daemons)</h5><p>这类程序在系统启动时就会自动运行，它们没有用户界面，默默地在后台工作，为整个系统提供关键服务。它们被称为守护进程 (Daemon)。</p>
+<p>守护进程是操作系统功能的延伸和实现者。它们本身也是运行在用户空间的进程，但它们负责管理系统资源，并为上层的Applications和Utilities提供服务，是操作系统内核与用户应用程序之间的重要中间层。</p>
+<p>“守护进程” <strong>systemd</strong>: 在现代Linux系统中，systemd 是1号进程，是所有用户空间进程的“始祖”。它负责启动和管理所有其他的守护进程，是系统服务的大管家。</p>
+<p>系统管理 (cron, udisksd): cron 是定时任务守护进程，它使用定时器相关的系统调用来在特定时间唤醒并执行任务。udisksd 监控硬件事件，当你插入U盘时，它会收到内核通知，并自动执行 mount 等系统调用来挂载U盘。</p>
+<p>各类服务 (httpd, sshd): httpd (Apache) 和 sshd (SSH服务) 是网络服务的提供者。它们在后台监听特定的网络端口 (bind, listen)，等待客户端连接 (accept)，为连接进来的用户提供Web或远程登录服务。</p>
+<h5 id="总结：一个分层的生态系统"><a href="#总结：一个分层的生态系统" class="headerlink" title="总结：一个分层的生态系统"></a>总结：一个分层的生态系统</h5><p>这三类程序与操作系统的关系构成了一个清晰的层次结构：</p>
+<p><strong>操作系统内核 (Kernel)</strong>：提供最核心、最底层的服务和抽象（进程、文件、网络、内存管理等），通过系统调用作为API。</p>
+<p><strong>守护进程 (Daemons)</strong>：作为内核的延伸，在后台运行，管理系统资源，并为上层提供更高级、更方便的服务（如窗口管理、音频管理、定时任务）。</p>
+<p><strong>实用工具 (Utilities)</strong>：作为专业的“工具箱”，让高级用户和开发者能够直接、高效地操作和管理系统。</p>
+<p><strong>应用程序 (Applications)</strong>：作为生态系统的顶层，消费下面所有层提供的服务和抽象，专注于为用户提供完成特定任务的功能和体验。</p>
+<p>从本质上讲，它们全都是操作系统眼中的“进程”，都遵循着<strong>计算 + 系统调用</strong>的模型。它们的区别在于其设计目的、运行方式以及在整个生态系统中所扮演的角色。</p>
+<h3 id="操作系统上的最小程序-minimal-S"><a href="#操作系统上的最小程序-minimal-S" class="headerlink" title="操作系统上的最小程序 minimal.S"></a>操作系统上的最小程序 minimal.S</h3><p>minimal.S 指的是一个最小化的汇编语言程序（.S 是汇编文件的常见扩展名）。它的目标是剥离所有C语言、标准库等上层封装，只保留一个程序能够运行所需的最核心、最基本的元素，从而让我们能清晰地看到程序是如何启动、执行和退出的。</p>
+<h4 id="认识-minimal-S"><a href="#认识-minimal-S" class="headerlink" title="认识 minimal.S"></a>认识 minimal.S</h4><p>在C语言中，我们写的第一个函数通常是 main。但 main 并非程序的真正入口。在 main 函数执行前，C运行时库（C Runtime Library）已经做了大量的准备工作，比如设置堆栈、初始化全局变量等。</p>
+<p>为了获得最彻底的控制权，我们需要直接从操作系统交给我们的那个最原始的入口点, 即一个名为 _start 的函数开始。</p>
+<p>然而，如果我们天真地写一个C函数 void _start() { … } 并试图编译链接，程序很可能会因为 段错误（Segmentation Fault） 而崩溃。这是因为C函数会默认自己拥有一个合法的、设置好的堆栈（Stack），但在这个最原始的入口点，堆栈环境可能并未完全准备好满足C语言的需求。</p>
+<p>因此，要编写这个最小的程序，我们必须使用比C更底层的汇编语言，这样才能完全、精确地控制每一条指令和每一个寄存器。这就是 minimal.S 的由来。</p>
+<h4 id="minimal-S-如何工作：一个二进制状态机"><a href="#minimal-S-如何工作：一个二进制状态机" class="headerlink" title="minimal.S 如何工作：一个二进制状态机"></a>minimal.S 如何工作：一个二进制状态机</h4><ol>
+<li><p>初始状态 (Initial State)</p>
+<ul>
+<li><p>由ABI规定：当操作系统通过 execve 加载我们的程序后，在跳转到 _start 之前，它会为我们的程序准备好一个“初始状态”。这个状态必须遵循应用二进制接口（Application Binary Interface, ABI） 的规范。</p>
+</li>
+<li><p>关键初始状态：最重要的就是操作系统必须提供一个合法的、指向可用内存的栈指针寄存器 sp。没有这个，几乎任何函数调用都会失败。</p>
+</li>
+</ul>
+</li>
+<li><p>入口点与状态迁移 (Entry Point &amp; State Transition)</p>
+<ul>
+<li><p>我们的 minimal.S 的代码就从 _start 这个标签开始。我们要做的最简单、但又能证明程序成功运行的事，就是“正常退出”。</p>
+</li>
+<li><p>然而, 根据上面介绍的程序知识, 程序自己是不能“停下来”的, CPU指令集中没有“停止”或“退出”指令。程序必须向操作系统发出请求，让操作系统来终结自己。这个请求就是通过系统调用（syscall, 在RISC-V中为ecall） 来完成的。</p>
+</li>
+</ul>
+</li>
+<li><p>syscall: 终极状态交接</p>
+<ul>
+<li><p>当程序执行 syscall 指令时，它就完全放弃了控制权。CPU会立即陷入内核模式，程序的执行被暂停，操作系统的代码开始运行。</p>
+</li>
+<li><p>操作系统接管：操作系统内核会检查 a7 寄存器的值，发现是 93，就知道程序请求 exit。然后它会检查 a0 的值，知道退出码是 0。</p>
+</li>
+<li><p>最终操作：操作系统收到请求后，执行所有清理工作（回收内存、关闭文件等），然后将这个进程彻底销毁。我们的程序，这个“状态机”，就此终结。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>一个在RISC-V Linux下的 minimal.S 文件内容如下：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> _start() {</span><br><span class="line">    __asm__(</span><br><span class="line">        <span class="string">"li a7, 93\n\t"</span>   <span class="comment">// syscall/ecall: exit </span></span><br><span class="line">        <span class="string">"li a0, 0\n\t"</span>    <span class="comment">// status: 0</span></span><br><span class="line">        <span class="string">"ecall"</span></span><br><span class="line">    );</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译命令: </span></span><br><span class="line"><span class="comment">// gcc -nostdlib -Os -o minimal minimal.c</span></span><br></pre></td></tr></table></figure></div>
+<blockquote>
+<p>在 GCC 和 Clang 等常见的 C 编译器中，使用 <strong>asm</strong> 或 asm 关键字来告诉编译器：“接下来的内容不是 C 代码，请直接将其作为汇编指令处理”。这是一种在 C 语言代码中直接嵌入汇编代码的语法，称为 内联汇编 (Inline Assembly)。</p>
+</blockquote>
+<h2 id="硬件视角下的操作系统"><a href="#硬件视角下的操作系统" class="headerlink" title="硬件视角下的操作系统"></a>硬件视角下的操作系统</h2><h3 id="CPU-状态机"><a href="#CPU-状态机" class="headerlink" title="CPU = 状态机"></a>CPU = 状态机</h3><p>对 CPU 而言，它只是一个忠实而无情的状态机，其毕生的使命就是不断重复一个简单的循环：根据程序计数器（PC, Program Counter）寄存器的地址，从内存中取出一条指令，然后执行它。</p>
+<ol>
+<li>状态 (State)</li>
+</ol>
+<ul>
+<li><p>计算机在任何一个瞬间的“快照”就是它的状态。这个状态由所有存储单元中的数值共同定义，最核心的就是<strong>内存</strong>和 CPU 内部所有<strong>寄存器</strong>的值。</p>
+</li>
+<li><p>改变任何一个寄存器或内存单元的值，计算机的状态就发生了改变。</p>
+</li>
+</ul>
+<ol start="2">
+<li>初始状态 (Initial State)</li>
+</ol>
+<ul>
+<li><p>系统必须有一个确定的起点。这个起点由系统设计者规定，通常是通过 CPU <strong>Reset</strong>（复位） 实现的。</p>
+</li>
+<li><p>当你按下电脑的电源键或重启按钮时，硬件电路会将 CPU 的所有寄存器（包括程序计数器 PC）设置为一个预先规定好的初始值。</p>
+</li>
+</ul>
+<ol start="3">
+<li>状态迁移 (State Transition)</li>
+</ol>
+<ul>
+<li><p>计算机的状态变化由执行指令、响应中断和输入输出三种方式实现</p>
+</li>
+<li><p>执行指令：CPU 根据 PC 寄存器的指向，从内存中取出指令并执行。执行这条指令的过程，就会改变寄存器或内存的值，从而完成一次状态迁移，进入下一个状态。</p>
+<ul>
+<li>在单处理器系统中，状态迁移是线性、串行的。CPU 严格按照程序计数器（PC）的指引，一条一条地执行指令。</li>
+<li>在多处理器系统中, 操作系统内核（作为运行在内核模式下的特权程序）负责调度，它决定在哪个时间点，在哪个处理器核心上，运行哪个进程（或线程）的哪部分指令。而对于多核的单个处理器, ，它的工作模式并没有改变，依然是那个“无情的指令执行机”。</li>
+</ul>
+</li>
+<li><p>响应中断 (Responding to Interrupts)：强制的控制权转移, 可以理解为<code>if (intr) goto vec;</code></p>
+<ul>
+<li><p><code>if (intr)</code>：这部分代表硬件在每执行完一条指令后，都会去检查一个名为 intr (interrupt) 的物理信号线。如果某个硬件设备（如定时器、硬盘、网卡）完成了任务或需要关注，它就会在这条线上发出一个信号。</p>
+</li>
+<li><p><code>goto vec</code>;：如果硬件检测到了中断信号，它会立即打断当前正常的执行流程（即不再去执行 PC 指向的下一条指令），转而执行一个特殊的跳转。vec 指的是中断向量表 (Interrupt Vector Table)。硬件会根据中断信号的类型，从这个表的特定位置取出一个地址，然后强制将这个地址加载到 PC 寄存器中。</p>
+</li>
+<li><p>最终的实现效果是, 无论当前正在运行什么程序，只要中断发生，CPU 的控制权必然、强制性地被硬件移交给操作系统。</p>
+</li>
+</ul>
+</li>
+<li><p>输入输出 (Input/Output)：与外部世界的交互. I/O 是计算机与外部世界（如用户、网络、存储设备）交换数据的过程，也是触发中断和系统调用的主要原因。</p>
+<ul>
+<li><p>应用程序想要读一个文件（访问“外部”的硬盘）, 但是它不能直接向硬盘控制器发命令，于是执行一条 syscall（系统调用）指令，陷入（Trap）到内核。</p>
+</li>
+<li><p>硬件检测到这是一条特权指令，于是像响应中断一样，将控制权移交给操作系统。</p>
+</li>
+<li><p>操作系统在内核模式下，向硬盘控制器发出“读数据”的命令，然后可能会让该应用程序暂停（等待），并调度另一个程序运行。</p>
+</li>
+<li><p>当硬盘准备好数据后，它会通过硬件发出一个中断信号。</p>
+</li>
+<li><p>硬件再次捕获这个中断，将控制权交给操作系统的中断处理程序。</p>
+</li>
+<li><p>操作系统从硬盘控制器读取数据，然后将数据交给等待的应用程序，并将其重新置为就绪状态，等待下一次被调度运行。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="操作系统：一个掌握特权的“普通程序”"><a href="#操作系统：一个掌握特权的“普通程序”" class="headerlink" title="操作系统：一个掌握特权的“普通程序”"></a>操作系统：一个掌握特权的“普通程序”</h3><p>既然 CPU 对所有指令一视同仁，那么操作系统是如何实现管理的呢？为什么它能凌驾于普通应用程序之上？</p>
+<p>答案是：操作系统本身就是一个普通的（二进制）程序，但它通过巧妙地利用硬件提供的特权机制和中断机制，实现了对整个系统的管理。</p>
+<h4 id="理解特权"><a href="#理解特权" class="headerlink" title="理解特权"></a>理解特权</h4><p>现代 CPU 硬件通常包含至少两种操作模式（或称特权级）：</p>
+<ul>
+<li><p>内核模式 (Kernel Mode)：拥有最高权限，可以执行所有指令，访问所有内存和硬件设备。</p>
+</li>
+<li><p>用户模式 (User Mode)：权限受限，不能执行某些特权指令（如直接操作 I/O 设备、修改页表等），只能访问分配给它的部分内存。</p>
+</li>
+</ul>
+<p>操作系统内核的代码运行在内核模式下，而普通的应用程序运行在用户模式下。这道由硬件划分的鸿沟，是系统安全和稳定的基石。</p>
+<h4 id="中断与陷阱：夺取控制权的关键"><a href="#中断与陷阱：夺取控制权的关键" class="headerlink" title="中断与陷阱：夺取控制权的关键"></a>中断与陷阱：夺取控制权的关键</h4><p>这是整个机制中最核心、最巧妙的部分。操作系统通过“接管”中断，实现了对所有关键事件的控制。</p>
+<p>当一个事件发生时——无论是硬件发出的信号（如磁盘读写完成、网络包到达，这叫中断），还是应用程序请求服务（如读文件、创建进程，这需要执行一条特殊的“陷阱”指令 syscall，也叫陷阱或软中断）——CPU 会硬件级别地、自动地停下当前的工作。</p>
+<p>此时CPU 会自动保存当前程序的执行上下文（比如 PC 寄存器和一些关键寄存器的值），然后跳转到一个预先设定好的内存地址去执行新的指令。这个预设的地址表被称为中断向量表 (Interrupt Vector Table)。</p>
+<blockquote>
+<p>操作系统在启动时，就会去修改这个中断向量表，把里面所有的地址都设置为指向它自己的代码——即各种中断处理程序。</p>
+</blockquote>
+<p>因此可以认为, 一旦启动后，操作系统就变成了一个中断处理程序。</p>
+<p>当应用程序需要访问 I/O 设备时，它不能直接访问（因为处于用户模式，没有权限），只能通过 syscall 指令请求操作系统。这个指令会触发一次陷阱，CPU 自动跳转到操作系统的代码。操作系统在内核模式下代为完成 I/O 操作，完成后再把控制权交还给应用程序。</p>
+<p>当中断发生时（比如用户敲击键盘），CPU 也会立刻跳转到操作系统的中断处理程序，让操作系统决定如何响应。</p>
+<h3 id="操作系统-状态机的管理者"><a href="#操作系统-状态机的管理者" class="headerlink" title="操作系统 = 状态机的管理者"></a>操作系统 = 状态机的管理者</h3><p>如果每个进程都是一个状态机，那么操作系统的角色就是这些状态机的管理者 (Manager) 或调度器 (Scheduler)。它负责以下核心任务：</p>
+<ul>
+<li><p><strong>状态机的创建与销毁</strong> (Creation &amp; Destruction)</p>
+<ul>
+<li><p>创建 (spawn 或 fork): 当一个进程请求创建另一个新进程时，操作系统负责为这个新的状态机分配资源（如内存空间、进程控制块PCB），并将其设置到一个可运行的初始状态。</p>
+</li>
+<li><p>销毁 (exit): 当一个进程执行完毕或被终止时，操作系统负责回收它占用的所有资源，彻底移除这个状态机。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>状态机的调度</strong> (Scheduling)</p>
+<ul>
+<li><p>这是管理的核心。现代操作系统可以同时“容纳”多个程序状态机（即多任务）。但通常情况下，一个CPU核心在同一时刻只能执行一个状态机的一步。</p>
+</li>
+<li><p>“选一个程序执行一步”: 操作系统的调度器 (Scheduler) 的核心职责就是从所有处于“就绪”状态的状态机中，选择一个，让它在CPU上运行一小段时间（称为“时间片”）。</p>
+</li>
+<li><p>上下文切换 (Context Switch): 当一个进程的时间片用完，或者它因等待I/O而需要暂停时，操作系统会介入：</p>
+<ul>
+<li><p>保存现场：将当前进程的完整状态（PC、寄存器、内存状态等）保存下来。</p>
+</li>
+<li><p>恢复现场：选择下一个要运行的进程，并将其之前保存的状态加载到CPU和内存中。</p>
+</li>
+<li><p>继续执行：让新的进程从它上次暂停的地方继续执行。</p>
+</li>
+</ul>
+</li>
+<li><p>这个“保存-恢复”的过程就是上下文切换，它使得多个状态机看起来像是在同时运行，即并发 (Concurrency)。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>响应状态迁移的请求</strong> (Handling System Calls)</p>
+<ul>
+<li><p>当一个状态机（进程）执行系统调用时，它实际上是在向管理者（操作系统）发出一个请求。操作系统会接管控制权，执行相应的服务。</p>
+</li>
+<li><p>例如，当进程调用 read():</p>
+<ul>
+<li><p>进程的状态从“运行”迁移到“阻塞”（等待I/O）。</p>
+</li>
+<li><p>操作系统执行实际的硬件读取操作。</p>
+</li>
+<li><p>当数据准备好后，操作系统将数据交给进程，并将其状态从“阻塞”改回“就绪”，等待下一次被调度器选中。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>资源分配与隔离</strong> (Resource Allocation &amp; Isolation)</p>
+</li>
+<li><p>作为管理者，操作系统必须确保各个状态机之间不会相互干扰，防止一个行为不当的进程搞垮整个系统。</p>
+</li>
+<li><p>内存隔离：通过虚拟内存技术，操作系统为每个进程提供一个独立的、私有的地址空间。一个进程无法直接访问另一个进程的内存。</p>
+</li>
+<li><p>权限控制：操作系统控制着对文件、设备等所有共享资源的访问权限。</p>
+</li>
+</ul>
+<h3 id="固件-硬件和操作系统之间的桥梁"><a href="#固件-硬件和操作系统之间的桥梁" class="headerlink" title="固件: 硬件和操作系统之间的桥梁"></a>固件: 硬件和操作系统之间的桥梁</h3><p>在我们之前的讨论中，我们已经明确：</p>
+<ul>
+<li><p>CPU 是一个只会从内存指定地址（由 PC 寄存器指向）取指令并执行的“无情机器”。</p>
+</li>
+<li><p>操作系统是一个特殊的程序，它通过中断和特权级管理整个系统。</p>
+</li>
+</ul>
+<p>这里就引出了一个关键的“鸡生蛋还是蛋生鸡”的问题：当计算机刚通电，CPU 复位（Reset）后，它的 PC 寄存器指向的那个初始地址，里面的代码究竟是什么？是谁在一切开始之前就把代码放在了那里？答案就是<strong>固件 (Firmware)</strong>。</p>
+<h4 id="什么是固件"><a href="#什么是固件" class="headerlink" title="什么是固件"></a>什么是固件</h4><p>固件，顾名思义，就是被“固化”在硬件里的软件。它是系统厂商“固定”在计算机系统里的代码。它不存储在易失性的主内存（RAM）中，也不是存储在硬盘上，而是存在于主板上的一个特殊的非易失性存储芯片里。</p>
+<p>早期固件通常被烧录在 ROM (Read-Only Memory) 芯片里。这意味着一旦出厂就无法更改。想要升级唯一的办法就是物理更换芯片。</p>
+<p>而现在普遍使用 Flash Memory（闪存）。这使得我们可以通过软件更新的方式来升级固件（例如，刷新主板的 BIOS/UEFI），大大增加了灵活性。</p>
+<p>硬件电路的设计保证了，当 CPU 加电复位时，其 PC 寄存器会被强制设置为一个固定的内存地址，而这个地址正好被内存映射 (memory-map) 到存放固件的那个芯片上。</p>
+<p>因此，CPU 执行的第一条指令必然来自固件。这就意味着，固件“‘出生’就有机器完整的控制权”，它是计算机世界里第一个“发号施令”的角色。</p>
+<h4 id="固件的核心功能"><a href="#固件的核心功能" class="headerlink" title="固件的核心功能"></a>固件的核心功能</h4><p>固件是连接纯硬件和操作系统的桥梁，它的使命主要分为两个阶段：</p>
+<ol>
+<li><strong>硬件初始化与自检</strong> (POST)</li>
+</ol>
+<ul>
+<li><p>在操作系统这个庞大的软件开始运行之前，必须确保硬件本身处于一个健康、可用的状态。这正是固件的首要任务。这个过程通常被称为 POST (Power-On Self-Test)，即开机自检。</p>
+</li>
+<li><p>具体工作：检查 CPU 类型和速度; 检测内存条大小、频率并进行测试; 配置 CPU 电压、内存时序等关键参数; 检测并初始化显卡、硬盘、键盘等外围设备; 根据用户在 BIOS/UEFI 设置界面中的配置，打开或关闭某些接口等。</p>
+</li>
+<li><p>我们平常打开计算机进入的蓝色的 BIOS(Basic I/O System)或者更先进的UEFI (Unified Extensible Firmware Interface) 设置界面，就是固件提供给我们的一个用户交互接口。</p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>引导加载操作系统</strong> (Bootstrapping)</li>
+</ol>
+<ul>
+<li><p>当硬件检查和配置完毕后，固件的下一个任务，就是找到并启动操作系统。具体流程如下: </p>
+<ul>
+<li><p>固件根据用户设定的启动顺序（如：USB -&gt; SSD -&gt; HDD）去扫描这些存储设备。</p>
+</li>
+<li><p>它会在设备的特定位置（如硬盘的 MBR 或 GPT 分区的 EFI 文件）寻找一个非常小的程序，这个程序叫做引导加载程序 (Bootloader)。</p>
+</li>
+<li><p>固件将这个 Bootloader 加载到内存（RAM）中，然后将 CPU 的控制权移交给它。</p>
+</li>
+<li><p>至此，固件的使命就完成了。接下来，由 Bootloader 负责找到完整的操作系统内核（例如 Windows 的 ntoskrnl.exe 或 Linux 的 vmlinuz），将其加载到内存，最后再把控制权交给操作系统内核。</p>
+</li>
+</ul>
+</li>
+</ul>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/system/">#system</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2024/06/26/algorithms/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">推荐系统基础</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">操作系统概论</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%A7%92%E8%89%B2%E5%92%8C%E5%8A%9F%E8%83%BD"><span class="nav-text">操作系统的角色和功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A0%B8%E5%BF%83%E4%BB%BB%E5%8A%A1%EF%BC%9A%E7%AE%A1%E7%90%86%E8%B5%84%E6%BA%90%E4%B8%8E%E6%8F%90%E4%BE%9B%E6%9C%8D%E5%8A%A1"><span class="nav-text">操作系统核心任务：管理资源与提供服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8-Resource-Manager"><span class="nav-text">资源管理器 (Resource Manager)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85-Service-Provider"><span class="nav-text">服务提供者 (Service Provider)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%9A%84%E7%A8%8B%E5%BA%8F"><span class="nav-text">操作系统上的程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F-%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-text">程序 &#x3D; 状态机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%8A%B6%E6%80%81-State"><span class="nav-text">什么是程序的状态 (State)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81-Initial-State"><span class="nav-text">什么是程序的初始状态 (Initial State)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%8A%B6%E6%80%81%E8%BF%81%E7%A7%BB-State-Transition"><span class="nav-text">什么是状态迁移 (State Transition)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%94%B9%E5%8F%98%E5%A4%96%E9%83%A8%E7%8A%B6%E6%80%81"><span class="nav-text">如何改变外部状态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-System-Call"><span class="nav-text">系统调用 (System Call)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#strace-system-call-trace"><span class="nav-text">strace (system call trace)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-text">使用示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="nav-text">理解操作系统上的应用程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E4%B8%8E%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%88%86%E5%B1%82%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F"><span class="nav-text">程序与操作系统的分层生态系统</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E4%B8%80%EF%BC%9A%E8%83%BD%E7%9B%B4%E6%8E%A5%E7%9C%8B%E5%88%B0%E7%9A%84%E7%A8%8B%E5%BA%8F-Applications"><span class="nav-text">层次一：能直接看到的程序 (Applications)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E4%BA%8C%EF%BC%9A%E8%83%BD%E7%9B%B4%E6%8E%A5%E7%9C%8B%E5%88%B0%E7%9A%84-%E5%B9%95%E5%90%8E-%E7%A8%8B%E5%BA%8F-Utilities"><span class="nav-text">层次二：能直接看到的(幕后)程序 (Utilities)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E4%B8%89%EF%BC%9A%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E7%9C%8B%E5%88%B0%E7%9A%84%E5%90%8E%E5%8F%B0%E7%A8%8B%E5%BA%8F-Daemons"><span class="nav-text">层次三：不能直接看到的后台程序 (Daemons)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%80%E4%B8%AA%E5%88%86%E5%B1%82%E7%9A%84%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F"><span class="nav-text">总结：一个分层的生态系统</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%9A%84%E6%9C%80%E5%B0%8F%E7%A8%8B%E5%BA%8F-minimal-S"><span class="nav-text">操作系统上的最小程序 minimal.S</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A4%E8%AF%86-minimal-S"><span class="nav-text">认识 minimal.S</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#minimal-S-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%EF%BC%9A%E4%B8%80%E4%B8%AA%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-text">minimal.S 如何工作：一个二进制状态机</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%A7%86%E8%A7%92%E4%B8%8B%E7%9A%84%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-text">硬件视角下的操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-text">CPU &#x3D; 状态机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8E%8C%E6%8F%A1%E7%89%B9%E6%9D%83%E7%9A%84%E2%80%9C%E6%99%AE%E9%80%9A%E7%A8%8B%E5%BA%8F%E2%80%9D"><span class="nav-text">操作系统：一个掌握特权的“普通程序”</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E7%89%B9%E6%9D%83"><span class="nav-text">理解特权</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E4%B8%8E%E9%99%B7%E9%98%B1%EF%BC%9A%E5%A4%BA%E5%8F%96%E6%8E%A7%E5%88%B6%E6%9D%83%E7%9A%84%E5%85%B3%E9%94%AE"><span class="nav-text">中断与陷阱：夺取控制权的关键</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%8A%B6%E6%80%81%E6%9C%BA%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85"><span class="nav-text">操作系统 &#x3D; 状态机的管理者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BA%E4%BB%B6-%E7%A1%AC%E4%BB%B6%E5%92%8C%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%97%B4%E7%9A%84%E6%A1%A5%E6%A2%81"><span class="nav-text">固件: 硬件和操作系统之间的桥梁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BA%E4%BB%B6"><span class="nav-text">什么是固件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BA%E4%BB%B6%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">固件的核心功能</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        143 posts in total
+                    </span>
+                    
+                        <span>
+                            309.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>
