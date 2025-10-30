@@ -843,116 +843,116 @@ button {
 :root {
   --inline-code-foreground: #24292e;
   --inline-code-background: #f1f1f1;
-  --highlight-background: #fdfdfd;
-  --highlight-foreground: #24292e;
-  --highlight-keyword: #d73a49;
-  --highlight-link: #d73a49 /* Following the pattern, link should have the same color as keyword */;
-  --highlight-built-in: #e36209;
-  --highlight-number: #005cc5;
-  --highlight-string: #032f62;
-  --highlight-regexp: #032f62;
-  --highlight-subst: #24292e;
-  --highlight-comment: #6a737d;
-  --highlight-doctag: #d73a49;
-  --highlight-meta: #005cc5 /* Mapped based on the pattern for constant */;
-  --highlight-variable: #005cc5;
-  --highlight-attr: #005cc5;
-  --highlight-section: #005cc5;
-  --highlight-bullet: #735c0f;
-  --highlight-addition: #22863a;
-  --highlight-deletion: #b31d28;
+  --highlight-background: #f3f3f3;
+  --highlight-foreground: #444;
+  --highlight-keyword: #444;
+  --highlight-link: #ab5656;
+  --highlight-built-in: #397300;
+  --highlight-number: #800;
+  --highlight-string: #800;
+  --highlight-regexp: #ab5656;
+  --highlight-subst: #444;
+  --highlight-comment: #697070;
+  --highlight-doctag: #444;
+  --highlight-meta: #1f7199;
+  --highlight-variable: #ab5656;
+  --highlight-attr: #444;
+  --highlight-section: #800;
+  --highlight-bullet: #397300;
+  --highlight-addition: #397300;
+  --highlight-deletion: #800;
 }
 @media (prefers-color-scheme: light) {
   :root {
     --inline-code-foreground: #24292e;
     --inline-code-background: #f1f1f1;
-    --highlight-background: #fdfdfd;
-    --highlight-foreground: #24292e;
-    --highlight-keyword: #d73a49;
-    --highlight-link: #d73a49 /* Following the pattern, link should have the same color as keyword */;
-    --highlight-built-in: #e36209;
-    --highlight-number: #005cc5;
-    --highlight-string: #032f62;
-    --highlight-regexp: #032f62;
-    --highlight-subst: #24292e;
-    --highlight-comment: #6a737d;
-    --highlight-doctag: #d73a49;
-    --highlight-meta: #005cc5 /* Mapped based on the pattern for constant */;
-    --highlight-variable: #005cc5;
-    --highlight-attr: #005cc5;
-    --highlight-section: #005cc5;
-    --highlight-bullet: #735c0f;
-    --highlight-addition: #22863a;
-    --highlight-deletion: #b31d28;
+    --highlight-background: #f3f3f3;
+    --highlight-foreground: #444;
+    --highlight-keyword: #444;
+    --highlight-link: #ab5656;
+    --highlight-built-in: #397300;
+    --highlight-number: #800;
+    --highlight-string: #800;
+    --highlight-regexp: #ab5656;
+    --highlight-subst: #444;
+    --highlight-comment: #697070;
+    --highlight-doctag: #444;
+    --highlight-meta: #1f7199;
+    --highlight-variable: #ab5656;
+    --highlight-attr: #444;
+    --highlight-section: #800;
+    --highlight-bullet: #397300;
+    --highlight-addition: #397300;
+    --highlight-deletion: #800;
   }
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --inline-code-foreground: #c9d1d9;
     --inline-code-background: #313131;
-    --highlight-background: #1e1e1e;
-    --highlight-foreground: #dcdcdc;
-    --highlight-keyword: #569cd6;
-    --highlight-link: #569cd6;
-    --highlight-built-in: #4ec9b0;
-    --highlight-number: #b8d7a3;
-    --highlight-string: #d69d85;
-    --highlight-regexp: #9a5334;
-    --highlight-subst: #dcdcdc;
-    --highlight-comment: #57a64a;
-    --highlight-doctag: #608b4e;
-    --highlight-meta: #9b9b9b;
-    --highlight-variable: #bd63c5;
-    --highlight-attr: #9cdcfe;
-    --highlight-section: #ffd700;
-    --highlight-bullet: #d7ba7d;
-    --highlight-addition: #144212;
-    --highlight-deletion: #600;
+    --highlight-background: #2b2b2b;
+    --highlight-foreground: #f8f8f2;
+    --highlight-keyword: #dcc6e0;
+    --highlight-link: #f5ab35;
+    --highlight-built-in: #f5ab35;
+    --highlight-number: #f5ab35;
+    --highlight-string: #abe338;
+    --highlight-regexp: #ffa07a;
+    --highlight-subst: #f8f8f2;
+    --highlight-comment: #d4d0ab;
+    --highlight-doctag: #dcc6e0;
+    --highlight-meta: #f5ab35;
+    --highlight-variable: #ffa07a;
+    --highlight-attr: #ffd700;
+    --highlight-section: #00e0e0;
+    --highlight-bullet: #abe338;
+    --highlight-addition: #abe338;
+    --highlight-deletion: #ffa07a;
   }
 }
 .light-mode {
   --inline-code-foreground: #24292e;
   --inline-code-background: #f1f1f1;
-  --highlight-background: #fdfdfd;
-  --highlight-foreground: #24292e;
-  --highlight-keyword: #d73a49;
-  --highlight-link: #d73a49 /* Following the pattern, link should have the same color as keyword */;
-  --highlight-built-in: #e36209;
-  --highlight-number: #005cc5;
-  --highlight-string: #032f62;
-  --highlight-regexp: #032f62;
-  --highlight-subst: #24292e;
-  --highlight-comment: #6a737d;
-  --highlight-doctag: #d73a49;
-  --highlight-meta: #005cc5 /* Mapped based on the pattern for constant */;
-  --highlight-variable: #005cc5;
-  --highlight-attr: #005cc5;
-  --highlight-section: #005cc5;
-  --highlight-bullet: #735c0f;
-  --highlight-addition: #22863a;
-  --highlight-deletion: #b31d28;
+  --highlight-background: #f3f3f3;
+  --highlight-foreground: #444;
+  --highlight-keyword: #444;
+  --highlight-link: #ab5656;
+  --highlight-built-in: #397300;
+  --highlight-number: #800;
+  --highlight-string: #800;
+  --highlight-regexp: #ab5656;
+  --highlight-subst: #444;
+  --highlight-comment: #697070;
+  --highlight-doctag: #444;
+  --highlight-meta: #1f7199;
+  --highlight-variable: #ab5656;
+  --highlight-attr: #444;
+  --highlight-section: #800;
+  --highlight-bullet: #397300;
+  --highlight-addition: #397300;
+  --highlight-deletion: #800;
 }
 .dark-mode {
   --inline-code-foreground: #c9d1d9;
   --inline-code-background: #313131;
-  --highlight-background: #1e1e1e;
-  --highlight-foreground: #dcdcdc;
-  --highlight-keyword: #569cd6;
-  --highlight-link: #569cd6;
-  --highlight-built-in: #4ec9b0;
-  --highlight-number: #b8d7a3;
-  --highlight-string: #d69d85;
-  --highlight-regexp: #9a5334;
-  --highlight-subst: #dcdcdc;
-  --highlight-comment: #57a64a;
-  --highlight-doctag: #608b4e;
-  --highlight-meta: #9b9b9b;
-  --highlight-variable: #bd63c5;
-  --highlight-attr: #9cdcfe;
-  --highlight-section: #ffd700;
-  --highlight-bullet: #d7ba7d;
-  --highlight-addition: #144212;
-  --highlight-deletion: #600;
+  --highlight-background: #2b2b2b;
+  --highlight-foreground: #f8f8f2;
+  --highlight-keyword: #dcc6e0;
+  --highlight-link: #f5ab35;
+  --highlight-built-in: #f5ab35;
+  --highlight-number: #f5ab35;
+  --highlight-string: #abe338;
+  --highlight-regexp: #ffa07a;
+  --highlight-subst: #f8f8f2;
+  --highlight-comment: #d4d0ab;
+  --highlight-doctag: #dcc6e0;
+  --highlight-meta: #f5ab35;
+  --highlight-variable: #ffa07a;
+  --highlight-attr: #ffd700;
+  --highlight-section: #00e0e0;
+  --highlight-bullet: #abe338;
+  --highlight-addition: #abe338;
+  --highlight-deletion: #ffa07a;
 }
 pre,
 .highlight {
@@ -968,7 +968,7 @@ pre,
 pre,
 code {
   line-height: 1.5 !important;
-  font-family: 'Geist Mono', Courier, monospace !important;
+  font-family: ''JetBrains Mono', monospace', 'Geist Mono', Courier, monospace !important;
 }
 pre.mermaid {
   background-color: var(--background-color);

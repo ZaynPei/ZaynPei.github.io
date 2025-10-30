@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -801,76 +801,97 @@ mjx-container[display="true"] + br {
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
 			<p>C++ 的类型转换分为两大类：隐式类型转换和显式类型转换</p>
-<h2 id="隐式类型转换-Implicit-Type-Conversion"><a href="#隐式类型转换-Implicit-Type-Conversion" class="headerlink" title="隐式类型转换 (Implicit Type Conversion)"></a>隐式类型转换 (Implicit Type Conversion)</h2><p>隐式类型转换是由编译器自动进行的，无需程序员显式指定。这通常发生在以下几种情况：</p>
-<ol>
-<li>算术转换 (Arithmetic Conversion)：在<strong>混合类型的算术</strong>表达式中，<strong>较小的类型</strong>会被<strong>提升</strong>（promote）为较大的类型以保证精度。</li>
+<h2 id="隐式类型转换-implicit-type-conversion">隐式类型转换 (Implicit
+Type Conversion)</h2>
+<p>隐式类型转换是由编译器自动进行的，无需程序员显式指定。这通常发生在以下几种情况：</p>
+<ol type="1">
+<li><p>算术转换 (Arithmetic
+Conversion)：在<strong>混合类型的算术</strong>表达式中，<strong>较小的类型</strong>会被<strong>提升</strong>（promote）为较大的类型以保证精度。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例如：int 和 double 运算时，int 会被自动转换为 double。</span></span><br><span class="line"><span class="type">int</span> i = <span class="number">5</span>;</span><br><span class="line"><span class="type">double</span> d = <span class="number">3.14</span>;</span><br><span class="line"><span class="type">double</span> result = i + d; <span class="comment">// i 被隐式转换为 double 5.0，然后与 3.14 相加</span></span><br></pre></td></tr></table></figure></div></p></li>
+<li><p>赋值转换 (Assignment
+Conversion)：将一个类型的值赋给另一个类型的变量时。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在此处，double 类型转换为 int 类型，会丢失精度，这是一种潜在的数据丢失风险。</span></span><br><span class="line"><span class="type">int</span> i;</span><br><span class="line"><span class="type">double</span> d = <span class="number">9.8</span>;</span><br><span class="line">i = d; <span class="comment">// d 的值被截断，小数部分丢失，i 的值为 9</span></span><br></pre></td></tr></table></figure></div></p></li>
+<li><p>指针转换 (Pointer
+Conversion)：派生类的指针或引用可以被隐式转换为基类的指针或引用。这是支持多态性的基础。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> {};</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base {};</span><br><span class="line"></span><br><span class="line">Derived* p_derived = <span class="keyword">new</span> <span class="built_in">Derived</span>();</span><br><span class="line">Base* p_base = p_derived; <span class="comment">// 派生类指针隐式转换为基类指针</span></span><br><span class="line">Base* p_base2 = <span class="keyword">new</span> <span class="built_in">Derived</span>(); <span class="comment">// 更多时候，直接 new 一个派生类对象赋给基类指针</span></span><br></pre></td></tr></table></figure></div></p></li>
 </ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例如：int 和 double 运算时，int 会被自动转换为 double。</span></span><br><span class="line"><span class="type">int</span> i = <span class="number">5</span>;</span><br><span class="line"><span class="type">double</span> d = <span class="number">3.14</span>;</span><br><span class="line"><span class="type">double</span> result = i + d; <span class="comment">// i 被隐式转换为 double 5.0，然后与 3.14 相加</span></span><br></pre></td></tr></table></figure></div>
-
-<ol start="2">
-<li>赋值转换 (Assignment Conversion)：将一个类型的值赋给另一个类型的变量时。</li>
-</ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在此处，double 类型转换为 int 类型，会丢失精度，这是一种潜在的数据丢失风险。</span></span><br><span class="line"><span class="type">int</span> i;</span><br><span class="line"><span class="type">double</span> d = <span class="number">9.8</span>;</span><br><span class="line">i = d; <span class="comment">// d 的值被截断，小数部分丢失，i 的值为 9</span></span><br></pre></td></tr></table></figure></div>
-
-<ol start="3">
-<li>指针转换 (Pointer Conversion)：派生类的指针或引用可以被隐式转换为基类的指针或引用。这是支持多态性的基础。</li>
-</ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> {};</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base {};</span><br><span class="line"></span><br><span class="line">Derived* p_derived = <span class="keyword">new</span> <span class="built_in">Derived</span>();</span><br><span class="line">Base* p_base = p_derived; <span class="comment">// 派生类指针隐式转换为基类指针</span></span><br><span class="line">Base* p_base2 = <span class="keyword">new</span> <span class="built_in">Derived</span>(); <span class="comment">// 更多时候，直接 new 一个派生类对象赋给基类指针</span></span><br></pre></td></tr></table></figure></div>
-
-<h2 id="显式类型转换-Explicit-Type-Conversion"><a href="#显式类型转换-Explicit-Type-Conversion" class="headerlink" title="显式类型转换 (Explicit Type Conversion)"></a>显式类型转换 (Explicit Type Conversion)</h2><p>显式类型转换，也称为强制类型转换（Casting），是程序员明确要求的转换。C++ 从 C 语言继承了强制转换的语法，并增加了四个功能更明确、更安全的转换操作符。</p>
-<h3 id="C-风格强制转换-C-Style-Cast"><a href="#C-风格强制转换-C-Style-Cast" class="headerlink" title="C 风格强制转换 (C-Style Cast)"></a>C 风格强制转换 (C-Style Cast)</h3><p>这是从 C 语言继承来的语法，有两种形式：</p>
+<h2 id="显式类型转换-explicit-type-conversion">显式类型转换 (Explicit
+Type Conversion)</h2>
+<p>显式类型转换，也称为强制类型转换（Casting），是程序员明确要求的转换。C++
+从 C
+语言继承了强制转换的语法，并增加了四个功能更明确、更安全的转换操作符。</p>
+<h3 id="c-风格强制转换-c-style-cast">C 风格强制转换 (C-Style Cast)</h3>
+<p>这是从 C 语言继承来的语法，有两种形式：</p>
 <ul>
-<li>(new_type)expression</li>
-<li>new_type(expression)</li>
+<li><p>(new_type)expression</p></li>
+<li><p>new_type(expression) <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">4</span>;</span><br><span class="line"><span class="type">double</span> result = (<span class="type">double</span>)a / b; <span class="comment">// 将 a 转换为 double，结果为 2.5</span></span><br></pre></td></tr></table></figure></div> C
+风格转换的缺点在于它<strong>过于强大</strong>和不安全，可能会执行多种不同类型的转换（如
+static_cast、const_cast、reinterpret_cast），这使得代码难以理解和维护。</p></li>
+<li><p><strong>过于粗暴</strong>：C
+风格的转换符像一把“万能钥匙”，它会<strong>依次尝试</strong>
+static_cast、const_cast、reinterpret_cast，直到找到一个可以工作的。这使得它的<strong>行为难以预测</strong>，可能会执行一些非常危险的转换。</p></li>
+<li><p>意图不明：当你在代码中看到一个 C
+风格转换时，你很难一眼看出程序员的真实意图。他是想进行一个安全的数值转换，还是想进行一个危险的指针类型重解释？</p></li>
+<li><p>难以搜索：在大型项目中，想要找出所有的类型转换是非常困难的，因为
+() 符号在代码中太常见了。而 C++ 的 *_cast
+关键字则非常容易搜索。</p></li>
 </ul>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">4</span>;</span><br><span class="line"><span class="type">double</span> result = (<span class="type">double</span>)a / b; <span class="comment">// 将 a 转换为 double，结果为 2.5</span></span><br></pre></td></tr></table></figure></div>
-<p>C 风格转换的缺点在于它<strong>过于强大</strong>和不安全，可能会执行多种不同类型的转换（如 static_cast、const_cast、reinterpret_cast），这使得代码难以理解和维护。</p>
+<h3 id="c-风格转换操作符">C++ 风格转换操作符</h3>
+<p>C++
+引入了四个新的转换操作符，它们的功能更具体，意图更明确，也更安全。</p>
+<p><strong>static_cast<new_type>(expression)</new_type></strong>:
+用于“良性”或“合理”的转换，其正确性在<strong>编译时检查</strong>就可以确定。它是<strong>最常用</strong>的转换操作符。</p>
 <ul>
-<li><p><strong>过于粗暴</strong>：C 风格的转换符像一把“万能钥匙”，它会<strong>依次尝试</strong> static_cast、const_cast、reinterpret_cast，直到找到一个可以工作的。这使得它的<strong>行为难以预测</strong>，可能会执行一些非常危险的转换。</p>
-</li>
-<li><p>意图不明：当你在代码中看到一个 C 风格转换时，你很难一眼看出程序员的真实意图。他是想进行一个安全的数值转换，还是想进行一个危险的指针类型重解释？</p>
-</li>
-<li><p>难以搜索：在大型项目中，想要找出所有的类型转换是非常困难的，因为 () 符号在代码中太常见了。而 C++ 的 *_cast 关键字则非常容易搜索。</p>
-</li>
-</ul>
-<h3 id="C-风格转换操作符"><a href="#C-风格转换操作符" class="headerlink" title="C++ 风格转换操作符"></a>C++ 风格转换操作符</h3><p>C++ 引入了四个新的转换操作符，它们的功能更具体，意图更明确，也更安全。</p>
-<p><strong>static_cast<new_type>(expression)</new_type></strong>: 用于“良性”或“合理”的转换，其正确性在<strong>编译时检查</strong>就可以确定。它是<strong>最常用</strong>的转换操作符。</p>
-<ul>
-<li><p><strong>相关类型</strong>之间的转换：如数值类型之间的转换（int 到 double）、void* 指针与其他类型指针之间的转换。</p>
-</li>
+<li><p><strong>相关类型</strong>之间的转换：如数值类型之间的转换（int 到
+double）、void* 指针与其他类型指针之间的转换。</p></li>
 <li><p>类层次结构中的转换：</p>
 <ul>
 <li><strong>上行</strong>转换（安全）：将<strong>派生类</strong>的指针或引用<strong>转换为基类</strong>的指针或引用（与隐式转换相同）。</li>
-<li><strong>下行</strong>转换（不安全）：将<strong>基类</strong>的指针或引用转换为<strong>派生类</strong>的指针或引用, 由于这属于<strong>多态</strong>, 而<strong>static_cast不进行运行时检查</strong>, 因此这需要程序员自己保证转换是安全的，即基类指针确实指向一个派生类对象。</li>
+<li><strong>下行</strong>转换（不安全）：将<strong>基类</strong>的指针或引用转换为<strong>派生类</strong>的指针或引用,
+由于这属于<strong>多态</strong>,
+而<strong>static_cast不进行运行时检查</strong>,
+因此这需要程序员自己保证转换是安全的，即基类指针确实指向一个派生类对象。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 基本类型转换</span></span><br><span class="line"><span class="type">double</span> d = <span class="number">3.14</span>;</span><br><span class="line"><span class="type">int</span> i = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(d); <span class="comment">// i 的值为 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 类层次结构转换 (下行转换)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> { <span class="keyword">public</span>: <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() {} };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base {};</span><br><span class="line"></span><br><span class="line">Base* p_base = <span class="keyword">new</span> <span class="built_in">Derived</span>();</span><br><span class="line"><span class="comment">// 程序员确信 p_base 指向的是一个 Derived 对象，可以进行下行转换</span></span><br><span class="line">Derived* p_derived = <span class="built_in">static_cast</span>&lt;Derived*&gt;(p_base);</span><br></pre></td></tr></table></figure></div></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 基本类型转换</span></span><br><span class="line"><span class="type">double</span> d = <span class="number">3.14</span>;</span><br><span class="line"><span class="type">int</span> i = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(d); <span class="comment">// i 的值为 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 类层次结构转换 (下行转换)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> { <span class="keyword">public</span>: <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() {} };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base {};</span><br><span class="line"></span><br><span class="line">Base* p_base = <span class="keyword">new</span> <span class="built_in">Derived</span>();</span><br><span class="line"><span class="comment">// 程序员确信 p_base 指向的是一个 Derived 对象，可以进行下行转换</span></span><br><span class="line">Derived* p_derived = <span class="built_in">static_cast</span>&lt;Derived*&gt;(p_base);</span><br></pre></td></tr></table></figure></div>
-
-<p>这里的 static_cast 进行了下行转换。但它<strong>不会在运行时进行检查</strong>。如果 p_base 实际上指向的不是 Derived 对象，这个操作将导致未定义行为。</p>
-<p><strong>dynamic_cast<new_type>(expression)</new_type></strong>: dynamic_cast专门用于处理<strong>多态</strong>类型，在<strong>运行时进行类型检查</strong>，以确保<strong>下行转换的安全性</strong>。</p>
+<p>这里的 static_cast
+进行了下行转换。但它<strong>不会在运行时进行检查</strong>。如果 p_base
+实际上指向的不是 Derived 对象，这个操作将导致未定义行为。</p>
+<p><strong>dynamic_cast<new_type>(expression)</new_type></strong>:
+dynamic_cast专门用于处理<strong>多态</strong>类型，在<strong>运行时进行类型检查</strong>，以确保<strong>下行转换的安全性</strong>。</p>
 <p>主要用于安全的<strong>类层次结构下行转换</strong>：在多态（基类必须有虚函数）的类继承体系中，将基类指针/引用安全地转换为派生类指针/引用。</p>
 <ul>
 <li>运行时检查：它会检查转换是否有效。</li>
-<li>对指针操作：如果转换成功，返回指向派生类对象的指针；如果转换失败（即基类指针并非指向目标派生类对象），返回 nullptr。</li>
-<li>对引用操作：如果转换成功，返回派生类的引用；如果转换失败，会抛出 std::bad_cast 异常。</li>
+<li>对指针操作：如果转换成功，返回指向派生类对象的指针；如果转换失败（即基类指针并非指向目标派生类对象），返回
+nullptr。</li>
+<li>对引用操作：如果转换成功，返回派生类的引用；如果转换失败，会抛出
+std::bad_cast 异常。</li>
 </ul>
 <blockquote>
-<p>前提：必须用于至少包含一个虚函数（virtual function）的基类，因为它依赖于<strong>运行时类型信息</strong>（RTTI）。</p>
+<p>前提：必须用于至少包含一个虚函数（virtual
+function）的基类，因为它依赖于<strong>运行时类型信息</strong>（RTTI）。</p>
 </blockquote>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> { <span class="keyword">public</span>: <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">who</span><span class="params">()</span> </span>{ std::cout &lt;&lt; <span class="string">"I am Base\n"</span>; } };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base { <span class="keyword">public</span>: <span class="function"><span class="type">void</span> <span class="title">who</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"I am Derived\n"</span>; } };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Other</span> : <span class="keyword">public</span> Base { <span class="keyword">public</span>: <span class="function"><span class="type">void</span> <span class="title">who</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"I am Other\n"</span>; } };</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">check_type</span><span class="params">(Base* p)</span> </span>{</span><br><span class="line">    <span class="comment">// 尝试将 Base* 转换为 Derived*, 这里 dynamic_cast 是创建一个新的指针变量，而不是改变原来指针的类型, 因此 p 本身的类型仍然是 Base*</span></span><br><span class="line">    Derived* p_derived = <span class="built_in">dynamic_cast</span>&lt;Derived*&gt;(p);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (p_derived != <span class="literal">nullptr</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Cast to Derived successful.\n"</span>;</span><br><span class="line">        p_derived-&gt;<span class="built_in">who</span>();</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Cast to Derived failed (p is not pointing to a Derived object).\n"</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Base* b1 = <span class="keyword">new</span> <span class="built_in">Derived</span>();</span><br><span class="line">    Base* b2 = <span class="keyword">new</span> <span class="built_in">Other</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">check_type</span>(b1); <span class="comment">// 输出: Cast to Derived successful. I am Derived</span></span><br><span class="line">    <span class="built_in">check_type</span>(b2); <span class="comment">// 输出: Cast to Derived failed (p is not pointing to a Derived object).</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">delete</span> b1;</span><br><span class="line">    <span class="keyword">delete</span> b2;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>const_cast<new_type>(expression)</new_type></strong>: 是唯一能修改 <strong>const</strong> 或 <strong>volatile</strong> 属性的转换操作符, 用于<strong>去除对象的常量性</strong>。它只能添加或移除 const/volatile 属性，<strong>不能改变对象的实际类型</strong>。</p>
+<p><strong>const_cast<new_type>(expression)</new_type></strong>: 是唯一能修改
+<strong>const</strong> 或 <strong>volatile</strong> 属性的转换操作符,
+用于<strong>去除对象的常量性</strong>。它只能添加或移除 const/volatile
+属性，<strong>不能改变对象的实际类型</strong>。</p>
 <ul>
-<li>移除 const 属性：将一个 const 指针/引用转换为非 const 指针/引用。</li>
-<li>增加 const 属性：将一个非 const 指针/引用转换为 const 指针/引用（这通常是安全的，可以隐式完成，但也可以显式使用 const_cast）。</li>
+<li>移除 const 属性：将一个 const 指针/引用转换为非 const
+指针/引用。</li>
+<li>增加 const 属性：将一个非 const 指针/引用转换为 const
+指针/引用（这通常是安全的，可以隐式完成，但也可以显式使用
+const_cast）。</li>
 </ul>
 <blockquote>
-<p>使用 const_cast 移除 const 属性后，如果试图修改一个本身被定义为 const 的对象，其行为是未定义的。它主要用于这样的场景：你有一个 <strong>const 指针/引用</strong>，但你知道它<strong>指向的对象本身不是 const 的</strong>，你需要调用一个不接受 const 参数的函数。</p>
+<p>使用 const_cast 移除 const 属性后，如果试图修改一个本身被定义为 const
+的对象，其行为是未定义的。它主要用于这样的场景：你有一个 <strong>const
+指针/引用</strong>，但你知道它<strong>指向的对象本身不是 const
+的</strong>，你需要调用一个不接受 const 参数的函数。</p>
 </blockquote>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">legacy_function</span><span class="params">(<span class="type">int</span>* p)</span> </span>{ <span class="comment">// 一个老旧的、不接受 const 指针的函数</span></span><br><span class="line">    *p = <span class="number">20</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> val = <span class="number">10</span>;</span><br><span class="line">    <span class="comment">// legacy_function(&amp;val); // 错误：无法将 const int* 转换为 int*</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 警告：对原始的 const 变量进行修改是未定义行为！</span></span><br><span class="line">    <span class="comment">// const_cast&lt;int*&gt;(&amp;val) 虽然可以通过编译，但运行时行为未定义！val完全可能存储在只读内存中。</span></span><br><span class="line">    <span class="comment">// legacy_function(const_cast&lt;int*&gt;(&amp;val)); </span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> non_const_val = <span class="number">15</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span>* p_const = &amp;non_const_val;</span><br><span class="line">    <span class="comment">// 这种情况是安全的，因为 p_const 指向的对象 non_const_val 本身不是 const</span></span><br><span class="line">    <span class="built_in">legacy_function</span>(<span class="built_in">const_cast</span>&lt;<span class="type">int</span>*&gt;(p_const)); </span><br><span class="line">    <span class="comment">// 现在 non_const_val 的值是 20</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>reinterpret_cast<new_type>(expression)</new_type></strong>: 用于<strong>低级别的重新解释类型</strong>，仅仅是重新解释给定的位模式，非常不安全。它通常用于与硬件打交道或进行底层编程。</p>
+<p><strong>reinterpret_cast<new_type>(expression)</new_type></strong>:
+用于<strong>低级别的重新解释类型</strong>，仅仅是重新解释给定的位模式，非常不安全。它通常用于与硬件打交道或进行底层编程。</p>
 <ul>
 <li>不同类型的指针之间转换：如将 int* 转换为 char*。</li>
 <li>指针与整数之间的转换：将指针转换为一个足以容纳它的整数类型，反之亦然。</li>
@@ -879,21 +900,22 @@ mjx-container[display="true"] + br {
 <p>这是最危险的转换操作符。它<strong>不进行任何类型检查</strong>，只是简单地告诉编译器“把这些<strong>二进制位</strong>当成另一种类型来看待”。它几乎总是不可移植的，应仅在绝对必要时（如与硬件交互的底层代码）使用。</p>
 </blockquote>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span> value = <span class="number">0x41424344</span>; <span class="comment">// 在小端系统中代表 'D', 'C', 'B', 'A'</span></span><br><span class="line">    <span class="type">int</span>* p_int = &amp;value;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 int* 重新解释为 char*</span></span><br><span class="line">    <span class="type">char</span>* p_char = <span class="built_in">reinterpret_cast</span>&lt;<span class="type">char</span>*&gt;(p_int);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 逐字节打印整数的内存表示</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">sizeof</span>(<span class="type">int</span>); ++i) {</span><br><span class="line">        std::cout &lt;&lt; *(p_char + i);</span><br><span class="line">    }</span><br><span class="line">    std::cout &lt;&lt; std::endl; <span class="comment">// 在小端系统上输出：DCBA</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
 <p>最佳实践：</p>
 <ul>
-<li><p>优先使用 C++ 风格转换：它们更安全、意图更明确、更易于搜索和维护。</p>
-</li>
-<li><p>尽量避免转换：如果你的代码中充斥着大量的类型转换，这通常是设计不良的信号。考虑使用多态、模板或更好的设计模式来避免转换。</p>
-</li>
+<li><p>优先使用 C++
+风格转换：它们更安全、意图更明确、更易于搜索和维护。</p></li>
+<li><p>尽量避免转换：如果你的代码中充斥着大量的类型转换，这通常是设计不良的信号。考虑使用多态、模板或更好的设计模式来避免转换。</p></li>
 <li><p>选择最合适的转换符：</p>
 <ul>
-<li>当你需要在<strong>相关类型之间</strong>进行转换时，static_cast 是首选。</li>
-<li>当你需要在<strong>多态</strong>类体系中安全地进行<strong>下行</strong>转换时，使用 dynamic_cast。</li>
-<li>当你需要处理 <strong>const</strong> 或 <strong>volatile</strong> 属性时（通常是为了兼容旧代码），只能使用 const_cast，并要格外小心。</li>
-<li>只有在进行<strong>非常底层</strong>的、与<strong>硬件</strong>相关的、并且你完全清楚自己在做什么时，才使用 reinterpret_cast。</li>
-</ul>
-</li>
+<li>当你需要在<strong>相关类型之间</strong>进行转换时，static_cast
+是首选。</li>
+<li>当你需要在<strong>多态</strong>类体系中安全地进行<strong>下行</strong>转换时，使用
+dynamic_cast。</li>
+<li>当你需要处理 <strong>const</strong> 或 <strong>volatile</strong>
+属性时（通常是为了兼容旧代码），只能使用 const_cast，并要格外小心。</li>
+<li>只有在进行<strong>非常底层</strong>的、与<strong>硬件</strong>相关的、并且你完全清楚自己在做什么时，才使用
+reinterpret_cast。</li>
+</ul></li>
 </ul>
 
 		</div>
@@ -945,7 +967,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">类型转换</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2-Implicit-Type-Conversion"><span class="nav-text">隐式类型转换 (Implicit Type Conversion)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2-Explicit-Type-Conversion"><span class="nav-text">显式类型转换 (Explicit Type Conversion)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E9%A3%8E%E6%A0%BC%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2-C-Style-Cast"><span class="nav-text">C 风格强制转换 (C-Style Cast)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E9%A3%8E%E6%A0%BC%E8%BD%AC%E6%8D%A2%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-text">C++ 风格转换操作符</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2-implicit-type-conversion"><span class="nav-text">隐式类型转换 (Implicit
+Type Conversion)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2-explicit-type-conversion"><span class="nav-text">显式类型转换 (Explicit
+Type Conversion)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#c-%E9%A3%8E%E6%A0%BC%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2-c-style-cast"><span class="nav-text">C 风格强制转换 (C-Style Cast)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c-%E9%A3%8E%E6%A0%BC%E8%BD%AC%E6%8D%A2%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-text">C++ 风格转换操作符</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -974,11 +998,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

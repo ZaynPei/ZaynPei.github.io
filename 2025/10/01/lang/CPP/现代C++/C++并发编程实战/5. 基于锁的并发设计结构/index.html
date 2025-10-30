@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/01/lang/cpp/现代c++/c++并发编程实战/5. 基于锁的并发设计结构/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5. 基于锁的并发设计结构">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/5.%20%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-01T03:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-29T15:42:19.383Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="language">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            5. 基于锁的并发设计结构 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">5. 基于锁的并发设计结构</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-01 11:00</span>
+        <span class="mobile">2025-10-01 11:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-29 23:42:19</span>
+            <span class="mobile">2025-10-29 23:42:19</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/language/">language</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>14.9k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>57 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="为并发设计">为并发设计</h2>
+<p>首先,
+什么是并发数据结构？一个并发数据结构是指一个可以被<strong>多个线程同时访问</strong>的数据结构。</p>
+<p>也就是说, 其最低要求是<strong>线程安全</strong> (Thread Safety)</p>
+<p>这意味着，即使多个线程并发地对数据结构执行操作（无论是相同还是不同的操作），数据结构也必须保持其<strong>内部一致性</strong>:</p>
+<ul>
+<li>无数据丢失或损坏。</li>
+<li>所有的不变量 (Invariants)
+必须始终保持（或者说，没有线程能看到不变量被破坏的中间状态）。</li>
+<li>无数据竞争 (Data Races)。</li>
+</ul>
+<p>然而,
+仅仅“线程安全”是不够的：许多简单的方法可以实现线程安全（例如，用一个巨大的<strong>互斥锁锁住整个数据结构</strong>），但这样做往往会牺牲性能。</p>
+<p>因此,
+本节的核心论点是：设计并发数据结构的真正意义不仅仅在于<strong>线程安全</strong>，更在于允许<strong>真正的并行处理</strong>，从而提高程序的性能,
+高效地利用多核处理器, 实现”真正的并发”。</p>
+<p>“真并发” (True
+Concurrency)：目标是让<strong>多个线程</strong>能够在<strong>同一时间点上</strong>，<strong>有效地</strong>在<strong>数据结构的不同部分</strong>或<strong>执行不同的（非冲突的）操作</strong>上取得进展。这与仅仅保证“一次只有一个线程能安全访问”形成了鲜明对比。</p>
+<p>序列化 (Serialization),
+或者说<strong>串行化</strong>则是并发的天敌：当你使用单一的全局互斥量来保护整个数据结构时（就像第3章、第4章中的简单栈和队列实现），虽然保证了线程安全，但也引入了序列化。</p>
+<p>序列化意味着：无论有多少线程想要访问数据结构，它们都必须<strong>排队等待</strong>获取那唯一的锁。在任何时刻，只有一个线程能够实际工作。这实际上将并发访问变成了<strong>串行访问</strong>（一个接一个），完全抵消了使用多线程带来的潜在性能优势。CPU
+核心闲置，线程都在<strong>等待</strong>。</p>
+<p>总之, 这一章设计的核心目标是：</p>
+<ul>
+<li>减少保护区域 (Reduce Protected
+Sections)：尽量缩小必须持有锁的代码范围。</li>
+<li>减少序列化 (Reduce
+Serialization)：尽量避免让所有线程都争抢同一个锁。</li>
+<li>提升并发访问的潜力 (Increase Potential for
+Concurrency)：通过更精细的控制，允许多个线程在不冲突的情况下同时操作数据结构。</li>
+</ul>
+<p>这需要我们超越简单的单锁模型，仔细思考如何<strong>分解数据结构</strong>，使用<strong>更细粒度的锁</strong>或其他同步机制，以最大限度地<strong>减少线程等待</strong>，最大化并行处理的机会。</p>
+<h3 id="指导原则第一方面确保访问安全-ensure-safety">指导原则第一方面：确保访问安全
+(Ensure Safety)</h3>
+<p>要想设计真正并发的数据结构，首先必须确保<strong>访问安全/线程安全</strong>。这意味着无论有多少线程同时访问数据结构，都不会导致数据损坏或不一致。</p>
+<p>这部分原则主要是对第3章中已经讨论过的线程安全问题的回顾和强调，因为<strong>安全</strong>是并发设计的基石。</p>
+<ol type="1">
+<li><p>确保<strong>不变量</strong>不被破坏时可见 (Protect
+Invariants)：</p>
+<ul>
+<li>核心：必须保证任何线程在任何时候都不会访问到数据结构处于“中间状态”（即不变量暂时被破坏时）的数据。</li>
+<li>实现：通常通过锁（互斥量）来保护那些修改数据结构并可能暂时破坏不变量的代码段。</li>
+</ul></li>
+<li><p>小心<strong>接口造成的条件竞争</strong> (Design Interfaces
+Carefully)：</p>
+<ul>
+<li><p>核心：即使每个单独的成员函数都是线程安全的（内部加锁），函数之间的组合调用也可能产生条件竞争（例如第3章
+stack 的 empty/top 问题）。</p></li>
+<li><p>建议：接口应该提供<strong>原子性</strong>的操作，完成<strong>一个完整的逻辑功能</strong>，而不是提供一系列需要用户组合起来才能完成功能的“步骤”函数。</p></li>
+</ul></li>
+<li><p>注意<strong>异常安全</strong> (Ensure Exception Safety)：</p>
+<ul>
+<li><p>核心：当数据结构的操作（特别是在持有锁时）抛出异常，必须保证数据结构的状态仍然是有效的（不变量未被永久破坏），并且锁能够被正确释放。</p></li>
+<li><p>实现：</p>
+<ul>
+<li><p>使用 <strong>RAII</strong> 锁管理（如 std::lock_guard,
+std::unique_lock）来确保锁在异常时自动释放。</p></li>
+<li><p>仔细设计操作步骤，确保在<strong>可能抛出异常的操作</strong>（如内存分配、拷贝/移动用户数据）失败时，<strong>数据结构能回滚到一致状态</strong>，或者至少保持有效状态。</p></li>
+</ul></li>
+</ul></li>
+<li><p>将<strong>死锁风险</strong>降至最低 (Minimize Deadlock
+Risk)：</p>
+<ul>
+<li><p>核心：死锁是并发设计中的常见陷阱，尤其是在使用多个锁时。</p></li>
+<li><p>建议：</p>
+<ul>
+<li><p>限制锁的范围：尽可能缩短持有锁的时间。</p></li>
+<li><p>避免嵌套锁：一个线程已持有锁A时，避免再去获取锁B。</p></li>
+<li><p>按固定顺序加锁：如果必须获取多个锁，所有线程都按同一顺序获取。</p></li>
+<li><p>避免在持有锁时调用用户代码：防止用户代码尝试获取其他锁导致死锁。</p></li>
+</ul></li>
+</ul></li>
+<li><p>考虑特殊成员函数：</p>
+<ul>
+<li><p>构造函数/析构函数：通常需要独占访问。用户必须保证在<strong>构造完成前</strong>、<strong>析构开始后</strong>，没有其他线程访问该对象。</p></li>
+<li><p>拷贝构造/赋值/swap()：如果你的数据结构支持这些操作，作为设计者，你需要明确它们在并发环境下的行为：它们是线程安全的吗？它们需要独占访问吗？用户在使用这些操作时需要注意什么？</p></li>
+</ul></li>
+</ol>
+<h3 id="指导原则第二方面确保真正的并发访问-enable-true-concurrency">指导原则第二方面：确保真正的并发访问
+(Enable True Concurrency)</h3>
+<p>这部分原则是本章的新重点，关注如何在保证安全的前提下，最大化数据结构的并行处理能力。</p>
+<ol type="1">
+<li><p><strong>锁的范围</strong>能否缩小？ (Minimize Lock Scope)</p>
+<ul>
+<li><p>问题：当前持有锁执行的操作中，是否有部分可以安全地移到锁的范围之外执行？</p></li>
+<li><p>示例：内存分配
+(new)、数据的拷贝/准备等<strong>耗时操作</strong>，如果可以，应在获取锁之前或释放锁之后进行（如在
+push 之前 make_shared 的例子）。</p></li>
+</ul></li>
+<li><p>能否使用<strong>多个锁</strong>？ (Fine-grained Locking)</p>
+<ul>
+<li><p>问题：数据结构的<strong>不同部分</strong>是否可以由<strong>不同的互斥量</strong>来保护？</p></li>
+<li><p>目标：实现<strong>细粒度锁</strong>。如果线程A操作数据结构的A部分（锁A），线程B操作B部分（锁B），它们就可以并行执行。</p></li>
+<li><p>挑战：增加了复杂性，需要仔细管理多个锁，并警惕死锁（如果一个操作需要同时获取多个锁）。</p></li>
+</ul></li>
+<li><p>是否所有操作都需要<strong>同级锁</strong>？ (Different Lock
+Types)</p>
+<ul>
+<li><p>问题：对于“只读”操作和“读写”操作，是否需要相同的（独占）锁保护？</p></li>
+<li><p>目标：利用<strong>读写锁</strong>（如
+std::shared_mutex）。允许多个“读者”线程并发访问，只有“写者”线程需要独占访问。</p></li>
+<li><p>适用场景：“读多写少”的数据结构（如查询表）。</p></li>
+</ul></li>
+<li><p>能否通过<strong>修改结构</strong>来增加并发？ (Modify Structure
+for Concurrency)</p>
+<ul>
+<li><p>问题：当前数据结构的内部组织方式是否本身就限制了并发？能否通过简单的修改来减少冲突点？</p></li>
+<li><p>示例：后面将要介绍的队列实现，通过引入一个“哑节点”，将
+push（操作尾部）和
+pop（操作头部）的操作目标分离开，从而允许它们在大部分时间里使用不同的锁并行执行。</p></li>
+</ul></li>
+</ol>
+<p>所有这些并发指导原则都服务于一个核心思想：如何在保证安全（通过必要的锁和同步）的前提下，最大限度地减少线程因锁而产生的等待（序列化），从而最大化线程能够并行执行（真并发）的机会？</p>
+<p>这是一个权衡 (Trade-off)
+的过程。更细粒度的锁、更复杂的同步机制可以带来更高的并发潜力，但也显著增加了设计的复杂性、出错（死锁、竞争）的风险以及可能的额外开销。设计者需要根据数据结构的具体使用场景和性能需求来做出明智的选择。</p>
+<h2 id="基于锁的并发数据结构">基于锁的并发数据结构</h2>
+<p>首先, 基于锁的设计天然就面临着挑战：</p>
+<ul>
+<li>锁的本质是互斥 (Mutual
+Exclusion)：它通过<strong>阻止并发</strong>访问来保证安全。</li>
+<li>并发的目标是并行
+(Parallelism)：我们希望<strong>允许多个线程</strong>同时工作。</li>
+</ul>
+<p>这两者本身就存在一定的矛盾。简单地使用一个大锁保护整个数据结构虽然安全，但会完全序列化访问，牺牲并发性。因此，本节的目标是探索如何在必要的保护（使用锁）与最大化的并发之间找到平衡点。</p>
+<p>本节的核心策略是：<strong>最小化锁的影响</strong></p>
+<p>对于基于锁的数据结构，提高并发性的关键策略在于最小化锁的<strong>持有时间</strong>和<strong>范围</strong>：</p>
+<ul>
+<li><p>持有锁的时间最短：只在<strong>绝对必要</strong>（访问或修改共享状态）时才持有锁。耗时的操作（如内存分配、复杂计算、I/O）应尽可能在锁外完成。</p></li>
+<li><p>锁的粒度尽可能小 (Fine-grained
+Locking)：如果数据结构的不同部分可以独立修改，考虑使用<strong>多个锁分别保护不同部分</strong>，而不是用一个锁保护所有部分。</p></li>
+</ul>
+<h3 id="线程安全栈使用锁">线程安全栈——使用锁</h3>
+<p>这一节的目标是重新审视我们在第3章实现的那个线程安全的栈，并使用上一节提出的指导原则来对其进行严格的分析，特别是评估它的<strong>安全性</strong>和<strong>并发性</strong>。</p>
+<p>首先，我们回顾一下这个栈的实现。它本质上是用一个 std::mutex
+包装了一个标准的 std::stack。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span> <span class="comment">// 引入 std::stack</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span> <span class="comment">// 为了 std::shared_ptr</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">empty_stack</span>: std::exception</span><br><span class="line">{</span><br><span class="line">  <span class="function"><span class="type">const</span> <span class="type">char</span>* <span class="title">what</span><span class="params">()</span> <span class="type">const</span> <span class="title">throw</span><span class="params">()</span></span>; <span class="comment">// 假设已实现</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">threadsafe_stack</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::stack&lt;T&gt; data;</span><br><span class="line">  <span class="keyword">mutable</span> std::mutex m; <span class="comment">// mutable 允许 const 成员函数 lock</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">threadsafe_stack</span>(){} <span class="comment">// 默认构造</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 拷贝构造函数</span></span><br><span class="line">  <span class="built_in">threadsafe_stack</span>(<span class="type">const</span> threadsafe_stack&amp; other)</span><br><span class="line">  {</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(other.m)</span></span>; <span class="comment">// 锁住源对象</span></span><br><span class="line">    data = other.data; <span class="comment">// 在锁内执行拷贝</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  threadsafe_stack&amp; <span class="keyword">operator</span>=(<span class="type">const</span> threadsafe_stack&amp;) = <span class="keyword">delete</span>; <span class="comment">// 禁止赋值</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// push 操作</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T new_value)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    data.<span class="built_in">push</span>(std::<span class="built_in">move</span>(new_value));  <span class="comment">// 1. 可能调用 T 的移动构造</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// pop 操作 (返回 shared_ptr)</span></span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(data.<span class="built_in">empty</span>()) <span class="keyword">throw</span> <span class="built_in">empty_stack</span>();  <span class="comment">// 2. 检查空 (在锁内)</span></span><br><span class="line">    <span class="comment">// 3. 创建 shared_ptr (可能调用 T 的拷贝/移动构造)</span></span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="type">const</span> <span class="title">res</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">      std::make_shared&lt;T&gt;(std::move(data.top())))</span></span>;</span><br><span class="line">    data.<span class="built_in">pop</span>();  <span class="comment">// 4. 从栈中移除 (noexcept)</span></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// pop 操作 (写入引用)</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">pop</span><span class="params">(T&amp; value)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(data.<span class="built_in">empty</span>()) <span class="keyword">throw</span> <span class="built_in">empty_stack</span>(); <span class="comment">// 检查空 (在锁内)</span></span><br><span class="line">    value = std::<span class="built_in">move</span>(data.<span class="built_in">top</span>());  <span class="comment">// 5. 移动赋值给 value (可能调用 T 的移动赋值)</span></span><br><span class="line">    data.<span class="built_in">pop</span>();  <span class="comment">// 6. 从栈中移除 (noexcept)</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// empty 操作</span></span><br><span class="line">  <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> data.<span class="built_in">empty</span>();</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="安全性分析">安全性分析</h4>
+<ol type="1">
+<li><p>不变量保护: 通过在每一个成员函数（push, pop, empty,
+拷贝构造）的入口处使用
+<code>std::lock_guard&lt;std::mutex&gt; lock(m);</code>，该实现保证了在任何时刻只有一个线程能够访问底层的
+<code>std::stack&lt;T&gt; data</code>。 因此，当一个线程正在修改
+data（例如 push 或 pop）并可能暂时破坏 std::stack
+的内部不变量时，没有其他线程能够看到这种中间状态。</p></li>
+<li><p>接口条件竞争:</p>
+<ul>
+<li><p>empty()/pop() 竞争：pop()
+函数在获取锁之后、执行任何操作之前，会显式地检查 data.empty()
+。因此，即使外部调用者先检查了 empty()，pop()
+内部的检查也能保证操作的安全性，避免了 TOCTTOU 竞争。（已处理）</p></li>
+<li><p>top()/pop() 竞争：标准 std::stack
+将这两个操作分开，导致竞争。这里的 threadsafe_stack
+通过提供<strong>合并的 pop 操作</strong>（直接返回弹出的值，无论是通过
+shared_ptr 还是引用）来避免了这个接口竞争。（已处理）</p></li>
+</ul></li>
+<li><p>异常安全:</p>
+<ul>
+<li><p>锁管理: 使用 std::lock_guard
+保证了即使在操作中（如内存分配或用户类型操作）抛出异常，互斥锁 m
+也会被自动、安全地释放。</p></li>
+<li><p>push(T new_value): 异常可能来自 data.push() 内部（内存分配失败或
+T 的移动构造函数抛异常）。而 std::stack::push
+通常提供强异常保证（失败时栈不变）。因此 push 是异常安全的。</p></li>
+<li><p>pop() (shared_ptr 版本):</p>
+<ul>
+<li>empty_stack 异常 (标记 2): 抛出前未修改数据，安全。</li>
+<li><code>make_shared&lt;T&gt;(...)</code> (标记 3):
+可能因内存分配失败或 T 的拷贝/移动构造函数抛异常。如果发生，data.pop()
+(标记 4) 不会被执行，栈保持不变。标准库保证 make_shared
+失败时无内存泄漏。因此是异常安全的（强保证）。</li>
+<li>data.pop() (标记 4): 本身保证不抛异常 (noexcept)。</li>
+</ul></li>
+<li><p>pop(T&amp; value) (引用版本):</p>
+<ul>
+<li>empty_stack 异常: 安全。</li>
+<li>value = std::move(data.top()) (标记 5): 可能因 <strong>T
+的移动赋值运算符</strong>抛异常。如果发生，data.pop() (标记 6)
+不会被执行，栈保持不变。因此是异常安全的（强保证）。</li>
+<li>data.pop() (标记 6): 本身保证不抛异常 (noexcept)。</li>
+</ul></li>
+<li><p>empty(): 只读操作，使用 lock_guard，异常安全。</p></li>
+<li><p>结论: 该栈设计具有良好的异常安全性。</p></li>
+</ul></li>
+<li><p>死锁风险:</p>
+<ul>
+<li>主要风险点：在持有互斥锁 m 的同时，调用了用户提供的代码：
+<ul>
+<li>push 中的 T 的移动构造函数 (间接在 data.push 内),
+虽然是隐式调用。</li>
+<li>pop (shared_ptr) 中的 T 的拷贝/移动构造函数 (在 make_shared 内),
+同样是隐式调用。</li>
+<li>pop (引用) 中的 T 的移动赋值运算符。</li>
+<li>拷贝构造函数中的 T 的拷贝赋值运算符 (在 data = other.data 内)。</li>
+<li>(
+因为T的类型是<strong>用户定义的</strong>，用户可能在<strong>这些操作中尝试获取其他锁</strong>，从而引发死锁
+)</li>
+</ul></li>
+<li>死锁场景：如果这些用户代码（直接或间接地）尝试再次锁定同一个
+threadsafe_stack 实例的互斥锁 m，就会发生死锁（如果用 std::mutex
+则是未定义行为）。</li>
+<li>责任：实际上,
+避免这种由用户代码引起的死锁是用户的责任，数据结构本身无法完全阻止。用户不应该在
+T 的操作中对包含它的栈进行操作。（存在风险，依赖用户）</li>
+</ul></li>
+<li><p>特殊成员函数:</p>
+<ul>
+<li>拷贝构造: 明确定义了，并且通过锁住源对象 (other.m)
+来保证拷贝过程的线程安全。</li>
+<li>赋值: 被显式删除 (=
+delete)，避免了复杂的、难以保证线程安全的赋值语义。</li>
+<li>构造/析构:
+它们本身不是线程安全的。<strong>用户必须确保</strong>在对象完全构造好之前没有其他线程访问它，并且在对象开始析构后也没有线程再访问它。这是<strong>标准的C++对象生命周期规则</strong>，适用于所有对象，不仅仅是并发数据结构。（<strong>用户责任</strong>）</li>
+</ul></li>
+</ol>
+<h4 id="并发性分析">并发性分析</h4>
+<ol type="1">
+<li><p>锁的范围:
+几乎每个成员函数都立即获取锁，并在函数结束时才释放锁。锁的范围覆盖了<strong>函数的整个执行过程</strong>。</p></li>
+<li><p>多个锁: 只使用了一个互斥量 m 来保护整个 std::stack
+data。</p></li>
+<li><p>不同锁级别: 没有使用读写锁等不同级别的锁。</p></li>
+<li><p>结构修改: 没有对 std::stack
+的内部结构进行修改以提高并发性，只是<strong>简单地包装</strong>。</p></li>
+</ol>
+<p>结论: 这个设计通过将所有操作<strong>完全序列化</strong>
+(Serialization)
+来保证线程安全。在任何时刻，<strong>最多只有一个线程</strong>可以对栈执行任何操作（无论是
+push, pop 还是 empty）。</p>
+<p>因此并发性极差。它没有利用多核处理器的能力。如果多个线程频繁访问栈，它们大部分时间都会<strong>阻塞在等待锁</strong>上。</p>
+<p>而且, 这个实现还存在<strong>缺乏等待机制</strong>的问题.
+当栈为空时，pop 操作会抛出 empty_stack
+异常。如果一个“消费者”线程需要等待“生产者”线程向栈中 push
+数据，它该怎么办？</p>
+<p>目前的实现只能够不断循环调用 try_pop 或 empty (忙等待/轮询), 不断调用
+pop 并捕获异常。</p>
+<p>这些方案浪费CPU资源，并且可能因为频繁的锁竞争而降低整体性能。</p>
+<p>更好的方案则需要数据结构内部提供高效的<strong>等待机制</strong>，例如使用条件变量。</p>
+<p>总之, threadsafe_stack
+是一个线程安全数据结构的基本示例。它满足了安全性的基本要求（虽然有用户代码导致死锁的风险）。</p>
+<p>然而，它在并发性方面表现很差，因为它将所有操作都序列化了。并且，它缺乏有效的等待机制，不适合典型的生产者-消费者场景。</p>
+<h3 id="线程安全队列使用锁和条件变量">线程安全队列——使用锁和条件变量</h3>
+<p>本节实际上是重新审视并分析了第4章已经实现的那个队列, 比起栈,
+它引入了<strong>条件变量</strong>来处理线程等待的问题。</p>
+<p>这个队列的核心是使用一个 std::mutex 来保护底层的
+std::queue，并使用一个 std::condition_variable 来实现等待功能。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">threadsafe_queue</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> std::mutex mut;</span><br><span class="line">  std::queue&lt;T&gt; data_queue;</span><br><span class="line">  std::condition_variable data_cond;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">threadsafe_queue</span>() {}</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Push 操作</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T new_value)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(mut)</span></span>;</span><br><span class="line">    data_queue.<span class="built_in">push</span>(std::<span class="built_in">move</span>(new_value)); <span class="comment">// 原文可能是 data，应为 new_value</span></span><br><span class="line">    data_cond.<span class="built_in">notify_one</span>();  <span class="comment">// 1. 唤醒一个等待者</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Wait and Pop 操作 (阻塞，写入引用)</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">wait_and_pop</span><span class="params">(T&amp; value)</span>  <span class="comment">// 2</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(mut)</span></span>; <span class="comment">// 必须用 unique_lock</span></span><br><span class="line">    <span class="comment">// 等待，直到 lambda 返回 true (队列非空)</span></span><br><span class="line">    data_cond.<span class="built_in">wait</span>(lk, [<span class="keyword">this</span>]{ <span class="keyword">return</span> !data_queue.<span class="built_in">empty</span>(); });</span><br><span class="line">    value = std::<span class="built_in">move</span>(data_queue.<span class="built_in">front</span>());</span><br><span class="line">    data_queue.<span class="built_in">pop</span>();</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Wait and Pop 操作 (阻塞，返回 shared_ptr)</span></span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">wait_and_pop</span><span class="params">()</span>  <span class="comment">// 3</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(mut)</span></span>; <span class="comment">// 必须用 unique_lock</span></span><br><span class="line">    <span class="comment">// 4. 等待</span></span><br><span class="line">    data_cond.<span class="built_in">wait</span>(lk, [<span class="keyword">this</span>]{ <span class="keyword">return</span> !data_queue.<span class="built_in">empty</span>(); });</span><br><span class="line">    <span class="comment">// 可能抛异常点 1: make_shared 分配内存</span></span><br><span class="line">    <span class="comment">// 可能抛异常点 2: T 的拷贝/移动构造</span></span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="title">res</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">      std::make_shared&lt;T&gt;(std::move(data_queue.front())))</span></span>;</span><br><span class="line">    data_queue.<span class="built_in">pop</span>(); <span class="comment">// 不抛异常</span></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Try Pop 操作 (非阻塞，写入引用)</span></span><br><span class="line">  <span class="function"><span class="type">bool</span> <span class="title">try_pop</span><span class="params">(T&amp; value)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(mut)</span></span>; <span class="comment">// 非阻塞，可用 lock_guard</span></span><br><span class="line">    <span class="keyword">if</span>(data_queue.<span class="built_in">empty</span>())</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 不等待，立即返回</span></span><br><span class="line">    value = std::<span class="built_in">move</span>(data_queue.<span class="built_in">front</span>()); <span class="comment">// 可能调用 T 的移动赋值</span></span><br><span class="line">    data_queue.<span class="built_in">pop</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Try Pop 操作 (非阻塞，返回 shared_ptr)</span></span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">try_pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(mut)</span></span>; <span class="comment">// 非阻塞，可用 lock_guard</span></span><br><span class="line">    <span class="keyword">if</span>(data_queue.<span class="built_in">empty</span>())</span><br><span class="line">      <span class="keyword">return</span> std::<span class="built_in">shared_ptr</span>&lt;T&gt;();  <span class="comment">// 5. 返回空指针表示失败</span></span><br><span class="line">    <span class="comment">// 可能抛异常点 1: make_shared</span></span><br><span class="line">    <span class="comment">// 可能抛异常点 2: T 的拷贝/移动构造</span></span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="title">res</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">      std::make_shared&lt;T&gt;(std::move(data_queue.front())))</span></span>;</span><br><span class="line">    data_queue.<span class="built_in">pop</span>();</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Empty 操作</span></span><br><span class="line">  <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(mut)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> data_queue.<span class="built_in">empty</span>();</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="与-threadsafe_stack-的对比与分析">与 threadsafe_stack
+的对比与分析</h4>
+<p>这个队列的设计与上述的栈有很多相似之处，但也引入了关键的不同.</p>
+<p>相似性:</p>
+<ul>
+<li><p>仍然使用<strong>单一互斥量</strong> (mut) 保护整个底层容器
+(data_queue)。</p></li>
+<li><p>接口设计上，同样通过<strong>合并 front/pop 操作</strong>到
+wait_and_pop/try_pop 中，避免了接口固有的条件竞争。</p></li>
+<li><p>try_pop 的逻辑与栈的 pop 非常相似（除了失败时不抛异常，而是返回
+false 或 nullptr）。</p></li>
+<li><p>同样存在因<strong>调用用户代码</strong>（T的构造/赋值）而导致的<strong>死锁风险</strong>。</p></li>
+<li><p>构造/析构函数同样不是线程安全的，需要<strong>用户保证生命周期管理</strong>。</p></li>
+</ul>
+<p>关键不同点:</p>
+<ul>
+<li><p><strong>等待机制</strong>: wait_and_pop 使用
+std::condition_variable::wait
+来高效地等待队列非空。这解决了栈实现中消费者需要“忙等待”或轮询的问题。</p></li>
+<li><p><strong>通知机制</strong>: push 操作 (标记 ①) 在添加元素后调用
+data_cond.notify_one() 来唤醒一个可能正在 wait_and_pop
+中等待的消费者线程。</p></li>
+<li><p>锁类型: wait_and_pop 必须使用 std::unique_lock，因为 wait
+操作需要在等待期间释放锁，并在被唤醒后重新获取锁。push, try_pop, empty
+等非阻塞操作则可以使用更高效的 std::lock_guard。</p></li>
+</ul>
+<p>然而, wait_and_pop
+引入<strong>条件变量</strong>的同时也带来了一个新的<strong>异常安全挑战</strong>：</p>
+<p>假设多个消费者线程阻塞在 wait_and_pop 的 data_cond.wait() 上。</p>
+<p>一个生产者线程调用 push，然后调用 notify_one()唤醒了一个消费者线程
+C1。C1 从 wait 返回，成功获取了锁，并且检查到队列非空。</p>
+<p>问题点: 在 C1 执行 <code>std::make_shared&lt;T&gt;(...)</code> 或
+<code>value = std::move(...)</code> 时，如果 T
+类型的<strong>构造函数或赋值运算符抛出异常</strong>, 后果是 C1
+抛出异常，data_queue.pop()
+不会被执行，<strong>数据项仍然留在队列</strong>中。</p>
+<p>但是，唤醒 C1 的那个 <strong>notify_one</strong>
+信号已经被“消耗”了。</p>
+<p>如果没有其他生产者再 push 新数据并发送新的 notify_one
+信号，那么其他原本在等待的消费者线程（C2,
+C3…）将永远不会被唤醒来处理那个留在队列中的数据项！它们会<strong>永久阻塞</strong>。</p>
+<p>这个问题目前有三种可能的解决方案：</p>
+<ul>
+<li><p><strong>notify_all()</strong>: 在 push 中总是调用
+notify_all()。当 C1 异常退出时，其他线程 C2, C3…
+也会被唤醒，其中一个会成功处理数据。但是显然<strong>效率低下</strong>（惊群效应
+Thundering Herd）。</p></li>
+<li><p><strong>在 catch 中重新 notify_one()</strong>: 在 wait_and_pop
+内部<strong>加上 try…catch</strong> 可能抛异常的操作，在 <strong>catch
+块中调用 notify_one()</strong> 唤醒另一个线程，然后 throw;
+重新抛出异常。缺点是代码复杂。</p></li>
+<li><p><strong>在队列中存储 std::shared_ptr<t></t></strong>:
+通过将数据项包装在 std::shared_ptr
+中，可以确保即使在异常情况下，数据项也能被正确处理。</p></li>
+<li><p>```cpp template<typename t> class threadsafe_queue{ private:
+mutable std::mutex mut; std::queue&lt;std::shared_ptr<t>&gt; data_queue;
+std::condition_variable data_cond; public: threadsafe_queue() {}</t></typename></p>
+<pre><code>  void wait_and_pop(T&amp; value)
+  {
+      std::unique_lock&lt;std::mutex&gt; lk(mut);
+      data_cond.wait(lk,[this]{return !data_queue.empty();});
+      value=std::move(*data_queue.front());  // 1
+      data_queue.pop();
+  }
+
+  bool try_pop(T&amp; value)
+  {
+      std::lock_guard&lt;std::mutex&gt; lk(mut);
+      if(data_queue.empty())
+      return false;
+      value=std::move(*data_queue.front());  // 2
+      data_queue.pop();
+      return true;
+  }
+
+  std::shared_ptr&lt;T&gt; wait_and_pop()
+  {
+      std::unique_lock&lt;std::mutex&gt; lk(mut);
+      data_cond.wait(lk,[this]{return !data_queue.empty();});
+      std::shared_ptr&lt;T&gt; res=data_queue.front();  // 3
+      data_queue.pop();
+      return res;
+  }
+
+  std::shared_ptr&lt;T&gt; try_pop()
+  {
+      std::lock_guard&lt;std::mutex&gt; lk(mut);
+      if(data_queue.empty())
+      return std::shared_ptr&lt;T&gt;();
+      std::shared_ptr&lt;T&gt; res=data_queue.front();  // 4
+      data_queue.pop();
+      return res;
+  }
+
+  void push(T new_value)
+  {
+      std::shared_ptr&lt;T&gt; data(
+      std::make_shared&lt;T&gt;(std::move(new_value)));  // 5
+      std::lock_guard&lt;std::mutex&gt; lk(mut);
+      data_queue.push(data);
+      data_cond.notify_one();
+  }
+
+  bool empty() const
+  {
+      std::lock_guard&lt;std::mutex&gt; lk(mut);
+      return data_queue.empty();
+  }</code></pre>
+<p>}; 关键改动:</p></li>
+<li><p>push 函数现在在获取锁之前就创建
+<code>std::shared_ptr&lt;T&gt;</code>。这包含了可能抛异常的内存分配和 T
+的构造。</p></li>
+<li><p>锁内操作: 在锁保护下，push 只需要将 shared_ptr
+(这是一个很小的对象) 拷贝/移动到 std::queue
+中。这个操作通常很快，并且不太可能抛异常。</p></li>
+<li><p>pop 操作: 在 wait 返回后，pop 操作只需要从队列中拷贝/移动
+shared_ptr。拷贝 shared_ptr
+是原子操作且不涉及用户代码，非常安全。之后如果需要返回 T&amp;
+，则需要解引用并移动赋值，这里仍然存在 T
+的移动赋值可能抛异常的风险，但原始数据（shared_ptr）已被安全取出。</p></li>
+</ul>
+<p>优点: - 解决了异常安全问题: wait_and_pop 在锁内执行的操作（拷贝
+shared_ptr）基本不会抛异常，大大降低了“丢失唤醒”的风险。 -
+提高了性能/并发潜力: 将耗时的内存分配 (make_shared) 和 T 的构造移到了
+push 函数的锁范围之外。这意味着 push
+操作持有锁的时间大大缩短，其他线程（执行 push, pop 或
+empty）等待锁的时间也相应减少，提高了并发的可能性。</p>
+<h4 id="并发性分析和总结">并发性分析和总结</h4>
+<p>核心限制:
+无论是原先的线程安全队列还是使用指针优化后的队列，它们都仍然使用单一互斥量
+(mut) 来保护整个 data_queue。</p>
+<p>后果就是所有对队列的操作（push, wait_and_pop, try_pop,
+empty）在同一时间点仍然只能有一个线程在执行。</p>
+<blockquote>
+<p>尽管使用指针优化后的队列通过减少锁持有时间略微提高了并发潜力，但本质上这个队列仍然是一个序列化访问的结构，并发性受限于单锁瓶颈。</p>
+</blockquote>
+<p>基于单锁和条件变量的 threadsafe_queue (特别是存储 shared_ptr 的版本)
+是一个实用且常用的并发数据结构。它安全、解决了等待问题，并且通过优化减少了锁争用。</p>
+<p>要实现更高程度的并发（允许多个 push 或多个 pop
+同时进行），就需要打破单一锁的限制，采用<strong>更细粒度的锁</strong>策略。这正是下一节将要探讨的内容，通过重新实现队列的底层链表结构来引入多个锁。</p>
+<h3 id="线程安全队列使用细粒度锁和条件变量">线程安全队列——使用细粒度锁和条件变量</h3>
+<p>继上一节指出单锁队列并发性不足后，本节的目标是打破单锁瓶颈，通过使用多个锁（细粒度锁）来显著提升队列的并发性能。</p>
+<p>首先问题回顾：上一节的队列虽然安全且解决了等待问题，但所有操作（push,
+pop, empty）都被同一个互斥量 mut 序列化了。即使一个线程想
+push（<strong>操作队尾</strong>），另一个线程想
+pop（<strong>操作队头</strong>），它们也必须<strong>排队等待同一个锁</strong>。</p>
+<p>核心思路：队列的 push 和 pop
+操作在<strong>逻辑上</strong>是作用<strong>于队列的两端</strong>。我们能否设计一种锁策略，使得对<strong>队头</strong>和<strong>队尾</strong>的操作能够<strong>并行</strong>进行？</p>
+<h4 id="初步尝试简单的链表与头尾锁">初步尝试：简单的链表与头尾锁</h4>
+<p>如果依旧使用deque或std::queue作为底层容器，实现细粒度锁会非常复杂，因为这些容器的内部结构并不支持独立地锁定头部和尾部。</p>
+<p>因此在底层结构上, 我们选择放弃
+std::queue，自己实现一个简单的<strong>单向链表</strong>来表示队列,
+<strong>head 指针</strong>指向第一个节点, <strong>tail
+指针</strong>指向最后一个节点, 每个节点包含数据和指向下一个节点的 next
+指针。</p>
+<p>细粒度锁的初步想法： - 用 head_mutex 保护 head 指针。pop 操作需要获取
+head_mutex(尾进头出) - 用 tail_mutex 保护 tail 指针。push 操作需要获取
+tail_mutex。</p>
+<p>致命缺陷 (空队列 &amp; 单元素队列)：</p>
+<ul>
+<li>空队列：head 和 tail 都为 nullptr。push 第一个元素时，需要同时修改
+head 和 tail，必须<strong>获取两个锁</strong>。pop 需要读取 head。</li>
+<li>单元素队列：head 和 tail 指向同一个节点。pop 需要读取 head-&gt;next
+(为 nullptr) 并将 head 设为 nullptr。push 需要读取 tail-&gt;next (为
+nullptr) 并修改 tail-&gt;next 指向新节点，然后更新 tail。
+<ul>
+<li>冲突：push 和 pop 同时在<strong>竞争访问</strong>和修改同一个节点的
+next 指针！简单的头尾锁无法解决这个冲突。</li>
+</ul></li>
+</ul>
+<h4 id="解决方案引入哑节点-dummy-node">解决方案：引入哑节点 (Dummy
+Node)</h4>
+<p>为了<strong>解耦头尾</strong>操作，特别是处理空队列和单元素队列的边界情况，引入了“哑节点”技术：</p>
+<p>机制：队列永远包含至少一个节点——这个节点就是“<strong>哑节点</strong>”，它不存储有效数据。<strong>tail
+指针始终指向这个哑节点</strong>。<strong>head
+指针</strong>指向队列中的<strong>第一个实际数据节点</strong>。</p>
+<p>空队列：当队列为空时，head 指针也指向哑节点 (即 head == tail)。</p>
+<p>操作流程 (简化版)：</p>
+<ul>
+<li>push(value)：push 主要操作的是 tail 指针和原 tail 指向的节点。
+<ol type="1">
+<li>创建一个新的哑节点 p。</li>
+<li>将 value 存入当前的哑节点（tail 指向的那个）。</li>
+<li>将当前哑节点的 next 指向新的哑节点 p。</li>
+<li>将 tail 指针更新为指向 p。</li>
+</ol></li>
+<li>pop()：pop 主要操作的是 head 指针。
+<ol type="1">
+<li>读取 head 指向节点的数据。</li>
+<li>将 head 指针更新为 head-&gt;next。</li>
+<li>(旧的 head 节点会被 unique_ptr 自动删除, 因为它超出了作用域)。</li>
+</ol></li>
+</ul>
+<p>优点：通过哑节点作为缓冲区，push 和 pop
+操作（在队列非空时）访问和修改的是<strong>不同的节点和指针</strong>，为使用不同的锁提供了基础。</p>
+<h4 id="细粒度锁与条件变量的完整实现">细粒度锁与条件变量的完整实现</h4>
+<p>基于哑节点，现在可以设计真正的细粒度锁队列： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span>               <span class="comment">// For std::unique_ptr, std::shared_ptr, std::make_shared</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span>                <span class="comment">// For std::mutex, std::lock_guard, std::unique_lock</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span> <span class="comment">// For std::condition_variable</span></span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">threadsafe_queue</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span></span><br><span class="line">  {</span><br><span class="line">    <span class="comment">// 数据使用 shared_ptr 包装，以便在锁外安全地复制（返回）。</span></span><br><span class="line">    std::shared_ptr&lt;T&gt; data;</span><br><span class="line">    <span class="comment">// 使用 unique_ptr 管理下一个节点，实现 RAII 自动内存管理。</span></span><br><span class="line">    std::unique_ptr&lt;node&gt; next;</span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  <span class="comment">// --- 核心成员变量 ---</span></span><br><span class="line"></span><br><span class="line">  std::mutex head_mutex;            <span class="comment">// 只保护 'head' 指针的访问</span></span><br><span class="line">  std::unique_ptr&lt;node&gt; head;       <span class="comment">// 队列头（独占所有权）</span></span><br><span class="line"></span><br><span class="line">  std::mutex tail_mutex;            <span class="comment">// 保护 'tail' 指针以及 'tail' 指向的节点</span></span><br><span class="line">  node* tail;                       <span class="comment">// 队列尾（非所有权的观察指针）</span></span><br><span class="line"></span><br><span class="line">  std::condition_variable data_cond; <span class="comment">// 用于 'wait_and_pop' 的条件变量</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// --- 私有辅助函数 (Private Helper Functions) ---</span></span><br><span class="line"></span><br><span class="line">  <span class="function">node* <span class="title">get_tail</span><span class="params">()</span>  <span class="comment">// 访问 tail 指针的线程安全方法</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">tail_lock</span><span class="params">(tail_mutex)</span></span>;  <span class="comment">// 先锁定 tail_mutex 再访问 tail</span></span><br><span class="line">    <span class="keyword">return</span> tail;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::unique_ptr&lt;node&gt; <span class="title">pop_head</span><span class="params">()</span>  <span class="comment">// 弹出头节点，返回节点指针 (假设已锁定 head_mutex)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    std::unique_ptr&lt;node&gt; old_head = std::<span class="built_in">move</span>(head);  <span class="comment">// </span></span><br><span class="line">    head = std::<span class="built_in">move</span>(old_head-&gt;next);</span><br><span class="line">    <span class="keyword">return</span> old_head;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">wait_for_data</span><span class="params">()</span> <span class="comment">// 等待直到队列非空, 返回已锁定的 head_mutex</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 获取 head_mutex。必须用 unique_lock 以便 'wait' 使用。</span></span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">head_lock</span><span class="params">(head_mutex)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 在条件变量上等待。</span></span><br><span class="line">    <span class="comment">//    lambda 谓词是“队列非空” (head != tail)。</span></span><br><span class="line">    <span class="comment">//    wait() 会原子地：</span></span><br><span class="line">    <span class="comment">//    a. 检查谓词，如果为 false (队列空)，释放 head_lock 并休眠。</span></span><br><span class="line">    <span class="comment">//    b. 被唤醒时，重新获取 head_lock，再次检查谓词（防止虚假唤醒）。</span></span><br><span class="line">    <span class="comment">//    c. 谓词检查 (head.get() != get_tail()) 会在持有 head_lock</span></span><br><span class="line">    <span class="comment">//       的情况下调用 get_tail()，这会获取 tail_mutex。</span></span><br><span class="line">    <span class="comment">//       锁顺序 (head -&gt; tail) 是安全的，不会死锁。</span></span><br><span class="line">    data_cond.<span class="built_in">wait</span>(head_lock, [&amp;]{ <span class="keyword">return</span> head.<span class="built_in">get</span>() != <span class="built_in">get_tail</span>(); });</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 此时，队列非空，且 head_lock 仍被持有。</span></span><br><span class="line">    <span class="comment">//    通过 std::move 将锁的所有权返回给调用者。</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">move</span>(head_lock);  <span class="comment">// 3</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::unique_ptr&lt;node&gt; <span class="title">wait_pop_head</span><span class="params">()</span> <span class="comment">// 等待并弹出头节点，返回节点指针。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 等待数据，并获取已锁定的 head_lock。</span></span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">head_lock</span><span class="params">(wait_for_data())</span></span>;   </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 在锁的保护下，调用内部(无锁)的 pop_head()。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">pop_head</span>();</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::unique_ptr&lt;node&gt; <span class="title">wait_pop_head</span><span class="params">(T&amp; value)</span> <span class="comment">//  等待并弹出头节点，将数据移入 'value'。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 等待数据，并获取已锁定的 head_lock。</span></span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">head_lock</span><span class="params">(wait_for_data())</span></span>;  </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. (关键：异常安全) 先移动数据。</span></span><br><span class="line">    <span class="comment">//    如果 T 的移动赋值操作抛异常，pop_head() 不会被调用，</span></span><br><span class="line">    <span class="comment">//    锁会释放，但节点仍留在队列中，数据不丢失。</span></span><br><span class="line">    value = std::<span class="built_in">move</span>(*head-&gt;data);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 数据安全移动后，再弹出节点。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">pop_head</span>();</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::unique_ptr&lt;node&gt; <span class="title">try_pop_head</span><span class="params">()</span> <span class="comment">// 尝试弹出头节点，返回节点指针。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 锁定 head_mutex。</span></span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">head_lock</span><span class="params">(head_mutex)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 执行线程安全的“空队列”检查 (锁顺序 head -&gt; tail)。</span></span><br><span class="line">    <span class="keyword">if</span>(head.<span class="built_in">get</span>() == <span class="built_in">get_tail</span>())</span><br><span class="line">    {</span><br><span class="line">      <span class="keyword">return</span> std::<span class="built_in">unique_ptr</span>&lt;node&gt;(); <span class="comment">// 返回 nullptr</span></span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 队列非空，在锁保护下弹出。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">pop_head</span>();</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::unique_ptr&lt;node&gt; <span class="title">try_pop_head</span><span class="params">(T&amp; value)</span> <span class="comment">// 尝试弹出头节点，将数据移入 'value'。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 锁定 head_mutex。</span></span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">head_lock</span><span class="params">(head_mutex)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 执行线程安全的“空队列”检查。</span></span><br><span class="line">    <span class="keyword">if</span>(head.<span class="built_in">get</span>() == <span class="built_in">get_tail</span>())  <span class="comment">// 锁的固定顺序 head -&gt; tail , 避免死锁</span></span><br><span class="line">    {</span><br><span class="line">      <span class="keyword">return</span> std::<span class="built_in">unique_ptr</span>&lt;node&gt;(); <span class="comment">// 返回 nullptr</span></span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. (关键：异常安全) 先移动数据，再弹出节点。</span></span><br><span class="line">    <span class="comment">//    理由同 wait_pop_head(T&amp; value)。</span></span><br><span class="line">    value = std::<span class="built_in">move</span>(*head-&gt;data);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 4. 弹出节点。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">pop_head</span>();</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">  <span class="built_in">threadsafe_queue</span>():</span><br><span class="line">    <span class="built_in">head</span>(<span class="keyword">new</span> node), <span class="built_in">tail</span>(head.<span class="built_in">get</span>()) <span class="comment">// 初始化时创建哑节点, head 和 tail 指向它</span></span><br><span class="line">  {}</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 禁止拷贝和赋值, 因为有独占所有权的指针成员和互斥量成员</span></span><br><span class="line">  <span class="built_in">threadsafe_queue</span>(<span class="type">const</span> threadsafe_queue&amp; other) = <span class="keyword">delete</span>;</span><br><span class="line">  threadsafe_queue&amp; <span class="keyword">operator</span>=(<span class="type">const</span> threadsafe_queue&amp; other) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// --- 公共接口 (Public Interface) ---</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T new_value)</span> </span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// --- 1. 锁外准备 (性能优化) ---</span></span><br><span class="line">    <span class="comment">// 在锁外创建 T 的实例 (make_shared) 和新节点 (new node)。</span></span><br><span class="line">    <span class="comment">// 内存分配是耗时操作，不应在锁内执行。</span></span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="title">new_data</span><span class="params">(std::make_shared&lt;T&gt;(std::move(new_value)))</span></span>;  </span><br><span class="line">    <span class="function">std::unique_ptr&lt;node&gt; <span class="title">p</span><span class="params">(<span class="keyword">new</span> node)</span></span>; <span class="comment">// 新的哑节点</span></span><br><span class="line">    node* <span class="type">const</span> new_tail = p.<span class="built_in">get</span>(); <span class="comment">// 保存新节点的原始指针</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 2. 锁内操作 (快速) ---</span></span><br><span class="line">    {</span><br><span class="line">      <span class="comment">// 只锁定 tail_mutex, push 操作与 pop 操作 (锁 head_mutex) 可以并发。</span></span><br><span class="line">      <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">tail_lock</span><span class="params">(tail_mutex)</span></span>;</span><br><span class="line">      tail-&gt;data = new_data;  <span class="comment">// 将数据 *填充* 到 *当前的* 虚拟节点中</span></span><br><span class="line">      tail-&gt;next = std::<span class="built_in">move</span>(p);  <span class="comment">// 将 *新的* 虚拟节点链接到链表末尾, 所有权转移</span></span><br><span class="line">      tail = new_tail;  <span class="comment">// 更新 tail 指针指向新的虚拟节点</span></span><br><span class="line">    } <span class="comment">// tail_lock 在此释放</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 3. 通知 (锁外) ---</span></span><br><span class="line">    data_cond.<span class="built_in">notify_one</span>();</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">wait_and_pop</span><span class="params">()</span> <span class="comment">// 等待并弹出一个元素，返回 std::shared_ptr。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 调用辅助函数，它会阻塞直到有数据，并安全地弹出一个节点, 返回旧头节点。</span></span><br><span class="line">    std::unique_ptr&lt;node&gt; <span class="type">const</span> old_head = <span class="built_in">wait_pop_head</span>();  <span class="comment">// 现在old_head管理旧头节点的所有权</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 从弹出的节点中返回数据。  </span></span><br><span class="line">    <span class="keyword">return</span> old_head-&gt;data;</span><br><span class="line">  } <span class="comment">// (RAII: old_head 在此销毁，自动 delete 节点)</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">wait_and_pop</span><span class="params">(T&amp; value)</span> <span class="comment">// 等待并弹出一个元素，通过引用写入 'value'。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 调用异常安全的辅助函数。</span></span><br><span class="line">    <span class="comment">//    数据在 wait_pop_head(value) 内部已经被移入 'value'。</span></span><br><span class="line">    std::unique_ptr&lt;node&gt; <span class="type">const</span> old_head = <span class="built_in">wait_pop_head</span>(value);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. (RAII: old_head 在此销毁，自动 delete 节点)</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">try_pop</span><span class="params">()</span> <span class="comment">// 尝试弹出头元素，返回 std::shared_ptr&lt;T&gt;。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 调用辅助函数。old_head 要么是弹出的节点，要么是 nullptr。</span></span><br><span class="line">    std::unique_ptr&lt;node&gt; old_head = <span class="built_in">try_pop_head</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 在锁外检查结果并返回数据 (或空指针)。</span></span><br><span class="line">    <span class="keyword">return</span> old_head ? old_head-&gt;data : std::<span class="built_in">shared_ptr</span>&lt;T&gt;();</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">bool</span> <span class="title">try_pop</span><span class="params">(T&amp; value)</span> <span class="comment">// 尝试弹出头元素，通过引用写入 'value'。</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 调用异常安全的辅助函数。</span></span><br><span class="line">    std::unique_ptr&lt;node&gt; <span class="type">const</span> old_head = <span class="built_in">try_pop_head</span>(value);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 利用 unique_ptr 到 bool 的隐式转换返回成功与否。</span></span><br><span class="line">    <span class="comment">//    (true: old_head 非空, 弹出成功; false: old_head 为空, 队列空)</span></span><br><span class="line">    <span class="keyword">return</span> old_head;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="comment">// 公共接口, 检查队列是否为空</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 1. 锁定 head_mutex。</span></span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">head_lock</span><span class="params">(head_mutex)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 执行与 pop 操作 *完全一致* 的线程安全“空队列”检查。</span></span><br><span class="line">    <span class="keyword">return</span> (head.<span class="built_in">get</span>() == <span class="built_in">get_tail</span>());</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> #####
+流程一：入队（Push）</p>
+<ol type="1">
+<li><strong>锁外准备（性能优化）</strong></li>
+</ol>
+<ul>
+<li>创建 <code>shared_ptr&lt;T&gt; new_data</code>（指向待入队数据
+A）。</li>
+<li>创建 <code>std::unique_ptr&lt;node&gt; p</code>（指向新的空节点
+D2）。</li>
+<li>这些耗时操作在锁外完成，减少锁持有时间。</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>获取锁</strong></li>
+</ol>
+<ul>
+<li>仅获取
+<code>tail_mutex</code>：<code>std::lock_guard&lt;std::mutex&gt; tail_lock(tail_mutex);</code></li>
+</ul>
+<ol start="3" type="1">
+<li><strong>修改队列（锁内）</strong></li>
+</ol>
+<ul>
+<li><code>tail-&gt;data = new_data;</code>：将数据 A 填充到当前虚拟节点
+D1。</li>
+<li><code>tail-&gt;next = std::move(p);</code>：将 D1 链接到新的虚拟节点
+D2。</li>
+<li><code>tail = new_tail;</code>：更新 <code>tail</code> 指针指向
+D2。</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>释放锁与通知（锁外）</strong></li>
+</ol>
+<ul>
+<li>释放 <code>tail_mutex</code>。</li>
+<li><code>data_cond.notify_one();</code>：通知一个等待的消费者线程。</li>
+</ul>
+<hr>
+<h5 id="流程二非阻塞出队try_pop">流程二：非阻塞出队（try_pop）</h5>
+<ol type="1">
+<li><strong>调用辅助函数</strong></li>
+</ol>
+<ul>
+<li><code>try_pop()</code> 调用 <code>try_pop_head()</code>。</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>获取锁</strong></li>
+</ol>
+<ul>
+<li>获取
+<code>head_mutex</code>：<code>std::lock_guard&lt;std::mutex&gt; head_lock(head_mutex);</code></li>
+</ul>
+<ol start="3" type="1">
+<li><strong>安全检查（队列是否为空）</strong></li>
+</ol>
+<ul>
+<li><code>if(head.get() == get_tail())</code>：检查队列是否为空。
+<ul>
+<li><code>head.get()</code>（D1），<code>get_tail()</code>（D2，需临时获取
+<code>tail_mutex</code>）。</li>
+</ul></li>
+<li>锁顺序始终为 <code>head_mutex</code> →
+<code>tail_mutex</code>，避免死锁。</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>修改队列（锁内）</strong></li>
+</ol>
+<ul>
+<li>调用 <code>pop_head()</code>：
+<ul>
+<li><code>std::unique_ptr&lt;node&gt; old_head = std::move(head);</code></li>
+<li><code>head = std::move(old_head-&gt;next);</code>（head 指向
+D2）</li>
+</ul></li>
+</ul>
+<ol start="5" type="1">
+<li><strong>释放锁与返回（锁外）</strong></li>
+</ol>
+<ul>
+<li>释放 <code>head_mutex</code>。</li>
+<li>返回 <code>old_head-&gt;data</code>（即 A）。</li>
+</ul>
+<ol start="6" type="1">
+<li><strong>内存回收（RAII）</strong></li>
+</ol>
+<ul>
+<li><code>old_head</code> 在函数末尾被销毁，自动释放 D1 节点。</li>
+</ul>
+<hr>
+<h5 id="流程三阻塞出队wait_and_pop">流程三：阻塞出队（wait_and_pop）</h5>
+<ol type="1">
+<li><strong>进入等待</strong></li>
+</ol>
+<ul>
+<li>调用 <code>wait_pop_head(value)</code> →
+<code>wait_for_data()</code>。</li>
+<li>获取 <code>head_mutex</code>（<code>unique_lock</code>）。</li>
+<li><code>data_cond.wait(head_lock, ...)</code>：谓词为
+<code>head.get() != get_tail()</code>。</li>
+<li>若队列为空，自动释放 <code>head_mutex</code>，线程休眠。</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>生产者唤醒</strong></li>
+</ol>
+<ul>
+<li>另一个线程调用 <code>push(A)</code>，最后执行
+<code>data_cond.notify_one()</code>。</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>消费者苏醒</strong></li>
+</ol>
+<ul>
+<li>被唤醒后重新获取 <code>head_mutex</code>。</li>
+<li>再次检查谓词，队列已非空，继续执行。</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>安全弹出（锁内）</strong></li>
+</ol>
+<ul>
+<li>持有
+<code>head_mutex</code>，先移动数据：<code>value = std::move(*head-&gt;data);</code></li>
+<li>若移动赋值抛异常，节点未弹出，数据不丢失。</li>
+<li>调用 <code>pop_head()</code>，弹出节点。</li>
+</ul>
+<ol start="5" type="1">
+<li><strong>释放</strong></li>
+</ol>
+<ul>
+<li>释放 <code>head_mutex</code>。</li>
+<li><code>old_head</code>（unique_ptr）在函数结束时销毁，自动释放节点。</li>
+</ul>
+<hr>
+<p>总结:</p>
+<p>通过引入哑节点和分离的头尾锁，可以实现并发性能远超单锁版本的线程安全队列。push
+和 pop 在大部分情况下可以并行执行，显著提高了吞吐量。</p>
+<p>不过实现极其复杂，需要非常小心地处理锁的范围、边界条件（空队列）以及潜在的竞争条件（如
+pop_head 中的 get_tail 时机）。</p>
+<p>带有等待功能的版本（wait_and_pop）以及需要处理异常安全（特别是引用版本）时，复杂性进一步增加。</p>
+<p>这个例子充分展示了细粒度锁带来的性能优势和设计挑战。</p>
+<h2 id="基于锁设计更加复杂的数据结构">基于锁设计更加复杂的数据结构</h2>
+<p>在上一节中，我们深入探讨了相对简单的线性数据结构——栈和队列——的并发设计，从单锁演进到了细粒度锁。</p>
+<p>本节将目光转向更复杂、接口更多样化的数据结构，例如查找表（类似
+map）和链表（类似
+list）。设计这些结构面临着新的挑战，但也提供了更多的并发可能性。</p>
+<p>复杂数据结构的特点及与栈/队列的区别：</p>
+<ul>
+<li>栈/队列：<strong>接口相对固定</strong>（push, pop, empty
+等），主要用于特定的数据流模式。大多数操作都会<strong>修改结构</strong>。</li>
+<li>复杂结构 (Map, List, Tree 等)：
+<ul>
+<li><strong>支持更多样化的操作</strong>（查找、插入、删除、更新、遍历、获取大小等）。</li>
+<li>使用模式更灵活，通常<strong>读取操作可能远多于修改</strong>操作（例如查找表）。</li>
+<li><strong>内部结构</strong>可能更复杂（如树的平衡、哈希表的冲突链/开放寻址）。</li>
+</ul></li>
+</ul>
+<p>这种多样性带来了双重影响： - 更大的并发潜力： -
+操作不冲突的可能性增加：例如，在哈希表中，对不同桶的插入操作理论上可以完全并行。对同一个桶的多次读取操作也可以并行（如果使用读写锁）。
+-
+读多写少：查找表等结构通常读取远多于写入，这天然适合使用读写锁来允许多个读者并发。</p>
+<ul>
+<li>更高的设计难度：
+<ul>
+<li>保护更困难：需要仔细考虑所有可能的操作组合之间的相互影响。例如insert
+操作进行时，find 操作是否安全？delete 操作进行时，其他 delete 或 find
+是否安全？如果结构需要内部重组（如哈希表扩容、树再平衡），如何保证这些“全局”操作与其他“局部”操作的安全交互？</li>
+<li>接口设计更关键：需要更加警惕接口固有的条件竞争，并仔细设计迭代/遍历机制（这是并发容器的一大难点）。</li>
+</ul></li>
+</ul>
+<p>但不管怎么样, 两个原则依旧要遵守: -
+安全第一：必须保证不变量、接口安全、异常安全、避免死锁。 -
+追求并发：通过最小化锁的范围和持有时间，以及采用细粒度锁或读写锁等策略，来最大化并行执行的机会。
+### 编写一个使用锁的线程安全查询表</p>
+<p>查找表（也称为字典或映射），这是一种更常用的数据结构，用于关联<strong>键</strong>（Key）和<strong>值</strong>（Value）。C++标准库提供了
+<strong>std::map</strong>（基于树）和
+<strong>std::unordered_map</strong>（基于哈希表）。</p>
+<p>本节的核心是探讨如何设计一个线程安全且高并发的查找表。</p>
+<h4 id="查找表的特点与挑战">查找表的特点与挑战</h4>
+<ul>
+<li>读多写少：查找表通常被查询（读取）的频率远高于插入、更新或删除（写入）的频率。</li>
+<li>接口更复杂：除了基本的增删改查，还可能需要检查空、获取大小、甚至遍历。</li>
+</ul>
+<p>主要挑战则在于接口设计与并发性：std::map 和 std::unordered_map
+的<strong>接口严重依赖迭代器</strong> (Iterators)。</p>
+<p>然而在<strong>并发环境</strong>下，<strong>迭代器非常危险</strong>。当一个线程持有指向某个元素的迭代器时，另一个线程可能删除该元素，导致迭代器失效
+(Invalidation)，继续使用它会导致未定义行为。要安全地管理并发迭代器极其困难，通常需要迭代器自身也持有锁，但这会带来新的复杂性和死锁风险。</p>
+<p>为了简化设计并保证安全，本节实现的线程安全查找表不提供传统意义上的迭代器接口。遍历等操作需要通过其他方式（如内部迭代函数或快照）实现。</p>
+<h4 id="基本操作与接口设计">基本操作与接口设计</h4>
+<p>一个基本的线程安全查找表需要支持以下操作：</p>
+<ul>
+<li><p>添加/更新键值对：</p>
+<ul>
+<li>接口竞争：如果提供单独的 add(key, value) 和 update(key, value)
+函数，或者 if (!find(key)) add(key, value); 这样的用户代码模式，都会存在
+TOCTTOU 竞争。</li>
+<li>解决方案：提供一个原子的 <strong>add_or_update_mapping(key,
+value)</strong> 操作, 将添加和更新合并为一个操作,
+从而避免条件竞争(在锁内进行检查和修改)。</li>
+</ul></li>
+<li><p>删除键值对：remove_mapping(key)。</p></li>
+<li><p>查找值：value_for(key, default_value)。</p>
+<ul>
+<li>接口选择：当键不存在时如何处理？
+<ul>
+<li>返回默认值（如本节实现）。</li>
+<li>返回 <code>std::optional&lt;Value&gt;</code> (C++17) 或
+<code>std::pair&lt;Value, bool&gt;</code>。</li>
+<li>返回智能指针
+(<code>std::shared_ptr&lt;Value&gt;</code>)，不存在时返回 nullptr。</li>
+<li>安全原则：绝不能返回
+Value&amp;（值的引用），因为这会违反第3章的原则（不允许受保护数据的引用泄漏出锁的作用域）。</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4 id="并发策略从单锁到细粒度锁">并发策略：从单锁到细粒度锁</h4>
+<p>设计线程安全查找表的第一步是选择合适的并发控制策略。这里介绍两种常见策略：</p>
+<p>策略 1：<strong>单锁</strong> (Single Lock), 使用一个 std::mutex 或
+std::shared_mutex 保护整个查找表。 -
+优点：实现简单，易于保证线程安全。使用 shared_mutex 可以允许多个
+value_for (<strong>读操作</strong>) 并发执行。 -
+缺点：写操作（add_or_update,
+remove）被完全序列化。在任何时刻，最多只有一个线程能修改表，这在高写入负载下会成为严重瓶颈。</p>
+<p>策略 2：<strong>细粒度锁</strong> (Fine-grained Locking) - 本节重点 -
+目标：允许多个写操作（只要它们<strong>不冲突</strong>）和读写操作并发执行。
+- 如何实现？ 需要选择合适的底层数据结构,
+从而可以构建<strong>分离的锁</strong>保护<strong>不同部分的数据</strong>。
+- 二叉搜索树
+(BST)：不适合。所有操作（查找、插入、删除）通常都需要从<strong>根节点</strong>开始，<strong>根节点会成为锁竞争的瓶颈</strong>。即使使用“手递手”锁，效果也不理想。
+-
+有序数组：更不适合。插入和删除可能需要<strong>移动大量元素</strong>，几乎总是需要锁住整个数组。
+- 哈希表 (Hash Table)：将数据分散到多个桶 (Buckets) 中,
+<strong>每个桶可以独立锁定</strong>。 -
+并发优势：操作（增删改查）通常只影响一个桶。因此，我们可以为每个桶分配各自的锁。
+- 效果：对不同桶的操作可以完全并行执行！</p>
+<h4 id="细粒度锁哈希表的实现">细粒度锁哈希表的实现</h4>
+<p>下面是一个使用细粒度锁实现的线程安全查找表的示例代码。该查找表基于哈希表结构，每个桶都有自己的读写锁，允许多个读者并发访问同一个桶，同时确保写操作的独占性。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> Value, <span class="keyword">typename</span> Hash=std::hash&lt;Key&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> threadsafe_lookup_table {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 内部类：代表哈希表的一个桶</span></span><br><span class="line">    <span class="keyword">class</span> bucket_type {</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">typedef</span> std::pair&lt;Key, Value&gt; bucket_value;</span><br><span class="line">        <span class="keyword">typedef</span> std::list&lt;bucket_value&gt; bucket_data; <span class="comment">// 桶内使用链表处理哈希冲突</span></span><br><span class="line">        <span class="keyword">typedef</span> <span class="keyword">typename</span> bucket_data::iterator bucket_iterator; <span class="comment">// 桶内元素迭代器, 即指向链表节点的指针</span></span><br><span class="line"></span><br><span class="line">        bucket_data data;  <span class="comment">// 桶内存储的键值对链表</span></span><br><span class="line">        <span class="keyword">mutable</span> boost::shared_mutex mutex; <span class="comment">// 1. 每个桶有自己的读写锁！</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 查找桶内元素的辅助函数 (假设已加锁)</span></span><br><span class="line">        <span class="function">bucket_iterator <span class="title">find_entry_for</span><span class="params">(Key <span class="type">const</span>&amp; key)</span> <span class="type">const</span></span>{</span><br><span class="line">          <span class="keyword">return</span> std::<span class="built_in">find_if</span>(data.<span class="built_in">begin</span>(),data.<span class="built_in">end</span>(),</span><br><span class="line">                  [&amp;](bucket_value <span class="type">const</span>&amp; item) {<span class="keyword">return</span> item.first==key;}</span><br><span class="line">          );</span><br><span class="line">        }</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="comment">// 读操作：查找值</span></span><br><span class="line">        <span class="function">Value <span class="title">value_for</span><span class="params">(Key <span class="type">const</span>&amp; key, Value <span class="type">const</span>&amp; default_value)</span> <span class="type">const</span> </span>{</span><br><span class="line">            <span class="function">boost::shared_lock&lt;boost::shared_mutex&gt; <span class="title">lock</span><span class="params">(mutex)</span></span>; <span class="comment">// 3. 获取桶的【共享锁】</span></span><br><span class="line">            bucket_iterator <span class="type">const</span> found_entry = <span class="built_in">find_entry_for</span>(key); <span class="comment">// 查找元素, 返回迭代器</span></span><br><span class="line">            <span class="keyword">return</span> (found_entry == data.<span class="built_in">end</span>()) ? default_value : found_entry-&gt;second; <span class="comment">// 返回值或默认值</span></span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 写操作：添加或更新</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">add_or_update_mapping</span><span class="params">(Key <span class="type">const</span>&amp; key, Value <span class="type">const</span>&amp; value)</span> </span>{</span><br><span class="line">            <span class="function">std::unique_lock&lt;boost::shared_mutex&gt; <span class="title">lock</span><span class="params">(mutex)</span></span>; <span class="comment">// 4. 获取桶的【独占锁】</span></span><br><span class="line">            bucket_iterator <span class="type">const</span> found_entry = <span class="built_in">find_entry_for</span>(key);</span><br><span class="line">            <span class="keyword">if</span> (found_entry == data.<span class="built_in">end</span>()) {</span><br><span class="line">                data.<span class="built_in">push_back</span>(<span class="built_in">bucket_value</span>(key, value));  <span class="comment">// 如果不存在则添加新键值对</span></span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                found_entry-&gt;second = value; <span class="comment">// 如果存在则更新值</span></span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 写操作：删除</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">remove_mapping</span><span class="params">(Key <span class="type">const</span>&amp; key)</span> </span>{</span><br><span class="line">            <span class="function">std::unique_lock&lt;boost::shared_mutex&gt; <span class="title">lock</span><span class="params">(mutex)</span></span>; <span class="comment">// 5. 获取桶的【独占锁】</span></span><br><span class="line">            bucket_iterator <span class="type">const</span> found_entry = <span class="built_in">find_entry_for</span>(key);</span><br><span class="line">            <span class="keyword">if</span> (found_entry != data.<span class="built_in">end</span>()) {</span><br><span class="line">                data.<span class="built_in">erase</span>(found_entry);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }; <span class="comment">// bucket_type 结束</span></span><br><span class="line"></span><br><span class="line">    std::vector&lt;std::unique_ptr&lt;bucket_type&gt;&gt; buckets; <span class="comment">// 6. 存储所有桶的 vector, 以指针形式管理</span></span><br><span class="line">    Hash hasher; <span class="comment">// 哈希函数对象, 重载了 operator()</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据 Key 获取对应的桶 (无锁操作)</span></span><br><span class="line">    <span class="function">bucket_type&amp; <span class="title">get_bucket</span><span class="params">(Key <span class="type">const</span>&amp; key)</span> <span class="type">const</span> </span>{ <span class="comment">// 7</span></span><br><span class="line">        std::<span class="type">size_t</span> <span class="type">const</span> bucket_index = <span class="built_in">hasher</span>(key) % buckets.<span class="built_in">size</span>();  <span class="comment">//  计算桶索引</span></span><br><span class="line">        <span class="keyword">return</span> *buckets[bucket_index];  <span class="comment">// 返回对应桶的引用</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 构造函数：创建指定数量的桶</span></span><br><span class="line">    <span class="built_in">threadsafe_lookup_table</span>(<span class="type">unsigned</span> num_buckets = <span class="number">19</span>, <span class="comment">/* ... */</span>) : <span class="built_in">buckets</span>(num_buckets), <span class="comment">/* ... */</span> {</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">unsigned</span> i = <span class="number">0</span>; i &lt; num_buckets; ++i) {</span><br><span class="line">            buckets[i].<span class="built_in">reset</span>(<span class="keyword">new</span> bucket_type); <span class="comment">// 初始化每个桶. 这里的reset函数将unique_ptr指向新创建的bucket_type对象</span></span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 禁止拷贝和赋值</span></span><br><span class="line">    <span class="built_in">threadsafe_lookup_table</span>(<span class="type">const</span> threadsafe_lookup_table&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    threadsafe_lookup_table&amp; <span class="keyword">operator</span>=(<span class="type">const</span> threadsafe_lookup_table&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 公共接口：委托给对应的桶</span></span><br><span class="line">    <span class="function">Value <span class="title">value_for</span><span class="params">(Key <span class="type">const</span>&amp; key, Value <span class="type">const</span>&amp; default_value = Value())</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">get_bucket</span>(key).<span class="built_in">value_for</span>(key, default_value); <span class="comment">// 先通过 get_bucket 获取桶, 再调用桶的 value_for </span></span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">add_or_update_mapping</span><span class="params">(Key <span class="type">const</span>&amp; key, Value <span class="type">const</span>&amp; value)</span> </span>{</span><br><span class="line">        <span class="built_in">get_bucket</span>(key).<span class="built_in">add_or_update_mapping</span>(key, value); </span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">remove_mapping</span><span class="params">(Key <span class="type">const</span>&amp; key)</span> </span>{</span><br><span class="line">        <span class="built_in">get_bucket</span>(key).<span class="built_in">remove_mapping</span>(key); </span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ... 可能的其他接口，如 get_map() ...</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 核心设计：</p>
+<ul>
+<li>threadsafe_lookup_table 包含一个 std::vector ，其中存储了固定数量的
+bucket_type 实例（通过 unique_ptr 管理）。</li>
+<li>get_bucket(key) 使用哈希函数 hasher 计算键 key
+应该属于哪个桶，并返回该桶的引用。这个定位过程是无锁的，因为 buckets
+向量在构造后是只读的。真正的锁在 bucket_type 内部。每个桶有自己独立的
+boost::shared_mutex (或 std::shared_mutex)。</li>
+<li>查找表的三个公共接口只是简单地调用 get_bucket
+定位到正确的桶，然后调用该桶的相应成员函数（value_for,
+add_or_update_mapping, remove_mapping）。</li>
+<li>桶内操作：
+<ul>
+<li>value_for (读) 获取桶的共享锁。</li>
+<li>add_or_update_mapping / remove_mapping (写) 获取桶的独占锁。</li>
+<li>桶内部使用 std::list 来处理哈希冲突（链地址法）。</li>
+</ul></li>
+</ul>
+<p>并发性分析：极高。 -
+对不同桶的操作（无论是读还是写）可以完全并行执行，因为它们获取的是不同的锁。
+- 对同一个桶的多个读操作 (value_for)
+也可以并行执行，因为它们获取的是共享锁。 - 只有对同一个桶的写操作
+(add_or_update, remove) 或读写混合操作才需要互斥（通过独占锁）。 -
+并发度大约与桶的数量成正比。</p>
+<p>异常安全分析：基本异常安全。 - value_for：只读，安全。 -
+remove_mapping：std::list::erase 对迭代器通常是 noexcept 的，安全。 -
+add_or_update_mapping： - push_back：std::list::push_back
+提供强异常保证，安全。 - found_entry-&gt;second = value：如果 Value
+的拷贝赋值运算符抛异常，桶内链表的状态可能只更新了一半（如果 Value
+是复杂类型），但这不影响数据结构的整体一致性，由用户负责 Value
+类型的异常安全。</p>
+<p>有时,
+还需要获取整个查找表的一致性快照（例如，用于序列化或调试）。此时需要<strong>同时阻止对所有桶的修改</strong>，才能获得一个<strong>原子性的快照</strong>。</p>
+<p>具体实现: 1. 创建一个
+<code>std::vector&lt;std::unique_lock&lt;boost::shared_mutex&gt;&gt; locks;</code>,
+用于存储所有桶的锁。 2. 按固定顺序（例如，桶的索引从 0 到 N-1）遍历
+buckets 向量。 3. 对每一个桶的 mutex 创建一个
+std::unique_lock（获取独占锁）并添加到 locks
+向量中。现在所有桶都被锁定了。 4. 创建一个新的
+<code>std::map&lt;Key, Value&gt; res;</code>, 用于存储快照结果。 5.
+遍历所有桶，将每个桶 list 中的所有键值对 insert 到 res 中。 6. 函数返回
+res。当函数退出时，locks 向量析构，所有 unique_lock
+析构，所有桶的锁被自动释放。</p>
+<blockquote>
+<p>死锁避免：必须按<strong>固定顺序</strong>（如索引顺序）<strong>获取所有桶的锁</strong>。如果两个线程同时尝试获取快照，它们会按相同顺序请求锁，最多只有一个线程会阻塞，不会发生死锁。</p>
+</blockquote>
+<p>总结:</p>
+<p>基于<strong>哈希表</strong>和<strong>桶级细粒度锁</strong>（特别是读写锁）是实现高并发线程安全查找表的有效策略。它通过将锁的范围限制在单个桶内，极大地提高了并发度，允许对不同桶的操作完全并行。相比单锁实现，并发性能得到了显著提升。</p>
+<p>不过需要仔细处理接口设计（避免迭代器）、哈希冲突（如使用链表）以及需要全局一致性的操作（如快照，需锁住所有桶并注意死锁）。</p>
+<h3 id="编写一个使用锁的线程安全链表">编写一个使用锁的线程安全链表</h3>
+<p>继查找表之后，本节将探讨另一种基础但重要的数据结构——链表 (Linked
+List) 的并发设计。链表的设计，特别是涉及到迭代 (Iteration)
+时，面临着与哈希表截然不同的挑战。</p>
+<p>与哈希表相似, 链表的核心挑战依旧是并发环境下的迭代器 -
+链表特性：链表的操作（插入、删除、查找）通常需要<strong>遍历节点</strong>。
+- 标准迭代器的问题： - 失效
+(Invalidation)：标准库迭代器通常持有指向容器内部节点的指针或引用。如果一个线程持有迭代器
+it 指向节点 N，而另一个线程删除了节点 N，迭代器 it
+就失效了。继续使用失效的迭代器是未定义行为。 -
+生命周期与锁：要使迭代器在并发环境下安全，迭代器本身可能需要持有它所指向（或将要访问）节点的锁。但这极大地增加了复杂性：
+-
+<strong>迭代器的生命周期通常独立于容器的操作</strong>，管理锁的释放变得困难。
+-
+持有锁时间过长：如果迭代器在其整个生命周期内都持有锁，会严重阻塞其他线程。</p>
+<p>结论：直接暴露标准库风格的迭代器对于并发链表来说极其危险且难以正确实现。</p>
+<p>一种避免暴露迭代器的策略是提供成员函数来进行迭代，例如
+for_each，它接受一个用户提供的函数 f，并在内部为链表中的每个元素调用
+f。</p>
+<p>优点在于容器内部可以管理遍历过程中的锁，用户不需要直接处理迭代器和锁。</p>
+<p>主要缺点 (严重)： - 违反死锁指导原则：for_each
+必须在持有内部锁（至少是当前节点的锁）的情况下，<strong>调用用户提供的代码</strong>
+(f)。如果用户代码 f
+尝试获取其他锁（甚至是同一个链表上其他操作所需的锁），就可能导致死锁。 -
+引用传递风险：为了让用户代码 f 能够操作元素，for_each
+通常需要将<strong>元素的引用传递给
+f</strong>。如果用户代码保存了这个引用，并在 for_each
+调用结束后（锁已释放）再去访问它，就会发生数据竞争。 -
+拷贝开销：可以通过传<strong>递元素的拷贝给 f</strong>
+来避免引用风险，但这对于大型或昂贵的对象来说开销可能过大。</p>
+<p>结论：虽然可行，但这种方法将避免死锁和数据竞争的责任推给了用户，使得接口不够安全和易用。</p>
+<p>最终,
+为了在允许一定并发性的同时安全地支持遍历和修改，本节采用了<strong>节点级锁</strong>结合“<strong>手递手</strong>”锁定的策略。</p>
+<ul>
+<li>节点级锁 (Node-Level
+Locking)：每一个<strong>链表节点内部都包含自己的
+std::mutex</strong>。</li>
+<li>“手递手”锁定 (<strong>Hand-over-Hand</strong> / Lock
+Coupling)：在遍历链表时，线程的操作流程如下：
+<ul>
+<li>持有当前节点 current 的锁。</li>
+<li>找到下一个节点 next。</li>
+<li>锁住 next 节点的锁。</li>
+<li>解锁 current 节点的锁。（关键步骤！）</li>
+<li>现在 next 节点成为新的 current 节点，继续遍历。</li>
+</ul></li>
+</ul>
+<p>效果：就像爬绳子时“一只手抓住上面，另一只手才松开下面”一样，线程在<strong>移动到下一个节点之前</strong>，会<strong>同时持有当前</strong>和<strong>下一个节点的锁</strong>，然后<strong>释放前一个</strong>。这保证了遍历过程的连续性和安全性，同时允许多个线程在链表的不同位置并发地进行遍历或修改。</p>
+<h4 id="细粒度锁链表的实现">细粒度锁链表的实现</h4>
+<p>下面是一个使用节点级锁和手递手锁定策略实现的线程安全链表的示例代码。该链表支持基本的插入、删除和查找操作，同时允许安全地遍历链表。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">threadsafe_list</span></span><br><span class="line">{</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span>  <span class="comment">// 1. 节点结构</span></span><br><span class="line">  {</span><br><span class="line">    std::mutex m; <span class="comment">// 每个节点都有自己的锁</span></span><br><span class="line">    std::shared_ptr&lt;T&gt; data; <span class="comment">// 使用 shared_ptr 管理数据</span></span><br><span class="line">    std::unique_ptr&lt;node&gt; next; <span class="comment">// 使用 unique_ptr 管理下一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">node</span>() : <span class="built_in">next</span>() {} <span class="comment">// 2. 哑节点的构造</span></span><br><span class="line">    <span class="built_in">node</span>(T <span class="type">const</span>&amp; value) : <span class="built_in">data</span>(std::<span class="built_in">make_shared</span>&lt;T&gt;(value)) {} <span class="comment">// 3. 数据节点的构造</span></span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  node head; <span class="comment">// 哑/哨兵头节点 (简化边界处理)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">threadsafe_list</span>() {}</span><br><span class="line">  ~<span class="built_in">threadsafe_list</span>() { <span class="built_in">remove_if</span>([](node <span class="type">const</span>&amp;){ <span class="keyword">return</span> <span class="literal">true</span>; }); } <span class="comment">// 清理</span></span><br><span class="line">  <span class="comment">// 禁止拷贝和赋值</span></span><br><span class="line">  <span class="built_in">threadsafe_list</span>(threadsafe_list <span class="type">const</span>&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  threadsafe_list&amp; <span class="keyword">operator</span>=(threadsafe_list <span class="type">const</span>&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 添加到头部</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push_front</span><span class="params">(T <span class="type">const</span>&amp; value)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::unique_ptr&lt;node&gt; <span class="title">new_node</span><span class="params">(<span class="keyword">new</span> node(value))</span></span>;  <span class="comment">// 4. 锁外分配</span></span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(head.m)</span></span>; <span class="comment">// 只锁头节点</span></span><br><span class="line">    new_node-&gt;next = std::<span class="built_in">move</span>(head.next);  <span class="comment">// 5. 链接</span></span><br><span class="line">    head.next = std::<span class="built_in">move</span>(new_node);  <span class="comment">// 6. 更新头指针</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 内部迭代：为每个元素调用 f</span></span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Function&gt;</span></span><br><span class="line"><span class="function">  <span class="type">void</span> <span class="title">for_each</span><span class="params">(Function f)</span> <span class="comment">// 7</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    node* current = &amp;head;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(head.m)</span></span>; <span class="comment">// 8. 初始锁住头节点</span></span><br><span class="line">    <span class="keyword">while</span>(node* <span class="type">const</span> next = current-&gt;next.<span class="built_in">get</span>()) <span class="comment">// 9. 找到下一个节点</span></span><br><span class="line">    {</span><br><span class="line">      <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">next_lk</span><span class="params">(next-&gt;m)</span></span>; <span class="comment">// 10. 锁住下一个节点</span></span><br><span class="line">      lk.<span class="built_in">unlock</span>();  <span class="comment">// 11. 解锁当前节点 (Hand-over-Hand!)</span></span><br><span class="line">      <span class="built_in">f</span>(*next-&gt;data); <span class="comment">// 12. 调用用户函数 (只持有 next 节点的锁)</span></span><br><span class="line">      current = next; <span class="comment">// 前进</span></span><br><span class="line">      lk = std::<span class="built_in">move</span>(next_lk); <span class="comment">// 13. 将 next_lk 的所有权转移给 lk，准备下次循环</span></span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 内部查找：找到第一个满足 p 的元素</span></span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Predicate&gt;</span></span><br><span class="line"><span class="function">  std::shared_ptr&lt;T&gt; <span class="title">find_first_if</span><span class="params">(Predicate p)</span> <span class="comment">// 14</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    node* current = &amp;head;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(head.m)</span></span>;</span><br><span class="line">    <span class="keyword">while</span>(node* <span class="type">const</span> next = current-&gt;next.<span class="built_in">get</span>())</span><br><span class="line">    {</span><br><span class="line">      <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">next_lk</span><span class="params">(next-&gt;m)</span></span>;</span><br><span class="line">      lk.<span class="built_in">unlock</span>();</span><br><span class="line">      <span class="keyword">if</span>(<span class="built_in">p</span>(*next-&gt;data)) <span class="comment">// 15. 检查条件 (只持有 next 节点的锁)</span></span><br><span class="line">      {</span><br><span class="line">         <span class="keyword">return</span> next-&gt;data; <span class="comment">// 16. 找到，返回数据 (shared_ptr)</span></span><br><span class="line">      }</span><br><span class="line">      current = next;</span><br><span class="line">      lk = std::<span class="built_in">move</span>(next_lk);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">shared_ptr</span>&lt;T&gt;(); <span class="comment">// 未找到</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 内部删除：删除所有满足 p 的元素</span></span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Predicate&gt;</span></span><br><span class="line"><span class="function">  <span class="type">void</span> <span class="title">remove_if</span><span class="params">(Predicate p)</span> <span class="comment">// 17</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    node* current = &amp;head;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(head.m)</span></span>; <span class="comment">// 锁住当前节点 (初始是 head)</span></span><br><span class="line">    <span class="keyword">while</span>(node* <span class="type">const</span> next = current-&gt;next.<span class="built_in">get</span>())</span><br><span class="line">    {</span><br><span class="line">      <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">next_lk</span><span class="params">(next-&gt;m)</span></span>; <span class="comment">// 锁住下一个节点</span></span><br><span class="line">      <span class="keyword">if</span>(<span class="built_in">p</span>(*next-&gt;data)) <span class="comment">// 18. 检查条件</span></span><br><span class="line">      {</span><br><span class="line">        <span class="comment">// 需要删除 next 节点</span></span><br><span class="line">        std::unique_ptr&lt;node&gt; old_next = std::<span class="built_in">move</span>(current-&gt;next); <span class="comment">// 从 current 断开 next, 此时 old_next 拥有 next 的所有权</span></span><br><span class="line">        current-&gt;next = std::<span class="built_in">move</span>(next-&gt;next); <span class="comment">// current 跳过 next，指向 next 的下一个</span></span><br><span class="line">        next_lk.<span class="built_in">unlock</span>(); <span class="comment">// 19. 解锁要删除的节点 next</span></span><br><span class="line">        <span class="comment">// old_next 在离开作用域时会自动删除节点 (20)</span></span><br><span class="line">      }</span><br><span class="line">      <span class="keyword">else</span> <span class="comment">// 不需要删除 next 节点</span></span><br><span class="line">      {</span><br><span class="line">        lk.<span class="built_in">unlock</span>(); <span class="comment">// 21. 解锁当前节点 (Hand-over-Hand)</span></span><br><span class="line">        current = next; <span class="comment">// 前进</span></span><br><span class="line">        lk = std::<span class="built_in">move</span>(next_lk); <span class="comment">// 移动锁所有权</span></span><br><span class="line">      }</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> - node 结构 (①)：关键在于 std::mutex
+m，每个节点都有自己的锁。使用 <code>shared_ptr&lt;T&gt;</code>
+存数据，便于安全返回和管理生命周期。<code>unique_ptr&lt;node&gt;</code>
+管理节点所有权。</p>
+<ul>
+<li><p>head 哑节点：构造函数创建了一个 head 节点 (②)，它本身不存数据
+(data 为空)，作为链表的起点。这简化了 push_front
+和遍历的逻辑，无需特殊处理空链表或头节点插入/删除。</p></li>
+<li><p>push_front (④, ⑤, ⑥)：实现简单高效。<strong>只需锁住 head
+节点</strong>，修改 head.next 和新节点的 next
+即可。分配节点在锁外完成。</p></li>
+<li><p>for_each (⑦ - ⑬)：完美体现了“手递手”锁定。注意在调用用户函数 f
+(⑫) 之前解锁了 current 节点 (⑪)，调用 f 时只持有 next
+节点的锁，减小了持有锁的时间和潜在的死锁风险（如果 f
+内部访问链表，只会与当前节点的操作冲突）。</p></li>
+<li><p>find_first_if (⑭ - ⑯)：与 for_each
+逻辑类似，但找到匹配项后立即返回 (⑯)。返回
+<code>shared_ptr&lt;T&gt;</code>
+保证了即使节点稍后被删除，返回的数据指针仍然有效。</p></li>
+<li><p>remove_if (⑰ - ㉑)：最复杂的操作,
+但同样遵循“手递手”锁定模式。</p>
+<ul>
+<li>当需要删除 next 节点时 (⑱)，它必须持有 current 节点的锁
+(lk)，因为它需要修改 current-&gt;next 来跳过 next 节点。</li>
+<li>它也持有 next 节点的锁 (next_lk) 来安全地读取 next-&gt;next。</li>
+<li>修改完 current-&gt;next 后，立即解锁 next_lk (⑲)。</li>
+<li>节点的实际删除 (⑳) 发生在 old_next (一个 unique_ptr)
+离开作用域时，此时 next 节点的锁已释放。</li>
+<li>安全性：虽然 next 节点的锁在节点被删除前释放了，但由于修改
+current-&gt;next 的操作是在持有 lk（current
+的锁）的情况下完成的，没有其他线程可以通过 current 到达那个即将被删除的
+next 节点。后续的遍历会直接跳过它。</li>
+<li>如果不需要删除 (㉑)，则执行与 for_each
+相同的“手递手”解锁和前进。</li>
+</ul></li>
+</ul>
+<h4 id="安全性与并发性分析">安全性与并发性分析</h4>
+<p>安全性： - 数据竞争：通过节点级锁和手递手策略避免了对节点内部数据和
+next 指针的竞争。 -
+死锁：由于总是按<strong>从头到尾的顺序获取锁</strong>，不可能出现循环等待，不会发生死锁（前提是用户提供的
+f 或 p 不会尝试以不兼容的方式锁住链表）。 -
+迭代器失效：通过内部迭代函数避免了传统迭代器失效问题。</p>
+<p>并发性： -
+优点：允许多个线程在链表的不同部分并发操作。例如，线程A可以在链表前端
+push_front，同时线程B在链表中部执行 find_first_if，线程C在链表尾部执行
+remove_if（只要它们操作的节点不重叠或不相邻太近）。这远优于单锁实现。 -
+缺点/瓶颈：“手递手”锁定本质上仍然是顺序依赖的。如果一个线程在<strong>处理某个节点时</strong>花费了很长时间（例如，用户函数
+f
+很慢），它会<strong>阻塞</strong>所有想要通过该节点的其他线程（无论是向前还是尝试从更前面追赶）。它提高了并发度，但并<strong>不能实现完全的并行访问</strong>。</p>
+<p>总结:</p>
+<p>基于节点级锁和“手递手”策略的线程安全链表是一种在安全性和并发性之间取得较好平衡的方案。它通过细粒度锁显著提高了并发潜力，允许多线程在链表不同区域同时工作;
+通过内部迭代函数避免了传统迭代器的并发安全问题;
+它通过固定的加锁顺序避免了死锁。</p>
+<p>其主要局限在于手递手锁定带来的顺序瓶颈，一个慢操作会阻塞后续线程。并且这种设计的复杂性也远高于单锁实现。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/language/">#language</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/3.%20%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E6%93%8D%E4%BD%9C/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">3. 线程间的等待与通知</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/4.%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">4. 内存模型和原子操作</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">5. 基于锁的并发设计结构</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1"><span class="nav-text">为并发设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99%E7%AC%AC%E4%B8%80%E6%96%B9%E9%9D%A2%E7%A1%AE%E4%BF%9D%E8%AE%BF%E9%97%AE%E5%AE%89%E5%85%A8-ensure-safety"><span class="nav-text">指导原则第一方面：确保访问安全
+(Ensure Safety)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99%E7%AC%AC%E4%BA%8C%E6%96%B9%E9%9D%A2%E7%A1%AE%E4%BF%9D%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE-enable-true-concurrency"><span class="nav-text">指导原则第二方面：确保真正的并发访问
+(Enable True Concurrency)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">基于锁的并发数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%A0%88%E4%BD%BF%E7%94%A8%E9%94%81"><span class="nav-text">线程安全栈——使用锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7%E5%88%86%E6%9E%90"><span class="nav-text">安全性分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E6%80%A7%E5%88%86%E6%9E%90"><span class="nav-text">并发性分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%98%9F%E5%88%97%E4%BD%BF%E7%94%A8%E9%94%81%E5%92%8C%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="nav-text">线程安全队列——使用锁和条件变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8E-threadsafe_stack-%E7%9A%84%E5%AF%B9%E6%AF%94%E4%B8%8E%E5%88%86%E6%9E%90"><span class="nav-text">与 threadsafe_stack
+的对比与分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E6%80%A7%E5%88%86%E6%9E%90%E5%92%8C%E6%80%BB%E7%BB%93"><span class="nav-text">并发性分析和总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%98%9F%E5%88%97%E4%BD%BF%E7%94%A8%E7%BB%86%E7%B2%92%E5%BA%A6%E9%94%81%E5%92%8C%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="nav-text">线程安全队列——使用细粒度锁和条件变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E6%AD%A5%E5%B0%9D%E8%AF%95%E7%AE%80%E5%8D%95%E7%9A%84%E9%93%BE%E8%A1%A8%E4%B8%8E%E5%A4%B4%E5%B0%BE%E9%94%81"><span class="nav-text">初步尝试：简单的链表与头尾锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E5%BC%95%E5%85%A5%E5%93%91%E8%8A%82%E7%82%B9-dummy-node"><span class="nav-text">解决方案：引入哑节点 (Dummy
+Node)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%86%E7%B2%92%E5%BA%A6%E9%94%81%E4%B8%8E%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0"><span class="nav-text">细粒度锁与条件变量的完整实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E4%BA%8C%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%87%BA%E9%98%9Ftry_pop"><span class="nav-text">流程二：非阻塞出队（try_pop）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E4%B8%89%E9%98%BB%E5%A1%9E%E5%87%BA%E9%98%9Fwait_and_pop"><span class="nav-text">流程三：阻塞出队（wait_and_pop）</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%94%81%E8%AE%BE%E8%AE%A1%E6%9B%B4%E5%8A%A0%E5%A4%8D%E6%9D%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">基于锁设计更加复杂的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E8%A1%A8%E7%9A%84%E7%89%B9%E7%82%B9%E4%B8%8E%E6%8C%91%E6%88%98"><span class="nav-text">查找表的特点与挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E4%B8%8E%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1"><span class="nav-text">基本操作与接口设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E7%AD%96%E7%95%A5%E4%BB%8E%E5%8D%95%E9%94%81%E5%88%B0%E7%BB%86%E7%B2%92%E5%BA%A6%E9%94%81"><span class="nav-text">并发策略：从单锁到细粒度锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%86%E7%B2%92%E5%BA%A6%E9%94%81%E5%93%88%E5%B8%8C%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">细粒度锁哈希表的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E4%BD%BF%E7%94%A8%E9%94%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%93%BE%E8%A1%A8"><span class="nav-text">编写一个使用锁的线程安全链表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%86%E7%B2%92%E5%BA%A6%E9%94%81%E9%93%BE%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">细粒度锁链表的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7%E4%B8%8E%E5%B9%B6%E5%8F%91%E6%80%A7%E5%88%86%E6%9E%90"><span class="nav-text">安全性与并发性分析</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

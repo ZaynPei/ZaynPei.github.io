@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,20 +833,27 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="捕获过滤器"><a href="#捕获过滤器" class="headerlink" title="捕获过滤器"></a>捕获过滤器</h3><p>“捕获过滤器”是在你开始捕获之前设置的一个规则。它的作用是告诉 Wireshark：“请你只记录符合这个规则的数据包，其他所有的包都直接丢弃，不要保存。”</p>
+			<h3 id="捕获过滤器">捕获过滤器</h3>
+<p>“捕获过滤器”是在你开始捕获之前设置的一个规则。它的作用是告诉
+Wireshark：“请你只记录符合这个规则的数据包，其他所有的包都直接丢弃，不要保存。”</p>
 <ul>
-<li>捕获过滤器 (Capture Filter)：捕获前设置，只保存匹配的包（数据量小）。</li>
-<li>显示过滤器 (Display Filter)：捕获后设置，捕获所有包，但根据选择只显示匹配的包（数据量大，但分析灵活）。</li>
+<li>捕获过滤器 (Capture
+Filter)：捕获前设置，只保存匹配的包（数据量小）。</li>
+<li>显示过滤器 (Display
+Filter)：捕获后设置，捕获所有包，但根据选择只显示匹配的包（数据量大，但分析灵活）。</li>
 </ul>
-<p>捕获过滤器的语法示例如下图:<br><img lazyload src="/images/loading.svg" data-src="/2025/06/28/misc/GNU-LINUX/ireshark/20250916222733.png"></p>
+<p>捕获过滤器的语法示例如下图: <img lazyload src="/images/loading.svg" data-src="20250916222733.png"></p>
 <ul>
-<li>Ethernet address 00:00:5e:00:53:00: ether host 00:00:5e:00:53:00</li>
+<li>Ethernet address 00:00:5e:00:53:00: ether host
+00:00:5e:00:53:00</li>
 </ul>
-<p>作用：只捕获数据链路层（以太网）的源 MAC 地址 或 目标 MAC 地址等于 00:00:5e:00:53:00 的数据包。</p>
+<p>作用：只捕获数据链路层（以太网）的源 MAC 地址 或 目标 MAC 地址等于
+00:00:5e:00:53:00 的数据包。</p>
 <ul>
 <li>Ethernet type 0x0806 (ARP): ether proto 0x0806</li>
 </ul>
-<p>作用：只捕获以太网帧类型字段为 0x0806 的数据包。由于 0x0806 是 ARP 协议的类型编号，所以这条规则等同于“只捕获 ARP 包”。</p>
+<p>作用：只捕获以太网帧类型字段为 0x0806 的数据包。由于 0x0806 是 ARP
+协议的类型编号，所以这条规则等同于“只捕获 ARP 包”。</p>
 <ul>
 <li>No Broadcast and no Multicast: not broadcast and not multicast</li>
 </ul>
@@ -862,7 +869,8 @@ mjx-container[display="true"] + br {
 <ul>
 <li>IPv4 address 192.0.2.1: host 192.0.2.1</li>
 </ul>
-<p>作用：只捕获源 IP 地址 或 目标 IP 地址等于 192.0.2.1 的 IPv4 数据包。</p>
+<p>作用：只捕获源 IP 地址 或 目标 IP 地址等于 192.0.2.1 的 IPv4
+数据包。</p>
 <ul>
 <li>IPv6 only: ip6</li>
 </ul>
@@ -878,11 +886,15 @@ mjx-container[display="true"] + br {
 <ul>
 <li>Non-DNS: not port 53</li>
 </ul>
-<p>作用：不捕获源端口 或 目标端口是 53 的数据包。DNS（域名解析）服务通常使用 53 端口，所以这条规则是“排除所有 DNS 流量”。</p>
+<p>作用：不捕获源端口 或 目标端口是 53
+的数据包。DNS（域名解析）服务通常使用 53 端口，所以这条规则是“排除所有
+DNS 流量”。</p>
 <ul>
-<li>TCP or UDP port 80 (HTTP): port 80（最后一行被部分截断，但通常是这个）</li>
+<li>TCP or UDP port 80 (HTTP): port
+80（最后一行被部分截断，但通常是这个）</li>
 </ul>
-<p>作用：只捕获源端口 或 目标端口是 80 的数据包。HTTP（网页）服务通常使用 80 端口。</p>
+<p>作用：只捕获源端口 或 目标端口是 80
+的数据包。HTTP（网页）服务通常使用 80 端口。</p>
 
 		</div>
 
@@ -974,11 +986,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

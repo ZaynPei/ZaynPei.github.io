@@ -1,0 +1,2514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/01/lang/cpp/现代c++/c++并发编程实战/4. 内存模型和原子操作/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4. 内存模型和原子操作">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/4.%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-01T03:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-29T15:43:14.743Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="language">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            4. 内存模型和原子操作 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">4. 内存模型和原子操作</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-01 11:00</span>
+        <span class="mobile">2025-10-01 11:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-29 23:43:14</span>
+            <span class="mobile">2025-10-29 23:43:14</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/language/">language</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>19.3k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>73 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="内存模型基础">内存模型基础</h2>
+<p>C++是一个系统级别的编程语言，标准委员会的目标之一就是不需要比C++还要底层的高级语言。C++应该向程序员提供足够的灵活性，无障碍的去做他们想要做的事情；当需要的时候，可以让他们“接触硬件”。原子类型和原子操作就允许他们“接触硬件”，并提供底层级别的同步操作，通常会将常规指令数缩减到1~2个CPU指令。</p>
+<h3 id="对象和内存位置">对象和内存位置</h3>
+<p>在一个C++程序中的所有数据都是由对象(objects)构成。这里的对象不是指面向对象编程中的对象,
+而是指一块<strong>有类型的内存区域</strong>。C++标准定义类对象为“<strong>存储区域</strong>”,
+每个对象都存储在<strong>一个或多个</strong>“<strong>内存位置</strong>”上(memory
+location)，这里的内存位置是由对象的起始地址和<strong>对象的大小</strong>决定的。两个对象如果它们的<strong>内存位置重叠</strong>(overlap)，那么它们就<strong>不是独立的对象</strong>。</p>
+<p>例如, 一个 <code>int</code>
+类型的对象通常占用4个字节的内存。如果有两个 <code>int</code>
+对象分别位于内存地址0x1000和0x1004，那么它们的内存位置不重叠，是独立的对象；但如果一个
+<code>int</code>
+对象位于0x1000，另一个位于0x1002，那么它们的内存位置就重叠了，不是独立的对象。</p>
+<p>此外,
+位域(bit-field)成员变量也是对象，但<strong>多个相邻的位域可能会共享同一个内存位置</strong>(如果没有被强制分隔的话)，这会导致数据竞争的问题。</p>
+<blockquote>
+<p>位域指的是在结构体(struct)或联合体(union)中定义的特殊成员变量，它们允许程序员指定成员变量占用的位数，而不是默认的字节数。位域通常用于节省内存空间，特别是在需要存储大量布尔值或小整数时。</p>
+</blockquote>
+<p><img lazyload src="/images/loading.svg" data-src="image.png" alt="alt text"> 如图的这个struct的结构如下
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">S</span> {</span><br><span class="line">  <span class="type">char</span> c;       <span class="comment">// 成员 c (对象)</span></span><br><span class="line">  <span class="type">int</span> i;        <span class="comment">// 成员 i (对象)</span></span><br><span class="line">  <span class="type">int</span> bf1 : <span class="number">10</span>; <span class="comment">// 位域 bf1 (对象)</span></span><br><span class="line">  <span class="type">int</span> bf2 : <span class="number">20</span>; <span class="comment">// 位域 bf2 (对象)</span></span><br><span class="line">  <span class="type">int</span> : <span class="number">0</span>;      <span class="comment">// 匿名位域 (bf3)</span></span><br><span class="line">  <span class="type">int</span> bf4 : <span class="number">10</span>; <span class="comment">// 位域 bf4 (对象)</span></span><br><span class="line">  std::string s;  <span class="comment">// 成员 s (对象)</span></span><br><span class="line">  <span class="type">double</span> d;     <span class="comment">// 成员 d (对象)</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 我们来分析这个 struct S 的实例：</p>
+<ul>
+<li>struct S
+本身：是一个<strong>大对象</strong>，它包含了很多“<strong>子对象</strong>”（即它的成员）。</li>
+<li>c (char)：一个对象，它自己独占一个内存位置。</li>
+<li>i (int)：一个对象，它自己独占一个内存位置。</li>
+<li>bf1 和 bf2
+(相邻位域)：它们是两个不同的对象。但是，因为它们是相邻的位域，C++标准规定它们共享同一个内存位置（这个位置是它们所属的
+int）。
+<ul>
+<li>这会造成并发后果：如果线程A写入 bf1，同时线程B写入
+bf2，它们是在<strong>访问同一个内存位置</strong>，这构成数据竞争 (Data
+Race)！</li>
+</ul></li>
+<li>bf3（匿名的
+<code>int : 0;</code>）是一个特殊的<strong>布局说明符</strong>，它<strong>强制
+bf4 与 bf1/bf2 分开</strong>。</li>
+<li>由于 bf3 的分隔, bf4
+是一个对象，它自己<strong>独占一个新的内存位置</strong>。</li>
+<li>s (std::string)：s 本身是一个对象, 但 std::string
+内部实现很复杂（可能包含指针、大小、容量等）。因此，s
+对象是由<strong>内部多个内存位置</strong>组成的。</li>
+</ul>
+<p>总之, 这一章要我们记住的四个原则:</p>
+<ul>
+<li>每一个<strong>变量</strong>都是一个<strong>对象</strong>（包括成员变量）。</li>
+<li>每个对象<strong>至少占有一个内存位置</strong>。</li>
+<li><strong>基本类型</strong>（如 int, char, float,
+T*）的对象都有自己<strong>确定的内存位置</strong>（即使它们在数组中相邻,
+这是因为它们的类型和大小是固定的4个字节倍数,
+<strong>天然对齐</strong>）。</li>
+<li>（关键）<strong>相邻的位域共享同一个内存位置</strong>。</li>
+</ul>
+<h3 id="并发下的内存位置">并发下的内存位置</h3>
+<p>在上一节中，我们精确定义了“内存位置”（特别是位域的陷阱）。本节将阐明为什么这个定义对<strong>并发编程</strong>是致命重要的。它影响了C++并发中最危险的情况：数据竞争
+(Data Race) 和 未定义行为 (Undefined Behavior)。</p>
+<p>首先, 我们来看一下并发访问的三种场景</p>
+<p>场景 1：访问“<strong>不同</strong>”的<strong>内存位置</strong> -
+线程A 写入 my_struct.c (一个 char)，同时线程B 写入 my_struct.i (一个
+int)。 - 结果：完全安全。 - 原因：c 和 i
+是不同的对象，它们位于<strong>不同的内存位置</strong>。因此，线程A和B在各自的“领地”上操作，互不相干。</p>
+<p>场景 2：访问“相同”的内存位置（<strong>全部只读</strong>） - 线程A
+读取 my_struct.i，同时线程B 也读取 my_struct.i。 - 结果：完全安全。 -
+原因：只读数据不需要保护或同步。</p>
+<p>场景
+3：访问“<strong>相同</strong>”的<strong>内存位置</strong>（<strong>至少一个写</strong>）
+- 线程A 写入 my_struct.i，同时线程B 读取 my_struct.i。 - 线程A 写入
+my_struct.i，同时线程B 写入 my_struct.i。 - 线程A 写入 my_struct.bf1
+(位域)，同时线程B 写入 my_struct.bf2 (<strong>相邻位域</strong>)。 -
+上述三种情况都是极度危险的, 是“条件竞争”的根源。</p>
+<p>让我们再回忆一下数据竞争 (Data Race) 的定义： -
+有两个或以上的线程并发（即没有同步）地执行。 - 它们访问相同的内存位置。
+- 这些访问中至少有一个是写操作。 - （并且）它们不是 std::atomic
+类型的操作。</p>
+<p>而数据竞争的直接后果就是未定义行为。</p>
+<p>如何避免数据竞争?
+尤其是在需要访问相同内存位置的情况下？答案是在<strong>不同的访问之间</strong>建立一个<strong>强制的执行顺序</strong>
+(Execution Order)。</p>
+<p>方法一就是我们之前提到的使用<strong>互斥量</strong> (Mutex) - 当线程A
+lock() 互斥量时，它就建立了一个“<strong>屏障</strong>”。 - 当线程B 尝试
+lock() 同一个互斥量时，它被迫等待。 - lock() 和 unlock()
+操作在线程A和线程B之间<strong>强制建立</strong>了一个“<strong>先行发生</strong>”
+(Happens-before) 关系，从而避免了数据竞争。</p>
+<p>方法二则是这一讲要介绍的<strong>原子操作</strong> (Atomic Operations)
+- <strong>std::atomic</strong> 类型的操作（如
+load()、store()）<strong>本身</strong>就提供了<strong>同步机制</strong>，它们也可以（在特定条件下）在线程间建立“<strong>先行发生</strong>”关系。</p>
+<h3 id="修改顺序-modification-order">修改顺序 (Modification Order)</h3>
+<p>对于C++程序中的任意一个独立的对象（例如，一个 int 变量
+x），C++内存模型规定，在一次程序的完整执行中，<strong>所有线程</strong>对这一个
+x
+的<strong>所有写入操作</strong>（从初始化开始），都必须存在一个<strong>单一的、全局的总顺序</strong>。</p>
+<p>换句话说：即使有10个线程在并发地写入
+x，在<strong>程序结束时</strong>，我们必须能（在理论上）将这些写入操作排成一个唯一的队伍，比如：“初始化”
+-&gt; “线程A的写入” -&gt; “线程C的写入” -&gt; “线程F的写入”…</p>
+<p>并且,
+在<strong>某一次特定的程序运行</strong>中，所有线程都必须“同意”这个<strong>唯一的顺序</strong>。它也不是在每次运行时都相同的。在大多数情况下，这个顺序不同于执行中的顺序（因为线程调度的不可预测性）。但是,
+<strong>所有线程必须对这个顺序达成一致</strong>。 &gt; 注意:
+这里的“达成一致”并不是指线程间需要通信或协商，而是指在程序<strong>执行结束后</strong>，<strong>所有线程都能观察到同一个修改顺序</strong>。这在某种程度上是一种”马后炮”的全局共识。</p>
+<p>例如线程A执行x = 10; 线程B执行x = 20;</p>
+<ul>
+<li>运行 1：可能的“修改顺序”是 init -&gt; (x=10) -&gt; (x=20)。</li>
+<li>运行 2：可能的“修改顺序”是 init -&gt; (x=20) -&gt; (x=10)。</li>
+</ul>
+<p>两种都是合法的。但关键是，在“运行 1”中，所有在之后读取 x
+的线程都必须认同 (x=10) 发生在 (x=20) 之前。</p>
+<p>从上面的例子中也可以看到, 一般变量的修改顺序是不可预测的, 而 C++
+标准通过<strong>原子操作</strong>强制实现了这个“修改顺序”, 这正是原子
+(Atomic) 类型和非原子 (Non-Atomic) 类型的根本区别。</p>
+<ul>
+<li><p>对于非原子类型（例如，一个普通的 int x）：</p>
+<ul>
+<li>编译器和CPU不提供任何保证。</li>
+<li>你（程序员）的责任：你必须使用<strong>互斥量</strong> (Mutex)
+等同步工具来手动强制建立这个“修改顺序”。</li>
+<li>后果：如果你不使用同步（即在不同线程中对 int x
+进行读/写），线程之间就无法“同意”一个单一的修改顺序。这就造成了数据竞争
+(Data Race)，它会导致未定义行为 (Undefined Behavior)。</li>
+</ul></li>
+<li><p>对于原子类型（例如，<code>std::atomic&lt;int&gt; x</code>）：</p>
+<ul>
+<li><strong>编译器和CPU</strong>的责任：当你使用原子操作时，编译器和CPU必须保证（通常是通过<strong>特殊的CPU指令</strong>和<strong>内存屏障</strong>）所有线程都能“<strong>同意</strong>”一个对
+x 的单一修改顺序。</li>
+<li>这是原子类型提供的核心保证：它使你摆脱了“数据竞争”和“未定义行为”。</li>
+</ul></li>
+</ul>
+<p>这个“所有线程必须同意一个顺序”的规则，反过来限制了编译器和CPU能做什么：</p>
+<ul>
+<li><strong>禁止读取“过去”</strong>：如果一个线程已经读取了 x
+的某个值（例如，x=20），那么它在之后的任何读取操作，必须返回 x=20
+或者是“修改顺序”中排在 <strong>x=20 之后</strong>的值（例如
+x=30）。它绝不能返回一个排在 x=20 之前的值（例如 x=10）。</li>
+<li><strong>写操作的可见性</strong>：任何写操作必须（在修改顺序上）出现在它自己线程的前一个<strong>写操作之后</strong>。</li>
+<li><strong>读操作的可见性</strong>：任何读操作必须返回修改顺序中某个（或某个读-改-写链上的）值。</li>
+</ul>
+<p>不过 ,十分重要的一点是:
+“<strong>修改顺序</strong>”是针对“<strong>每一个独立对象</strong>”的,
+它<strong>不提供“跨对象”的顺序</strong>。</p>
+<p>例如, 有两个独立的<strong>原子对象</strong> x 和 y, 初始值都是0: -
+线程 A 执行 <code>x.store(1);</code> <code>y.store(1);</code> - 线程 B
+执行 <code>y_val = y.load();</code> <code>x_val = x.load();</code> -
+线程 C 执行 <code>x_val = x.load();</code>
+<code>y_val = y.load();</code></p>
+<p>毫无疑问, 所有线程都会同意 x 的修改顺序是 0 -&gt; 1, y 的修改顺序也是
+0 -&gt; 1, 这是原子操作的保证。</p>
+<p>但是, 线程B 可能会看到 <strong>y_val=1 和 x_val=0</strong>。（它看到
+y 的修改在 x 之前）. 同理线程C 可能会看到 <strong>x_val=1 和
+y_val=0</strong>。（它看到 x 的修改在 y 之前）</p>
+<p>这是因为处理器和编译器为了优化性能，可能会<strong>重排（Reorder）指令</strong>。当操作是针对两个<strong>不相关的内存位置</strong>（即
+x 和 y）时，这种重排是<strong>允许的</strong>。</p>
+<p>线程 A
+内部的程序顺序（<code>x.store(1); y.store(1);</code>）只是一个“在本线程内”的顺序。这种顺序并不会自动同步给观察者线程
+B 和 C，让它们看到 <span class="math inline"><em>x</em></span>
+的写入严格发生在 <span class="math inline"><em>y</em></span>
+的写入之前。</p>
+<blockquote>
+<p>要实现<strong>跨对象的顺序同步</strong>，需要使用更强的同步机制，例如<strong>内存栅栏</strong>
+(Memory Fences) , 即指定更强的<strong>内存顺序语义</strong> (Memory
+Order Semantics)（例如
+<code>std::memory_order_seq_cst</code>）的原子操作，或者使用互斥量等同步工具。</p>
+</blockquote>
+<p>任何线程都会承认 <span class="math inline"><em>x</em></span>
+的所有写操作是按 <span class="math inline"><em>W</em><sub><em>x</em>1</sub>, <em>W</em><sub><em>x</em>2</sub>, …</span>
+的顺序发生的，也会承认 <span class="math inline"><em>y</em></span>
+的所有写操作是按 <span class="math inline"><em>W</em><sub><em>y</em>1</sub>, <em>W</em><sub><em>y</em>2</sub>, …</span>
+的顺序发生的。但是，线程 A 可能会看到 <span class="math inline"><em>W</em><sub><em>x</em>1</sub></span> 发生在 <span class="math inline"><em>W</em><sub><em>y</em>1</sub></span> 之前，而线程
+B 则可能会看到 <span class="math inline"><em>W</em><sub><em>y</em>1</sub></span> 发生在 <span class="math inline"><em>W</em><sub><em>x</em>1</sub></span>
+之前，这两种视角都是合法且可能发生的。</p>
+<p>总之,
+本节定义了并发程序的一个基本“健康”标准——<strong>所有线程</strong>必须能对<strong>任一单个对象</strong>的<strong>修改历史</strong>达成<strong>一致</strong>。原子类型会自动帮你做到这一点，从而避免数据竞争。但它不会自动帮你处理多个对象之间的相对顺序问题</p>
+<h2 id="c中的原子操作和原子类型">C++中的原子操作和原子类型</h2>
+<h3 id="标准原子类型">标准原子类型</h3>
+<p>首先,
+原子类型是并发编程中用于在多线程环境中安全地访问和修改共享数据的类型,
+它们提供了一种机制，确保对这些数据的操作是原子的，即不可分割的,
+从而避免使用传统的锁机制（如互斥量）来进行同步。</p>
+<p>然而, 原子操作真的是”无锁编程”吗? 也就是is_lock_free()这个概念</p>
+<p>一般来说, 原子性
+(Atomicity)这个概念保证操作是不可分割的。其实现存在两种方式：</p>
+<p><strong>真·无锁 (Lock-Free)</strong>：</p>
+<ul>
+<li>编译器使用<strong>特殊的CPU指令</strong>（例如 x86 上的 LOCK
+CMPXCHG）来保证操作的原子性。</li>
+<li>优点：效率极高，没有互斥量的阻塞、上下文切换等开销。</li>
+</ul>
+<p><strong>假·无锁” (Lock-Based)</strong>：</p>
+<ul>
+<li>编译器内部使用一个<strong>隐藏的互斥量</strong> (Mutex)
+来“模拟”原子性。</li>
+<li>当你调用 my_atomic.store(x)
+时，编译器（在幕后）执行的可能是：<code>internal_mutex.lock(); my_value = x; internal_mutex.unlock();</code></li>
+<li>优点：它依然是线程安全的，能避免数据竞争。</li>
+<li>缺点：它有<strong>锁的全部性能开销</strong>，会阻塞其他线程。</li>
+</ul>
+<p><strong>is_lock_free()
+成员函数</strong>：<code>bool my_atomic.is_lock_free() const;</code></p>
+<p>这是一个<strong>运行时检查</strong>，它告诉你：“在这个<strong>特定的CPU架构和编译器</strong>上，对这个对象的操作是‘真·无锁’（返回
+true）还是‘假·无锁’（返回 false）？”</p>
+<blockquote>
+<p>在x86/x86-64等主流平台上，你可以期望
+<code>std::atomic&lt;int&gt;</code>、<code>std::atomic&lt;void*&gt;</code>
+等基础类型是无锁的，但C++标准并<strong>不对此做保证</strong>。</p>
+</blockquote>
+<h4 id="stdatomic_flag最基础的原子类型">std::atomic_flag：最基础的原子类型</h4>
+<p>这是标准库中最简单的原子类型。它就是一个<strong>布尔标志</strong>。</p>
+<p>std::atomic_flag
+是唯一被<strong>C++标准保证在所有平台上都必须是无锁的类型</strong>。</p>
+<p>因为它必须是无锁的，所以它的功能被极度阉割，只被用作最底层的“构建块”（例如自旋锁）。</p>
+<p>它没有 is_lock_free()（因为永远是 true），没有 load 或 store。它只有
+<strong>clear()</strong> 和 <strong>test_and_set()</strong>
+等几个非常受限的操作。</p>
+<h4 id="stdatomic主要的类模板">std::atomic&lt;&gt;：主要的类模板</h4>
+<p>这是我们实际使用中最主要的原子类型, 使用一个非原子<strong>类型 T
+来特化</strong>它，以得到对应的原子版本</p>
+<ul>
+<li><code>std::atomic&lt;bool&gt;</code></li>
+<li><code>std::atomic&lt;int&gt;</code></li>
+<li><code>std::atomic&lt;unsigned long&gt;</code></li>
+<li><code>std::atomic&lt;MyClass*&gt;</code> , 指针类型的原子版本</li>
+<li><code>std::atomic&lt;MyUserDefinedType&gt;</code> ,
+用户自定义类型的原子版本（前提是该类型满足某些要求，例如可拷贝、大小适中等）。</li>
+</ul>
+<p>这些类型提供了全套的操作（load, store, exchange
+等），但<strong>不保证是无锁</strong>的（你需要用 is_lock_free()
+来检查）</p>
+<h4 id="核心属性">核心属性</h4>
+<p>除了类型 T 的要求外，<code>std::atomic&lt;T&gt;</code>
+还有以下几个核心属性( atomic_flag 除外)： -
+<strong>不可拷贝构造</strong> / <strong>不可拷贝赋值</strong>
+(Non-Copyable /
+Non-Assignable)：<code>std::atomic&lt;int&gt; x = y; // 编译错误！</code>
+-
+原因：“拷贝”是一个包含“<strong>读（y）</strong>”和“<strong>写（x）</strong>”的两个操作。C++无法将这两个独立的操作合并成一个原子操作。
+- 但是可以从<strong>非原子类型来构造和赋值</strong>：
+<code>std::atomic&lt;int&gt; x(5); // 正确</code>
+<code>x = 10; // 正确 (这调用了 x.store(10))</code></p>
+<ul>
+<li><strong>核心操作</strong>：
+<ul>
+<li>load() (加载), store() (存储)</li>
+<li>exchange() (交换)</li>
+<li>compare_exchange_weak/strong() (CAS)</li>
+</ul></li>
+<li><strong>整数/指针</strong>的特殊操作：
+<ul>
+<li>fetch_add(), fetch_sub()</li>
+<li>+=, -=, ++, –(重载了上述操作符)</li>
+</ul></li>
+<li><strong>内存顺序</strong>：这是本章的重点。load, store
+等所有操作都有一个<strong>可选的内存顺序参数</strong>。
+<ul>
+<li>默认值：如果你不指定，所有操作默认都是
+<strong>std::memory_order_seq_cst</strong>（最强、最安全、但也最慢的顺序）。</li>
+</ul></li>
+</ul>
+<h3 id="stdatomic_flag">std::atomic_flag</h3>
+<p>这是C++标准库中最基础、最简单的原子类型。它就是一个<strong>布尔标志</strong>。</p>
+<ul>
+<li>它只有两种状态：“设置” (<strong>set</strong>, <strong>true</strong>)
+和 “清除” (<strong>clear</strong>, <strong>false</strong>)。</li>
+<li>唯一保证：它是C++标准中唯一<strong>保证始终无锁</strong> (lock-free)
+的类型。<code>std::atomic&lt;bool&gt;</code> 都不一定能做到这一点。</li>
+<li>角色：它不是为通用布尔逻辑设计的，而是作为<strong>最底层的构建块</strong>存在的（例如，用来实现其他锁）。</li>
+</ul>
+<h4 id="初始化atomic_flag_init">初始化：ATOMIC_FLAG_INIT</h4>
+<p>std::atomic_flag
+的初始化非常特殊，它不能像其他原子类型那样在构造函数中传入 true 或
+false。你必须使用<strong>宏 ATOMIC_FLAG_INIT</strong>。</p>
+<p>并且 ATOMIC_FLAG_INIT 只能将 atomic_flag 初始化为“清除” (clear)
+状态（即 <strong>false</strong>）。你没有别的选择。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::atomic_flag f = ATOMIC_FLAG_INIT;</span><br></pre></td></tr></table></figure></div></p>
+<p><strong>静态初始化保证</strong>：当 std::atomic_flag 被声明为
+<strong>static</strong> 或<strong>全局变量</strong>时，使用
+ATOMIC_FLAG_INIT
+可以保证它是“静态初始化”的，这意味着它在程序开始（甚至在多线程启动）之前就已经被初始化了，不会有初始化顺序问题。</p>
+<blockquote>
+<p>与之类似的还有静态局部变量的初始化保证：C++11及以后的标准保证，函数内的<strong>静态局部变量</strong>在多线程环境下只会被<strong>初始化一次</strong>，且初始化过程是<strong>线程安全的</strong>。</p>
+</blockquote>
+<h4 id="核心操作test_and_set-和-clear">核心操作：test_and_set() 和
+clear()</h4>
+<p>std::atomic_flag
+的功能被极度限制。一旦初始化，你只能对它做两件事：</p>
+<p><strong>clear() (清除)</strong>: 原子性地将标志的状态设置为“清除”
+(false)。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">clear</span><span class="params">(std::memory_order = std::memory_order_seq_cst)</span></span>;  <span class="comment">// 默认为 seq_cst</span></span><br><span class="line"></span><br><span class="line">f.<span class="built_in">clear</span>(std::memory_order_release); <span class="comment">// 使用 release 语义</span></span><br><span class="line">f.<span class="built_in">clear</span>(); <span class="comment">// 使用默认的 seq_cst</span></span><br></pre></td></tr></table></figure></div></p>
+<p>这是一个“存储 (Store)”操作, 它可以接受 memory_order_relaxed,
+memory_order_release, 或 memory_order_seq_cst。</p>
+<p><strong>test_and_set() (测试并设置)</strong>：这是 atomic_flag
+最关键的操作，它是一个<strong>原子</strong>的“<strong>读-改-写</strong>”
+(Read-Modify-Write, <strong>RMW</strong>) 操作。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">test_and_set</span><span class="params">(std::memory_order = std::memory_order_seq_cst)</span></span>;  <span class="comment">// 默认为 seq_cst</span></span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> old = f.<span class="built_in">test_and_set</span>(std::memory_order_acquire); <span class="comment">// 使用 acquire 语义</span></span><br><span class="line"><span class="type">bool</span> old2 = f.<span class="built_in">test_and_set</span>(); <span class="comment">// 使用默认的 seq_cst</span></span><br></pre></td></tr></table></figure></div>
+它同时做两件事： - 改 (Modify)：将标志的状态设置为“设置”
+(<strong>true</strong>)。 - 读
+(Read)：返回该标志在被设置之前的<strong>旧状态</strong>。</p>
+<p>并且作为RMW操作，它可以接受所有类型的内存顺序。</p>
+<p>返回值分析：</p>
+<ul>
+<li>如果标志之前是 <strong>false</strong> (clear)：test_and_set()
+<strong>返回 false</strong>，然后将标志<strong>设为 true</strong>。</li>
+<li>如果标志之前是 <strong>true</strong> (set)：test_and_set()
+<strong>返回 true</strong>，标志<strong>保持为 true</strong>。</li>
+</ul>
+<h4 id="关键限制">关键限制</h4>
+<ul>
+<li>不可拷贝 / 不可赋值：
+<ul>
+<li>这是<strong>所有原子类型的共性</strong>。“拷贝”/“赋值”涉及两个对象（源和目标），需要“从A读”和“向B写”两个步骤。这“两个”步骤无法合并为一个原子操作，因此被禁止。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::atomic_flag f2 = f; <span class="comment">// 编译错误！</span></span><br><span class="line">f2 = f; <span class="comment">// 编译错误！</span></span><br></pre></td></tr></table></figure></div></li>
+</ul></li>
+<li>没有“只读”操作：
+<ul>
+<li>这是 atomic_flag
+最致命的局限性：你<strong>无法在不修改它的情况下检查它的当前值</strong>。</li>
+<li>它没有 load() 或 test() 这样的函数。你<strong>唯一的“读”操作就是
+test_and_set()</strong>，而它会强制将标志<strong>设为
+true</strong>。</li>
+</ul></li>
+</ul>
+<h4 id="示例实现自旋锁-spinlock">示例：实现自旋锁 (Spinlock)</h4>
+<p>atomic_flag
+的局限性使它成为实现自旋互斥锁的完美（虽然非常基础）工具。</p>
+<ul>
+<li>“清除” (false) 状态代表锁是“可用” (unlocked)。</li>
+<li>“设置” (true) 状态代表锁是“被持有” (locked)。</li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">spinlock_mutex</span></span><br><span class="line">{</span><br><span class="line">  std::atomic_flag flag;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">spinlock_mutex</span>():</span><br><span class="line">    <span class="built_in">flag</span>(ATOMIC_FLAG_INIT) <span class="comment">// 1. 构造函数：初始化为“清除”(unlocked)</span></span><br><span class="line">  {}</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">lock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 2. 关键：自旋 (spin)</span></span><br><span class="line">    <span class="keyword">while</span>(flag.<span class="built_in">test_and_set</span>(std::memory_order_acquire));</span><br><span class="line">    <span class="comment">// memory_order_acquire (获取) 语义是 release 的配对。它确保：在 lock 成功之后，该线程能看到前一个线程在 unlock 之前写入的所有数据。</span></span><br><span class="line">  }</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">unlock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 3. 释放锁</span></span><br><span class="line">    flag.<span class="built_in">clear</span>(std::memory_order_release);</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>行为分析： - unlock() (解锁)： - 非常简单。调用 clear()
+将标志位原子性地设为 <strong>false</strong> (unlocked)。 -
+memory_order_release (释放) 语义确保了：在此 unlock
+之前的所有内存写入（即在锁保护下的代码），对于下一个 lock
+它的线程都是可见的。</p>
+<ul>
+<li>lock() (上锁)：
+<ul>
+<li>这是最精妙的部分。线程会执行 while(flag.test_and_set(…))。</li>
+<li>情况 1：<strong>锁是可用的 (flag == false)</strong>
+<ul>
+<li>线程调用 test_and_set()。</li>
+<li>test_and_set() 原子地返回 false（之前的状态），并将 flag 设为
+true。</li>
+<li>while(false)：循环条件为 false，循环立即终止。</li>
+<li>结果：线程成功获取了锁（只用了一次
+test_and_set），并<strong>继续执行</strong>。</li>
+</ul></li>
+<li>情况 2：<strong>锁已被持有 (flag == true)</strong>
+<ul>
+<li>线程调用 test_and_set()。</li>
+<li>test_and_set() 原子地返回 true（之前的状态），flag 保持为
+true。</li>
+<li>while(true)：循环条件为
+true，线程继续循环（这就是“<strong>自旋</strong>”）。</li>
+<li>线程会一遍又一遍地调用 test_and_set()，每次都返回 true，直到…</li>
+</ul></li>
+<li>情况 3：锁被释放
+<ul>
+<li>某个持有锁的线程调用了 unlock()，将 flag clear() 为 false。</li>
+<li>自旋中的线程在其下一次 test_and_set() 调用中，命中了情况1。</li>
+<li>test_and_set() 返回 false，循环终止，该线程获取了锁。</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="stdatomicbool-的相关操作"><code>std::atomic&lt;bool&gt;</code>
+的相关操作</h3>
+<p><code>std::atomic&lt;bool&gt;</code> 可以看作是<strong>普通 bool
+类型的线程安全、原子版本</strong>。与极其基础的 std::atomic_flag
+相比，它提供了更完整、更易于使用的布尔操作集。然而，代价是它不像
+atomic_flag 那样被标准保证一定是无锁的。</p>
+<p>你可以直接用<strong>普通的 bool 值</strong>来初始化
+<code>std::atomic&lt;bool&gt;</code>，也可以将一个 bool 值赋给它。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::atomic&lt;<span class="type">bool</span>&gt; <span class="title">b</span><span class="params">(<span class="literal">true</span>)</span></span>; <span class="comment">// 用 true 初始化</span></span><br><span class="line">b = <span class="literal">false</span>; <span class="comment">// 赋值 false (这实际上调用了 b.store(false))</span></span><br></pre></td></tr></table></figure></div> 关于赋值的关键点：<strong>赋值操作符</strong>
+(=)，以及其他<strong>对原子变量进行修改</strong>的操作<strong>返回</strong>的是<strong>被赋的值本身</strong>（在此例中是
+bool），而<strong>不是对原子对象的引用</strong>。这样做是为了避免潜在的竞争条件：如果你获取了一个引用，在你读取这个引用的值之前，另一个线程可能已经再次修改了原子变量的值。</p>
+<blockquote>
+<p>假设赋值操作符返回的是引用,
+当我们执行这样一行代码：<code>bool result = (atomic_b = false);</code>，此时如果另一个线程在我们读取
+result 之前又将 atomic_b 修改为 true，那么我们得到的 result
+就是一个不一致的值。因为对于这样的链式调用,
+atomic_b在赋值时和被读取时是原子的, 但是中间存在非原子的间隙。
+而返回被赋的值本身（不是引用）可以避免这种问题，因为我们直接得到的是赋值时的那个值,
+即使 atomic_b 在之后被其他线程修改了, 也不会影响我们已经得到的 result。
+同理还有 <code>if (atomic_b = true) { ... }</code>这种用法,
+因为赋值返回的是值本身, 所以不会因为后续的修改而影响条件判断。</p>
+</blockquote>
+<h4 id="核心操作">核心操作</h4>
+<p><code>std::atomic&lt;bool&gt;</code> 支持几个基本的原子操作：</p>
+<ul>
+<li><p>load()：原子性地读取当前值。</p>
+<ul>
+<li><code>bool x = b.load(std::memory_order_acquire);</code></li>
+<li>这是一个读 (Read) 操作。它仅仅返回 b 中当前存储的布尔值（true 或
+false）。你也可以通过隐式转换来读取值（bool x =
+b;），这同样执行原子加载。</li>
+</ul></li>
+<li><p>store(bool)：原子性地写入一个新值。</p>
+<ul>
+<li><code>b.store(true);</code></li>
+<li>这是一个写 (Write) 操作。它用提供的值（这里是 true）替换 b
+中的当前值。赋值操作符（b = false;）是 b.store(false); 的简写形式。</li>
+</ul></li>
+<li><p>exchange(bool)：原子性地用一个<strong>新值替换当前值</strong>，并<strong>返回旧的值</strong>。</p>
+<ul>
+<li><code>bool old_value = b.exchange(false, std::memory_order_acq_rel);</code></li>
+<li>这是一个原子的读-改-写 (Read-Modify-Write, <strong>RMW</strong>)
+操作。它不可分割地执行两个动作：
+<ul>
+<li>将 b 的值设置为新值（这里是 false）。</li>
+<li>返回 b 在此操作之前所持有的值。</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4 id="比较并交换-compare-and-swap-cas-操作">比较并交换
+(Compare-and-Swap, CAS) 操作</h4>
+<p>这是最强大的 <strong>RMW</strong>
+操作，是许多无锁算法的基础。它们尝试更改值，但仅当当前值与预期值匹配时才进行。</p>
+<ul>
+<li>逻辑：“如果<strong>当前值是
+expected</strong>，那么就把它<strong>设置为
+desired</strong>。并通过<strong>返回值告诉我是否成功</strong>了。”</li>
+<li>形式: 目前 C++ 标准提供了两个版本的 CAS 函数
+<ul>
+<li><code>bool compare_exchange_weak(T&amp; expected, T desired, ...);</code></li>
+<li><code>bool compare_exchange_strong(T&amp; expected, T desired, ...);</code></li>
+</ul></li>
+<li>参数：两个 CAS 函数都至少接受两个参数
+<ul>
+<li><strong>expected</strong>：一个引用，指向一个 bool
+变量，该变量持有你期望原子变量当前应该具有的值,
+且是<strong>引用</strong>类型。</li>
+<li><strong>desired</strong>：你希望在期望匹配时设置的 bool 值。</li>
+<li>可选的第三个参数是内存顺序标签（将在后面解释）。</li>
+<li>返回值：一个 bool，表示操作是否成功。</li>
+</ul></li>
+<li>失败时的行为：如果原子变量的<strong>当前值与 expected
+不匹配</strong>，<strong>CAS
+操作失败</strong>。关键在于，此时它会用<strong>原子变量实际的当前值</strong>去更新
+<strong>expected
+变量</strong>。这会告诉你它<strong>失败的原因</strong>，并为可能的重试准备好
+expected。</li>
+</ul>
+<p><strong>compare_exchange_weak() (CAS Weak)</strong> <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> expected = <span class="literal">false</span>;</span><br><span class="line"><span class="type">bool</span> success = b.<span class="built_in">compare_exchange_weak</span>(expected, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure></div></p>
+<ul>
+<li><p>可能伪失败 (Spurious Failure)：即使值确实匹配
+expected，这个版本也可能失败（返回 false）。这可能发生在某些 CPU
+架构上，由于时间问题（例如上下文切换）。但是在某些平台上，它在循环内部可能生成比
+strong 更高效的代码。</p></li>
+<li><p>用法：由于可能伪失败，compare_exchange_weak
+几乎总是用在一个循环中。循环会持续，只要操作失败 并且
+失败的原因不是因为值与我们最初（或上一次尝试时）期望的不同。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> expected = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">// 持续尝试，只要 CAS 失败了 并且 失败的原因不是因为实际值不是我们期望的'false'。</span></span><br><span class="line"><span class="keyword">while</span> (!b.<span class="built_in">compare_exchange_weak</span>(expected, <span class="literal">true</span>) &amp;&amp; !expected) {</span><br><span class="line">    <span class="comment">// 如果我们只想在它变为 'false' 时将其设置为 'true'，循环体可以为空。</span></span><br><span class="line">    <span class="comment">// 如果 CAS 调用内部将 'expected' 更新为 'true'，那么 &amp;&amp; 条件的后半部分将失败，退出循环。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p></li>
+</ul>
+<p><strong>compare_exchange_strong() (CAS Strong)</strong>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> expected = <span class="literal">false</span>;</span><br><span class="line"><span class="type">bool</span> success = b.<span class="built_in">compare_exchange_strong</span>(expected, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure></div></p>
+<ul>
+<li><p>无伪失败：这个版本保证只有在原子变量的值确实与 expected
+不匹配时才会返回 false。</p></li>
+<li><p>当你需要明确知道更改是成功还是因为值不匹配而失败，并且不想处理伪失败时使用。你可能仍然需要一个循环（如果你的逻辑需要在值被其他线程更改后重试），但循环逻辑通常比
+weak 更简单。</p></li>
+</ul>
+<blockquote>
+<p>内存顺序：所有这些操作 (load, store, exchange, CAS) 都接受可选的
+std::memory_order
+参数（将在后面详细解释），用于指定内存同步行为。默认值是
+std::memory_order_seq_cst，这是最强、最安全的选择。</p>
+</blockquote>
+<h3 id="stdatomict-指针运算"><code>std::atomic&lt;T*&gt;</code>:
+指针运算</h3>
+<p><code>std::atomic&lt;T*&gt;</code> 除了支持
+<code>std::atomic&lt;bool&gt;</code> 所具有的基本原子操作（load, store,
+exchange,
+compare_exchange）之外，它还额外支持<strong>原子化的指针算术运算</strong>。</p>
+<p>它是针对指针类型 T<em>（可以是内置类型指针如
+int</em>，也可以是用户定义类型指针如 MyClass*）的 std::atomic
+特化版本。</p>
+<p>基本操作：与 <code>std::atomic&lt;bool&gt;</code> 类似，它支持： -
+is_lock_free() 检查。 - 从 T* 构造和赋值。 -
+<code>std::atomic&lt;int*&gt; p(nullptr);</code> -
+<code>p = some_int_pointer; // 这调用了 p.store(some_int_pointer);</code>
+- load(), store(), exchange(), compare_exchange_weak(),
+compare_exchange_strong() 成员函数，只不过操作的对象和返回的值现在是 T*
+类型。 - <code>int* old_ptr = p.exchange(new_ptr);</code> -
+<code>int* expected = nullptr;</code> -
+<code>bool success = p.compare_exchange_strong(expected, new_ptr);</code>
+- 增加了对指针加减运算的原子支持。</p>
+<h4 id="原子指针算术运算">原子指针算术运算</h4>
+<p><code>std::atomic&lt;T*&gt;</code>
+提供了两组成员函数（和对应的操作符）来实现原子化的指针加减：</p>
+<p><strong>fetch_add() 和 fetch_sub()</strong>: 这是底层的读-改-写 (RMW)
+操作。</p>
+<p><code>T* fetch_add(ptrdiff_t n, std::memory_order = std::memory_order_seq_cst);</code></p>
+<ul>
+<li>功能：原子性地给存储的指针加上 <strong>n
+个元素的偏移量</strong>（注意：是元素数量，不是字节数）。</li>
+<li>返回值：返回指针在执行加法之前的<strong>旧值</strong> (T*)。</li>
+<li>类比：类似于 p += n，但返回的是 p 加之前的值。</li>
+</ul>
+<p><code>T* fetch_sub(ptrdiff_t n, std::memory_order = std::memory_order_seq_cst);</code></p>
+<ul>
+<li>功能：原子性地从存储的指针减去 <strong>n
+个元素的偏移量</strong>。</li>
+<li>返回值：返回指针在执行减法之前的<strong>旧值</strong> (T*)。</li>
+<li>类比：类似于 p -= n，但返回的是 p 减之前的值。</li>
+</ul>
+<p>特性：作为 <strong>RMW</strong>
+操作，它们可以接受<strong>任何内存顺序</strong>标签。返回的是<strong>普通的
+T* 值</strong>，而<strong>不是原子对象的引用</strong>。</p>
+<p><strong>操作符重载 (+=, -=, ++, –)</strong>:
+为了方便使用，<code>std::atomic&lt;T*&gt;</code>
+还重载了常见的指针算术操作符。这些操作符提供了更方便、更熟悉的语法，它们内部会调用相应的
+fetch_xxx 操作。</p>
+<p><code>p += n / p -= n：</code> - 功能：原子性地加/减 n 个元素。 -
+返回值：返回指针加/减之后的<strong>新值</strong> (T*)。</p>
+<p><code>++p / --p (前缀)：</code> - 功能：原子性地自增/自减 1 个元素。
+- 返回值：返回指针自增/自减之后的<strong>新值</strong> (T*)。</p>
+<p><code>p++ / p-- (后缀)：</code> - 功能：原子性地自增/自减 1 个元素。
+- 返回值：返回指针自增/自减之前的<strong>旧值</strong> (T*)。</p>
+<p>重要限制：这些<strong>重载</strong>的操作符<strong>不能指定内存顺序</strong>。它们总是使用默认的、最强的内存顺序
+std::memory_order_seq_cst。如果你需要更弱的内存顺序（为了性能），你必须使用
+fetch_add 或 fetch_sub 成员函数。 - 何时使用
+fetch_xxx：当你需要返回旧值，或者需要指定非默认的内存顺序时。 -
+何时使用操作符：当你只需要执行操作，并且对返回值（新值或旧值）符合要求，且满足于默认的
+seq_cst 内存顺序时，操作符提供了更简洁的语法。</p>
+<h4 id="示例">示例</h4>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>{};</span><br><span class="line">Foo some_array[<span class="number">5</span>]; <span class="comment">// 一个 Foo 类型的数组</span></span><br><span class="line"><span class="function">std::atomic&lt;Foo*&gt; <span class="title">p</span><span class="params">(some_array)</span></span>; <span class="comment">// 原子指针 p 初始化指向数组开头</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 使用 fetch_add</span></span><br><span class="line">Foo* x = p.<span class="built_in">fetch_add</span>(<span class="number">2</span>); <span class="comment">// 原子地 p += 2，返回旧值</span></span><br><span class="line"><span class="comment">// 结果：</span></span><br><span class="line"><span class="built_in">assert</span>(x == some_array); <span class="comment">// x 得到的是 p 加之前的值 (指向 a[0])</span></span><br><span class="line"><span class="built_in">assert</span>(p.<span class="built_in">load</span>() == &amp;some_array[<span class="number">2</span>]); <span class="comment">// p 现在指向 a[2]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 使用 -= 操作符</span></span><br><span class="line">x = (p -= <span class="number">1</span>); <span class="comment">// 原子地 p -= 1，返回新值</span></span><br><span class="line"><span class="comment">// 结果：</span></span><br><span class="line"><span class="built_in">assert</span>(x == &amp;some_array[<span class="number">1</span>]); <span class="comment">// x 得到的是 p 减之后的值 (指向 a[1])</span></span><br><span class="line"><span class="built_in">assert</span>(p.<span class="built_in">load</span>() == &amp;some_array[<span class="number">1</span>]); <span class="comment">// p 现在指向 a[1]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 使用 fetch_add 并指定内存顺序</span></span><br><span class="line">p.<span class="built_in">fetch_add</span>(<span class="number">3</span>, std::memory_order_release); <span class="comment">// 原子地 p += 3，使用释放语义</span></span><br></pre></td></tr></table></figure></div>
+<h3 id="标准的原子整型的相关操作">标准的原子整型的相关操作</h3>
+<p>这一节介绍了除了 <code>std::atomic&lt;bool&gt;</code> 和
+<code>std::atomic&lt;T*&gt;</code>
+之外的其他标准原子类型，它们都是原子整数类型（例如
+<code>std::atomic&lt;int&gt;</code>,
+<code>std::atomic&lt;unsigned long long&gt;</code> 等）。</p>
+<p>继承通用操作：它们都支持 <code>std::atomic&lt;bool&gt;</code>
+所拥有的基本操作集： - load(), store() - exchange() -
+compare_exchange_weak(), compare_exchange_strong() -
+不可拷贝/赋值：像所有原子类型一样，它们不能被<strong>拷贝构造或拷贝赋值</strong>，但可以从对应的非原子整数类型构造或赋值。
+- is_lock_free()：同样提供此函数来检查是否无锁。</p>
+<h4 id="原子整数类型的专属操作">原子整数类型的专属操作</h4>
+<p>原子整数类型（包括所有 std::atomic<integral_type>
+的特化）在基本操作集之上，增加了算术和位运算的原子支持。</integral_type></p>
+<p><strong>算术运算</strong> (继承自指针类型并扩展)</p>
+<ul>
+<li><p>fetch_add(integral_value, memory_order = seq_cst)</p></li>
+<li><p>fetch_sub(integral_value, memory_order = seq_cst)</p>
+<ul>
+<li>功能：原子性地给当前值加上/减去 integral_value。</li>
+<li>返回值：返回执行加/减之前的<strong>旧值</strong>。</li>
+<li>内存顺序：作为 RMW 操作，可以指定任何内存顺序。</li>
+</ul></li>
+<li><p>+=, -= 操作符</p>
+<ul>
+<li>功能：原子性地加/减 integral_value。</li>
+<li>返回值：返回执行加/减之后的<strong>新值</strong>。</li>
+<li>内存顺序：总是 <strong>memory_order_seq_cst</strong>。</li>
+</ul></li>
+<li><p>++, – 操作符 (前缀和后缀)</p>
+<ul>
+<li>功能：原子性地自增/自减 1。</li>
+<li>返回值：
+<ul>
+<li>++x / –x (前缀)：返回新值。</li>
+<li>x++ / x– (后缀)：返回旧值。</li>
+</ul></li>
+<li>内存顺序：总是 <strong>memory_order_seq_cst</strong>。</li>
+</ul></li>
+</ul>
+<p><strong>位运算</strong> (<strong>原子整数类型专属</strong>):
+这是原子整数类型区别于原子指针的关键增强。</p>
+<ul>
+<li><p>fetch_and(integral_value, memory_order = seq_cst)</p>
+<ul>
+<li><p>功能：原子性地对当前值执行<strong>按位与</strong> (&amp;=)
+操作：current_value <strong>&amp;=</strong> integral_value。</p></li>
+<li><p>返回值：返回执行按位与之前的<strong>旧值</strong>。</p></li>
+<li><p>内存顺序：作为 RMW 操作，可以指定任何内存顺序。</p></li>
+</ul></li>
+<li><p>fetch_or(integral_value, memory_order = seq_cst)</p>
+<ul>
+<li><p>功能：原子性地对当前值执行按位或 (|=) 操作：current_value |=
+integral_value。</p></li>
+<li><p>返回值：返回执行按位或之前的<strong>旧值</strong>。</p></li>
+<li><p>内存顺序：可以指定任何内存顺序。</p></li>
+</ul></li>
+<li><p>fetch_xor(integral_value, memory_order = seq_cst)</p>
+<ul>
+<li><p>功能：原子性地对当前值执行按位异或 (^=) 操作：current_value ^=
+integral_value。</p></li>
+<li><p>返回值：返回执行按位异或之前的<strong>旧值</strong>。</p></li>
+<li><p>内存顺序：可以指定任何内存顺序。</p></li>
+</ul></li>
+<li><p>&amp;=, |=, ^= 操作符</p>
+<ul>
+<li><p>功能：原子性地执行相应的按位与/或/异或操作。</p></li>
+<li><p>返回值：返回执行操作之后的<strong>新值</strong>。</p></li>
+<li><p>内存顺序：总是 memory_order_seq_cst。</p></li>
+</ul></li>
+</ul>
+<blockquote>
+<p>一般重载运算符都返回新值, 非重载的 fetch_xxx 函数返回旧值,
+且返回的都是普通类型, 而不是原子对象的引用。</p>
+</blockquote>
+<p>不过,
+原子整数类型没有提供原子化的乘法、除法和移位操作。因为这些操作在并发场景（如原子计数器、标志位掩码）中不如加减和位运算常用。</p>
+<p>替代方案：如果确实需要这些复杂操作的原子版本，可以通过在一个<strong>循环</strong>中使用
+compare_exchange_weak() 或 compare_exchange_strong()
+来实现。例如，原子乘法可以这样实现（伪代码）： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">int</span>&gt; atomic_val;</span><br><span class="line"><span class="type">int</span> multiplier = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> old_val = atomic_val.<span class="built_in">load</span>();</span><br><span class="line"><span class="type">int</span> new_val;</span><br><span class="line"><span class="keyword">do</span> {</span><br><span class="line">    new_val = old_val * multiplier; </span><br><span class="line">} <span class="keyword">while</span> (!atomic_val.<span class="built_in">compare_exchange_weak</span>(old_val, new_val)); </span><br><span class="line"><span class="comment">// compare_exchange 会在失败时自动更新 old_val</span></span><br></pre></td></tr></table></figure></div>
+这个循环会一直尝试，直到它成功地“捕获”了一个 old_val 并原子地将其替换为
+new_val = old_val * multiplier。如果在 CAS 期间有其他线程修改了
+atomic_val，CAS 会失败，循环会重试，直到成功。</p>
+<h3 id="stdatomic-主要类的模板">std::atomic&lt;&gt; 主要类的模板</h3>
+<p>前面几节讨论的都是 std::atomic&lt;&gt; 针对内置类型（如 bool, int,
+T*）的特化版本 (Specializations)。这些特化版本拥有丰富的操作集（如
+fetch_add, fetch_or 等）。</p>
+<p>本节讨论的是 std::atomic&lt;&gt; 的主要类模板 (Primary Class
+Template) 本身。这个模板允许你尝试为用户定义类型 (User-Defined Type,
+<strong>UDT</strong>) 创建原子版本，例如
+<code>std::atomic&lt;MyStruct&gt;</code>。</p>
+<h4 id="udt-的限制条件">UDT 的限制条件</h4>
+<p>首先, <code>std::atomic&lt;UDT&gt;</code> 对 UDT
+有着非常严格的限制。并不是任何类或结构体都可以直接放入
+std::atomic&lt;&gt; 中。为了使 <code>std::atomic&lt;UDT&gt;</code>
+能够被实例化和使用，UDT 类型必须满足以下条件：</p>
+<ul>
+<li>必须具有<strong>平凡</strong>的<strong>拷贝赋值</strong>运算符
+(Trivial Copy Assignment Operator)：
+<ul>
+<li>含义：编译器必须能够<strong>自动生成</strong> UDT
+的<strong>拷贝赋值运算符</strong>，而不需要调用任何用户自定义的赋值代码。</li>
+<li>推论：
+<ul>
+<li>UDT <strong>不能有任何虚函数</strong> (virtual functions)
+或<strong>虚基类</strong> (virtual base
+classes)。（因为这些会影响对象的内存布局和赋值方式）。</li>
+<li>UDT
+的所有<strong>基类</strong>和所有<strong>非静态数据成员</strong>也必须具有<strong>平凡的拷贝赋值运算符</strong>。</li>
+</ul></li>
+<li>本质：这个限制（基本上）允许编译器使用 <strong>memcpy()</strong>
+或等价的<strong>按位拷贝</strong>操作来实现 UDT 对象的赋值。</li>
+</ul></li>
+<li>必须是<strong>位可比</strong>的 (Bitwise Equality Comparable)：
+<ul>
+<li>含义：UDT
+类型的两个对象，如果它们的内存表示是一致的（<strong>按位相等</strong>，<strong>memcmp
+结果为0</strong>），那么它们就必须<strong>逻辑相等</strong> (operator==
+结果为 true)；反之亦然。</li>
+<li>本质：这确保了 compare_exchange
+操作可以在底层按位比较对象，而不会产生逻辑错误。</li>
+</ul></li>
+</ul>
+<p>为什么有这些严格的限制？这些限制不是随意的，它们背后有深刻的原因，主要与安全和性能有关：</p>
+<ul>
+<li>防止在原子操作内部调用用户代码：
+<ul>
+<li>风险：如果 <code>std::atomic&lt;UDT&gt;</code>
+允许用户自定义的赋值或比较运算符，那么原子操作（如 store 或
+compare_exchange）在执行时就必须调用这些用户代码。</li>
+<li>问题：<code>std::atomic&lt;UDT&gt;</code>
+的实现（尤其是在非无锁的情况下）通常会使用<strong>一个内部锁</strong>来保证原子性(因为<strong>没有单一的
+CPU
+指令能原子地读取、修改和写入整个结构体</strong>。)。如果在持有这个内部锁的同时调用了用户代码，就违反了第3章的指导原则（“不要在持有锁时调用用户提供的代码”），这可能导致死锁或性能问题（用户代码阻塞了所有其他访问该原子变量的线程）。</li>
+<li>解决方案：限制 UDT
+只能进行按位拷贝/比较，这样编译器就知道<strong>原子操作内部不需要执行任何可能阻塞或产生副作用的用户代码</strong>。</li>
+</ul></li>
+<li>为无锁实现提供可能性：
+<ul>
+<li>通过将 UDT 限制为可以按位操作的“<strong>类 POD</strong> (Plain Old
+Data)”类型，编译器就<strong>有可能</strong>为
+<code>std::atomic&lt;UDT&gt;</code> 生成<strong>无锁</strong>
+(lock-free) 的代码，特别是当 sizeof(UDT)
+等于平台原生支持的原子类型大小（如 int, void*）时。</li>
+<li>对于支持 DWCAS (Double-Word-Compare-and-Swap)
+指令的平台，甚至可能对两倍指针大小的 UDT 实现无锁操作。</li>
+</ul></li>
+<li>保证 compare_exchange 的行为符合预期：
+<ul>
+<li>浮点数陷阱：即使 float 或 double
+满足按位拷贝/比较的标准，compare_exchange
+也可能失败，即使两个浮点数在逻辑上相等（例如，+0.0 和 -0.0
+的<strong>位模式不同</strong>）。</li>
+<li>UDT 陷阱：如果 UDT 定义了自己的 operator==，但其逻辑与 memcmp
+不完全一致，compare_exchange（它依赖于位比较）的行为可能会让用户感到意外。</li>
+<li>解决方案：限制 UDT 必须是“位可比的”，确保 <strong>compare_exchange
+的行为是基于内存表示的精确匹配</strong>。 ####
+<code>std::atomic&lt;UDT&gt;</code> 的可用操作 (受限接口)</li>
+</ul></li>
+</ul>
+<p>由于 UDT 的通用性以及上述限制，std::atomic<udt>
+的接口比针对内置类型的特化版本要少得多。它只提供那些不依赖于类型具体算术或位运算的操作：</udt></p>
+<ul>
+<li><p>load()：原子读取。</p></li>
+<li><p>store()：原子写入 (也支持从 UDT 赋值)。</p></li>
+<li><p>exchange()：原子交换。</p></li>
+<li><p>compare_exchange_weak()：原子比较并交换 (弱)。</p></li>
+<li><p>compare_exchange_strong()：原子比较并交换 (强)。</p></li>
+<li><p>operator UDT()：原子转换为 UDT 类型 (相当于 load())。</p></li>
+<li><p>operator=(UDT)：原子赋值 (相当于 store())。</p></li>
+<li><p>is_lock_free()：检查是否无锁。</p></li>
+</ul>
+<p>注意：std::atomic<udt> 没有 fetch_add, fetch_or, ++, -=
+等算术或位运算操作。</udt></p>
+<p>关于自定义类型的原子操作, 下面是一些建议:</p>
+<ul>
+<li><p>非法示例：你不能创建
+<code>std::atomic&lt;std::vector&lt;int&gt;&gt;</code> 或
+<code>std::atomic&lt;std::string&gt;</code>，因为 std::vector 和
+std::string
+有<strong>非平凡的拷贝构造/赋值</strong>（需要<strong>管理动态内存</strong>）。</p></li>
+<li><p>何时使用 std::mutex：如果你的 <strong>UDT
+很复杂</strong>，或者你需要对其执行<strong>比简单替换/比较更复杂的操作</strong>，那么
+<code>std::atomic&lt;UDT&gt;</code>
+可能不适合。你应该回到第3章的方法：使用 std::mutex 来保护这个 UDT
+对象，并在锁内执行所需的操作。</p></li>
+</ul>
+<p>总结：<code>std::atomic&lt;UDT&gt;</code>
+提供了一种将<strong>原子性扩展到简单用户定义类型</strong>的机制，但前提是这些类型必须像
+<strong>POD</strong>
+类型一样，可以<strong>安全地进行按位拷贝和比较</strong>。对于更复杂的类型或操作，互斥锁仍然是必要的工具。</p>
+<h3 id="原子自由函数">原子自由函数</h3>
+<p>除了原子类型的成员函数外，C++标准库还提供了一些<strong>原子自由函数</strong>（Atomic
+Free
+Functions），这些函数可以在不需要锁的情况下安全地操作原子变量。常见的原子自由函数包括：</p>
+<ul>
+<li>std::atomic_load：原子读取。</li>
+<li>std::atomic_store：原子写入。</li>
+<li>std::atomic_exchange：原子交换。</li>
+<li>std::atomic_compare_exchange_weak：原子比较并交换（弱）。</li>
+<li>std::atomic_compare_exchange_strong：原子比较并交换（强）。</li>
+</ul>
+<p>这些函数的使用方式与对应的成员函数类似，但它们是以自由函数的形式提供的。它们的第一个参数是一个指向原子变量的指针，在这个原子变量的基础上执行相应的原子操作。例如:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">a</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> value = std::<span class="built_in">atomic_load</span>(&amp;a); <span class="comment">// 原子读取</span></span><br><span class="line">std::<span class="built_in">atomic_store</span>(&amp;a, <span class="number">42</span>); <span class="comment">// 原子写入</span></span><br></pre></td></tr></table></figure></div>
+这样做的好处是，它们可以与非原子类型的变量一起使用，提供了一种更通用的方式来进行原子操作。</p>
+<h4 id="为shared_ptr等智能指针提供原子操作">为shared_ptr等智能指针提供原子操作</h4>
+<p>C++11引入了对智能指针（如 <code>std::shared_ptr</code> 和
+<code>std::weak_ptr</code>）的原子操作支持。这些操作允许你在多线程环境中安全地共享和管理智能指针，而无需显式使用互斥锁。
+- std::atomic_load(std::shared_ptr<t>* p)：原子读取 shared_ptr。 -
+std::atomic_store(std::shared_ptr<t>* p, std::shared_ptr<t> r)：原子写入
+shared_ptr。 - std::atomic_exchange(std::shared_ptr<t>* p,
+std::shared_ptr<t> r)：原子交换 shared_ptr。 -
+std::atomic_compare_exchange_weak(std::shared_ptr<t>* p,
+std::shared_ptr<t>* expected, std::shared_ptr<t>
+desired)：原子比较并交换 shared_ptr（弱）。 -
+std::atomic_compare_exchange_strong(std::shared_ptr<t>* p,
+std::shared_ptr<t>* expected, std::shared_ptr<t>
+desired)：原子比较并交换 shared_ptr（强）。</t></t></t></t></t></t></t></t></t></t></t></p>
+<blockquote>
+<p>为 std::shared_ptr 提供特殊的原子自由函数，是 C++
+标准委员会基于实际编程需求和易用性考虑做出的一个务实的决定。shared_ptr
+在并发编程中太重要了，更新它的操作又涉及到复杂的引用计数原子性，因此提供一套标准化的、封装好的原子操作接口，可以显著提高开发效率和程序的健壮性，即使这意味着在类型系统上做出一点“让步”。</p>
+</blockquote>
+<h2 id="同步操作和强制排序">同步操作和强制排序</h2>
+<p>这是C++内存模型中用于建立<strong>线程间顺序关系</strong>的核心机制。理解它对于理解原子操作如何实现同步至关重要。</p>
+<h3 id="同步发生-synchronizes-with">同步发生 (Synchronizes-with)</h3>
+<p>“同步发生” (Synchronizes-with)
+是一种只发生在原子类型操作之间的关系。</p>
+<p>基本思想：当一个线程对一个原子变量执行<strong>写</strong>操作，而另一个线程对同一个原子变量执行<strong>读</strong>操作，并且这个读操作确实<strong>读取到了那个写操作写入的值</strong>（或者之后的值），那么这两个操作之间就可能建立“<strong>同步发生</strong>”关系。</p>
+<p>更精确的定义是, 一个<strong>原子写操作 W</strong>（例如 store 或
+exchange）在一个<strong>原子变量 x</strong> 上， <strong>同步于</strong>
+(Synchronizes-with) 一个<strong>原子读操作 R</strong>（例如 load 或
+exchange）在<strong>同一个原子变量 x</strong> 上，当且仅当：</p>
+<ul>
+<li>W 和 R
+都被“<strong>适当标记</strong>”（使用了<strong>能够建立同步</strong>的<strong>内存顺序标签</strong>）；</li>
+<li>并且，操作 <strong>R 读取的值</strong>是由 <strong>W
+直接写入的值</strong>；
+<ul>
+<li>或者，由 <strong>W 之后</strong>的<strong>同一个线程对 x
+的后续原子写操作写入的值</strong>；</li>
+<li>或者，由<strong>一系列原子“读-改-写” (RMW) 操作</strong>（例如
+fetch_add,
+compare_exchange）构成的一个<strong>链条</strong>，这个链条的<strong>起始值来源于
+W</strong>，而 <strong>R
+读取的是这个链条中某个操作写入的值</strong>。</li>
+</ul></li>
+</ul>
+<h4 id="同步发生的意义建立线程间先行关系">“同步发生”的意义：建立“线程间先行”关系</h4>
+<p>“同步发生”本身只是一个技术术语。它真正的威力在于，它是建立“<strong>线程间先行发生</strong>”
+(Inter-thread Happens-before) 关系的桥梁。</p>
+<p>规则：如果<strong>操作 A</strong>（在一个线程上）<strong>同步于操作
+B</strong>（在另一个线程上），那么 <strong>A 就线程间先行于 B</strong>。
+&gt; “同步于”之前的是先执行的, “先行于”之前的也是先执行的.</p>
+<p>“先行发生”关系保证了操作 <strong>A
+的所有内存效果</strong>（比如<strong>写</strong>入非原子变量
+data）对于操作** B 之后的代码<strong>（比如</strong>读<strong>取
+data）是</strong>可见且有序的**。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 线程 A (Writer)</span></span><br><span class="line">data.<span class="built_in">push_back</span>(<span class="number">42</span>);</span><br><span class="line">data_ready.<span class="built_in">store</span>(<span class="literal">true</span>); <span class="comment">// W: 原子写 (默认 seq_cst)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程 B (Reader)</span></span><br><span class="line"><span class="keyword">while</span>(!data_ready.<span class="built_in">load</span>()); <span class="comment">// R: 原子读 (默认 seq_cst)，读到 true</span></span><br><span class="line"><span class="built_in">use</span>(data[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure></div>
+<p>这里<code>store(true)</code> 同步于 <code>load()</code>
+(因为满足上述条件：store 写入 true，load 读取到直接写入的
+true，且两者都使用了 seq_cst 内存顺序)。</p>
+<p>因此，store(true) <strong>线程间先行</strong>于 load()。这就保证了在
+load() 返回 true 之后，线程B一定能看到 data.push_back(42) 的效果。</p>
+<p>总结:</p>
+<ul>
+<li><p>“同步发生”是 C++
+内存模型定义的一种<strong>成对关系</strong>，发生在对同一个原子变量的写操作和读操作之间。</p></li>
+<li><p>它的发生需要满足<strong>两个条件</strong>：操作被“适当标记”（例如，使用默认的
+seq_cst），并且读操作看到了写操作（或其后续）的结果。</p></li>
+<li><p>“同步发生”是建立跨线程的“<strong>先行发生</strong>”关系的<strong>基础</strong>，从而保证内存操作的可见性和顺序性。</p></li>
+<li><p>它是理解原子操作如何实现线程同步（例如 mutex
+的底层原理）的关键。</p></li>
+</ul>
+<h3 id="先行发生-happens-before">先行发生 (Happens-before)</h3>
+<p>这是C++内存模型中最基本、最核心的顺序关系概念。它定义了在一个并发程序中，一个操作的内存效果（例如写入）何时能保证对另一个操作（例如读取）可见。</p>
+<p>如果操作 A 先行于 (Happens-before) 操作 B，那么就意味着：</p>
+<ul>
+<li>A 的执行结果（特别是对内存的写入）必须对 B 的执行是可见的。</li>
+<li>在抽象的执行模型中，A 必须在 B 之前完成。</li>
+</ul>
+<p>它是建立程序中<strong>基本操作顺序</strong>的构建块，尤其是在多线程环境下，用于避免数据竞争并保证程序的逻辑正确性。</p>
+<p>如果两个操作（至少一个是写）访问同一个非原子内存位置，并且它们之间<strong>没有“先行发生”关系</strong>，那么就构成了<strong>数据竞争</strong>，导致未定义行为。</p>
+<p>相比上面的“同步发生”关系，“先行发生”关系更为<strong>广泛</strong>。它不仅涵盖了<strong>线程间</strong>的操作，还包括<strong>同一线程内的操作顺序</strong>。因此，“先行发生”关系主要由两种更基础的关系组合而成：“<strong>序前</strong>”和“<strong>线程间先行</strong>”。</p>
+<h4 id="序前-sequenced-before单线程内的顺序">“序前”
+(Sequenced-before)：单线程内的顺序</h4>
+<p>这是我们最熟悉的顺序，它描述了<strong>同一个线程内部操作</strong>之间的顺序。</p>
+<p>基本上，如果<strong>源代码中</strong>操作 A 出现在操作 B
+<strong>之前</strong>（例如，在不同的语句中，或者由分号、逗号操作符、函数调用顺序等分隔），那么
+A 就序前于 (Sequenced-before) B。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// writer_thread()</span></span><br><span class="line">data.<span class="built_in">push_back</span>(<span class="number">42</span>);  <span class="comment">// 操作 ③</span></span><br><span class="line">data_ready = <span class="literal">true</span>;   <span class="comment">// 操作 ④</span></span><br></pre></td></tr></table></figure></div>
+<p>因为语句③在语句④之前，所以操作③ 序前于 操作④。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">foo</span>(<span class="built_in">get_num</span>(), <span class="built_in">get_num</span>()); <span class="comment">// 两个 get_num() 调用的顺序是“未指定顺序的”</span></span><br></pre></td></tr></table></figure></div>
+但是这里，对 get_num()
+的两次调用之间没有“序前”关系。<strong>编译器可以自由选择</strong>先调用哪个。这种缺乏“序前”关系的操作被称为“<strong>未序</strong>
+(unsequenced)”。</p>
+<h4 id="线程间先行-inter-thread-happens-before跨线程的顺序">“线程间先行”
+(Inter-thread Happens-before)：跨线程的顺序</h4>
+<p>这是专门用来描述<strong>不同线程之间</strong>操作顺序的关系。</p>
+<p>如何建立？ 根据上一节所说, “线程间先行”关系必须通过“同步发生”
+(Synchronizes-with) 关系来建立。</p>
+<ul>
+<li>如果操作 A（在线程T1上）同步于 (Synchronizes-with) 操作
+B（在线程T2上），那么操作 A 就 线程间先行于 (Inter-thread
+Happens-before) 操作 B。</li>
+</ul>
+<p>建立线程先行的主要机制有两点：</p>
+<ul>
+<li><p>原子操作：一个（适当标记的）原子写操作 W
+同步于一个（适当标记的）原子读操作 R（如果 R 读到了 W
+或其后续写入的值）。</p></li>
+<li><p>互斥量：mutex.unlock() 操作（内部是一个原子 release
+操作）同步于后续在同一个 mutex 上的 lock() 操作（内部是一个原子 acquire
+操作）。</p></li>
+</ul>
+<p>并且, “先行发生”关系是<strong>可传递</strong>的，这一点极其重要。</p>
+<ul>
+<li>如果 A 先行于 B，并且 B 先行于 C，那么 A 就先行于 C。</li>
+</ul>
+<p>这允许<strong>同步效果“穿透”多个操作和线程</strong>, 例如:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 线程 A (Writer 1)</span></span><br><span class="line">data.<span class="built_in">push_back</span>(<span class="number">42</span>);          <span class="comment">// 操作 ①  </span></span><br><span class="line">data_ready.<span class="built_in">store</span>(<span class="literal">true</span>);     <span class="comment">// 操作 ② (W)</span></span><br><span class="line"><span class="comment">// 线程 B (Writer 2)</span></span><br><span class="line"><span class="keyword">while</span>(!data_ready.<span class="built_in">load</span>()); <span class="comment">// 操作 ③ (R)</span></span><br><span class="line">more_data.<span class="built_in">push_back</span>(<span class="number">84</span>);    <span class="comment">// 操作 ④</span></span><br><span class="line">data_ready<span class="number">2.</span><span class="built_in">store</span>(<span class="literal">true</span>);    <span class="comment">// 操作 ⑤ (W)</span></span><br><span class="line"><span class="comment">// 线程 C (Reader)</span></span><br><span class="line"><span class="keyword">while</span>(!data_ready<span class="number">2.l</span>oad()); <span class="comment">// 操作 ⑥ (R)</span></span><br><span class="line"><span class="built_in">use</span>(data[<span class="number">0</span>], more_data[<span class="number">0</span>]); <span class="comment">// 操作 ⑦</span></span><br></pre></td></tr></table></figure></div> 在这个例子中： - 操作② 同步于 操作③，因此 ② 线程间先行于
+③。 - 操作⑤ 同步于 操作⑥，因此 ⑤ 线程间先行于 ⑥。 - 由于 ② 先行于 ③，且
+③ 在同一线程内序前于 ④，且 ④ 序前于 ⑤，因此根据传递性，操作 ② 也先行于
+⑤。 - 结合 ⑤ 先行于 ⑥，我们得到 ② 先行于 ⑥。 - 因此，操作
+①（data.push_back(42)）的效果对于操作 ⑦（use(data[0],
+more_data[0])）是<strong>可见</strong>的。</p>
+<p>这也是”<strong>序前</strong>”和”<strong>线程间先行</strong>”关系<strong>结合</strong>使用的一个典型例子,
+它展示了如何通过多个线程和操作建立起内存可见性。</p>
+<h3 id="原子操作的内存顺序memory-order">原子操作的内存顺序(Memory
+Order)</h3>
+<p>这是这一整章<strong>最核心</strong>、最复杂的部分。它解释了你在执行原子操作时，可以附加的不同“内存顺序标签”
+(Memory Ordering
+Tags)，以及这些标签如何精确地控制线程间的同步行为和内存可见性。</p>
+<p>为什么需要内存顺序？因为如果你不指定，所有原子操作都使用
+<strong>std::memory_order_seq_cst</strong>。这提供了<strong>最强</strong>、最直观的保证（排序一致性），但可能是<strong>最慢</strong>的。</p>
+<p>不同的CPU架构对内存操作的排序有不同的硬件支持。强制执行强顺序（如
+seq_cst）在某些CPU（特别是多核、弱排序架构如
+ARM）上可能需要<strong>昂贵的CPU指令</strong>（内存屏障/栅栏）来确保全局同步。</p>
+<p>因此,
+C++提供<strong>更弱的内存顺序</strong>选项，允许专家级程序员在保证程序正确性的前提下，放松排序约束，从而减少同步开销，<strong>提升性能</strong>。</p>
+<h4 id="六种内存顺序标签与三种模型">六种内存顺序标签与三种模型</h4>
+<p>C++11
+定义了<strong>六种内存顺序标签</strong>，它们可以归纳为<strong>三种不同的内存模型</strong>：</p>
+<p><strong>排序一致 (Sequentially Consistent) 模型</strong></p>
+<ul>
+<li>标签：std::memory_order_seq_cst</li>
+</ul>
+<p><strong>获取-释放 (Acquire-Release) 模型</strong></p>
+<ul>
+<li><p>标签：std::memory_order_acquire (用于加载或 RMW)</p></li>
+<li><p>标签：std::memory_order_release (用于存储或 RMW)</p></li>
+<li><p>标签：std::memory_order_acq_rel (用于 RMW)</p></li>
+</ul>
+<p><strong>自由 (Relaxed) 模型</strong></p>
+<ul>
+<li>标签：std::memory_order_relaxed</li>
+</ul>
+<h4 id="排序一致序列-sequentially-consistent---seq_cst">排序一致序列
+(Sequentially Consistent - seq_cst)</h4>
+<ul>
+<li><p>标签：std::memory_order_seq_cst</p></li>
+<li><p>保证：<strong>最强保证</strong>。所有<strong>被标记为 seq_cst
+的原子操作</strong>，在<strong>所有线程</strong>看来，都存在一个<strong>单一的、全局的总执行顺序</strong>。</p></li>
+<li><p>行为：程序的行为就像<strong>所有线程的操作被简单地交错</strong>
+(interleaved)
+在一个单一的时间线上执行一样。这符合我们对<strong>并发</strong>程序的直观想象。</p></li>
+<li><p><strong>易于推理</strong>：这是最容易理解的模型。你可以通过列出所有可能的交错执行顺序来分析程序的行为。</p></li>
+<li><p><strong>禁止重排</strong>：编译器和CPU不能对 seq_cst
+操作相对于其他 seq_cst 操作进行重排。</p></li>
+<li><p>同步关系：一个 seq_cst 的存储操作 W 同步于一个 seq_cst 的加载操作
+R（如果 R 读取了 W
+或其后续写入的值）。这会建立<strong>线程间先行</strong>发生
+(Inter-thread Happens-before) 关系。</p></li>
+<li><p><strong>全局顺序</strong>：seq_cst
+提供的保证超越了简单的“同步发生”。它强制所有 seq_cst
+操作都必须纳入那个单一的全局顺序中。</p></li>
+</ul>
+<p>下面是一个示例，展示了 seq_cst 的行为：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">bool</span>&gt; x,y; std::atomic&lt;<span class="type">int</span>&gt; z;</span><br><span class="line"><span class="comment">// Thread A: write_x() { x.store(true, seq_cst); } // 1</span></span><br><span class="line"><span class="comment">// Thread B: write_y() { y.store(true, seq_cst); } // 2</span></span><br><span class="line"><span class="comment">// Thread C: read_x_then_y() { while(!x.load(seq_cst)); if(y.load(seq_cst)) ++z; } // 3</span></span><br><span class="line"><span class="comment">// Thread D: read_y_then_x() { while(!y.load(seq_cst)); if(x.load(seq_cst)) ++z; } // 4</span></span><br><span class="line"><span class="comment">// main() creates threads...</span></span><br><span class="line"><span class="built_in">assert</span>(z.<span class="built_in">load</span>() != <span class="number">0</span>); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure></div>
+<p>在上述的例子中, 断言 5 永远不会失败。为什么？因为 seq_cst
+保证了一个单一全局顺序。 - 首先, 线程 A 和线程 B 的 store 操作 (1 和 2)
+会以某个顺序出现在全局序列中。可能是 <strong>1 在 2 之前</strong>，或者
+<strong>2 在 1 之前</strong>。 - 假设 1 在 2 之前，那么线程 C 的 x.load
+操作 (3) 会看到 x 为 true，从而跳出循环, 然后它会检查 y。如果 2
+已经执行了，那么 y 也为 true，z 会被递增。 - 当然也有可能检查 y
+还没执行, 从而线程 C 不会递增 z. 但是此时线程 D 会一直阻塞在 y.load 处,
+直到线程 B 执行完毕后 y 为 true, 然后线程 D 会检查 x, 由于线程 A
+已经执行完毕 x 为 true, z 也会被递增. - 反之亦然，如果 2 在 1 之前，线程
+D 先跳出循环并检查 x，假设 x 也为 true，z 也会被递增。 - 假设 x
+还没执行完毕, 线程 C 会阻塞在 x.load 处, 直到线程 A 执行完毕后 x 为
+true, 然后线程 C 会检查 y, 由于线程 B 已经执行完毕 y 为 true, z
+也会被递增. - 因此, 无论哪种情况, z 最终都会被递增至少一次, 断言 5
+永远不会失败. - 根本原因就在于 seq_cst 保证了一个单一的全局顺序,
+使得<strong>至少有一个线程能够看到两个 store 操作的结果</strong>. -
+代价就是, 在多核弱排序 CPU 上，seq_cst 可能需要昂贵的全局同步指令。</p>
+<h4 id="自由序列-relaxed---relaxed">自由序列 (Relaxed - relaxed)</h4>
+<p>以下都属于<strong>非排序一致模型</strong>(踏出 seq_cst 的世界).
+一旦你放弃 seq_cst，以下直觉不再成立：</p>
+<ul>
+<li><p>没有单一全局顺序：<strong>不同线程</strong>可以<strong>对其他线程的操作看到不同的相对顺序</strong>。</p></li>
+<li><p><strong>重排是可能的</strong>：编译器和CPU（缓存、存储缓冲区）可以更自由地重排指令，只要遵守每个变量自身的修改顺序和明确的同步关系。</p></li>
+<li><p>线程不必“同意”：不同线程可以对同一组操作看到不同的顺序。</p></li>
+</ul>
+<p>对于<strong>自由序列 (relaxed)</strong> ,
+编译器带来的同步保证是最少的:</p>
+<ul>
+<li><p>标签：std::memory_order_relaxed</p></li>
+<li><p>保证：<strong>最弱</strong>保证。只保证<strong>操作本身的原子性</strong>（不会发生数据撕裂）。</p></li>
+<li><p>行为：</p>
+<ul>
+<li>没有同步关系 (synchronizes-with)。</li>
+<li>没有强制的跨线程顺序。</li>
+<li>唯一的顺序是：<strong>同一个线程</strong>对<strong>同一个原子变量的操作</strong>不能被重排（符合<strong>该变量的修改顺序</strong>）。</li>
+</ul></li>
+<li><p>重排：<strong>不同变量</strong>上的 relaxed
+操作可以被编译器或CPU<strong>自由地重排</strong>。</p></li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">bool</span>&gt; x,y; std::atomic&lt;<span class="type">int</span>&gt; z;</span><br><span class="line"><span class="comment">// Thread A: write_x_then_y() { x.store(true, relaxed); /*1*/ y.store(true, relaxed); /*2*/ }</span></span><br><span class="line"><span class="comment">// Thread B: read_y_then_x() { while(!y.load(relaxed)); /*3*/ if(x.load(relaxed)) ++z; /*4*/ }</span></span><br><span class="line"><span class="comment">// main() creates threads...</span></span><br><span class="line"><span class="built_in">assert</span>(z.<span class="built_in">load</span>() != <span class="number">0</span>); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure></div>
+<p>对于上述例子, 断言 5 <strong>可能会失败</strong>。为什么？因为
+relaxed 不保证任何跨线程的顺序。 - 在线程 A 中，x.store ① 序前于 y.store
+②。 - 但是，因为使用了 relaxed，这两个操作之间没有同步关系传递给线程 B。
+- 线程 B 的 <strong>y.load</strong> ③ 可能先于 x.load ④ 看到
+<strong>true</strong>（例如，y 的更新先到达 B 的缓存）。 -
+此时，<strong>x.load</strong> ④ 可能仍然看到
+<strong>false</strong>（因为 x 的更新还没到达 B
+的缓存，或者<strong>指令被重排</strong>了）。 - 因此，z 可能保持为 0。 -
+上面是<strong>线程 A
+的写-写（Store-Store）重排</strong>（更常见）。或者还有一种可能是<strong>线程
+B 的读-读（Load-Load）重排</strong>，线程 B 的指令被重排，使得
+<strong>x.load</strong> ④ 先于 <strong>y.load</strong> ③ 执行，此时
+<strong>x.load</strong> ④ 看到 <strong>false</strong>，导致 z 保持为 0。
+- 逻辑上, 线程 B 的 if 语句依赖于 while 循环的结果, 但由于使用了
+relaxed, 编译器/CPU 可以在<strong>取值的时候</strong>忽略这种依赖关系,
+导致重排发生(当然执行时仍然是按逻辑顺序执行的). -
+程序执行顺序（控制依赖）：线程B不会在 while 循环 (3) 退出之前去执行 if
+语句 (4) 的逻辑判断。这是由控制依赖保证的，这个逻辑顺序是可靠的。 -
+内存访问顺序（relaxed 导致的问题）：现代CPU是“乱序执行”的。当CPU在 while
+循环 (3) 处等待 y 变为 true
+时，它会“空闲”。它会“向前看”，发现哦，我等下（if 里）需要 x 的值。由于
+(4) 的 x.load 也是 relaxed
+的，CPU认为这个读取操作没有限制，它就可以决定“提前”去内存中把 x
+的值取回来（发起 Load 指令），尽管此时 while 循环还没退出。</p>
+<p>用途：relaxed
+通常用于<strong>不需要同步</strong>的场景，例如简单的<strong>原子计数器</strong>（只关心<strong>最终结果</strong>，不关心中间状态的可见性），或者需要配合栅栏
+(fences) 或其他更强顺序的操作一起使用。</p>
+<h4 id="获取-释放序列-acquire-release">获取-释放序列
+(Acquire-Release)</h4>
+<p>这是在性能和易用性之间取得平衡的主要模型。它不提供全局顺序，但允许你在<strong>特定操作之间</strong>建立<strong>成对的同步关系</strong>。</p>
+<ul>
+<li><p>标签：</p>
+<ul>
+<li>std::memory_order_<strong>release</strong>
+(释放)：用于<strong>存储</strong>操作 (store) 或读-改-写操作 (exchange,
+fetch_add 等)。</li>
+<li>std::memory_order_<strong>acquire</strong>
+(获取)：用于<strong>加载</strong>操作 (load) 或读-改-写操作。</li>
+<li>std::memory_order_<strong>acq_rel</strong>
+(获取并释放)：仅用于<strong>读-改-写</strong>操作。</li>
+</ul></li>
+<li><p>核心规则 (配对)： 一个 release 存储操作 W
+<strong>同步于</strong>一个 acquire 加载操作
+R（在<strong>同一个原子变量</strong>上），如果 R 读取了由 W 或 W 之后的
+RMW 链写入的值。</p></li>
+<li><p>效果（先行发生）：这种同步会建立线程间先行发生关系 (W
+happens-before R)。</p></li>
+<li><p>这保证了：在 <strong>W (release store)
+之前的所有内存写入</strong>（包括非原子写入），对于在 <strong>R (acquire
+load)
+之后的所有内存读取</strong>（包括非原子读取）都是<strong>可见且有序</strong>的。</p>
+<ul>
+<li>可以理解为：release 操作“发布”了它之前的内存效果，而 acquire
+操作“获取”了这些效果。</li>
+<li><strong>release</strong>
+操作在它<strong>之后建起了一个“屏障”</strong>，防止它之前的操作被重排到它之后。而
+<strong>acquire</strong>
+操作在它<strong>之前建起了一个“屏障”</strong>，防止它之后的操作被重排到它之前。</li>
+</ul></li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">bool</span>&gt; x,y; std::atomic&lt;<span class="type">int</span>&gt; z;</span><br><span class="line"><span class="comment">// Thread A: write_x_then_y() { x.store(true, relaxed); /*1*/ y.store(true, release); /*2*/ }</span></span><br><span class="line"><span class="comment">// Thread B: read_y_then_x() { while(!y.load(acquire)); /*3*/ if(x.load(relaxed)) ++z; /*4*/ }</span></span><br><span class="line"><span class="comment">// main() creates threads...</span></span><br><span class="line"><span class="built_in">assert</span>(z.<span class="built_in">load</span>() != <span class="number">0</span>); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure></div>
+<p>在上述例子中, 断言 5 永远不会失败。为什么？因为 release-acquire
+建立了同步关系。 - 在线程 A 中，x.store ① 序前于 y.store ②, 并且 y.store
+② 是一个 release 操作。 - 在线程 B 中，y.load ③ 是一个 acquire 操作,
+它读取到了 y.store ② 写入的 true。 - 因此，y.store ② 同步于 y.load
+③，建立了<strong>线程间先行</strong>关系 (② happens-before ③)。 - 由于 ①
+序前于 ②，并且 ② 先行于 ③，根据<strong>传递性</strong>，① 也先行于 ③。 -
+这保证了 x.store ① 的效果对于 x.load ④ 是可见的。因此，x.load ④
+一定会看到 true，z 会被递增。</p>
+<p>还有下面这个例子: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">int</span>&gt; data[<span class="number">5</span>];</span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">bool</span>&gt; <span class="title">sync1</span><span class="params">(<span class="literal">false</span>)</span>,<span class="title">sync2</span><span class="params">(<span class="literal">false</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread_1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  data[<span class="number">0</span>].<span class="built_in">store</span>(<span class="number">42</span>,std::memory_order_relaxed);</span><br><span class="line">  data[<span class="number">1</span>].<span class="built_in">store</span>(<span class="number">97</span>,std::memory_order_relaxed);</span><br><span class="line">  data[<span class="number">2</span>].<span class="built_in">store</span>(<span class="number">17</span>,std::memory_order_relaxed);</span><br><span class="line">  data[<span class="number">3</span>].<span class="built_in">store</span>(<span class="number">-141</span>,std::memory_order_relaxed);</span><br><span class="line">  data[<span class="number">4</span>].<span class="built_in">store</span>(<span class="number">2003</span>,std::memory_order_relaxed);</span><br><span class="line">  sync<span class="number">1.</span><span class="built_in">store</span>(<span class="literal">true</span>,std::memory_order_release);  <span class="comment">// 1.设置sync1</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread_2</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  <span class="keyword">while</span>(!sync<span class="number">1.l</span>oad(std::memory_order_acquire));  <span class="comment">// 2.直到sync1设置后，循环结束</span></span><br><span class="line">  sync<span class="number">2.</span><span class="built_in">store</span>(<span class="literal">true</span>,std::memory_order_release);  <span class="comment">// 3.设置sync2</span></span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread_3</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  <span class="keyword">while</span>(!sync<span class="number">2.l</span>oad(std::memory_order_acquire));   <span class="comment">// 4.直到sync2设置后，循环结束</span></span><br><span class="line">  <span class="built_in">assert</span>(data[<span class="number">0</span>].<span class="built_in">load</span>(std::memory_order_relaxed)==<span class="number">42</span>);</span><br><span class="line">  <span class="built_in">assert</span>(data[<span class="number">1</span>].<span class="built_in">load</span>(std::memory_order_relaxed)==<span class="number">97</span>);</span><br><span class="line">  <span class="built_in">assert</span>(data[<span class="number">2</span>].<span class="built_in">load</span>(std::memory_order_relaxed)==<span class="number">17</span>);</span><br><span class="line">  <span class="built_in">assert</span>(data[<span class="number">3</span>].<span class="built_in">load</span>(std::memory_order_relaxed)==<span class="number">-141</span>);</span><br><span class="line">  <span class="built_in">assert</span>(data[<span class="number">4</span>].<span class="built_in">load</span>(std::memory_order_relaxed)==<span class="number">2003</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 在这个例子中, thread_3 中对 data
+数组的读取操作一定会看到 thread_1 中的写入结果。原因如下： - 在 thread_1
+中, sync1.store 是一个 release 操作 (1)。 - 在 thread_2 中, sync1.load
+是一个 acquire 操作 (2)，它读取到了 sync1.store 写入的 true。因此,
+sync1.store (1) 同步于 sync1.load (2)，建立了线程间先行关系 (1
+happens-before 2)。 - 在 thread_2 中, sync2.store 是一个 release 操作
+(3)。 - 在 thread_3 中, sync2.load 是一个 acquire 操作 (4)，它读取到了
+sync2.store 写入的 true。因此, sync2.store (3) 同步于 sync2.load
+(4)，建立了线程间先行关系 (3 happens-before 4)。 - 由于 (1
+happens-before 2) 且 (2 序前于 3) 且 (3 happens-before 4)，根据传递性,
+我们得到 (1 happens-before 4)。 - 这保证了 thread_1 中在 sync1.store
+之前对 data 数组的所有写入，对于 thread_3 中在 sync2.load 之后对 data
+数组的所有读取，都是可见且有序的。</p>
+<p>同时我们也可以看到, 在 thread_1 中对 data 数组的写入使用的是 relaxed
+内存顺序，thread_3 中对 data 数组的读取也使用的是 relaxed
+内存顺序。这是安全的，因为获取-释放模型只要求在<strong>同步点</strong>（sync1
+和 sync2）使用 <strong>acquire 和 release</strong>
+建立<strong>屏障</strong>，而在其他地方可以使用
+relaxed，从而提高性能。</p>
+<p>而读-改-写 (RMW) 的 <strong>acq_rel</strong>,
+例如<code>my_atomic.fetch_add(1, std::memory_order_acq_rel);</code>,
+这个操作同时扮演 <strong>acquire</strong> 和 <strong>release</strong>
+的角色：</p>
+<ul>
+<li>它与之前对 my_atomic 的 release 存储同步（获取语义）。</li>
+<li>它与之后对 my_atomic 的 acquire 加载同步（释放语义）。</li>
+</ul>
+<p>这对于实现锁或在 RMW 链中传递同步非常有用。</p>
+<h4 id="总结">总结</h4>
+<p>内存顺序是 C++
+原子编程的<strong>核心</strong>，它允许你在程序的正确性和性能之间进行权衡：</p>
+<ul>
+<li>seq_cst：最简单，最安全，但可能最慢。提供<strong>全局顺序</strong>。</li>
+<li>acquire-release：性能更好，需要仔细<strong>配对</strong> release 和
+acquire。提供<strong>成对同步</strong>和<strong>先行发生</strong>。</li>
+<li>relaxed：最快，但最危险。只保证原子性，<strong>没有同步</strong>。通常需要配合其他更强顺序或栅栏使用。</li>
+</ul>
+<h3 id="释放队列与同步-release-sequences">释放队列与同步 (Release
+Sequences)</h3>
+<p>这一节是 “同步发生” (Synchronizes-with)
+定义的一个重要<strong>扩展</strong>和深化。基本的“同步发生”主要描述了<strong>单个“写”操作</strong>与<strong>单个“读”操作</strong>之间的直接关系。而“释放序列”则解释了<strong>同步关系</strong>如何通过<strong>一系列的“读-改-写”</strong>
+(Read-Modify-Write, RMW) 操作<strong>传递</strong>下去。</p>
+<p>考虑以下场景：</p>
+<ul>
+<li>线程 A 执行 <code>store(value_A, release)</code>。(W)</li>
+<li>线程 B 执行 <code>old_B = fetch_add(1, acquire)</code>。假设它读取了
+<code>value_A</code>，写入了 <code>value_B</code>。(RMW1)</li>
+<li>线程 C 执行 <code>old_C = fetch_add(1, acquire)</code>。假设它读取了
+<code>value_B</code>，写入了 <code>value_C</code>。(RMW2)</li>
+<li>线程 D 执行 <code>value_D = load(acquire)</code>。假设它读取了
+<code>value_C</code>。(R)</li>
+</ul>
+<p>没有释放序列规则会怎样？</p>
+<ul>
+<li>W 同步于 RMW1 (因为 RMW1 读取了 W 的值)。</li>
+<li>但是，RMW1 本身是 acquire 操作，它没有 release 语义。所以，W
+的同步效果似乎在 RMW1 这里就中断了。</li>
+<li>RMW2 读取的是 RMW1 的值，而 <strong>RMW1 没有 release
+语义</strong>，所以 RMW2 与 W 似乎没有同步关系。</li>
+<li>同理，R 读取的是 RMW2 的值，似乎也与 W 没有同步关系。</li>
+</ul>
+<p>这意味着只有线程 B 能保证看到线程 A 在 W 之前的写入，而线程 C 和 D
+则没有保证！这显然不符合我们对原子计数器等模式的期望。</p>
+<p>然而,
+“<strong>释放序列</strong>”规则解决了上述问题。一个以<strong>写操作 W
+开始</strong>的释放序列包含：</p>
+<ul>
+<li><p><strong>起始点</strong>：写操作 W 本身，它必须被标记为
+memory_order_<strong>release</strong>, memory_order_acq_rel, 或
+memory_order_seq_cst (即具有释放语义的操作)。</p></li>
+<li><p><strong>链条</strong>：一系列（零个或多个）在<strong>同一个原子变量上执行的原子
+RMW 操作</strong>（例如 fetch_add, compare_exchange, exchange
+等）。</p></li>
+<li><p><strong>链接条件</strong>：链条中的每一个 RMW
+操作，都必须<strong>读取由序列中前一个操作</strong>（起始的 W 或前一个
+RMW）写入的值。</p></li>
+<li><p>RMW 的内存顺序：链条中的 RMW
+操作可以使用<strong>任何内存顺序</strong>（甚至是
+memory_order_relaxed！）。</p>
+<ul>
+<li>起始的 store(release) 已经付出了建立 Release 屏障的代价,
+因此它们不需要再建立屏障。</li>
+<li>它们只需要保证<strong>逻辑连接性</strong>（即读取了前一个操作写入的值），从而证明自己是释放序列的一部分。</li>
+</ul></li>
+</ul>
+<p>释放序列这一规则的关键点在于：<strong>释放序列中的所有 RMW
+操作都被视为具有“释放”语义</strong>，即使它们本身并没有被标记为
+release。这是 C++ 内存模型赋予原子 RMW 操作的一个强大“特性”</p>
+<p>换句话说：只要 <strong>load(acquire)</strong> 读取到的值是那个
+release
+<strong>链条上的任何一环</strong>，它就与<strong>链条的起始点</strong>
+(store(release)) <strong>建立了同步关系</strong>！</p>
+<p>下面是一个示例，展示了释放序列的作用：</p>
+<p>场景：<strong>一个生产者线程</strong> populate_queue 准备数据，然后用
+count.store(release) (①)
+告知消费者数据量。<strong>多个消费者线程</strong> consume_queue_items
+通过 count.fetch_sub(acquire) (②) 来原子性地获取一个项目索引。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; queue_data;</span><br><span class="line">std::atomic&lt;<span class="type">int</span>&gt; count;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">populate_queue</span><span class="params">()</span> </span>{</span><br><span class="line">  <span class="comment">// ... 填充 queue_data ...</span></span><br><span class="line">  count.<span class="built_in">store</span>(number_of_items, std::memory_order_release); <span class="comment">// 1. 起始的 Store-Release (W)</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">consume_queue_items</span><span class="params">()</span> </span>{</span><br><span class="line">  <span class="keyword">while</span>(<span class="literal">true</span>) {</span><br><span class="line">    <span class="type">int</span> item_index;</span><br><span class="line">    <span class="comment">// 2. 原子地递减计数器并获取旧值 (RMW with Acquire)</span></span><br><span class="line">    <span class="keyword">if</span>((item_index = count.<span class="built_in">fetch_sub</span>(<span class="number">1</span>, std::memory_order_acquire)) &lt;= <span class="number">0</span>) {</span><br><span class="line">       <span class="comment">// ... 队列空 ... (3)</span></span><br><span class="line">       <span class="keyword">continue</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 4. 读取数据 (需要保证可见性)</span></span><br><span class="line">    <span class="built_in">process</span>(queue_data[item_index - <span class="number">1</span>]); </span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>生产者调用 store(release) ①。这是释放序列的起始点 W。</li>
+<li>消费者 C1 调用 fetch_sub(acquire) ②。假设它读取了 W 写入的值 N，并将
+count 更新为 N-1。
+<ul>
+<li>根据释放序列规则（链条长度为0），W 同步于 C1 的 fetch_sub。</li>
+<li>因此，W 先行于 C1 的 fetch_sub。C1 可以安全地访问 queue_data[N-1]
+(④)。</li>
+<li>C1 的 fetch_sub 操作本身（即使是 acquire）现在成为释放序列 W
+的一部分。</li>
+</ul></li>
+<li>消费者 C2 调用 fetch_sub(acquire) ②。假设它读取了由 C1 的 fetch_sub
+写入的值 N-1，并将 count 更新为 N-2。
+<ul>
+<li>C2 的 load 读取了由 C1 的 RMW 操作写入的值，而 C1 的 RMW
+操作是释放序列 W 的一部分。</li>
+<li>根据释放序列规则，起始的 store W (①) 同步于 C2 的 fetch_sub！</li>
+<li>因此，W 先行于 C2 的 fetch_sub。C2 也可以安全地访问 queue_data[N-2]
+(④)。</li>
+</ul></li>
+</ul>
+<p>尽管 C1 和 C2 之间没有直接的同步关系（因为 C1 的 fetch_sub 是
+acquire，不是 release）, 但它们都与最初生产者的 store(release)
+建立了同步关系。</p>
+<p>这保证了所有成功获取到项目索引（item_index &gt;
+0）的消费者，都能看到生产者在 store(release) 之前对 queue_data
+的写入。这正是我们期望的行为！</p>
+<p>总结:</p>
+<p>“释放序列”是 C++
+内存模型的一个重要规则，它允许同步关系通过<strong>一系列原子 RMW
+操作</strong>（即使它们本身没有 release
+语义）进行<strong>传递</strong>。</p>
+<p>它确保了在一个由 release 写操作启动、后续由 RMW
+操作（如原子计数器增减）延续的链条中，任何读取该链条上任何值的 acquire
+读操作，都能与最初的 release 写操作建立同步。</p>
+<p>这对于实现高效的<strong>多生产者/多消费者模式</strong>（例如使用原子计数器管理共享资源）至关重要。</p>
+<h3 id="栅栏-fences---stdatomic_thread_fence">栅栏 (Fences -
+std::atomic_thread_fence)</h3>
+<p>在之前，我们学习了如何将内存顺序标签（如 acquire, release,
+relaxed）<strong>附加</strong>到具体的<strong>原子操作</strong>（如
+load, store）上。</p>
+<p>本节介绍了一种与之类似但不同的<strong>强制排序机制</strong>：<strong>原子栅栏</strong>
+(Atomic Fences)，也常被称为<strong>内存屏障</strong> (Memory
+Barriers)。</p>
+<ul>
+<li><p><strong>独立于操作</strong>：栅栏<strong>不是作用于某一个特定的原子变量</strong>或操作，而是作为一个<strong>独立的指令</strong>存在于程序的执行序列中。</p></li>
+<li><p><strong>“画一条线”</strong>：你可以把它想象成在代码中“画了一条线”。这条线具有特定的内存顺序属性（例如
+release 或 acquire）。</p>
+<ul>
+<li>栅栏之前的所有操作都必须在栅栏之前完成，而栅栏之后的所有操作都必须在栅栏之后开始。</li>
+<li>之前的内存标签也是同样的理解，但栅栏的作用范围更广，因为它<strong>不依赖</strong>于具体的原子变量。</li>
+</ul></li>
+<li><p><strong>强制排序</strong>：栅栏强制了它之前的操作和它之后的操作之间的相对顺序，<strong>防止编译器或CPU将它们重排越过这条“线”</strong>。</p></li>
+<li><p><strong>主要用途</strong>：通常与
+<strong>memory_order_relaxed</strong>
+的<strong>原子操作</strong>配合使用，在需要同步的关键点插入栅栏来强制建立顺序，而在其他地方则允许<strong>最大的执行自由度</strong>（和性能）。</p></li>
+</ul>
+<h4 id="c-中的栅栏stdatomic_thread_fence">C++
+中的栅栏：std::atomic_thread_fence</h4>
+<p>函数原型： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">std::atomic_thread_fence</span><span class="params">( std::memory_order order )</span></span>;</span><br></pre></td></tr></table></figure></div></p>
+<p>参数 order：栅栏可以接受所有六种内存顺序标签：</p>
+<ul>
+<li><p>memory_order_relaxed：这个栅栏什么也不做 (no-op)。</p></li>
+<li><p>memory_order_release：释放栅栏。它确保在此栅栏之前的所有内存写入（原子和非原子）都不能被重排到栅栏之后，并且这些写入对于后续看到相关
+release 效果的 acquire 操作/栅栏是可见的。</p></li>
+<li><p>memory_order_acquire：获取栅栏。它确保在此栅栏之后的所有内存读取（原子和非原子）都不能被重排到栅栏之前，并且能看到由与之同步的
+release 操作/栅栏所“释放”的写入。</p></li>
+<li><p>memory_order_acq_rel：获取-释放栅栏。同时具有 acquire 和 release
+的效果。</p></li>
+<li><p>memory_order_seq_cst：排序一致栅栏。具有 acq_rel
+的效果，并且还参与到所有 seq_cst 操作的单一全局总顺序中。</p></li>
+</ul>
+<blockquote>
+<p>基本和之前介绍的内存顺序标签的语义是一样的，只不过栅栏是独立于具体操作的。</p>
+</blockquote>
+<h4 id="栅栏如何建立同步">栅栏如何建立同步</h4>
+<p>栅栏本身不会“凭空”建立同步。它们需要依赖原子变量的读写作为“<strong>信使</strong>”来传递同步信号。</p>
+<p>核心规则： 一个 release 栅栏 F1（在线程 T1 中）
+<strong>同步于</strong> (Synchronizes-with) 一个 acquire 栅栏 F2（在线程
+T2 中）, 当且仅当：</p>
+<ul>
+<li>存在一个原子变量 A；</li>
+<li>T1 在<strong>栅栏 F1 之后</strong>执行了一个对 <strong>A
+的原子写</strong>操作 W（可以是 relaxed）；</li>
+<li>T2 在<strong>栅栏 F2 之前</strong>执行了一个对 <strong>A
+的原子读</strong>操作 R（可以是 relaxed）；</li>
+<li>并且，<strong>R 读取了由 W</strong>（或由 W
+开始的释放序列中的某个操作）写入的值。</li>
+</ul>
+<p>简化理解：如果线程 T2（通过 acquire 栅栏）能够“看到”（通过 relaxed
+load）一个由线程 T1 在 release 栅栏之后写入的值（通过 relaxed
+store），那么这两个栅栏就同步了。</p>
+<blockquote>
+<p>类似于原子变量带着 <span class="math inline"><em>F</em><sub>1</sub></span> 边界内的信息出发,
+然后被 <span class="math inline"><em>F</em><sub>2</sub></span>
+边界内的读取操作接收，从而建立起同步关系。</p>
+</blockquote>
+<p>这个例子展示了如何用栅栏和 relaxed 操作模拟使用 acquire-release
+操作达到的效果。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">bool</span>&gt; x,y;</span><br><span class="line">std::atomic&lt;<span class="type">int</span>&gt; z;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">write_x_then_y</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  x.<span class="built_in">store</span>(<span class="literal">true</span>, std::memory_order_relaxed);        <span class="comment">// 1. relaxed store x</span></span><br><span class="line">  std::<span class="built_in">atomic_thread_fence</span>(std::memory_order_release); <span class="comment">// 2. Release Fence F1</span></span><br><span class="line">  y.<span class="built_in">store</span>(<span class="literal">true</span>, std::memory_order_relaxed);        <span class="comment">// 3. relaxed store y (W)</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">read_y_then_x</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  <span class="keyword">while</span>(!y.<span class="built_in">load</span>(std::memory_order_relaxed));       <span class="comment">// 4. relaxed load y (R)</span></span><br><span class="line">  std::<span class="built_in">atomic_thread_fence</span>(std::memory_order_acquire); <span class="comment">// 5. Acquire Fence F2</span></span><br><span class="line">  <span class="keyword">if</span>(x.<span class="built_in">load</span>(std::memory_order_relaxed))            <span class="comment">// 6. relaxed load x</span></span><br><span class="line">    ++z;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  <span class="comment">// ... setup and join ...</span></span><br><span class="line">  <span class="built_in">assert</span>(z.<span class="built_in">load</span>() != <span class="number">0</span>); <span class="comment">// 7. 断言不会触发</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> - y.store (③, W) 发生在 release 栅栏 (②,
+F1) 之后。 - y.load (④, R) 发生在 acquire 栅栏 (⑤, F2) 之前。 - while
+循环确保 y.load (④) 最终会读取到 y.store (③) 写入的 true 值。</p>
+<p>根据栅栏同步规则，release 栅栏 (②) 同步于 acquire 栅栏
+(⑤)。这建立了<strong>栅栏之间的线程间先行发生关系</strong>：F1
+happens-before F2。建立先行链如下：</p>
+<ul>
+<li>x.store (①) 序前于 F1 (②) [在 T1 内]</li>
+<li>F1 (②) 先行于 F2 (⑤) [跨线程，通过同步]</li>
+<li>F2 (⑤) 序前于 x.load (⑥) [在 T2 内]</li>
+<li>传递性：因此，x.store (①) 先行于 x.load (⑥)。x.load (⑥) 必须看到
+true，断言 ⑦ 不会触发。</li>
+</ul>
+<blockquote>
+<p>如果没有栅栏 ② 和 ⑤ ，x.store ① 和 x.load ⑥ 之间没有先行关系，x.load
+⑥ 可能看到 false，断言可能触发。</p>
+</blockquote>
+<p>注意事项: -
+栅栏的位置至关重要：操作必须位于栅栏的“<strong>正确一侧</strong>”才能参与排序。如果将
+x.store 移动到 release 栅栏之后，那么栅栏就不再保证 x.store 对 x.load
+的可见性了。</p>
+<ul>
+<li><p>需要成对出现：通常需要一个 release 栅栏和一个 acquire 栅栏（或
+acquire 操作）配对才能建立同步。</p></li>
+<li><p>栅栏与其他操作的交互：栅栏不仅与 relaxed
+操作交互，也与更强顺序的操作交互。例如，一个 acquire 栅栏也能与之前的
+release store 同步。</p></li>
+<li><p>栅栏是全局的（相对线程内）：一个栅栏会影响该线程中所有位于其前/后的原子（甚至非原子）操作的排序，而不仅仅是某一个变量。</p></li>
+</ul>
+<p>总之, 原子栅栏 (std::atomic_thread_fence)
+提供了一种独立于具体原子操作的内存排序机制。它们像代码中的“<strong>屏障</strong>”，限制<strong>编译器和
+CPU 的重排</strong>。</p>
+<p>release 栅栏与 acquire 栅栏可以通过跨越栅栏的原子读写（通常是
+relaxed）建立同步和先行发生关系。</p>
+<p>它们常用于需要对多个 relaxed
+操作进行<strong>分组排序</strong>，或者需要<strong>同步原子操作与非原子操作</strong>的场景。</p>
+<p>栅栏提供了非常细粒度的控制，但也需要非常仔细的推理来确保正确性。</p>
+<h3 id="原子操作对非原子的操作排序">原子操作对非原子的操作排序</h3>
+<p>这是理解 C++
+内存模型和原子操作的关键所在。它揭示了一个极其重要的原理：原子操作（特别是带有
+acquire 和 release
+语义的）不仅能<strong>同步原子变量本身</strong>，还能强制对其周围的<strong>非原子操作</strong>建立<strong>跨线程的顺序关系</strong>。这一原理正是
+std::mutex、std::condition_variable
+等高级同步原语能够保护非原子共享数据的根本原因。</p>
+<p>我们知道，对非原子变量（如普通的 bool
+x）进行无同步的并发读写是数据竞争，导致未定义行为。</p>
+<p>然而, 我们可以利用原子操作作为“<strong>同步点</strong>”
+(Synchronization
+Points)。只要确保对非原子变量的访问被这些“同步点”恰当地“夹在中间”，就可以为这些非原子访问建立先行发生
+(Happens-before)** 关系，从而避免数据竞争。原理在于:</p>
+<ul>
+<li>如果非原子操作 A 序前于 (Sequenced-before) 原子同步操作 S1
+(在同一线程)。</li>
+<li>并且 S1 同步于 (Synchronizes-with) / 先行于 (Happens-before)
+另一个原子同步操作 S2 (在另一线程)。</li>
+<li>并且 S2 序前于 非原子操作 B (在 S2 所在的线程)。</li>
+<li>那么，通过传递性，非原子操作 A 就先行于非原子操作 B。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;assert.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> x = <span class="literal">false</span>; <span class="comment">// 1. x 现在是一个非原子变量</span></span><br><span class="line">std::atomic&lt;<span class="type">bool</span>&gt; y; <span class="comment">// y 仍然是原子变量，用作“信使”</span></span><br><span class="line">std::atomic&lt;<span class="type">int</span>&gt; z;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">write_x_then_y</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  x = <span class="literal">true</span>; <span class="comment">// 2. 非原子写 (A)</span></span><br><span class="line">  std::<span class="built_in">atomic_thread_fence</span>(std::memory_order_release); <span class="comment">// 3. 释放栅栏 (S1)</span></span><br><span class="line">  y.<span class="built_in">store</span>(<span class="literal">true</span>, std::memory_order_relaxed); <span class="comment">// 4. 原子写 y (W - 写信)</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">read_y_then_x</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  <span class="keyword">while</span> (!y.<span class="built_in">load</span>(std::memory_order_relaxed)); <span class="comment">// 5. 原子读 y (R - 收信)</span></span><br><span class="line">  std::<span class="built_in">atomic_thread_fence</span>(std::memory_order_acquire); <span class="comment">// 6. 获取栅栏 (S2)</span></span><br><span class="line">  <span class="keyword">if</span> (x) <span class="comment">// 7. 非原子读 (B)</span></span><br><span class="line">    ++z;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">  <span class="comment">// ... setup and join ...</span></span><br><span class="line">  <span class="built_in">assert</span>(z.<span class="built_in">load</span>() != <span class="number">0</span>); <span class="comment">// 8. 断言不会触发</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+如上面代码所示, 尽管 x 本身是非原子的，但由于原子栅栏强制了顺序，对 x
+的访问没有数据竞争。读取操作 (⑦) 保证能看到写入操作 (②) 的结果
+true，因此断言 (⑧) 不会触发。</li>
+</ul>
+<h4 id="stdmutex-的工作原理">std::mutex 的工作原理</h4>
+<p>这正是 std::mutex 能够保护非原子数据的核心机制.</p>
+<p>一个 std::mutex
+内部（至少在概念上）包含一个<strong>带有内存标签的原子标志</strong>（类似于
+std::atomic_flag 或
+std::atomic<bool>）来表示锁的状态（是否被持有）。</bool></p>
+<ul>
+<li>mutex.unlock() (释放操作)：当你调用 unlock()
+时，它内部会执行一个原子写操作（例如 flag.clear() 或
+flag.store(false)）来标记锁为“可用”。
+<ul>
+<li>这个原子写操作带有 std::memory_order_<strong>release</strong>
+语义。</li>
+<li>效果：release 语义保证，在 unlock()
+调用之前的所有内存写入（包括对互斥量保护的非原子数据的写入）都不能被重排到
+unlock() 之后，并且这些写入的效果对于下一个成功 lock()
+该互斥量的线程是可见的, 像是在 unlock()
+之后插入了一个“屏障”，防止重排。</li>
+</ul></li>
+<li>mutex.lock() (获取操作)：当你调用 lock()
+时，它内部会执行一个原子读-改-写操作（例如循环 flag.test_and_set() 或
+compare_exchange_weak()）来尝试将锁标记为“被持有”。
+<ul>
+<li>这个（或这些）原子操作带有
+std::memory_order_<strong>acquire</strong> 语义。</li>
+<li>效果：acquire 语义保证，在 lock()
+调用成功之后的所有内存读取（包括对互斥量保护的非原子数据的读取）都不能被重排到
+lock() 之前，并且能够看到上一个调用 unlock() 的线程所“释放”的内存写入,
+像是在 lock() 之前插入了一个“屏障”，防止重排。</li>
+</ul></li>
+</ul>
+<p>串联起来： - 线程 T1 调用 lock() (Acquire S1)。 - T1 修改非原子数据
+D。 - T1 调用 unlock() (Release S2)。 - 线程 T2 调用 lock() (Acquire
+S3)。由于 S2 释放了锁，S3 现在可以成功获取锁。 - T2 读取非原子数据 D。 -
+T2 调用 unlock() (Release S4)。</p>
+<p>同步链： - T1 对 D 的修改序前于 S2 (Release Unlock)。 - S2 (Release
+Unlock) 同步于 S3 (Acquire Lock) —— 因为 S3 观察到了 S2 释放锁的效果。 -
+S3 (Acquire Lock) 序前于 T2 对 D 的读取。 - 结论：T1 对 D 的修改 先行于
+T2 对 D 的读取！没有数据竞争发生。</p>
+<p>例如, 一个可能的实现如下: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 共享的锁状态：0=未锁定, 1=已锁定</span></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">lock_status</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ----------------------------------------------------------------------</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">simple_lock</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// lock() 概念上是 Acquire：</span></span><br><span class="line">    <span class="comment">// 使用 CAS 尝试将 0 设为 1，并使用 Acquire 内存顺序。</span></span><br><span class="line">    <span class="type">int</span> expected = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (!lock_status.<span class="built_in">compare_exchange_weak</span>(</span><br><span class="line">            expected, <span class="number">1</span>,</span><br><span class="line">            std::memory_order_acquire, <span class="comment">// &lt;--- Acquire 语义</span></span><br><span class="line">            std::memory_order_relaxed)) </span><br><span class="line">    {</span><br><span class="line">        expected = <span class="number">0</span>; <span class="comment">// 失败则重试</span></span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">simple_unlock</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// unlock() 概念上是 Release：</span></span><br><span class="line">    <span class="comment">// 原子地将锁状态设为 0，并使用 Release 内存顺序。</span></span><br><span class="line">    lock_status.<span class="built_in">store</span>(<span class="number">0</span>, std::memory_order_release); <span class="comment">// &lt;--- Release 语义</span></span><br><span class="line">}</span><br><span class="line"><span class="comment">// ----------------------------------------------------------------------</span></span><br></pre></td></tr></table></figure></div> - simple_unlock()
+(Release)：将锁状态 (lock_status) 设置为 0，并带上 Release
+标签。这确保了 unlock() 之前的内存写入被同步, 从而类似于在 unlock()
+之后插入了一个“屏障”，防止重排, 将临界区的修改挡在 unlock() 之前, 只有在
+unlock() 之后的代码才能看到这些修改。</p>
+<ul>
+<li>simple_lock() (Acquire)：自旋等待，直到它能将 lock_status 从 0 变为
+1。成功时，它使用的是 Acquire 标签，这保证了它能看到配对的 Release
+操作之前的所有内存写入, 从而类似于在 lock()
+之前插入了一个“屏障”，防止重排, 将临界区的修改挡在 lock() 之后, 只有在
+lock() 之前的代码才能看到这些修改。</li>
+</ul>
+<p>这就是为什么互斥量能保证锁内代码的内存可见性。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/language/">#language</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/5.%20%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1%E7%BB%93%E6%9E%84/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">5. 基于锁的并发设计结构</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/09/30/system/OS/Process/Process/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Process</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">4. 内存模型和原子操作</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80"><span class="nav-text">内存模型基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%86%85%E5%AD%98%E4%BD%8D%E7%BD%AE"><span class="nav-text">对象和内存位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%B8%8B%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%8D%E7%BD%AE"><span class="nav-text">并发下的内存位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%A1%BA%E5%BA%8F-modification-order"><span class="nav-text">修改顺序 (Modification Order)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%92%8C%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B"><span class="nav-text">C++中的原子操作和原子类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B"><span class="nav-text">标准原子类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#stdatomic_flag%E6%9C%80%E5%9F%BA%E7%A1%80%E7%9A%84%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B"><span class="nav-text">std::atomic_flag：最基础的原子类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stdatomic%E4%B8%BB%E8%A6%81%E7%9A%84%E7%B1%BB%E6%A8%A1%E6%9D%BF"><span class="nav-text">std::atomic&lt;&gt;：主要的类模板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%B1%9E%E6%80%A7"><span class="nav-text">核心属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdatomic_flag"><span class="nav-text">std::atomic_flag</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96atomic_flag_init"><span class="nav-text">初始化：ATOMIC_FLAG_INIT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9Ctest_and_set-%E5%92%8C-clear"><span class="nav-text">核心操作：test_and_set() 和
+clear()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E9%99%90%E5%88%B6"><span class="nav-text">关键限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E5%AE%9E%E7%8E%B0%E8%87%AA%E6%97%8B%E9%94%81-spinlock"><span class="nav-text">示例：实现自旋锁 (Spinlock)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdatomicbool-%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="nav-text">std::atomic&lt;bool&gt;
+的相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C"><span class="nav-text">核心操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E5%B9%B6%E4%BA%A4%E6%8D%A2-compare-and-swap-cas-%E6%93%8D%E4%BD%9C"><span class="nav-text">比较并交换
+(Compare-and-Swap, CAS) 操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdatomict-%E6%8C%87%E9%92%88%E8%BF%90%E7%AE%97"><span class="nav-text">std::atomic&lt;T*&gt;:
+指针运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%8C%87%E9%92%88%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="nav-text">原子指针算术运算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E7%9A%84%E5%8E%9F%E5%AD%90%E6%95%B4%E5%9E%8B%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="nav-text">标准的原子整型的相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%95%B4%E6%95%B0%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%B8%93%E5%B1%9E%E6%93%8D%E4%BD%9C"><span class="nav-text">原子整数类型的专属操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdatomic-%E4%B8%BB%E8%A6%81%E7%B1%BB%E7%9A%84%E6%A8%A1%E6%9D%BF"><span class="nav-text">std::atomic&lt;&gt; 主要类的模板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#udt-%E7%9A%84%E9%99%90%E5%88%B6%E6%9D%A1%E4%BB%B6"><span class="nav-text">UDT 的限制条件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E8%87%AA%E7%94%B1%E5%87%BD%E6%95%B0"><span class="nav-text">原子自由函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BAshared_ptr%E7%AD%89%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E6%8F%90%E4%BE%9B%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="nav-text">为shared_ptr等智能指针提供原子操作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E6%93%8D%E4%BD%9C%E5%92%8C%E5%BC%BA%E5%88%B6%E6%8E%92%E5%BA%8F"><span class="nav-text">同步操作和强制排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%8F%91%E7%94%9F-synchronizes-with"><span class="nav-text">同步发生 (Synchronizes-with)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%8F%91%E7%94%9F%E7%9A%84%E6%84%8F%E4%B9%89%E5%BB%BA%E7%AB%8B%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%85%88%E8%A1%8C%E5%85%B3%E7%B3%BB"><span class="nav-text">“同步发生”的意义：建立“线程间先行”关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E8%A1%8C%E5%8F%91%E7%94%9F-happens-before"><span class="nav-text">先行发生 (Happens-before)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%8F%E5%89%8D-sequenced-before%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%86%85%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="nav-text">“序前”
+(Sequenced-before)：单线程内的顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%85%88%E8%A1%8C-inter-thread-happens-before%E8%B7%A8%E7%BA%BF%E7%A8%8B%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="nav-text">“线程间先行”
+(Inter-thread Happens-before)：跨线程的顺序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8Fmemory-order"><span class="nav-text">原子操作的内存顺序(Memory
+Order)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AD%E7%A7%8D%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F%E6%A0%87%E7%AD%BE%E4%B8%8E%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%9E%8B"><span class="nav-text">六种内存顺序标签与三种模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E4%B8%80%E8%87%B4%E5%BA%8F%E5%88%97-sequentially-consistent---seq_cst"><span class="nav-text">排序一致序列
+(Sequentially Consistent - seq_cst)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E7%94%B1%E5%BA%8F%E5%88%97-relaxed---relaxed"><span class="nav-text">自由序列 (Relaxed - relaxed)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-%E9%87%8A%E6%94%BE%E5%BA%8F%E5%88%97-acquire-release"><span class="nav-text">获取-释放序列
+(Acquire-Release)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8A%E6%94%BE%E9%98%9F%E5%88%97%E4%B8%8E%E5%90%8C%E6%AD%A5-release-sequences"><span class="nav-text">释放队列与同步 (Release
+Sequences)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%85%E6%A0%8F-fences---stdatomic_thread_fence"><span class="nav-text">栅栏 (Fences -
+std::atomic_thread_fence)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#c-%E4%B8%AD%E7%9A%84%E6%A0%85%E6%A0%8Fstdatomic_thread_fence"><span class="nav-text">C++
+中的栅栏：std::atomic_thread_fence</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%85%E6%A0%8F%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E5%90%8C%E6%AD%A5"><span class="nav-text">栅栏如何建立同步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%AF%B9%E9%9D%9E%E5%8E%9F%E5%AD%90%E7%9A%84%E6%93%8D%E4%BD%9C%E6%8E%92%E5%BA%8F"><span class="nav-text">原子操作对非原子的操作排序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#stdmutex-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">std::mutex 的工作原理</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

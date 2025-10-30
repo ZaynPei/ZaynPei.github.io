@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -800,88 +800,91 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="程序的内存布局-Process-Memory-Layout"><a href="#程序的内存布局-Process-Memory-Layout" class="headerlink" title="程序的内存布局 (Process Memory Layout)"></a>程序的内存布局 (Process Memory Layout)</h3><p>一个程序运行起来后，操作系统会为其分配一块虚拟内存空间。这块空间在逻辑上通常分为以下几个部分：</p>
+			<h3 id="程序的内存布局-process-memory-layout">程序的内存布局 (Process
+Memory Layout)</h3>
+<p>一个程序运行起来后，操作系统会为其分配一块虚拟内存空间。这块空间在逻辑上通常分为以下几个部分：</p>
 <ul>
 <li><p><strong>栈 (Stack)</strong>：</p>
 <ul>
-<li><p>用途：用于存储函数的<strong>局部变量</strong>（也叫临时变量）、<strong>函数参数</strong>、<strong>返回地址</strong>等。</p>
-</li>
-<li><p>特点：由<strong>编译器自动分配和释放</strong>。内存区域通常较<strong>小</strong>，且向下增长（即从高地址向低地址扩展）。<strong>每个线程都有自己独立的栈</strong>。</p>
-</li>
-</ul>
-</li>
+<li><p>用途：用于存储函数的<strong>局部变量</strong>（也叫临时变量）、<strong>函数参数</strong>、<strong>返回地址</strong>等。</p></li>
+<li><p>特点：由<strong>编译器自动分配和释放</strong>。内存区域通常较<strong>小</strong>，且向下增长（即从高地址向低地址扩展）。<strong>每个线程都有自己独立的栈</strong>。</p></li>
+</ul></li>
 <li><p><strong>堆 (Heap)</strong>：</p>
 <ul>
-<li><p>用途：用于程序运行时动态分配的内存，例如通过 new (C++) 或 malloc (C) 创建的对象。</p>
-</li>
-<li><p>特点：由<strong>程序员手动分配和释放</strong>（delete/free）。空间较<strong>大</strong>，向上增长。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>静态/全局存储区</strong> (Static/Global Storage Area)：</p>
+<li><p>用途：用于程序运行时动态分配的内存，例如通过 new (C++) 或 malloc
+(C) 创建的对象。</p></li>
+<li><p>特点：由<strong>程序员手动分配和释放</strong>（delete/free）。空间较<strong>大</strong>，向上增长。</p></li>
+</ul></li>
+<li><p><strong>静态/全局存储区</strong> (Static/Global Storage
+Area)：</p>
 <ul>
 <li><p>这块区域用于存储<strong>全局变量</strong>和<strong>静态变量</strong>，生命周期与整个程序相同。它内部又细分为两个子区域：</p>
 <ul>
-<li><p>.data 段 (Initialized Data Segment)：存储<strong>已初始化且初始值不为0</strong>的全局变量和静态变量。</p>
-</li>
-<li><p>.bss 段 (Uninitialized Data Segment)：存储<strong>未初始化</strong>或<strong>初始化为0</strong>的全局变量和静态变量。</p>
-</li>
+<li><p>.data 段 (Initialized Data
+Segment)：存储<strong>已初始化且初始值不为0</strong>的全局变量和静态变量。</p></li>
+<li><p>.bss 段 (Uninitialized Data
+Segment)：存储<strong>未初始化</strong>或<strong>初始化为0</strong>的全局变量和静态变量。</p></li>
 <li></li>
-</ul>
-</li>
-<li><p>这部分内存在<strong>程序加载到内存时就已经分配好了</strong>，并且在程序的整个生命周期内都不会改变位置。因此，无论你何时访问一个全局变量，它的内存地址都是同一个。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>常量存储区</strong> (Constant Storage Area / <strong>.rodata</strong>)：</p>
+</ul></li>
+<li><p>这部分内存在<strong>程序加载到内存时就已经分配好了</strong>，并且在程序的整个生命周期内都不会改变位置。因此，无论你何时访问一个全局变量，它的内存地址都是同一个。</p></li>
+</ul></li>
+<li><p><strong>常量存储区</strong> (Constant Storage Area /
+<strong>.rodata</strong>)：</p>
 <ul>
-<li><p>用途：存储字符串<strong>字面量</strong>和被 <strong>const 修饰的常量</strong>。</p>
-</li>
-<li><p>特点：只读（Read-Only）。</p>
-</li>
-</ul>
-</li>
+<li><p>用途：存储字符串<strong>字面量</strong>和被 <strong>const
+修饰的常量</strong>。</p></li>
+<li><p>特点：只读（Read-Only）。</p></li>
+</ul></li>
 <li><p><strong>代码段</strong> (Code Segment / .text)：</p>
 <ul>
-<li><p>用途：存储程序的可执行二进制指令。</p>
-</li>
-<li><p>特点：只读且可共享。</p>
-</li>
+<li><p>用途：存储程序的可执行二进制指令。</p></li>
+<li><p>特点：只读且可共享。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="变量在内存中的分布"><a href="#变量在内存中的分布" class="headerlink" title="变量在内存中的分布"></a>变量在内存中的分布</h3><p><strong>全局/静态变量 vs. 临时变量</strong>: 全局变量和静态变量的内存地址是固定的，但临时变量的内存地址，往往不是固定的。”</p>
-<p>为什么全局/静态变量地址固定: 因为它们被存储在静态/全局存储区（.data 或 .bss 段）。这部分内存在程序加载到内存时就已经分配好了，并且在程序的整个生命周期内都不会改变位置。因此，无论你何时访问一个全局变量，它的内存地址都是同一个。</p>
-<p>为什么临时变量（局部变量）地址不固定: 因为它们被存储在**栈 (Stack)**上。当一个函数被调用时，系统会在栈顶为这个函数创建一个“栈帧”（Stack Frame），用来存放它的局部变量。当函数执行完毕返回时，这个栈帧就会被销毁。</p>
+<h3 id="变量在内存中的分布">变量在内存中的分布</h3>
+<p><strong>全局/静态变量 vs. 临时变量</strong>:
+全局变量和静态变量的内存地址是固定的，但临时变量的内存地址，往往不是固定的。”</p>
+<p>为什么全局/静态变量地址固定: 因为它们被存储在静态/全局存储区（.data
+或 .bss
+段）。这部分内存在程序加载到内存时就已经分配好了，并且在程序的整个生命周期内都不会改变位置。因此，无论你何时访问一个全局变量，它的内存地址都是同一个。</p>
+<p>为什么临时变量（局部变量）地址不固定: 因为它们被存储在<strong>栈
+(Stack)</strong>上。当一个函数被调用时，系统会在栈顶为这个函数创建一个“栈帧”（Stack
+Frame），用来存放它的局部变量。当函数执行完毕返回时，这个栈帧就会被销毁。</p>
 <p>如果你在一个循环中多次调用同一个函数，那么每次调用时，该函数内的局部变量都会在一个新的栈帧中被创建，其内存地址也因此会不一样。如果函数发生递归调用，同样会创建多个栈帧，局部变量的地址也各不相同。</p>
-<p><strong>静态变量与全局变量的相似性和差异性</strong>: 静态变量，除了作用域跟全局变量有所差异外，其存储原则、生命周期跟全局变量类似。”</p>
+<p><strong>静态变量与全局变量的相似性和差异性</strong>:
+静态变量，除了作用域跟全局变量有所差异外，其存储原则、生命周期跟全局变量类似。”</p>
 <ul>
 <li><p>相似点：存储原则和生命周期</p>
 <ul>
-<li><p>存储位置：它们都存储在静态/全局存储区（.data 或 .bss）。</p>
-</li>
-<li><p>生命周期：它们的生命周期都是整个程序的运行期间。从程序开始执行时被创建，到程序结束时才被销毁。即使是定义在函数内部的静态局部变量（static local variable），它也只会被初始化一次，并且在函数调用结束后其值会一直保留，不会被销毁。</p>
-</li>
-</ul>
-</li>
+<li><p>存储位置：它们都存储在静态/全局存储区（.data 或 .bss）。</p></li>
+<li><p>生命周期：它们的生命周期都是整个程序的运行期间。从程序开始执行时被创建，到程序结束时才被销毁。即使是定义在函数内部的静态局部变量（static
+local
+variable），它也只会被初始化一次，并且在函数调用结束后其值会一直保留，不会被销毁。</p></li>
+</ul></li>
 <li><p>差异点：作用域 (Scope)</p>
 <ul>
-<li><p>全局变量 (Global Variable)：作用域是整个程序，可以被多个源文件通过 extern 关键字访问（除非被 static 修饰成文件作用域）。</p>
-</li>
+<li><p>全局变量 (Global
+Variable)：作用域是整个程序，可以被多个源文件通过 extern
+关键字访问（除非被 static 修饰成文件作用域）。</p></li>
 <li><p>静态变量 (Static Variable)：</p>
 <ul>
-<li><p>静态全局变量（在函数外定义）：作用域被限制在定义它的单个源文件内，其他文件无法访问。</p>
-</li>
-<li><p>静态局部变量（在函数内定义）：作用域被限制在定义它的函数或代码块内，但其生命周期依然是整个程序。</p>
-</li>
+<li><p>静态全局变量（在函数外定义）：作用域被限制在定义它的单个源文件内，其他文件无法访问。</p></li>
+<li><p>静态局部变量（在函数内定义）：作用域被限制在定义它的函数或代码块内，但其生命周期依然是整个程序。</p></li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><strong>未初始化/零初始化变量与 .bss 段</strong>: 无论是全局变量还是静态变量，如果它们没有<strong>被初始化</strong>，或者<strong>被初始化为 0</strong>，都会被安置在未初始化数据段(.bss)，一定程度上可以节省二进制文件 a.out 的存储空间。</p>
-<p>这是一个非常巧妙的编译器和加载器优化。对于 .data 段中的变量（例如 int global_var = 100;），<strong>值 100 必须被实际地保存</strong>在可执行文件（如 a.out）中，因为它是一个非零的特定值。这会占用文件的体积。</p>
-<p>但对于 .bss 段，可执行文件<strong>只需要记录这个段的总大小</strong>，而<strong>不需要存储所有这些0</strong>。当操作系统加载程序时，它会读取 .bss 段的大小，然后在内存中分配相应大小的区域，并自动将其<strong>全部填充为零</strong>。</p>
+<p><strong>未初始化/零初始化变量与 .bss 段</strong>:
+无论是全局变量还是静态变量，如果它们没有<strong>被初始化</strong>，或者<strong>被初始化为
+0</strong>，都会被安置在未初始化数据段(.bss)，一定程度上可以节省二进制文件
+a.out 的存储空间。</p>
+<p>这是一个非常巧妙的编译器和加载器优化。对于 .data 段中的变量（例如 int
+global_var = 100;），<strong>值 100
+必须被实际地保存</strong>在可执行文件（如
+a.out）中，因为它是一个非零的特定值。这会占用文件的体积。</p>
+<p>但对于 .bss
+段，可执行文件<strong>只需要记录这个段的总大小</strong>，而<strong>不需要存储所有这些0</strong>。当操作系统加载程序时，它会读取
+.bss
+段的大小，然后在内存中分配相应大小的区域，并自动将其<strong>全部填充为零</strong>。</p>
 <p>因此，一个拥有大量未初始化或零初始化全局/静态变量的程序，其可执行文件的大小可以显著减小，因为<strong>这些“零”并没有被实际存储在文件中</strong>，而是由加载器在运行时“创造”出来的。</p>
 
 		</div>
@@ -896,7 +899,7 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/10/02/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91/">
+				<a class="prev" rel="prev" href="/2025/10/02/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
@@ -933,7 +936,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">内存分区</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80-Process-Memory-Layout"><span class="nav-text">程序的内存布局 (Process Memory Layout)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-text">变量在内存中的分布</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80-process-memory-layout"><span class="nav-text">程序的内存布局 (Process
+Memory Layout)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-text">变量在内存中的分布</span></a></li></ol>
 
 	</div>
 </div>
@@ -962,11 +966,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

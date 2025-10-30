@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -839,45 +839,61 @@ mjx-container[display="true"] + br {
 <li>用什么模型来做？（自动机与模型）</li>
 <li>能多快/多好地做？（复杂性）(本课程未涉及)</li>
 </ul>
-<p>这门学科本质上是数学的一个分支，它使用严谨的、抽象的数学模型来探索计算的本质、能力和极限 </p>
-<p>该课程安排在大三秋冬学期, 参考课本为《Elements of the Theory of Computation》. 课程的宏观框架如下: </p>
+<p>这门学科本质上是数学的一个分支，它使用严谨的、抽象的数学模型来探索计算的本质、能力和极限</p>
+<p>该课程安排在大三秋冬学期, 参考课本为《Elements of the Theory of
+Computation》. 课程的宏观框架如下:</p>
 <p>一、 数学预备知识（基础）</p>
 <p>在深入探讨计算理论之前，课程首先介绍了所需的基础数学语言和概念。这部分对应课本的第1章。</p>
-<p>核心内容：集合、关系、函数、有穷与无穷集合 、基本的证明技术（如数学归纳法、鸽巢原理和对角化方法）、字母表与语言，以及算法的初步介绍 。</p>
+<p>核心内容：集合、关系、函数、有穷与无穷集合
+、基本的证明技术（如数学归纳法、鸽巢原理和对角化方法）、字母表与语言，以及算法的初步介绍
+。</p>
 <p>二、 形式语言与自动机理论</p>
-<p>这是计算理论的第一大核心板块。它主要研究“<strong>受限制的计算模型</strong>” ，探索它们的能力边界，这些模型在电路设计和编译器（如词法分析）等领域有实际应用 。这部分对应第2章和第3章。</p>
+<p>这是计算理论的第一大核心板块。它主要研究“<strong>受限制的计算模型</strong>”
+，探索它们的能力边界，这些模型在电路设计和编译器（如词法分析）等领域有实际应用
+。这部分对应第2章和第3章。</p>
 <p><strong>正则语言</strong> (Regular Languages)：</p>
 <ul>
-<li>计算模型：使用有穷自动机 (Finite Automata) ，包括确定型（DFA）和非确定型（NFA） 。</li>
+<li>计算模型：使用有穷自动机 (Finite Automata)
+，包括确定型（DFA）和非确定型（NFA） 。</li>
 <li>语言表示：使用正则表达式 (Regular Expressions) 。</li>
-<li>关键结果：证明了非确定型有穷自动机、确定型有穷自动机和正则表达式三者在表达能力上是等价的 。</li>
-<li>研究问题：状态最小化 、正则语言的泵定理（Pumping Lemma）以及如何证明一个语言不是正则的 。</li>
+<li>关键结果：证明了非确定型有穷自动机、确定型有穷自动机和正则表达式三者在表达能力上是等价的
+。</li>
+<li>研究问题：状态最小化 、正则语言的泵定理（Pumping
+Lemma）以及如何证明一个语言不是正则的 。</li>
 </ul>
 <p><strong>上下文无关语言</strong> (Context-Free Languages)：</p>
 <ul>
-<li>计算模型：使用下推自动机 (Pushdown Automata) 。这是一种比有穷自动机更强，增加了“栈”（一种下推存储器）的计算模型 。</li>
+<li>计算模型：使用下推自动机 (Pushdown Automata)
+。这是一种比有穷自动机更强，增加了“栈”（一种下推存储器）的计算模型
+。</li>
 <li>语言表示：使用上下文无关文法 (Context-Free Grammars) 。</li>
 </ul>
 <p><strong>上下文无关语言</strong> (Context-Free Languages)：</p>
 <ul>
-<li>计算模型：使用下推自动机 (Pushdown Automata) 。这是一种比有穷自动机更强，增加了“栈”（一种下推存储器）的计算模型 。</li>
+<li>计算模型：使用下推自动机 (Pushdown Automata)
+。这是一种比有穷自动机更强，增加了“栈”（一种下推存储器）的计算模型
+。</li>
 <li>语言表示：使用上下文无关文法 (Context-Free Grammars) 。</li>
-<li>研究问题：语法分析（Parsing）与语法分析树（Parse Trees） 、文法的歧义性（Ambiguity）、以及上下文无关语言的泵定理。</li>
+<li>研究问题：语法分析（Parsing）与语法分析树（Parse Trees）
+、文法的歧义性（Ambiguity）、以及上下文无关语言的泵定理。</li>
 </ul>
 <p>三、 可计算性理论 (Computability Theory)</p>
 <p>这是计算理论的第二大核心板块。它旨在建立一个“算法的一般模型”，并利用这个模型来回答计算机科学的根本问题：什么是可计算的？什么是不可计算的？这部分对应第4章和第5章。</p>
-<p><strong>通用计算模型</strong> (General Model of Computation)：</p>
-<ul>
-<li>核心模型：Turing 机 (Turing Machine) 。图灵机被视为描述任意算法的通用框架 。</li>
-<li>研究内容：引入Turing机的变种（如多带Turing机、随机存取Turing机） ，并证明它们在计算能力上都等价于基本的Turing机模型 。这也引出了 Church-Turing 论题 。</li>
-</ul>
-<p><strong>不可判定性</strong> (Undecidability)：</p>
-<ul>
-<li>核心问题：研究那些被证明“根本不可能用计算机解决”的问题 。</li>
-<li>关键结果：证明停机问题 (The Halting Problem) 是不可判定的 。</li>
-<li>研究内容：讨论其他不可判定的问题，如与文法或铺砖问题相关的不可解问题 。</li>
-</ul>
-<p>最后一部分是计算复杂性理论 (Complexity Theory), 这是计算理论的第三大核心板块。它研究那些可计算的问题，并根据其解决所需的资源（主要是时间或空间）来对其进行分类，探讨哪些问题存在“实际可行的算法”; 这部分定义了计算复杂性的概念，如P类问题、NP类问题、NPC问题和NP完全问题等, 由于课时安排暂且按下不表. </p>
+<p><strong>通用计算模型</strong> (General Model of Computation)： -
+核心模型：Turing 机 (Turing Machine)
+。图灵机被视为描述任意算法的通用框架 。 -
+研究内容：引入Turing机的变种（如多带Turing机、随机存取Turing机）
+，并证明它们在计算能力上都等价于基本的Turing机模型 。这也引出了
+Church-Turing 论题 。</p>
+<p><strong>不可判定性</strong> (Undecidability)： -
+核心问题：研究那些被证明“根本不可能用计算机解决”的问题 。 -
+关键结果：证明停机问题 (The Halting Problem) 是不可判定的 。 -
+研究内容：讨论其他不可判定的问题，如与文法或铺砖问题相关的不可解问题
+。</p>
+<p>最后一部分是计算复杂性理论 (Complexity Theory),
+这是计算理论的第三大核心板块。它研究那些可计算的问题，并根据其解决所需的资源（主要是时间或空间）来对其进行分类，探讨哪些问题存在“实际可行的算法”;
+这部分定义了计算复杂性的概念，如P类问题、NP类问题、NPC问题和NP完全问题等,
+由于课时安排暂且按下不表.</p>
 
 		</div>
 
@@ -916,9 +932,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE10%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E9%99%90%E5%AE%9A%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE%E5%9E%8B%E5%88%AB%EF%BC%8C%E8%80%8C%E9%9D%9E%E4%B8%8D%E9%99%90%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE%E5%9E%8B%E5%88%AB/">
+				<a class="next" rel="next" href="/2025/09/14/algorithms/Computing%20Theory/%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款10：优先选用限定作用域的枚举型别，而非不限作用域的枚举型别</span>
+						<span class="post-nav-title-item truncate max-w-48">预备知识</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -969,11 +985,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

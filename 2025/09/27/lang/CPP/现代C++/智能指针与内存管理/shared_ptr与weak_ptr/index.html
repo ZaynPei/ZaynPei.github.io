@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -800,73 +800,114 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="std-shared-ptr：共享所有权的管理者"><a href="#std-shared-ptr：共享所有权的管理者" class="headerlink" title="std::shared_ptr：共享所有权的管理者"></a>std::shared_ptr：共享所有权的管理者</h2><p>std::shared_ptr 是一种拥有共享所有权的智能指针。这意味着多个 shared_ptr 实例可以共同拥有和管理同一个动态分配的对象。当最后一个指向该对象的 shared_ptr 被销毁或重置时，该对象会被自动释放。</p>
-<h3 id="核心理念：引用计数"><a href="#核心理念：引用计数" class="headerlink" title="核心理念：引用计数"></a>核心理念：引用计数</h3><p>shared_ptr 的核心机制是引用计数（Reference Counting）。它通过一个“控制块”来实现这一机制。</p>
-<p>控制块（Control Block）是一个<strong>与被管理对象分离</strong>的内存块, 存储在<strong>堆</strong>上。当第一个 shared_ptr 创建时，控制块也随之被创建。它包含以下关键信息：</p>
+			<h2 id="stdshared_ptr共享所有权的管理者">std::shared_ptr：共享所有权的管理者</h2>
+<p>std::shared_ptr 是一种拥有共享所有权的智能指针。这意味着多个
+shared_ptr
+实例可以共同拥有和管理同一个动态分配的对象。当最后一个指向该对象的
+shared_ptr 被销毁或重置时，该对象会被自动释放。</p>
+<h3 id="核心理念引用计数">核心理念：引用计数</h3>
+<p>shared_ptr 的核心机制是引用计数（Reference
+Counting）。它通过一个“控制块”来实现这一机制。</p>
+<p>控制块（Control
+Block）是一个<strong>与被管理对象分离</strong>的内存块,
+存储在<strong>堆</strong>上。当第一个 shared_ptr
+创建时，控制块也随之被创建。它包含以下关键信息：</p>
 <ul>
-<li>强引用计数（Strong Reference Count）：记录有多少个 shared_ptr 正指向同一个对象。</li>
-<li>弱引用计数（Weak Reference Count）：记录有多少个 weak_ptr 正在“观察”这个对象。</li>
+<li>强引用计数（Strong Reference Count）：记录有多少个 shared_ptr
+正指向同一个对象。</li>
+<li>弱引用计数（Weak Reference Count）：记录有多少个 weak_ptr
+正在“观察”这个对象。</li>
 <li>指向被管理对象的指针。</li>
 <li>（可选）自定义删除器的指针。</li>
 </ul>
 <p>一般来说, 引用计数和控制块的工作流程如下：</p>
 <ul>
-<li>当一个新的 shared_ptr 创建或通过拷贝构造或拷贝赋值指向一个已有对象时，强引用计数 +1。</li>
-<li>当一个 shared_ptr 被销毁（例如离开作用域）、被重置（reset()）或指向其他对象时，强引用计数 -1。</li>
-<li>当<strong>强引用计数变为 0</strong> 时，shared_ptr 会自动调用删除器（默认为 delete）来释放被管理的对象。</li>
+<li>当一个新的 shared_ptr
+创建或通过拷贝构造或拷贝赋值指向一个已有对象时，强引用计数 +1。</li>
+<li>当一个 shared_ptr
+被销毁（例如离开作用域）、被重置（reset()）或指向其他对象时，强引用计数
+-1。</li>
+<li>当<strong>强引用计数变为 0</strong> 时，shared_ptr
+会自动调用删除器（默认为 delete）来释放被管理的对象。</li>
 <li>当弱引用计数和强引用计数都变为 0 时，控制块本身才会被释放。</li>
 </ul>
-<p>这种<strong>引用计数的加减</strong>还是线程安全的：shared_ptr 的引用计数增减操作是原子的，这意味着在多线程环境下，仅对 shared_ptr 对象本身进行拷贝、赋值和销毁是线程安全的，不会导致引用计数出错。但<strong>它并不保护被管理对象本身</strong>，如果<strong>多线程要修改对象内容</strong>，仍需<strong>手动加锁</strong>。</p>
-<h3 id="创建-shared-ptr"><a href="#创建-shared-ptr" class="headerlink" title="创建 shared_ptr"></a>创建 shared_ptr</h3><p>函数模板 std::make_shared 的函数原型如下:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std {</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="title">make_shared</span><span class="params">(Args&amp;&amp;... args)</span></span>;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-<p>T是<strong>要指向的对象的类型</strong>, args是传给T这个类<strong>构造函数的参数</strong>（如果有的话）。</p>
+<p>这种<strong>引用计数的加减</strong>还是线程安全的：shared_ptr
+的引用计数增减操作是原子的，这意味着在多线程环境下，仅对 shared_ptr
+对象本身进行拷贝、赋值和销毁是线程安全的，不会导致引用计数出错。但<strong>它并不保护被管理对象本身</strong>，如果<strong>多线程要修改对象内容</strong>，仍需<strong>手动加锁</strong>。</p>
+<h3 id="创建-shared_ptr">创建 shared_ptr</h3>
+<p>函数模板 std::make_shared 的函数原型如下: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std {</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="title">make_shared</span><span class="params">(Args&amp;&amp;... args)</span></span>;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+T是<strong>要指向的对象的类型</strong>,
+args是传给T这个类<strong>构造函数的参数</strong>（如果有的话）。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span>    <span class="comment">// 存放智能指针相关</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyClass</span>() { std::cout &lt;&lt; <span class="string">"MyClass 构造"</span> &lt;&lt; std::endl; }</span><br><span class="line">    ~<span class="built_in">MyClass</span>() { std::cout &lt;&lt; <span class="string">"MyClass 析构"</span> &lt;&lt; std::endl; }</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">greet</span><span class="params">()</span> </span>{ std::cout &lt;&lt; <span class="string">"Hello!"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 推荐方式：使用 std::make_shared</span></span><br><span class="line">    <span class="comment">// 优点：1. 更高效（对象和控制块一次性分配内存） 2. 异常安全</span></span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; sp1 = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 不太推荐的方式：使用 new, 虽然最终也能通过shared_ptr安全管理, 但是会分两次（一次 new T()，一次为控制块）分配内存</span></span><br><span class="line">    <span class="function">std::shared_ptr&lt;MyClass&gt; <span class="title">sp2</span><span class="params">(<span class="keyword">new</span> MyClass())</span></span>; </span><br><span class="line">    <span class="keyword">auto</span> sp3 = sp1; <span class="comment">// 直接拷贝构造</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建完毕后, 这两个指针指向的对象都在堆上, 控制块也在堆上</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>对于std::shared_ptr, 还有一些需要了解但是不太常用的接口: </p>
-<ul>
-<li>通过 get() 方法来获取原始指针，适用于和旧版C语言库等只接受原始指针的接口交互</li>
-<li>通过 reset() 来减少一个强引用计数， 适用于提前终止对资源的管理</li>
-<li>通过use_count()来查看一个对象的引用计数。</li>
-</ul>
-<h3 id="共享所有权"><a href="#共享所有权" class="headerlink" title="共享所有权"></a>共享所有权</h3><div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个 shared_ptr</span></span><br><span class="line">std::shared_ptr&lt;MyClass&gt; sp1 = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">std::cout &lt;&lt; <span class="string">"sp1 创建后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 1</span></span><br><span class="line"></span><br><span class="line">{</span><br><span class="line">    <span class="comment">// sp2 通过拷贝 sp1 创建</span></span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; sp2 = sp1;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"sp2 创建后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 2</span></span><br><span class="line">    </span><br><span class="line">    sp2-&gt;<span class="built_in">greet</span>(); <span class="comment">// 可以像普通指针一样使用</span></span><br><span class="line">} <span class="comment">// sp2 在这里离开作用域并被销毁</span></span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">"sp2 销毁后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// sp1 在 main 函数结束时销毁，引用计数变为0，MyClass 对象被析构</span></span><br></pre></td></tr></table></figure></div>
-
-<p>优点：</p>
-<ul>
-<li>自动管理内存，有效防止内存泄漏。</li>
-<li>易于使用，可以像普通指针一样操作。</li>
-<li>明确了资源的“共享所有权”语义。</li>
-</ul>
-<p>但是, 如果只使用std::shared_ptr, 会存在一个难以察觉的陷阱: 循环引用（Circular Reference）, 这是 shared_ptr 最大的问题，也是 weak_ptr 存在的原因。</p>
-<h3 id="循环引用（Circular-Reference）"><a href="#循环引用（Circular-Reference）" class="headerlink" title="循环引用（Circular Reference）"></a>循环引用（Circular Reference）</h3><p>如下是一个双向链表的实现代码</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> {</span><br><span class="line">    <span class="type">int</span> value;</span><br><span class="line">    <span class="comment">// 错误的方式：前后指针都使用 shared_ptr</span></span><br><span class="line">    std::shared_ptr&lt;Node&gt; next;</span><br><span class="line">    std::shared_ptr&lt;Node&gt; prev;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Node</span>(<span class="type">int</span> v) : <span class="built_in">value</span>(v) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"构造函数: Node("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">    ~<span class="built_in">Node</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"析构函数: ~Node("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">create_leaky_list</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 进入 create_leaky_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建两个节点</span></span><br><span class="line">    <span class="keyword">auto</span> node1 = std::<span class="built_in">make_shared</span>&lt;Node&gt;(<span class="number">10</span>); <span class="comment">// Node(10) 的强引用计数为 1</span></span><br><span class="line">    <span class="keyword">auto</span> node2 = std::<span class="built_in">make_shared</span>&lt;Node&gt;(<span class="number">20</span>); <span class="comment">// Node(20) 的强引用计数为 1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将它们互相连接，形成双向链表</span></span><br><span class="line">    node1-&gt;next = node2; <span class="comment">// Node(20) 的强引用计数变为 2 (来自 node2 和 node1-&gt;next)</span></span><br><span class="line">    node2-&gt;prev = node1; <span class="comment">// Node(10) 的强引用计数变为 2 (来自 node1 和 node2-&gt;prev)</span></span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(10) 的引用计数: "</span> &lt;&lt; node<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(20) 的引用计数: "</span> &lt;&lt; node<span class="number">2.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 准备离开 create_leaky_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="built_in">create_leaky_list</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"\n--- create_leaky_list 函数已结束 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"程序即将退出，检查是否有析构函数被调用..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>当 create_leaky_list 函数结束时，<strong>栈上的 node1 和 node2</strong> 两个 shared_ptr 指针变量被销毁(指向的堆上的对象并没有)。node1 销毁，导致 Node(10) 的强引用计数从 2 降为 1。但不为 0，因为 Node(20)-&gt;prev 仍然指向它; node2 销毁，导致 Node(20) 的强引用计数从 2 降为 1。但不为 0，因为 Node(10)-&gt;next 仍然指向它。</p>
-<p>最终结果是, 由于两个节点(对象)的强引用计数都无法归零，它们的析构函数永远不会被调用，导致它们所占用的内存无法被释放。</p>
-<h2 id="std-weak-ptr：打破循环引用的观察者"><a href="#std-weak-ptr：打破循环引用的观察者" class="headerlink" title="std::weak_ptr：打破循环引用的观察者"></a>std::weak_ptr：打破循环引用的观察者</h2><p>std::weak_ptr 是一种<strong>非拥有型</strong>的智能指针。它像一个“观察者”，可以指向一个由 shared_ptr 管理的对象，但不会增加对象的强引用计数。</p>
+<p>对于std::shared_ptr, 还有一些需要了解但是不太常用的接口: - 通过 get()
+方法来获取原始指针，适用于和旧版C语言库等只接受原始指针的接口交互 - 通过
+reset() 来减少一个强引用计数， 适用于提前终止对资源的管理 -
+通过use_count()来查看一个对象的引用计数。</p>
+<h3 id="共享所有权">共享所有权</h3>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个 shared_ptr</span></span><br><span class="line">std::shared_ptr&lt;MyClass&gt; sp1 = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">std::cout &lt;&lt; <span class="string">"sp1 创建后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 1</span></span><br><span class="line"></span><br><span class="line">{</span><br><span class="line">    <span class="comment">// sp2 通过拷贝 sp1 创建</span></span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; sp2 = sp1;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"sp2 创建后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 2</span></span><br><span class="line">    </span><br><span class="line">    sp2-&gt;<span class="built_in">greet</span>(); <span class="comment">// 可以像普通指针一样使用</span></span><br><span class="line">} <span class="comment">// sp2 在这里离开作用域并被销毁</span></span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">"sp2 销毁后, 引用计数: "</span> &lt;&lt; sp<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// sp1 在 main 函数结束时销毁，引用计数变为0，MyClass 对象被析构</span></span><br></pre></td></tr></table></figure></div>
+<p>优点： - 自动管理内存，有效防止内存泄漏。 -
+易于使用，可以像普通指针一样操作。 - 明确了资源的“共享所有权”语义。</p>
+<p>但是, 如果只使用std::shared_ptr, 会存在一个难以察觉的陷阱:
+循环引用（Circular Reference）, 这是 shared_ptr 最大的问题，也是
+weak_ptr 存在的原因。</p>
+<h3 id="循环引用circular-reference">循环引用（Circular Reference）</h3>
+<p>如下是一个双向链表的实现代码 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> {</span><br><span class="line">    <span class="type">int</span> value;</span><br><span class="line">    <span class="comment">// 错误的方式：前后指针都使用 shared_ptr</span></span><br><span class="line">    std::shared_ptr&lt;Node&gt; next;</span><br><span class="line">    std::shared_ptr&lt;Node&gt; prev;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Node</span>(<span class="type">int</span> v) : <span class="built_in">value</span>(v) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"构造函数: Node("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">    ~<span class="built_in">Node</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"析构函数: ~Node("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">create_leaky_list</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 进入 create_leaky_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建两个节点</span></span><br><span class="line">    <span class="keyword">auto</span> node1 = std::<span class="built_in">make_shared</span>&lt;Node&gt;(<span class="number">10</span>); <span class="comment">// Node(10) 的强引用计数为 1</span></span><br><span class="line">    <span class="keyword">auto</span> node2 = std::<span class="built_in">make_shared</span>&lt;Node&gt;(<span class="number">20</span>); <span class="comment">// Node(20) 的强引用计数为 1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将它们互相连接，形成双向链表</span></span><br><span class="line">    node1-&gt;next = node2; <span class="comment">// Node(20) 的强引用计数变为 2 (来自 node2 和 node1-&gt;next)</span></span><br><span class="line">    node2-&gt;prev = node1; <span class="comment">// Node(10) 的强引用计数变为 2 (来自 node1 和 node2-&gt;prev)</span></span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(10) 的引用计数: "</span> &lt;&lt; node<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(20) 的引用计数: "</span> &lt;&lt; node<span class="number">2.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 准备离开 create_leaky_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="built_in">create_leaky_list</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"\n--- create_leaky_list 函数已结束 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"程序即将退出，检查是否有析构函数被调用..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 当 create_leaky_list
+函数结束时，<strong>栈上的 node1 和 node2</strong> 两个 shared_ptr
+指针变量被销毁(指向的堆上的对象并没有)。node1 销毁，导致 Node(10)
+的强引用计数从 2 降为 1。但不为 0，因为 Node(20)-&gt;prev 仍然指向它;
+node2 销毁，导致 Node(20) 的强引用计数从 2 降为 1。但不为 0，因为
+Node(10)-&gt;next 仍然指向它。</p>
+<p>最终结果是,
+由于两个节点(对象)的强引用计数都无法归零，它们的析构函数永远不会被调用，导致它们所占用的内存无法被释放。</p>
+<h2 id="stdweak_ptr打破循环引用的观察者">std::weak_ptr：打破循环引用的观察者</h2>
+<p>std::weak_ptr
+是一种<strong>非拥有型</strong>的智能指针。它像一个“观察者”，可以指向一个由
+shared_ptr 管理的对象，但不会增加对象的强引用计数。</p>
 <p>也就是说, 这种指针是一种弱引用:</p>
 <ul>
 <li>weak_ptr 的存在不会影响对象的生命周期。它只是监视对象是否存在。</li>
-<li>它指向与 shared_ptr <strong>相同的控制块</strong>，并通过创建和销毁来增减控制块中的<strong>弱引用计数</strong>。</li>
-<li>你<strong>不能直接通过 weak_ptr 访问对象</strong>（<strong>没有 * 或 -&gt; 操作符</strong>），因为对象可能随时被销毁。</li>
+<li>它指向与 shared_ptr
+<strong>相同的控制块</strong>，并通过创建和销毁来增减控制块中的<strong>弱引用计数</strong>。</li>
+<li>你<strong>不能直接通过 weak_ptr 访问对象</strong>（<strong>没有 * 或
+-&gt; 操作符</strong>），因为对象可能随时被销毁。</li>
 </ul>
-<h3 id="创建-weak-ptr-和访问对象（核心操作：lock-）"><a href="#创建-weak-ptr-和访问对象（核心操作：lock-）" class="headerlink" title="创建 weak_ptr 和访问对象（核心操作：lock()）"></a>创建 weak_ptr 和访问对象（核心操作：lock()）</h3><p>weak_ptr 只能从 shared_ptr 或另一个 weak_ptr 构造, 而不能构造一个来指向某个新对象</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="type">int</span>&gt; sp = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">10</span>);</span><br><span class="line">std::weak_ptr&lt;<span class="type">int</span>&gt; wp = sp; <span class="comment">// 从 shared_ptr 创建</span></span><br></pre></td></tr></table></figure></div>
-
-<p>weak_ptr 最重要的函数是 <strong>lock()</strong>。它会安全地检查被观察对象是否存在：</p>
+<h3 id="创建-weak_ptr-和访问对象核心操作lock">创建 weak_ptr
+和访问对象（核心操作：lock()）</h3>
+<p>weak_ptr 只能从 shared_ptr 或另一个 weak_ptr 构造,
+而不能构造一个来指向某个新对象 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::shared_ptr&lt;<span class="type">int</span>&gt; sp = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">10</span>);</span><br><span class="line">std::weak_ptr&lt;<span class="type">int</span>&gt; wp = sp; <span class="comment">// 从 shared_ptr 创建</span></span><br></pre></td></tr></table></figure></div></p>
+<p>weak_ptr 最重要的函数是
+<strong>lock()</strong>。它会安全地检查被观察对象是否存在：</p>
 <ul>
-<li>如果对象仍然存在，lock() 会返回一个指向该对象的有效的 shared_ptr，并使对象的强引用计数 +1。</li>
+<li>如果对象仍然存在，lock() 会返回一个指向该对象的有效的
+shared_ptr，并使对象的强引用计数 +1。</li>
 <li>如果对象已被销毁，lock() 会返回一个空的 shared_ptr。</li>
 </ul>
-<p>这种“检查并获取”的模式是原子操作，保证了线程安全。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">std::weak_ptr&lt;MyClass&gt; weak_p;</span><br><span class="line">{</span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; shared_p = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">    weak_p = shared_p; <span class="comment">// weak_p 观察 shared_p 管理的对象</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试从 weak_p 获取一个 shared_ptr</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">auto</span> sp_temp = weak_p.<span class="built_in">lock</span>()) { <span class="comment">// 看是否能够成功获取</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"对象仍然存在, 可以安全访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">        sp_temp-&gt;<span class="built_in">greet</span>();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">} <span class="comment">// shared_p 在此销毁, MyClass 对象也被析构</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// MyClass 对象已被析构, weak_p无指向, 再次尝试 lock会失败</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> sp_temp = weak_p.<span class="built_in">lock</span>()) {</span><br><span class="line">    <span class="comment">// 这段代码不会执行</span></span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"对象已被销毁, 无法访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>还有个常用的函数: std::weak_ptr::<strong>expired()</strong>, 用于判断当前 weak_ptr 是否已经失效，也就是它所观察的对象是否已经被销毁。如果返回 true, 表示对象已经被销毁，weak_ptr 不再指向有效资源; 返回 false则表示对象仍然存在，可以尝试通过 lock() 获取一个有效的 shared_ptr。</p>
-<p>结合起来上面的代码还可以修改为:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!weak_ptr.<span class="built_in">expired</span>()) {</span><br><span class="line">    weak_ptr.<span class="built_in">lock</span>()-&gt;<span class="built_in">greet</span>();</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"对象已被销毁, 无法访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="解决循环引用"><a href="#解决循环引用" class="headerlink" title="解决循环引用"></a>解决循环引用</h3><p>只需将循环引用链中的任意一环从 shared_ptr 改为 weak_ptr 即可。通常，我们会选择从属关系中的“子”指向“父”的指针(在双向链表中通常是 prev 指针)改为 weak_ptr。</p>
+<p>这种“检查并获取”的模式是原子操作，保证了线程安全。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">std::weak_ptr&lt;MyClass&gt; weak_p;</span><br><span class="line">{</span><br><span class="line">    std::shared_ptr&lt;MyClass&gt; shared_p = std::<span class="built_in">make_shared</span>&lt;MyClass&gt;();</span><br><span class="line">    weak_p = shared_p; <span class="comment">// weak_p 观察 shared_p 管理的对象</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试从 weak_p 获取一个 shared_ptr</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">auto</span> sp_temp = weak_p.<span class="built_in">lock</span>()) { <span class="comment">// 看是否能够成功获取</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"对象仍然存在, 可以安全访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">        sp_temp-&gt;<span class="built_in">greet</span>();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">} <span class="comment">// shared_p 在此销毁, MyClass 对象也被析构</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// MyClass 对象已被析构, weak_p无指向, 再次尝试 lock会失败</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> sp_temp = weak_p.<span class="built_in">lock</span>()) {</span><br><span class="line">    <span class="comment">// 这段代码不会执行</span></span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"对象已被销毁, 无法访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<p>还有个常用的函数: std::weak_ptr::<strong>expired()</strong>,
+用于判断当前 weak_ptr
+是否已经失效，也就是它所观察的对象是否已经被销毁。如果返回 true,
+表示对象已经被销毁，weak_ptr 不再指向有效资源; 返回
+false则表示对象仍然存在，可以尝试通过 lock() 获取一个有效的
+shared_ptr。</p>
+<p>结合起来上面的代码还可以修改为: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!weak_ptr.<span class="built_in">expired</span>()) {</span><br><span class="line">    weak_ptr.<span class="built_in">lock</span>()-&gt;<span class="built_in">greet</span>();</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"对象已被销毁, 无法访问。"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="解决循环引用">解决循环引用</h3>
+<p>只需将循环引用链中的任意一环从 shared_ptr 改为 weak_ptr
+即可。通常，我们会选择从属关系中的“子”指向“父”的指针(在双向链表中通常是
+prev 指针)改为 weak_ptr。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">CorrectNode</span> {</span><br><span class="line">    <span class="type">int</span> value;</span><br><span class="line">    std::shared_ptr&lt;CorrectNode&gt; next;</span><br><span class="line">    <span class="comment">// 解决方案：将 prev 指针改为 weak_ptr</span></span><br><span class="line">    std::weak_ptr&lt;CorrectNode&gt; prev;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">CorrectNode</span>(<span class="type">int</span> v) : <span class="built_in">value</span>(v) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"构造函数: CorrectNode("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">    ~<span class="built_in">CorrectNode</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"析构函数: ~CorrectNode("</span> &lt;&lt; value &lt;&lt; <span class="string">")"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">create_correct_list</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 进入 create_correct_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> node1 = std::<span class="built_in">make_shared</span>&lt;CorrectNode&gt;(<span class="number">10</span>); <span class="comment">// Node(10) 强引用 = 1</span></span><br><span class="line">    <span class="keyword">auto</span> node2 = std::<span class="built_in">make_shared</span>&lt;CorrectNode&gt;(<span class="number">20</span>); <span class="comment">// Node(20) 强引用 = 1</span></span><br><span class="line"></span><br><span class="line">    node1-&gt;next = node2; <span class="comment">// Node(20) 强引用 = 2</span></span><br><span class="line">    node2-&gt;prev = node1; <span class="comment">// Node(10) 强引用不变，仍为 1 (因为 prev 是 weak_ptr)</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(10) 的引用计数: "</span> &lt;&lt; node<span class="number">1.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"连接后, Node(20) 的引用计数: "</span> &lt;&lt; node<span class="number">2.</span><span class="built_in">use_count</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 准备离开 create_correct_list 函数 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="built_in">create_correct_list</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"\n--- create_correct_list 函数已结束 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"程序即将退出，检查是否有析构函数被调用..."</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>当 create_correct_list 函数结束时，栈上的 node1 和 node2 被销毁。因为 node1 销毁，Node(10) 的强引用计数从 1 降为 0。Node(10) 对象被析构, 导致其成员 next（一个指向 Node(20) 的 shared_ptr）被销毁。这导致 Node(20) 的强引用计数从 2 降为 1。</p>
-<p>随后，node2 销毁，Node(20) 的强引用计数从 1 降为 0。Node(20) 对象被析构。最终结果是, 所有节点都被正确地、依次地销毁。</p>
-<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><table>
+<p>当 create_correct_list 函数结束时，栈上的 node1 和 node2 被销毁。因为
+node1 销毁，Node(10) 的强引用计数从 1 降为 0。Node(10) 对象被析构,
+导致其成员 next（一个指向 Node(20) 的 shared_ptr）被销毁。这导致
+Node(20) 的强引用计数从 2 降为 1。</p>
+<p>随后，node2 销毁，Node(20) 的强引用计数从 1 降为 0。Node(20)
+对象被析构。最终结果是, 所有节点都被正确地、依次地销毁。</p>
+<h2 id="总结对比">总结对比</h2>
+<table>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 29%">
+<col style="width: 54%">
+</colgroup>
 <thead>
 <tr>
 <th>特性</th>
@@ -874,7 +915,8 @@ mjx-container[display="true"] + br {
 <th>std::weak_ptr</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>所有权</td>
 <td>拥有（共享所有权）</td>
 <td>不拥有（观察者）</td>
@@ -902,15 +944,19 @@ mjx-container[display="true"] + br {
 <tr>
 <td>主要用途</td>
 <td>管理具有共享所有权的动态资源</td>
-<td>1. 打破 shared_ptr 的循环引用<br>2. 实现缓存系统<br>3. 观察者模式</td>
+<td>1. 打破 shared_ptr 的循环引用<br>2. 实现缓存系统<br>3.
+观察者模式</td>
 </tr>
 <tr>
 <td>如何创建</td>
 <td><code>std::make_shared</code> 或从原始指针构造</td>
 <td>从 shared_ptr 或其他 weak_ptr 构造</td>
 </tr>
-</tbody></table>
-<p>智能指针这种技术并不新奇，在很多语言中都是一种常见的技术，现代 C++ 将这项技术引进，在一定程度上消除了 new/delete 的滥用，是一种更加成熟的编程范式。</p>
+</tbody>
+</table>
+<p>智能指针这种技术并不新奇，在很多语言中都是一种常见的技术，现代 C++
+将这项技术引进，在一定程度上消除了 new/delete
+的滥用，是一种更加成熟的编程范式。</p>
 
 		</div>
 
@@ -961,7 +1007,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">shared_ptr与weak_ptr</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#std-shared-ptr%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85"><span class="nav-text">std::shared_ptr：共享所有权的管理者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5%EF%BC%9A%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-text">核心理念：引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-shared-ptr"><span class="nav-text">创建 shared_ptr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83"><span class="nav-text">共享所有权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%EF%BC%88Circular-Reference%EF%BC%89"><span class="nav-text">循环引用（Circular Reference）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-weak-ptr%EF%BC%9A%E6%89%93%E7%A0%B4%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%E8%A7%82%E5%AF%9F%E8%80%85"><span class="nav-text">std::weak_ptr：打破循环引用的观察者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-weak-ptr-%E5%92%8C%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%EF%BC%88%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C%EF%BC%9Alock-%EF%BC%89"><span class="nav-text">创建 weak_ptr 和访问对象（核心操作：lock()）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-text">解决循环引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-text">总结对比</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#stdshared_ptr%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85"><span class="nav-text">std::shared_ptr：共享所有权的管理者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%90%86%E5%BF%B5%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-text">核心理念：引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-shared_ptr"><span class="nav-text">创建 shared_ptr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83"><span class="nav-text">共享所有权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8circular-reference"><span class="nav-text">循环引用（Circular Reference）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stdweak_ptr%E6%89%93%E7%A0%B4%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%E8%A7%82%E5%AF%9F%E8%80%85"><span class="nav-text">std::weak_ptr：打破循环引用的观察者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-weak_ptr-%E5%92%8C%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9Clock"><span class="nav-text">创建 weak_ptr
+和访问对象（核心操作：lock()）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-text">解决循环引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-text">总结对比</span></a></li></ol>
 
 	</div>
 </div>
@@ -990,11 +1037,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

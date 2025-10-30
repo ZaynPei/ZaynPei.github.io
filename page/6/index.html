@@ -742,15 +742,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -782,15 +782,15 @@ mjx-container[display="true"] + br {
 </div>
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -815,25 +815,32 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/4.%20std%20call_once/">
-                            std::call_once 解决多线程数据共享
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/5.%20%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1%E7%BB%93%E6%9E%84/">
+                            5. 基于锁的并发设计结构
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            在多线程环境中，我们经常会遇到一个需求：确保某段代码（通常是初始化代码）在整个程序的生命周期中，无论有多少个线程并发调用它，都只被执行一次。一个经典的例子就是线程安全的懒汉式单例模式 (Lazy-Initialized Singleton)。
-12345678910111213141516#include &lt;iostream&gt;class Singleton {public:   ...
+                            为并发设计
+首先,
+什么是并发数据结构？一个并发数据结构是指一个可以被多个线程同时访问的数据结构。
+也就是说, 其最低要求是线程安全 (Thread Safety)
+这意味着，即使多个线程并发地对数据结构执行操作（无论是相同还是不同的操作），数据结构也必须保持其内部一致性:
+
+无数据丢失或损坏。
+所有的不变量 (Invariants)
+必须始终保持（或者说，没有线程能看到不变...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 16:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
                 
-                    2025-09-22
+                    2025-10-01
                 
             </span>
         </span>
@@ -861,16 +868,6 @@ mjx-container[display="true"] + br {
                     
                     
                 
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
-                        </li>
-                    
-                    
-                
             </ul>
         </span>
         
@@ -889,7 +886,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/4.%20std%20call_once/">Read more<span class="seo-reader-text">std::call_once 解决多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/5.%20%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1%E7%BB%93%E6%9E%84/">Read more<span class="seo-reader-text">5. 基于锁的并发设计结构</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -904,25 +901,27 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/3.%20%E4%BA%92%E6%96%A5%E9%87%8F%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%A7%A3%E5%86%B3%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
-                            互斥量和原子操作解决多线程数据共享
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/4.%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/">
+                            4. 内存模型和原子操作
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            在多个线程中共享数据时，需要注意线程安全问题。如果多个线程同时访问同一个变量，并且其中至少有一个线程对该变量进行了写操作，那么就会出现数据竞争问题。数据竞争可能会导致程序崩溃、产生未定义的结果，或者得到错误的结果。为了避免数据竞争问题，需要使用同步机制来确保多个线程之间对共享数据的访问是安全的。常见的同步机制包括互斥量、条件变量、原子操作等。
-互斥量问题的根源：竞争条件 (Race Cond...
+                            内存模型基础
+C++是一个系统级别的编程语言，标准委员会的目标之一就是不需要比C++还要底层的高级语言。C++应该向程序员提供足够的灵活性，无障碍的去做他们想要做的事情；当需要的时候，可以让他们“接触硬件”。原子类型和原子操作就允许他们“接触硬件”，并提供底层级别的同步操作，通常会将常规指令数缩减到1~2个CPU指令。
+对象和内存位置
+在一个C++程序中的所有数据都是由对象(objec...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 13:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
                 
-                    2025-09-22
+                    2025-10-01
                 
             </span>
         </span>
@@ -950,16 +949,6 @@ mjx-container[display="true"] + br {
                     
                     
                 
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
-                        </li>
-                    
-                    
-                
             </ul>
         </span>
         
@@ -978,7 +967,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/3.%20%E4%BA%92%E6%96%A5%E9%87%8F%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%A7%A3%E5%86%B3%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">Read more<span class="seo-reader-text">互斥量和原子操作解决多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/4.%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/">Read more<span class="seo-reader-text">4. 内存模型和原子操作</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -993,26 +982,34 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90%E9%97%AE%E9%A2%98/">
-                            Thread线程库中的资源问题
+                        <a href="/2025/09/30/system/OS/Process/Process/">
+                            Process
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            在单线程程序中，对象的创建和销毁顺序是可预测的。但在多线程程序中，新线程的执行时机是不确定的。它可能在创建它的函数返回之前、之中或之后才真正开始运行。“数据未定义错误”的根源就是，程序员错误地假设了新线程会比它所需要的数据“死”得更早，但事实往往相反。
-下面这些问题的本质原因在于: 线程的生命周期与其访问的数据的生命周期不匹配，导致线程访问了无效的内存
-数据未定义的情况传递临时变量12345...
+                            进程的基本概念 (Process
+Concept)
+什么是进程 (Process)
+一个进程是 “一个正在执行中的程序”
+。它不仅仅是代码，还包含了程序当前的活动状态 。
+一个进程在内存中通常包含以下几个部分 ：
+
+文本段 (Text Section)：存放程序代码 。
+数据段 (Data Section)：存放全局变量 。
+堆 (Heap)：用于动态分配的内存 。
+栈 ...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 12:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Tue Sep 30 2025 22:00:00 GMT+0800">
                 
-                    2025-09-22
+                    2025-09-30
                 
             </span>
         </span>
@@ -1025,7 +1022,7 @@ mjx-container[display="true"] + br {
                     
                         
                         <li>
-                            <a href="/categories/language/">language</a>&nbsp;
+                            <a href="/categories/system/">system</a>&nbsp;
                         </li>
                     
                     
@@ -1035,17 +1032,7 @@ mjx-container[display="true"] + br {
                             <li>></li>
                         
                         <li>
-                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                            <a href="/categories/system/OS/">OS</a>&nbsp;
                         </li>
                     
                     
@@ -1060,7 +1047,7 @@ mjx-container[display="true"] + br {
                     
                         <li>
                             
-                            <a href="/tags/language/">language</a>&nbsp;
+                            <a href="/tags/system/">system</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1068,7 +1055,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90%E9%97%AE%E9%A2%98/">Read more<span class="seo-reader-text">Thread线程库中的资源问题</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/30/system/OS/Process/Process/">Read more<span class="seo-reader-text">Process</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1083,81 +1070,39 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
-                            Thread线程库的基本使用
+                        <a href="/2025/09/30/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AF%AD%E8%A8%80%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84%E5%BC%BA%E5%8C%96/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">
+                            类型转换
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            C++11 标准的发布是一个里程碑，它首次将线程支持纳入了标准库。这意味着开发者终于可以编写跨平台的、标准化的多线程程序了。在使用 std::thread 之前，必须包含头文件 : #include &lt;thread&gt;
-创建和启动线程在 C++11 中，创建一个 std::thread 对象的同时，新线程就已经开始执行了, 同时主线程立即、不阻塞地继续往下执行,** 新线程和主线程...
+                            C++ 的类型转换分为两大类：隐式类型转换和显式类型转换
+隐式类型转换 (Implicit
+Type Conversion)
+隐式类型转换是由编译器自动进行的，无需程序员显式指定。这通常发生在以下几种情况：
+
+算术转换 (Arithmetic
+Conversion)：在混合类型的算术表达式中，较小的类型会被提升（promote）为较大的类型以保证精度。
+1234// 例如：in...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 11:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Tue Sep 30 2025 18:42:46 GMT+0800">
                 
-                    2025-09-22
+                    2025-09-30
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">Read more<span class="seo-reader-text">Thread线程库的基本使用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/30/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AF%AD%E8%A8%80%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84%E5%BC%BA%E5%8C%96/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">Read more<span class="seo-reader-text">类型转换</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1172,25 +1117,29 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
-                            条款35 ：优先选用基于任务而非基于线程的程序设计
+                        <a href="/2025/09/30/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/array/">
+                            array
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            该条款的核心观点是，当需要异步运行一个函数时，使用 std::async 的基于任务 (task-based) 的方法，通常优于直接使用 std::thread 的基于线程 (thread-based) 的方法。
-基于线程 (Thread-based) 与 std::threadstd::thread 是 C++ 标准库中对操作系统线程 (Thread) 的直接封装。线程可以看作是 CPU ...
+                            std::array 是在 C++11
+中引入的一个容器模板，它封装了一个固定大小的数组。它结合了C风格数组的性能优势（静态分配、无额外开销）和STL容器的便利性与安全性。
+12#include &lt;array&gt;std::array&lt;T, N&gt; array_name;
+
+T: 存储的元素类型 (例如 int, double, std::string)。
+N: ...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 10:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Tue Sep 30 2025 16:00:00 GMT+0800">
                 
-                    2025-09-22
+                    2025-09-30
                 
             </span>
         </span>
@@ -1223,7 +1172,7 @@ mjx-container[display="true"] + br {
                     
                         <li>
                             | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                            <a href="/tags/cpp/">cpp</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1231,7 +1180,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">Read more<span class="seo-reader-text">条款35 ：优先选用基于任务而非基于线程的程序设计</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/30/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/array/">Read more<span class="seo-reader-text">array</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1246,27 +1195,106 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">
-                            条款36 ：如果异步是必要的，则指定 std::launch::async
+                        <a href="/2025/09/30/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/">
+                            网络层
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            该条款的核心论点是，std::async 的默认启动策略虽然为标准库调度器提供了有用的灵活性，但也给程序员带来了不确定性，可能导致难以发现的bug。因此，当你确实需要函数必须异步执行时，就应该明确指定这一点。
-std::async 的启动策略std::async 可以接受一个启动策略参数，来控制任务的执行方式：
-
-std::launch::async：此策略保证任务会在一个不同的线程上异步执...
+                            网络层概述
+网络层在OSI体系结构中是自下而上的第三层，其最核心的任务是将数据分组从源主机，经过多个网络和多段链路，最终传输到目的主机。这个核心任务可以被分解为两个关键功能：分组转发和路由选择
+。
+分组转发 (Forwarding)
+当一台路由器从其某个接口所连接的链路上接收到一个数据分组后，它会根据分组首部中的信息，在自己的转发表中进行查询，并依据查询结果将该分组从一个合适的接口发...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 10:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Tue Sep 30 2025 15:00:00 GMT+0800">
                 
-                    2025-09-22
+                    2025-09-30
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/web/">web</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/computer-network/">computer network</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/30/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/">Read more<span class="seo-reader-text">网络层</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/29/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
+                            排序算法
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            排序算法是计算机科学中用于将一组数据按照特定顺序进行排列的算法。本节不讨论
+C++ STL中的排序算法，而是介绍一些基本的排序算法及其实现。
+对于当前的排序算法, 主要分为两大类: 1. 比较排序算法
+(Comparison-based Sorting Algorithms):
+这些算法通过比较元素之间的大小关系来决定它们的顺序。常见的比较排序算法包括快速排序
+(Quick Sor...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 29 2025 16:00:00 GMT+0800">
+                
+                    2025-09-29
                 
             </span>
         </span>
@@ -1299,7 +1327,7 @@ std::launch::async：此策略保证任务会在一个不同的线程上异步�
                     
                         <li>
                             | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                            <a href="/tags/cpp/">cpp</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1307,7 +1335,7 @@ std::launch::async：此策略保证任务会在一个不同的线程上异步�
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">Read more<span class="seo-reader-text">条款36 ：如果异步是必要的，则指定 std::launch::async</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">Read more<span class="seo-reader-text">排序算法</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1322,32 +1350,32 @@ std::launch::async：此策略保证任务会在一个不同的线程上异步�
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">
-                            GDB
+                        <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1/">
+                            可迭代对象和迭代器
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            使用gdb之前，要求对文件进行编译时增加-g参数，加了这个参数过后生成的编译文件会大一些，这是因为增加了gdb调试内容
-基础指令：
--g：使用该参数编译可以执行文件，得到调试表。
-gdb ./a.out: 开始调试
-list/l： l 1  列出源码, 因为分页显示, 后续直接l即可
-b：	b 20	在20行位置设置断点。
-run/r:	运行程序
-n/next: 下一条指令（会越过函数）
-s...
+                            可迭代对象 (Iterable)
+是指那些能够逐一返回其内部成员的对象(返回迭代器)。换句话说，任何你可以用
+for 循环进行遍历的对象，都是可迭代对象。
+常见的可迭代对象
+常见的可迭代对象包括：
+
+序列 (Sequence)：如列表 (list)、元组 (tuple)、字符串 (str)。
+集合 (Set)：如 set、frozenset。
+映射 (Mapping)：如字典...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Sep 21 2025 22:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 15:35:14 GMT+0800">
                 
-                    2025-09-21
+                    2025-09-29
                 
             </span>
         </span>
@@ -1360,17 +1388,7 @@ s...
                     
                         
                         <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
+                            <a href="/categories/python/">python</a>&nbsp;
                         </li>
                     
                     
@@ -1385,7 +1403,12 @@ s...
                     
                         <li>
                             
-                            <a href="/tags/system/">system</a>&nbsp;
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/python/">python</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1393,7 +1416,7 @@ s...
         
     </div>
 
-    <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">Read more<span class="seo-reader-text">GDB</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1/">Read more<span class="seo-reader-text">可迭代对象和迭代器</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1408,24 +1431,33 @@ s...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Vim/">
-                            Vim
+                        <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%88%97%E8%A1%A8/">
+                            列表与元组
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            
+                            列表 (List)
+列表是一个有序的、可变的集合，可以包含任意类型的对象，例如数字、字符串、甚至其他列表。
+列表使用方括号 [] 来定义，元素之间用逗号分隔。
+
+有序性
+(Ordered)：列表中的元素按照它们被添加的顺序进行存储。每个元素都有一个唯一的索引（位置编号），从
+0 开始。
+可变性
+(Mutable)：你可以在列表创建后，随时添加、删除或修改其中的元素。
+异构性...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Sep 21 2025 19:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 15:35:14 GMT+0800">
                 
-                    2025-09-21
+                    2025-09-29
                 
             </span>
         </span>
@@ -1438,17 +1470,7 @@ s...
                     
                         
                         <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
+                            <a href="/categories/python/">python</a>&nbsp;
                         </li>
                     
                     
@@ -1463,7 +1485,12 @@ s...
                     
                         <li>
                             
-                            <a href="/tags/system/">system</a>&nbsp;
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/python/">python</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1471,7 +1498,7 @@ s...
         
     </div>
 
-    <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Vim/">Read more<span class="seo-reader-text">Vim</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%88%97%E8%A1%A8/">Read more<span class="seo-reader-text">列表与元组</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1486,26 +1513,29 @@ s...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gcc/">
-                            gcc
+                        <a href="/2025/09/29/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/">
+                            栈和队列
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            GCC 编译的四个阶段一个 C 语言源文件要变成可执行文件，需要经过预处理 (Preprocessing)、编译 (Compilation)、汇编 (Assembly) 和 链接 (Linking) 这四个核心步骤。
-当你执行一个简单的命令 gcc hello.c -o hello 时，GCC 实际上在后台为你自动完成了所有四个步骤, 分别是:
-第一步：预处理 (Preprocessing)...
+                            “栈和队列是以底层容器完成其所有的工作，对外提供统一的接口，底层容器是可插拔的”
+这句话描述的是一种经典的设计模式————适配器模式
+(Adapter Pattern)。在 C++ 标准库中，std::stack 和 std::queue
+正是这种模式的绝佳范例，它们并不是底层容器,
+而被称为“容器适配器 (Container Adapters)”。
+适配器模式 (Adapter ...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Sep 21 2025 19:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 15:00:00 GMT+0800">
                 
-                    2025-09-21
+                    2025-09-29
                 
             </span>
         </span>
@@ -1518,17 +1548,7 @@ s...
                     
                         
                         <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
+                            <a href="/categories/language/">language</a>&nbsp;
                         </li>
                     
                     
@@ -1543,7 +1563,12 @@ s...
                     
                         <li>
                             
-                            <a href="/tags/system/">system</a>&nbsp;
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/cpp/">cpp</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1551,86 +1576,7 @@ s...
         
     </div>
 
-    <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gcc/">Read more<span class="seo-reader-text">gcc</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%B8%8E%E8%AE%A4%E8%AF%86Linux/">
-                            基本命令与认识Linux
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            Linux命令基础习惯date 显示系统当前时间, 本质是通过shell解释器调用 /bin/date.execat /etc/shells	查看当前可使用的shellecho $SHELL	查看当前使用的shell, echo是回声命令, 用于将参数输出到标准输出
-键盘快捷键:Ctrl+A	将光标移动到行首Ctrl+E	将光标移动到行尾Ctrl+L	清屏Ctrl+U	删除整行方向键	 移动...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Sep 21 2025 18:00:00 GMT+0800">
-                
-                    2025-09-21
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/system/">system</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%B8%8E%E8%AE%A4%E8%AF%86Linux/">Read more<span class="seo-reader-text">基本命令与认识Linux</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/">Read more<span class="seo-reader-text">栈和队列</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1640,7 +1586,7 @@ s...
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/5/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/7/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/5/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/7/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1668,11 +1614,11 @@ s...
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

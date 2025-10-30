@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-29T07:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-01T07:24:09.374Z">
+<meta property="article:modified_time" content="2025-10-26T07:05:27.930Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="cpp">
@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -770,8 +770,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-01 15:24:09</span>
-            <span class="mobile">2025-10-01 15:24:09</span>
+            <span class="desktop">2025-10-26 15:05:27</span>
+            <span class="mobile">2025-10-26 15:05:27</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -813,12 +813,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.7k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.8k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>7 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>11 Mins</span>
         </span>
     
     
@@ -834,68 +834,143 @@ mjx-container[display="true"] + br {
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
 			<p>“栈和队列是以底层容器完成其所有的工作，对外提供统一的接口，底层容器是可插拔的”</p>
-<p>这句话描述的是一种经典的设计模式————<strong>适配器模式</strong> (Adapter Pattern)。在 C++ 标准库中，std::stack 和 std::queue 正是这种模式的绝佳范例，它们并不是底层容器, 而被称为“<strong>容器适配器</strong> (Container Adapters)”。</p>
-<h2 id="适配器模式-Adapter-Pattern"><a href="#适配器模式-Adapter-Pattern" class="headerlink" title="适配器模式 (Adapter Pattern)"></a>适配器模式 (Adapter Pattern)</h2><blockquote>
+<p>这句话描述的是一种经典的设计模式————<strong>适配器模式</strong>
+(Adapter Pattern)。在 C++ 标准库中，std::stack 和 std::queue
+正是这种模式的绝佳范例，它们并不是底层容器,
+而被称为“<strong>容器适配器</strong> (Container Adapters)”。</p>
+<h2 id="适配器模式-adapter-pattern">适配器模式 (Adapter Pattern)</h2>
+<blockquote>
 <p>适配器模式是一种结构型设计模式，它允许将一个类的接口转换成客户端所期望的另一个接口。通过这种方式，原本由于接口不兼容而无法一起工作的类可以协同工作。</p>
 </blockquote>
-<p>回到标题, std::stack 和 std::queue 类本身并<strong>不真正存储数据</strong>。它们<strong>内部包含了一个底层容器的对象</strong>（比如一个 std::deque 对象），并将所有的数据操作委托（Delegate）给这个内部对象来完成。</p>
+<p>回到标题, std::stack 和 std::queue
+类本身并<strong>不真正存储数据</strong>。它们<strong>内部包含了一个底层容器的对象</strong>（比如一个
+std::deque
+对象），并将所有的数据操作委托（Delegate）给这个内部对象来完成。</p>
 <ul>
-<li>当你对一个 std::stack 执行 push() 操作时，std::stack 内部实际上调用的是其底层容器的 push_back() 方法。</li>
-<li>当你执行 pop() 操作时，它内部调用的是底层容器的 pop_back() 方法。</li>
-<li>当你执行 top() 操作时，它内部调用的是底层容器的 back() 方法来获取最后一个元素的引用。</li>
+<li>当你对一个 std::stack 执行 push() 操作时，std::stack
+内部实际上调用的是其底层容器的 push_back() 方法。</li>
+<li>当你执行 pop() 操作时，它内部调用的是底层容器的 pop_back()
+方法。</li>
+<li>当你执行 top() 操作时，它内部调用的是底层容器的 back()
+方法来获取最后一个元素的引用。</li>
 </ul>
-<p>因此, stack 类的实现就像一个“中间人”或“代理”: </p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 概念伪代码</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span> <span class="title class_">Container</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">stack</span> {</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    Container c; <span class="comment">// 内部包含一个底层容器对象 c, 可以是 std::vector, std::deque 等</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">const</span> T&amp; val)</span> </span>{</span><br><span class="line">        c.<span class="built_in">push_back</span>(val); <span class="comment">// 将 push 操作委托给底层容器的 push_back</span></span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">pop</span><span class="params">()</span> </span>{</span><br><span class="line">        c.<span class="built_in">pop_back</span>(); <span class="comment">// 将 pop 操作委托给底层容器的 pop_back</span></span><br><span class="line">    }</span><br><span class="line">    <span class="function">T&amp; <span class="title">top</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> c.<span class="built_in">back</span>(); <span class="comment">// 将 top 操作委托给底层容器的 back</span></span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ... 其他接口如 empty(), size() 也都委托给 c</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
-<p>当然, 底层容器（如 std::vector）的功能非常强大，它提供了在任意位置插入 (insert())、删除 (erase())、随机访问 (operator[]) 等多种操作。但是，一个“栈”的逻辑是严格的后进先出 (Last-In, First-Out, LIFO)。你不应该能在栈的中间插入或删除元素。</p>
-<p>因此，std::stack 适配器屏蔽了底层容器的大部分接口，只<strong>暴露出符合栈逻辑的几个关键接口</strong>(限制和简化接口):</p>
-<ul>
-<li>push(): 在栈顶添加元素。</li>
-<li>pop(): 从栈顶移除元素。</li>
-<li>top(): 查看栈顶元素。</li>
-<li>empty(): 判断栈是否为空。</li>
-<li>size(): 获取栈中元素的数量。</li>
-</ul>
-<p>通过这种方式，std::stack 强制保证了其 LIFO 的行为特性，使得代码更安全、逻辑更清晰。你无法意外地对一个栈执行不符合其数据结构逻辑的操作。std::queue（先进先出, First-In, First-Out, FIFO）也是同理。</p>
-<p>与此同时, 底层容器是<strong>可插拔的</strong>. 这体现了设计的灵活性和复用性。C++ 通过模板 (Templates) 机制实现了这一点。std::stack 和 std::queue 的定义如下：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">T</span>,</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Container</span> = std::deque&lt;T&gt;</span><br><span class="line">&gt; <span class="keyword">class</span> stack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">T</span>,</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Container</span> = std::deque&lt;T&gt;</span><br><span class="line">&gt; <span class="keyword">class</span> queue;</span><br></pre></td></tr></table></figure></div>
-<p>可以看出, T是存储元素的类型; Container是选择的底层容器类型。它有一个默认值 std::deque<t>, 我们可以显式指定为 std::vector<t> 或 std::list<t>。</t></t></t></p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;deque&gt;</span> <span class="comment">// 默认使用它</span></span></span><br><span class="line"></span><br><span class="line">std::stack&lt;<span class="type">int</span>&gt; s1; <span class="comment">// 底层是 std::deque&lt;int&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 显式指定 std::vector&lt;int&gt; 作为底层容器</span></span><br><span class="line">std::stack&lt;<span class="type">int</span>, std::vector&lt;<span class="type">int</span>&gt;&gt; s2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 显式指定 std::list&lt;int&gt; 作为底层容器</span></span><br><span class="line">std::stack&lt;<span class="type">int</span>, std::list&lt;<span class="type">int</span>&gt;&gt; s3;</span><br></pre></td></tr></table></figure></div>
-
+<p>因此, stack 类的实现就像一个“中间人”或“代理”: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 概念伪代码</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span> <span class="title class_">Container</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">stack</span> {</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    Container c; <span class="comment">// 内部包含一个底层容器对象 c, 可以是 std::vector, std::deque 等</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">const</span> T&amp; val)</span> </span>{</span><br><span class="line">        c.<span class="built_in">push_back</span>(val); <span class="comment">// 将 push 操作委托给底层容器的 push_back</span></span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">pop</span><span class="params">()</span> </span>{</span><br><span class="line">        c.<span class="built_in">pop_back</span>(); <span class="comment">// 将 pop 操作委托给底层容器的 pop_back</span></span><br><span class="line">    }</span><br><span class="line">    <span class="function">T&amp; <span class="title">top</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> c.<span class="built_in">back</span>(); <span class="comment">// 将 top 操作委托给底层容器的 back</span></span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ... 其他接口如 empty(), size() 也都委托给 c</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<p>当然, 底层容器（如
+std::vector）的功能非常强大，它提供了在任意位置插入 (insert())、删除
+(erase())、随机访问 (operator[])
+等多种操作。但是，一个“栈”的逻辑是严格的后进先出 (Last-In, First-Out,
+LIFO)。你不应该能在栈的中间插入或删除元素。</p>
+<p>因此，std::stack
+适配器屏蔽了底层容器的大部分接口，只<strong>暴露出符合栈逻辑的几个关键接口</strong>(限制和简化接口):
+- push(): 在栈顶添加元素。 - pop(): 从栈顶移除元素。 - top():
+查看栈顶元素。 - empty(): 判断栈是否为空。 - size():
+获取栈中元素的数量。</p>
+<p>通过这种方式，std::stack 强制保证了其 LIFO
+的行为特性，使得代码更安全、逻辑更清晰。你无法意外地对一个栈执行不符合其数据结构逻辑的操作。std::queue（先进先出,
+First-In, First-Out, FIFO）也是同理。</p>
+<p>与此同时, 底层容器是<strong>可插拔的</strong>.
+这体现了设计的灵活性和复用性。C++ 通过模板 (Templates)
+机制实现了这一点。std::stack 和 std::queue 的定义如下： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">T</span>,</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Container</span> = std::deque&lt;T&gt;</span><br><span class="line">&gt; <span class="keyword">class</span> stack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">T</span>,</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Container</span> = std::deque&lt;T&gt;</span><br><span class="line">&gt; <span class="keyword">class</span> queue;</span><br></pre></td></tr></table></figure></div>
+可以看出, T是存储元素的类型;
+Container是选择的底层容器类型。它有一个默认值 std::deque<t>,
+我们可以显式指定为 std::vector<t> 或 std::list<t>。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;deque&gt;</span> <span class="comment">// 默认使用它</span></span></span><br><span class="line"></span><br><span class="line">std::stack&lt;<span class="type">int</span>&gt; s1; <span class="comment">// 底层是 std::deque&lt;int&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 显式指定 std::vector&lt;int&gt; 作为底层容器</span></span><br><span class="line">std::stack&lt;<span class="type">int</span>, std::vector&lt;<span class="type">int</span>&gt;&gt; s2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 显式指定 std::list&lt;int&gt; 作为底层容器</span></span><br><span class="line">std::stack&lt;<span class="type">int</span>, std::list&lt;<span class="type">int</span>&gt;&gt; s3;</span><br></pre></td></tr></table></figure></div></t></t></t></p>
 <blockquote>
-<p>不是任何容器都可以作为 stack 的底层容器。它必须满足一定的接口要求，比如必须提供 back(), push_back(), pop_back() 这几个函数。</p>
+<p>不是任何容器都可以作为 stack
+的底层容器。它必须满足一定的接口要求，比如必须提供 back(), push_back(),
+pop_back() 这几个函数。</p>
 </blockquote>
-<h2 id="栈-Stack"><a href="#栈-Stack" class="headerlink" title="栈 (Stack)"></a>栈 (Stack)</h2><p>栈是一种严格遵循“后进先出”（Last-In, First-Out）原则的数据结构。</p>
-<p><strong>头文件</strong>: 要使用 std::stack，你需要包含以下头文件:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br></pre></td></tr></table></figure></div>
-
-<p><strong>定义和初始化</strong>: std::stack 是一个<strong>模板类</strong>，你需要指定存储的元素类型。你也可以选择性地指定底层容器。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 使用默认的底层容器 std::deque</span></span><br><span class="line">std::stack&lt;<span class="type">int</span>&gt; s1;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 显式指定 std::vector 作为底层容器</span></span><br><span class="line">std::stack&lt;std::string, std::vector&lt;std::string&gt;&gt; s2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 显式指定 std::list 作为底层容器</span></span><br><span class="line">std::stack&lt;<span class="type">double</span>, std::list&lt;<span class="type">double</span>&gt;&gt; s3;</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>核心成员函数</strong>: std::stack 的接口非常简洁，主要包含以下几个核心操作：</p>
+<blockquote>
+<p>还要注意, stack和queue并不支持迭代器 (Iterators), 你无法像遍历 vector
+或 deque 那样遍历 stack 或
+queue。因为它们的设计初衷就是提供一种受限的访问方式，以符合栈和队列的逻辑。</p>
+</blockquote>
+<h2 id="栈-stack">栈 (Stack)</h2>
+<p>栈是一种严格遵循“后进先出”（Last-In, First-Out）原则的数据结构。</p>
+<p><strong>头文件</strong>: 要使用 std::stack，你需要包含以下头文件:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br></pre></td></tr></table></figure></div></p>
+<p><strong>定义和初始化</strong>: std::stack
+是一个<strong>模板类</strong>，你需要指定存储的元素类型。你也可以选择性地指定底层容器。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 使用默认的底层容器 std::deque</span></span><br><span class="line">std::stack&lt;<span class="type">int</span>&gt; s1;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 显式指定 std::vector 作为底层容器</span></span><br><span class="line">std::stack&lt;std::string, std::vector&lt;std::string&gt;&gt; s2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 显式指定 std::list 作为底层容器</span></span><br><span class="line">std::stack&lt;<span class="type">double</span>, std::list&lt;<span class="type">double</span>&gt;&gt; s3;</span><br></pre></td></tr></table></figure></div></p>
+<p><strong>核心成员函数</strong>: std::stack
+的接口非常简洁，主要包含以下几个核心操作：</p>
 <ul>
 <li>push(const T&amp; value): 将元素压入栈顶。</li>
-<li>pop(): 移除栈顶元素。注意：这个函数<strong>没有返回值</strong>，它<strong>只负责移除</strong>。</li>
-<li>top(): <strong>返回对栈顶元素</strong>的<strong>引用</strong>。你可以通过它读取或修改栈顶元素。<ul>
+<li>pop():
+移除栈顶元素。注意：这个函数<strong>没有返回值</strong>，它<strong>只负责移除</strong>。</li>
+<li>top():
+<strong>返回对栈顶元素</strong>的<strong>引用</strong>。你可以通过它读取或修改栈顶元素。
+<ul>
 <li>如果栈为空，调用 top() 会导致未定义行为 (Undefined Behavior)。</li>
-</ul>
-</li>
+</ul></li>
 <li>empty(): 检查栈是否为空。如果为空，返回 true；否则返回 false。</li>
 <li>size(): 返回栈中元素的数量。</li>
 </ul>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个存储 int 类型的栈，底层使用默认的 std::deque</span></span><br><span class="line">    std::stack&lt;<span class="type">int</span>&gt; my_stack;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 压入元素 ---</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Pushing 10, 20, 30 onto the stack..."</span> &lt;&lt; std::endl;</span><br><span class="line">    my_stack.<span class="built_in">push</span>(<span class="number">10</span>); <span class="comment">// 栈: [10]</span></span><br><span class="line">    my_stack.<span class="built_in">push</span>(<span class="number">20</span>); <span class="comment">// 栈: [10, 20]</span></span><br><span class="line">    my_stack.<span class="built_in">push</span>(<span class="number">30</span>); <span class="comment">// 栈: [10, 20, 30] &lt;- 30 是栈顶</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 访问和检查 ---</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Stack size is: "</span> &lt;&lt; my_stack.<span class="built_in">size</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 3</span></span><br><span class="line">    <span class="keyword">if</span> (!my_stack.<span class="built_in">empty</span>()) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Top element is: "</span> &lt;&lt; my_stack.<span class="built_in">top</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 30</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 弹出元素 ---</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"\nPopping elements from the stack:"</span> &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">while</span> (!my_stack.<span class="built_in">empty</span>()) {</span><br><span class="line">        <span class="comment">// 步骤1：访问栈顶元素</span></span><br><span class="line">        <span class="type">int</span> top_element = my_stack.<span class="built_in">top</span>();</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Popping: "</span> &lt;&lt; top_element &lt;&lt; std::endl;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 步骤2：移除栈顶元素</span></span><br><span class="line">        my_stack.<span class="built_in">pop</span>();</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 循环结束后，栈为空</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 检查栈是否为空 ---</span></span><br><span class="line">    <span class="keyword">if</span> (my_stack.<span class="built_in">empty</span>()) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"\nThe stack is now empty."</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="队列-Queue"><a href="#队列-Queue" class="headerlink" title="队列 (Queue)"></a>队列 (Queue)</h2><p>std::queue 是 C++ 标准模板库（STL）中的一个容器适配器（Container Adapter）。它提供了一种先进先出（First-In, First-Out, FIFO）的数据结构。默认情况下，std::queue 使用 std::deque（双端队列）作为其底层容器。</p>
+<h2 id="队列-queue">队列 (Queue)</h2>
+<p>std::queue 是 C++
+标准模板库（STL）中的一个<strong>容器适配器</strong>（Container
+Adapter）。它提供了一种<strong>先进先出</strong>(<strong>尾进头出</strong>)（First-In,
+First-Out, FIFO）的数据结构。默认情况下，std::queue 使用
+std::deque（双端队列）作为其底层容器。</p>
+<p>使用前需要包含头文件: <code>#include &lt;queue&gt;</code></p>
 <p>std::queue 的接口非常简洁，主要包含以下几个核心操作：</p>
-<p><strong>push(const T&amp; value)</strong>: 在队列的尾部添加一个元素。这被称为“入队”（enqueue）。</p>
-<p><strong>pop()</strong>: 移除队列头部的元素。这被称为“出队”（dequeue）。</p>
 <ul>
-<li>此函数不返回任何值 (void)。如果想获取头部元素的值，必须在调用 pop() 之前先调用 front()。</li>
+<li><strong>push(const T&amp; value)</strong>:
+在队列的尾部添加一个元素。这被称为“入队”（enqueue）。</li>
+<li><strong>pop()</strong>:
+移除队列头部的元素。这被称为“出队”（dequeue）。
+<ul>
+<li>此函数不返回任何值 (void)。如果想获取头部元素的值，必须在调用 pop()
+之前先调用 front()。</li>
+</ul></li>
+<li><strong>front()</strong>:
+返回对队列头部的第一个元素的引用。你可以通过它读取或修改头部元素，但不会将其从队列中移除。</li>
+<li><strong>back()</strong>: 返回对队列尾部的最后一个元素的引用。</li>
+<li><strong>empty()</strong>:
+检查队列是否为空。如果队列中没有任何元素，返回 true；否则返回
+false。</li>
+<li><strong>size()</strong>: 返回队列中元素的数量。</li>
 </ul>
-<p><strong>front()</strong>: 返回对队列头部的第一个元素的引用。你可以通过它读取或修改头部元素，但不会将其从队列中移除。</p>
-<p><strong>back()</strong>: 返回对队列尾部的最后一个元素的引用。</p>
-<p><strong>empty()</strong>: 检查队列是否为空。如果队列中没有任何元素，返回 true；否则返回 false。</p>
-<p><strong>size()</strong>: 返回队列中元素的数量。</p>
+<p>注意: Queue没有迭代器 (Iterators), 你无法像遍历 vector 或 deque
+那样遍历 queue。如果需要遍历, 可以考虑使用 deque 代替.</p>
+<h3 id="双端队列-deque">双端队列 (Deque)</h3>
+<p>双端队列（Deque，全称 Double-Ended
+Queue）是一种允许在<strong>两端</strong>进行<strong>插入</strong>和<strong>删除</strong>操作的线性数据结构。与传统的队列（Queue）和栈（Stack）不同，双端队列既支持先进先出（FIFO）的操作，也支持后进先出（LIFO）的操作。</p>
+<p>使用前需要包含头文件: <code>#include &lt;deque&gt;</code></p>
+<p>其常用函数包括： - push_back(const T&amp; value):
+在队列的尾部添加一个元素。 - push_front(const T&amp; value):
+在队列的头部添加一个元素。 - pop_back(): 移除队列尾部的元素。 -
+pop_front(): 移除队列头部的元素。 - front(): 返回对队列头部元素的引用。
+- back(): 返回对队列尾部元素的引用。 - empty(): 检查队列是否为空。 -
+size(): 返回队列中元素的数量。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;deque&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    std::deque&lt;<span class="type">int</span>&gt; my_deque;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在尾部添加元素</span></span><br><span class="line">    my_deque.<span class="built_in">push_back</span>(<span class="number">10</span>); <span class="comment">// 队列: [10]</span></span><br><span class="line">    my_deque.<span class="built_in">push_back</span>(<span class="number">20</span>); <span class="comment">// 队列: [10, 20]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在头部添加元素</span></span><br><span class="line">    my_deque.<span class="built_in">push_front</span>(<span class="number">5</span>); <span class="comment">// 队列: [5, 10, 20]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 访问头部和尾部元素</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Front element: "</span> &lt;&lt; my_deque.<span class="built_in">front</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 5</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Back element: "</span> &lt;&lt; my_deque.<span class="built_in">back</span>() &lt;&lt; std::endl;   <span class="comment">// 输出: 20</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除头部元素</span></span><br><span class="line">    my_deque.<span class="built_in">pop_front</span>(); <span class="comment">// 队列: [10, 20]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除尾部元素</span></span><br><span class="line">    my_deque.<span class="built_in">pop_back</span>();  <span class="comment">// 队列: [10]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查队列是否为空</span></span><br><span class="line">    <span class="keyword">if</span> (!my_deque.<span class="built_in">empty</span>()) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Deque size: "</span> &lt;&lt; my_deque.<span class="built_in">size</span>() &lt;&lt; std::endl; <span class="comment">// 输出: 1</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>其在头部或尾部插入/删除元素的时间复杂度都是 O(1)</p>
+<h3 id="单调队列">单调队列</h3>
+<p>单调队列是一种特殊的数据结构，它在保持队列基本功能的同时，还维护了<strong>队列中元素的单调性</strong>（<strong>递增或递减</strong>）。单调队列常用于解决一些需要在<strong>滑动窗口</strong>内<strong>快速获取最大值或最小值</strong>的问题。</p>
+<p>例如 Leetcode 239 题“滑动窗口最大值”就是单调队列的经典应用场景。</p>
+<p>给你一个整数数组 nums，有一个大小为 k
+的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k
+个数字。滑动窗口每次只向右移动一位。返回 滑动窗口中的最大值。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Monotonicqueue</span>{</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        deque&lt;<span class="type">int</span>&gt; que;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">pop</span><span class="params">(<span class="type">int</span> value)</span></span>{</span><br><span class="line">            <span class="keyword">if</span>(!que.<span class="built_in">empty</span>()&amp;&amp; value==que.<span class="built_in">front</span>()){</span><br><span class="line">                que.<span class="built_in">pop_front</span>();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">int</span> value)</span></span>{</span><br><span class="line">            <span class="keyword">while</span>(!que.<span class="built_in">empty</span>()&amp;&amp;value&gt;que.<span class="built_in">back</span>()){</span><br><span class="line">                que.<span class="built_in">pop_back</span>();</span><br><span class="line">            }</span><br><span class="line">            que.<span class="built_in">push_back</span>(value);</span><br><span class="line">        }</span><br><span class="line">        <span class="function"><span class="type">int</span> <span class="title">front</span><span class="params">()</span></span>{</span><br><span class="line">            <span class="keyword">return</span> que.<span class="built_in">front</span>();</span><br><span class="line">        }</span><br><span class="line">    };</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">maxSlidingWindow</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>{</span><br><span class="line">        Monotonicqueue que;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++) { <span class="comment">// 先将前k的元素放进队列</span></span><br><span class="line">            que.<span class="built_in">push</span>(nums[i]);</span><br><span class="line">        }</span><br><span class="line">        result.<span class="built_in">push_back</span>(que.<span class="built_in">front</span>()); <span class="comment">// result 记录前k的元素的最大值</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = k; i &lt; nums.<span class="built_in">size</span>(); i++) {</span><br><span class="line">            que.<span class="built_in">pop</span>(nums[i - k]); <span class="comment">// 滑动窗口移除最前面元素</span></span><br><span class="line">            que.<span class="built_in">push</span>(nums[i]); <span class="comment">// 滑动窗口前加入最后面的元素</span></span><br><span class="line">            result.<span class="built_in">push_back</span>(que.<span class="built_in">front</span>()); <span class="comment">// 记录对应的最大值</span></span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>这是个<strong>单调递减</strong>队列（从<strong>队头到队尾</strong>，front
+<span class="math inline">→</span>
+back）。这意味着队列的头部是最大的元素，尾部是最小的元素</p>
+<ul>
+<li>pop(int value): 如果队列头部的元素等于
+value，则将其移除。这是为了在滑动窗口移动时，移除过期的元素。
+<ul>
+<li>之所以要和 value
+比较，是因为只有当要移除的元素正好是队列头部时，才需要将其移除;
+否则，说明该元素已经被之前的 push 操作移除掉了。</li>
+</ul></li>
+<li>push(int value): 将新元素 value 插入队列。插入前，会移除所有小于
+value 的元素，以保持队列的单调递减性质。
+<ul>
+<li>队列中存在的所有小于 value
+的元素都不可能成为当前或未来窗口的最大值，因此可以安全地移除它们。</li>
+</ul></li>
+<li>front(): 返回队列头部的最大元素。</li>
+</ul>
 
 		</div>
 
@@ -921,12 +996,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1/">
+				<a class="prev" rel="prev" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%88%97%E8%A1%A8/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">可迭代对象和迭代器</span>
+						<span class="post-nav-title-item truncate max-w-48">列表与元组</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -958,7 +1033,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">栈和队列</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter-Pattern"><span class="nav-text">适配器模式 (Adapter Pattern)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88-Stack"><span class="nav-text">栈 (Stack)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%9F%E5%88%97-Queue"><span class="nav-text">队列 (Queue)</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-adapter-pattern"><span class="nav-text">适配器模式 (Adapter Pattern)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88-stack"><span class="nav-text">栈 (Stack)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%9F%E5%88%97-queue"><span class="nav-text">队列 (Queue)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97-deque"><span class="nav-text">双端队列 (Deque)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97"><span class="nav-text">单调队列</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -987,11 +1062,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

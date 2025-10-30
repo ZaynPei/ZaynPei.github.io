@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -801,97 +801,142 @@ mjx-container[display="true"] + br {
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
 			<p>要理解尾递归和尾递归优化，首先必须理解程序是如何执行函数调用的。</p>
-<h3 id="函数调用与调用栈-Call-Stack"><a href="#函数调用与调用栈-Call-Stack" class="headerlink" title="函数调用与调用栈 (Call Stack)"></a>函数调用与调用栈 (Call Stack)</h3><p>当一个函数被调用时，计算机会在内存中一个称为 “<strong>调用栈</strong>” (Call Stack) 的特殊区域创建一个“<strong>栈帧</strong>” (Stack Frame)。它可以看作是函数的一次执行实例的“工作区”。它存储了函数的：</p>
+<h3 id="函数调用与调用栈-call-stack">函数调用与调用栈 (Call Stack)</h3>
+<p>当一个函数被调用时，计算机会在内存中一个称为
+“<strong>调用栈</strong>” (Call Stack)
+的特殊区域创建一个“<strong>栈帧</strong>” (Stack
+Frame)。它可以看作是函数的一次执行实例的“工作区”。它存储了函数的：</p>
 <ul>
 <li><strong>参数</strong> (Arguments)：传递给函数的数值。</li>
-<li><strong>局部变量</strong> (Local Variables)：函数内部定义的变量。</li>
-<li><strong>返回地址</strong> (Return Address)：函数执行完毕后，程序应该回到哪里继续执行。</li>
+<li><strong>局部变量</strong> (Local
+Variables)：函数内部定义的变量。</li>
+<li><strong>返回地址</strong> (Return
+Address)：函数执行完毕后，程序应该回到哪里继续执行。</li>
 </ul>
 <p>而函数调用的过程就像是往一摞盘子上放盘子：</p>
 <ul>
 <li>main 函数开始执行，main 的栈帧被压入栈底。</li>
 <li>main 调用函数 A，A 的栈帧被压入栈顶。</li>
 <li>函数 A 调用函数 B，B 的栈帧被再次压入栈顶。</li>
-<li>函数 B 执行完毕，它的栈帧被弹出，程序根据返回地址回到 A 中继续执行。</li>
+<li>函数 B 执行完毕，它的栈帧被弹出，程序根据返回地址回到 A
+中继续执行。</li>
 <li>函数 A 执行完毕，它的栈帧被弹出，程序回到 main。</li>
 </ul>
-<p>这个调用栈的大小是有限的。如果函数调用链条太长，栈会耗尽空间，导致 栈溢出 (Stack Overflow) 错误，程序崩溃。</p>
-<h3 id="普通递归及其问题"><a href="#普通递归及其问题" class="headerlink" title="普通递归及其问题"></a>普通递归及其问题</h3><p>让我们以一个经典的阶乘函数为例来说明普通递归</p>
-<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">factorial</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 注意：递归调用后，还有一个乘法操作</span></span><br><span class="line">        <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>)</span><br></pre></td></tr></table></figure></div>
-<p>当我们计算 factorial(4) 时，调用栈的变化过程如下：</p>
+<p>这个调用栈的大小是有限的。如果函数调用链条太长，栈会耗尽空间，导致
+栈溢出 (Stack Overflow) 错误，程序崩溃。</p>
+<h3 id="普通递归及其问题">普通递归及其问题</h3>
+<p>让我们以一个经典的阶乘函数为例来说明普通递归 <div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">factorial</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 注意：递归调用后，还有一个乘法操作</span></span><br><span class="line">        <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>)</span><br></pre></td></tr></table></figure></div> 当我们计算
+factorial(4) 时，调用栈的变化过程如下：</p>
 <ul>
-<li>factorial(4) 被调用。它需要计算 factorial(3) 的结果才能完成 4 * … 的计算。factorial(4) 的栈帧入栈。<ul>
-<li>调用栈(前面代表栈底或者说高地址, 后部代表栈顶或者低地址): [factorial(4)]</li>
-</ul>
-</li>
-<li>factorial(3) 被调用。它需要 factorial(2) 的结果。factorial(3) 的栈帧入栈。<ul>
+<li>factorial(4) 被调用。它需要计算 factorial(3) 的结果才能完成 4 * …
+的计算。factorial(4) 的栈帧入栈。
+<ul>
+<li>调用栈(前面代表栈底或者说高地址, 后部代表栈顶或者低地址):
+[factorial(4)]</li>
+</ul></li>
+<li>factorial(3) 被调用。它需要 factorial(2) 的结果。factorial(3)
+的栈帧入栈。
+<ul>
 <li>调用栈: [factorial(4), factorial(3)]</li>
-</ul>
-</li>
-<li>factorial(2) 被调用。它需要 factorial(1) 的结果。factorial(2) 的栈帧入栈。<ul>
+</ul></li>
+<li>factorial(2) 被调用。它需要 factorial(1) 的结果。factorial(2)
+的栈帧入栈。
+<ul>
 <li>调用栈: [factorial(4), factorial(3), factorial(2)]</li>
-</ul>
-</li>
-<li>factorial(1) 被调用。它直接返回 1。factorial(1) 的栈帧入栈，然后<strong>立即出栈</strong>。<ul>
-<li>调用栈: [factorial(4), factorial(3), factorial(2), factorial(1)] -&gt; [factorial(4), factorial(3), factorial(2)]</li>
-</ul>
-</li>
-<li>factorial(2) 拿到返回值 1，计算 2 * 1，返回 2。factorial(2) 的栈帧出栈。<ul>
-<li>调用栈: [factorial(4), factorial(3)]</li>
-</ul>
-</li>
-<li>factorial(3) 拿到返回值 2，计算 3 * 2，返回 6。factorial(3) 的栈帧出栈。<ul>
-<li>调用栈: [factorial(4)]</li>
-</ul>
-</li>
-<li>factorial(4) 拿到返回值 6，计算 4 * 6，返回 24。factorial(4) 的栈帧出栈。</li>
-</ul>
-<p>问题所在：在普通递归中，每一次递归调用都需要<strong>保留当前的栈帧</strong>，因为需要<strong>用它的信息（比如变量 n）来完成后续的计算</strong>。如果递归深度非常大（例如 factorial(10000)），就会创建成千上万个栈帧，最终导致栈溢出。这种空间复杂度是 O(n)。</p>
-<h3 id="尾递归-Tail-Recursion"><a href="#尾递归-Tail-Recursion" class="headerlink" title="尾递归 (Tail Recursion)"></a>尾递归 (Tail Recursion)</h3><p>尾调用 (Tail Call) 指的是一个函数中最后一步, 操作是调用另一个函数。</p>
-<p>尾递归 (Tail Recursion) 是尾调用的一种特殊情况，即这个调用是调用函数自身。</p>
-<p>关键点在于，递<strong>归调用是整个函数的最后一个动作</strong>，其<strong>返回值</strong>被<strong>直接返回</strong>，<strong>不再参与任何其他计算</strong>。</p>
-<p>我们可以将上面的阶乘函数改写为尾递归形式，通常需要一个额外的“累加器”参数：</p>
-<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">factorial_tail</span>(<span class="params">n, accumulator</span>):</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> accumulator</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 最后的动作就是调用自身，没有其他操作</span></span><br><span class="line">        <span class="keyword">return</span> factorial_tail(n - <span class="number">1</span>, n * accumulator)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始调用</span></span><br><span class="line"><span class="comment"># factorial(4) is equivalent to factorial_tail(4, 1)</span></span><br></pre></td></tr></table></figure></div>
-<p>观察 <code>return factorial_tail(n - 1, n * accumulator)</code>，乘法 n * accumulator 在递归调用之前就计算好了。当 factorial_tail(n-1, …) 被调用时，当前的函数 factorial_tail(n, …) 已经完成了它所有的工作, 这个结果在原函数中直接返回而不需要再进入原函数参与计算。</p>
-<h3 id="尾递归优化-Tail-Call-Optimization-TCO"><a href="#尾递归优化-Tail-Call-Optimization-TCO" class="headerlink" title="尾递归优化 (Tail-Call Optimization, TCO)"></a>尾递归优化 (Tail-Call Optimization, TCO)</h3><p>尾递归优化 (Tail-Call Optimization, TCO) 是编译器或解释器的一种优化技术。它的目标是<strong>消除尾递归调用所带来的额外栈空间开销</strong>。</p>
-<p>对于支持 TCO 的语言（编译器或解释器），当它检测到一个尾调用时，它会意识到<strong>当前的栈帧已经不再需要</strong>了。因此，它不会创建一个新的栈帧，而是<strong>复用当前的栈帧</strong>。</p>
-<p>因此, 对于 factorial_tail(4, 1) 的调用过程：</p>
+</ul></li>
+<li>factorial(1) 被调用。它直接返回 1。factorial(1)
+的栈帧入栈，然后<strong>立即出栈</strong>。
 <ul>
-<li>调用 factorial_tail(4, 1)。栈帧包含 n=4, accumulator=1。</li>
-<li>检测到尾调用 <code>factorial_tail(3, 4 * 1)</code>。编译器不会创建新栈帧，而是直接用新参数 n=3, accumulator=4 更新（覆盖）当前的栈帧，然后像 goto 一样跳转到函数开头重新执行。</li>
-<li>调用栈: [frame(n=4, acc=1)] -&gt; 复用 -&gt; [frame(n=3, acc=4)]</li>
-<li>再次检测到尾调用 factorial_tail(2, 3 * 4)。再次更新当前栈帧。</li>
-<li>调用栈: [frame(n=2, acc=12)]</li>
+<li>调用栈: [factorial(4), factorial(3), factorial(2), factorial(1)]
+-&gt; [factorial(4), factorial(3), factorial(2)]</li>
+</ul></li>
+<li>factorial(2) 拿到返回值 1，计算 2 * 1，返回 2。factorial(2)
+的栈帧出栈。
+<ul>
+<li>调用栈: [factorial(4), factorial(3)]</li>
+</ul></li>
+<li>factorial(3) 拿到返回值 2，计算 3 * 2，返回 6。factorial(3)
+的栈帧出栈。
+<ul>
+<li>调用栈: [factorial(4)]</li>
+</ul></li>
+<li>factorial(4) 拿到返回值 6，计算 4 * 6，返回 24。factorial(4)
+的栈帧出栈。</li>
 </ul>
+<p>问题所在：在普通递归中，每一次递归调用都需要<strong>保留当前的栈帧</strong>，因为需要<strong>用它的信息（比如变量
+n）来完成后续的计算</strong>。如果递归深度非常大（例如
+factorial(10000)），就会创建成千上万个栈帧，最终导致栈溢出。这种空间复杂度是
+O(n)。</p>
+<h3 id="尾递归-tail-recursion">尾递归 (Tail Recursion)</h3>
+<p>尾调用 (Tail Call) 指的是一个函数中最后一步,
+操作是调用另一个函数。</p>
+<p>尾递归 (Tail Recursion)
+是尾调用的一种特殊情况，即这个调用是调用函数自身。</p>
+<p>关键点在于，递<strong>归调用是整个函数的最后一个动作</strong>，其<strong>返回值</strong>被<strong>直接返回</strong>，<strong>不再参与任何其他计算</strong>。</p>
+<p>我们可以将上面的阶乘函数改写为尾递归形式，通常需要一个额外的“累加器”参数：
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">factorial_tail</span>(<span class="params">n, accumulator</span>):</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> accumulator</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 最后的动作就是调用自身，没有其他操作</span></span><br><span class="line">        <span class="keyword">return</span> factorial_tail(n - <span class="number">1</span>, n * accumulator)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始调用</span></span><br><span class="line"><span class="comment"># factorial(4) is equivalent to factorial_tail(4, 1)</span></span><br></pre></td></tr></table></figure></div> 观察
+<code>return factorial_tail(n - 1, n * accumulator)</code>，乘法 n *
+accumulator 在递归调用之前就计算好了。当 factorial_tail(n-1, …)
+被调用时，当前的函数 factorial_tail(n, …) 已经完成了它所有的工作,
+这个结果在原函数中直接返回而不需要再进入原函数参与计算。</p>
+<h3 id="尾递归优化-tail-call-optimization-tco">尾递归优化 (Tail-Call
+Optimization, TCO)</h3>
+<p>尾递归优化 (Tail-Call Optimization, TCO)
+是编译器或解释器的一种优化技术。它的目标是<strong>消除尾递归调用所带来的额外栈空间开销</strong>。</p>
+<p>对于支持 TCO
+的语言（编译器或解释器），当它检测到一个尾调用时，它会意识到<strong>当前的栈帧已经不再需要</strong>了。因此，它不会创建一个新的栈帧，而是<strong>复用当前的栈帧</strong>。</p>
+<p>因此, 对于 factorial_tail(4, 1) 的调用过程： - 调用 factorial_tail(4,
+1)。栈帧包含 n=4, accumulator=1。 - 检测到尾调用
+<code>factorial_tail(3, 4 * 1)</code>。编译器不会创建新栈帧，而是直接用新参数
+n=3, accumulator=4 更新（覆盖）当前的栈帧，然后像 goto
+一样跳转到函数开头重新执行。 - 调用栈: [frame(n=4, acc=1)] -&gt; 复用
+-&gt; [frame(n=3, acc=4)] - 再次检测到尾调用 factorial_tail(2, 3 *
+4)。再次更新当前栈帧。 - 调用栈: [frame(n=2, acc=12)]</p>
 <p>以此类推，直到 n=1，直接返回 accumulator 的最终值。</p>
-<p>优化的效果：整个递归过程只占用了<strong>一个栈帧</strong>的空间。它的空间复杂度从 O(n) 降到了 O(1)，等效于一个循环。这样，即使递归一亿次，也不会发生栈溢出。</p>
-<h3 id="为什么大多数编程语言不做这个优化"><a href="#为什么大多数编程语言不做这个优化" class="headerlink" title="为什么大多数编程语言不做这个优化"></a>为什么大多数编程语言不做这个优化</h3><p>尽管尾递归优化有显著的优势，但许多主流编程语言（如 Python、Java、JavaScript）并不支持 TCO，主要有以下几个原因：</p>
-<ol>
-<li><p>调试困难 (Debugging Difficulty), 破坏了调用栈：TCO 的本质是<strong>销毁（复用）栈帧</strong>。如果程序在深层递归中出错，你<strong>看不到完整的函数调用链条</strong>，因为中间的栈帧信息都丢失了。这对于调试来说是一个巨大的障碍，你无法追溯函数是如何一步步调用到当前状态的。</p>
-</li>
+<p>优化的效果：整个递归过程只占用了<strong>一个栈帧</strong>的空间。它的空间复杂度从
+O(n) 降到了
+O(1)，等效于一个循环。这样，即使递归一亿次，也不会发生栈溢出。</p>
+<h3 id="为什么大多数编程语言不做这个优化">为什么大多数编程语言不做这个优化</h3>
+<p>尽管尾递归优化有显著的优势，但许多主流编程语言（如
+Python、Java、JavaScript）并不支持 TCO，主要有以下几个原因：</p>
+<ol type="1">
+<li><p>调试困难 (Debugging Difficulty), 破坏了调用栈：TCO
+的本质是<strong>销毁（复用）栈帧</strong>。如果程序在深层递归中出错，你<strong>看不到完整的函数调用链条</strong>，因为中间的栈帧信息都丢失了。这对于调试来说是一个巨大的障碍，你无法追溯函数是如何一步步调用到当前状态的。</p></li>
 <li><p>实现复杂性和语言规范</p>
 <ul>
-<li>对语言设计者是负担：强制要求 TCO 会让语言的规范和编译器的实现变得更加<strong>复杂</strong>。设计者需要精确定义什么是“尾位置”，并确保所有实现都遵循。</li>
-<li>与某些语言特性冲突：在像 C++ 或 Java 这样的语言中，<strong>栈上的对象可能有关联的析构函数</strong>（或 finally 块）。如果 TCO 优化掉了栈帧，这些清理代码可能不会被正确执行，导致<strong>资源泄露</strong>。</li>
-</ul>
-</li>
+<li>对语言设计者是负担：强制要求 TCO
+会让语言的规范和编译器的实现变得更加<strong>复杂</strong>。设计者需要精确定义什么是“尾位置”，并确保所有实现都遵循。</li>
+<li>与某些语言特性冲突：在像 C++ 或 Java
+这样的语言中，<strong>栈上的对象可能有关联的析构函数</strong>（或
+finally 块）。如果 TCO
+优化掉了栈帧，这些清理代码可能不会被正确执行，导致<strong>资源泄露</strong>。</li>
+</ul></li>
 <li><p>文化和哲学原因</p>
 <ul>
-<li>Python 的理念：Python 的创造者 Guido van Rossum 多次表示反对 TCO。他认为 Python 程序员更倾向于使用<strong>明确的循环 (for, while)</strong>，这比递归更直观、易读。强制 TCO 会鼓励一种不符合 Python 风格的编程范式，并且他认为<strong>调试信息的价值高于 TCO 带来的性能优势</strong>。</li>
-<li>Java 的情况：Java 虚拟机（JVM）的设计使得 TCO 难以实现，因为它需要修改字节码的验证和安全模型。虽然有一些实验性的支持，但它不是标准特性。</li>
-</ul>
-</li>
-<li><p>不认为是必要功能: 在很多面向对象和命令式编程场景下，深度递归并不是一个常见的模式。<strong>大多数问题都可以用迭代</strong>（循环）清晰地解决。因此，实现 TCO 的<strong>投入产出比被认为不高</strong>。</p>
-</li>
+<li>Python 的理念：Python 的创造者 Guido van Rossum 多次表示反对
+TCO。他认为 Python 程序员更倾向于使用<strong>明确的循环 (for,
+while)</strong>，这比递归更直观、易读。强制 TCO 会鼓励一种不符合 Python
+风格的编程范式，并且他认为<strong>调试信息的价值高于 TCO
+带来的性能优势</strong>。</li>
+<li>Java 的情况：Java 虚拟机（JVM）的设计使得 TCO
+难以实现，因为它需要修改字节码的验证和安全模型。虽然有一些实验性的支持，但它不是标准特性。</li>
+</ul></li>
+<li><p>不认为是必要功能:
+在很多面向对象和命令式编程场景下，深度递归并不是一个常见的模式。<strong>大多数问题都可以用迭代</strong>（循环）清晰地解决。因此，实现
+TCO 的<strong>投入产出比被认为不高</strong>。</p></li>
 </ol>
-<p>不过, 仍然有部分语言是支持TCO的, 例如: </p>
+<p>不过, 仍然有部分语言是支持TCO的, 例如:</p>
 <ul>
-<li><p>某些<strong>函数式编程</strong>语言：这类语言通常将<strong>递归作为核心的循环和控制流结构</strong>，因此 TCO 是 必须 的。例如 Scheme（语言规范强制要求 TCO）、Lisp、F#、Scala 等。</p>
-</li>
-<li><p><strong>C/C++</strong>：某些编译器（如 GCC, Clang）在开启<strong>较高优化等级</strong>（如 -O2 或 -O3）时，可能会进行 TCO，但这不是语言标准所保证的。</p>
-</li>
-<li><p><strong>JavaScript</strong>：ES6 规范中引入了对尾调用优化的支持，但实际实现依赖于具体的 JavaScript 引擎（如 V8, SpiderMonkey）。然而，许多主流引擎并未完全实现这一特性。</p>
-</li>
+<li><p>某些<strong>函数式编程</strong>语言：这类语言通常将<strong>递归作为核心的循环和控制流结构</strong>，因此
+TCO 是 必须 的。例如 Scheme（语言规范强制要求 TCO）、Lisp、F#、Scala
+等。</p></li>
+<li><p><strong>C/C++</strong>：某些编译器（如 GCC,
+Clang）在开启<strong>较高优化等级</strong>（如 -O2 或
+-O3）时，可能会进行 TCO，但这不是语言标准所保证的。</p></li>
+<li><p><strong>JavaScript</strong>：ES6
+规范中引入了对尾调用优化的支持，但实际实现依赖于具体的 JavaScript
+引擎（如 V8,
+SpiderMonkey）。然而，许多主流引擎并未完全实现这一特性。</p></li>
 </ul>
 
 		</div>
@@ -919,9 +964,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%87%BD%E6%95%B0/">
+				<a class="next" rel="next" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/OOP/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">函数</span>
+						<span class="post-nav-title-item truncate max-w-48">OOP</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -943,7 +988,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">尾递归 (Tail Recursion) 与尾调用优化 (TCO)</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E4%B8%8E%E8%B0%83%E7%94%A8%E6%A0%88-Call-Stack"><span class="nav-text">函数调用与调用栈 (Call Stack)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E9%80%92%E5%BD%92%E5%8F%8A%E5%85%B6%E9%97%AE%E9%A2%98"><span class="nav-text">普通递归及其问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%BE%E9%80%92%E5%BD%92-Tail-Recursion"><span class="nav-text">尾递归 (Tail Recursion)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%BE%E9%80%92%E5%BD%92%E4%BC%98%E5%8C%96-Tail-Call-Optimization-TCO"><span class="nav-text">尾递归优化 (Tail-Call Optimization, TCO)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%A4%9A%E6%95%B0%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E4%B8%8D%E5%81%9A%E8%BF%99%E4%B8%AA%E4%BC%98%E5%8C%96"><span class="nav-text">为什么大多数编程语言不做这个优化</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E4%B8%8E%E8%B0%83%E7%94%A8%E6%A0%88-call-stack"><span class="nav-text">函数调用与调用栈 (Call Stack)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E9%80%92%E5%BD%92%E5%8F%8A%E5%85%B6%E9%97%AE%E9%A2%98"><span class="nav-text">普通递归及其问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%BE%E9%80%92%E5%BD%92-tail-recursion"><span class="nav-text">尾递归 (Tail Recursion)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%BE%E9%80%92%E5%BD%92%E4%BC%98%E5%8C%96-tail-call-optimization-tco"><span class="nav-text">尾递归优化 (Tail-Call
+Optimization, TCO)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%A4%9A%E6%95%B0%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E4%B8%8D%E5%81%9A%E8%BF%99%E4%B8%AA%E4%BC%98%E5%8C%96"><span class="nav-text">为什么大多数编程语言不做这个优化</span></a></li></ol>
 
 	</div>
 </div>
@@ -972,11 +1018,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,7 +833,8 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="回忆左值（Lvalue）和右值（Rvalue）"><a href="#回忆左值（Lvalue）和右值（Rvalue）" class="headerlink" title="回忆左值（Lvalue）和右值（Rvalue）"></a>回忆左值（Lvalue）和右值（Rvalue）</h3><p>左值（Lvalue）表示一个有名字、可寻址、在表达式结束后仍然存在的对象。其特点是：</p>
+			<h3 id="回忆左值lvalue和右值rvalue">回忆左值（Lvalue）和右值（Rvalue）</h3>
+<p>左值（Lvalue）表示一个有名字、可寻址、在表达式结束后仍然存在的对象。其特点是：</p>
 <ul>
 <li>可以出现在赋值语句的左边：x = 5;</li>
 <li>可以取地址：&amp;x</li>
@@ -846,55 +847,74 @@ mjx-container[display="true"] + br {
 <li>不具备持久性，生命周期短</li>
 <li>可以<strong>移动</strong>（move），而不能复制（copy）</li>
 </ul>
-<p>基于此, 我们可以得到右值引用 (Rvalue Reference): T&amp;&amp;. 这是一种新的引用类型，用 &amp;&amp; 表示。它有一个关键特性：它只能绑定到右值（临时对象）。这使得我们可以在函数重载时区分传入的是左值还是右值：</p>
+<p>基于此, 我们可以得到右值引用 (Rvalue Reference): T&amp;&amp;.
+这是一种新的引用类型，用 &amp;&amp;
+表示。它有一个关键特性：它只能绑定到右值（临时对象）。这使得我们可以在函数重载时区分传入的是左值还是右值：</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(<span class="type">const</span> MyClass&amp; obj)</span></span>; <span class="comment">// 版本 1: 接受左值 (const引用也可以接受右值，但这是题外话)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(MyClass&amp;&amp; obj)</span></span>;      <span class="comment">// 版本 2: (C++11 新增) 只接受右值</span></span><br></pre></td></tr></table></figure></div>
-<p>更进一步地, 右值还可以继续划分: 右值 (rvalue) = <strong>纯右值</strong> (prvalue) + <strong>将亡值</strong> (xvalue)</p>
-<p>其中纯右值是<strong>没有名字的临时值</strong>或<strong>返回非引用的函数</strong>, 而将亡值特指<strong>资源即将被销毁</strong>的对象，通常是右值引用表达式即std::move(obj)或者返回T&amp;&amp;类型的函数返回值.</p>
-<h2 id="万能引用（Universal-Reference）-转发引用（Forwarding-Reference）"><a href="#万能引用（Universal-Reference）-转发引用（Forwarding-Reference）" class="headerlink" title="万能引用（Universal Reference）/ 转发引用（Forwarding Reference）"></a>万能引用（Universal Reference）/ 转发引用（Forwarding Reference）</h2><p>万能引用（转发引用）是一种特殊的引用，它既可以绑定到<strong>左值</strong>，也可以绑定到<strong>右值</strong>。它在<strong>语法上看起来与右值引用完全相同</strong>（都是使用 <strong>&amp;&amp;</strong>），但它只在非常特定的上下文中出现，并且遵循一套完全不同的类型推导规则。</p>
+<p>更进一步地, 右值还可以继续划分: 右值 (rvalue) =
+<strong>纯右值</strong> (prvalue) + <strong>将亡值</strong> (xvalue)</p>
+<p>其中纯右值是<strong>没有名字的临时值</strong>或<strong>返回非引用的函数</strong>,
+而将亡值特指<strong>资源即将被销毁</strong>的对象，通常是右值引用表达式即std::move(obj)或者返回T&amp;&amp;类型的函数返回值.</p>
+<h2 id="万能引用universal-reference-转发引用forwarding-reference">万能引用（Universal
+Reference）/ 转发引用（Forwarding Reference）</h2>
+<p>万能引用（转发引用）是一种特殊的引用，它既可以绑定到<strong>左值</strong>，也可以绑定到<strong>右值</strong>。它在<strong>语法上看起来与右值引用完全相同</strong>（都是使用
+<strong>&amp;&amp;</strong>），但它只在非常特定的上下文中出现，并且遵循一套完全不同的类型推导规则。</p>
 <p>一个参数要成为“万能引用”，必须同时满足以下两个条件：</p>
 <ul>
-<li>必须涉及<strong>模板类型推导</strong>或者<strong>auto类型推导</strong>： 这个引用必须依赖于一个正在被推导的模板参数T或者auto。</li>
-<li>参数的声明形式必须是 <strong>T&amp;&amp;</strong>： 必须是这个<strong>精确的形式</strong>。不能有 const，也不能是其他任何形式。</li>
+<li>必须涉及<strong>模板类型推导</strong>或者<strong>auto类型推导</strong>：
+这个引用必须依赖于一个正在被推导的模板参数T或者auto。</li>
+<li>参数的声明形式必须是 <strong>T&amp;&amp;</strong>：
+必须是这个<strong>精确的形式</strong>。不能有
+const，也不能是其他任何形式。</li>
 </ul>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(Widget&amp;&amp; param)</span></span>;   <span class="comment">// 没有类型推导，是右值引用</span></span><br><span class="line"></span><br><span class="line">Widget&amp;&amp; var1 = <span class="built_in">Widget</span>();  <span class="comment">// 右值引用</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span>&amp;&amp; var2 = var1;    <span class="comment">// auto类型推导, 是万能引用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(std::vector&lt;T&gt;&amp;&amp; param)</span></span>;   <span class="comment">// 非精确形式, 是右值引用</span></span><br><span class="line">std: :vector&lt;<span class="type">int</span>&gt; v; </span><br><span class="line"><span class="built_in">f</span>(v); <span class="comment">// 此时会错误！不能给右值引用绑定左值</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp;&amp; param)</span></span>;   <span class="comment">// 非精确形式, 是个右值引用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T&amp;&amp; param)</span></span>; <span class="comment">// 模板参数推导+精确形式, 是万能引用</span></span><br><span class="line">Widget w; </span><br><span class="line"><span class="built_in">f</span>(w);               <span class="comment">// 传递左值, param为左值引用Widget&amp;</span></span><br><span class="line"><span class="built_in">f</span> (std::<span class="built_in">move</span>(w));   <span class="comment">// 传递右值, param为右值引用Widget&amp;&amp;</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="万能引用如何工作：特殊的类型推导与引用折叠"><a href="#万能引用如何工作：特殊的类型推导与引用折叠" class="headerlink" title="万能引用如何工作：特殊的类型推导与引用折叠"></a>万能引用如何工作：特殊的类型推导与引用折叠</h3><p>万能引用的“魔力”来自于它在模板类型推导中使用的特殊规则，以及 C++ 的**引用折叠（Reference Collapsing）**规则。</p>
-<p>当我们使用 <code>template&lt;typename T&gt; void func(T&amp;&amp; param)</code> 时：</p>
-<ol>
+<h3 id="万能引用如何工作特殊的类型推导与引用折叠">万能引用如何工作：特殊的类型推导与引用折叠</h3>
+<p>万能引用的“魔力”来自于它在模板类型推导中使用的特殊规则，以及 C++
+的<strong>引用折叠（Reference Collapsing）</strong>规则。</p>
+<p>当我们使用
+<code>template&lt;typename T&gt; void func(T&amp;&amp; param)</code>
+时：</p>
+<ol type="1">
 <li>情况一：传递一个左值</li>
 </ol>
-<p>假设我们有一个左值变量：<code>MyClass widget;</code> 我们调用：<code>func(widget);</code></p>
+<p>假设我们有一个左值变量：<code>MyClass widget;</code>
+我们调用：<code>func(widget);</code></p>
 <ul>
-<li><p>类型推导（关键规则）： 当一个左值（类型为 A）被传递给一个 T&amp;&amp; 形式的万能引用时，模板参数 T 被推导为 <strong>A&amp;</strong> (一个左值引用)。在本例中，T 被推导为 MyClass&amp;。</p>
-</li>
-<li><p>实例化参数类型： 编译器将 T (即 MyClass&amp;) 替换回参数声明 T&amp;&amp; 中，得到(MyClass&amp;) &amp;&amp;</p>
-</li>
-<li><p>引用折叠： C++ <strong>不允许“引用的引用</strong>”。编译器使用“引用折叠”规则来简化它。折叠规则是（简单来说）：只要有 &amp; 出现，最终就折叠为 &amp;。只有<strong>当两者都是 &amp;&amp;</strong> 时，才折叠为 <strong>&amp;&amp;</strong>。</p>
+<li><p>类型推导（关键规则）： 当一个左值（类型为 A）被传递给一个
+T&amp;&amp; 形式的万能引用时，模板参数 T 被推导为
+<strong>A&amp;</strong> (一个左值引用)。在本例中，T 被推导为
+MyClass&amp;。</p></li>
+<li><p>实例化参数类型： 编译器将 T (即 MyClass&amp;) 替换回参数声明
+T&amp;&amp; 中，得到(MyClass&amp;) &amp;&amp;</p></li>
+<li><p>引用折叠： C++
+<strong>不允许“引用的引用</strong>”。编译器使用“引用折叠”规则来简化它。折叠规则是（简单来说）：只要有
+&amp; 出现，最终就折叠为 &amp;。只有<strong>当两者都是
+&amp;&amp;</strong> 时，才折叠为 <strong>&amp;&amp;</strong>。</p>
 <ul>
-<li><p>A&amp; &amp; -&gt; A&amp;</p>
-</li>
-<li><p>A&amp; &amp;&amp; -&gt; A&amp; （我们命中的规则）</p>
-</li>
-<li><p>A&amp;&amp; &amp; -&gt; A&amp;</p>
-</li>
-<li><p>A&amp;&amp; &amp;&amp; -&gt; A&amp;&amp;</p>
-</li>
+<li><p>A&amp; &amp; -&gt; A&amp;</p></li>
+<li><p>A&amp; &amp;&amp; -&gt; A&amp; （我们命中的规则）</p></li>
+<li><p>A&amp;&amp; &amp; -&gt; A&amp;</p></li>
+<li><p>A&amp;&amp; &amp;&amp; -&gt; A&amp;&amp;</p></li>
+</ul></li>
+<li><p>最终函数签名： 折叠后，func
+被实例化的版本是：<code>void func(MyClass&amp; param);</code>,
+结果是函数变成了一个接受左值引用的函数，它成功地绑定到了我们传入的左值
+widget 上。</p></li>
 </ul>
-</li>
-<li><p>最终函数签名： 折叠后，func 被实例化的版本是：<code>void func(MyClass&amp; param);</code>, 结果是函数变成了一个接受左值引用的函数，它成功地绑定到了我们传入的左值 widget 上。</p>
-</li>
-</ul>
-<ol start="2">
+<ol start="2" type="1">
 <li>情况二：传递一个右值</li>
 </ol>
 <p>假设我们传递一个临时对象（右值）：<code>func(MyClass());</code></p>
 <ul>
-<li><p>类型推导（关键规则）： 当一个**右值（类型为 A）**被传递给一个 T&amp;&amp; 形式的万能引用时，模板参数 T 被推导为 <strong>A</strong> (一个普通的、非引用的类型)。本例中，T 被推导为 MyClass。</p>
-</li>
-<li><p>实例化参数类型： 编译器将 T (即 MyClass) 替换回参数声明 T&amp;&amp; 中，得到：(MyClass) &amp;&amp;，即 MyClass&amp;&amp;。(注意这里不需要发生折叠)</p>
-</li>
-<li><p>最终函数签名： func 被实例化的版本是：<code>void func(MyClass&amp;&amp; param);</code>函数变成了一个接受右值引用的函数，它成功地绑定到了我们传入的右值临时对象上。</p>
-</li>
+<li><p>类型推导（关键规则）： 当一个<strong>右值（类型为
+A）</strong>被传递给一个 T&amp;&amp; 形式的万能引用时，模板参数 T
+被推导为 <strong>A</strong> (一个普通的、非引用的类型)。本例中，T
+被推导为 MyClass。</p></li>
+<li><p>实例化参数类型： 编译器将 T (即 MyClass) 替换回参数声明
+T&amp;&amp; 中，得到：(MyClass) &amp;&amp;，即
+MyClass&amp;&amp;。(注意这里不需要发生折叠)</p></li>
+<li><p>最终函数签名： func
+被实例化的版本是：<code>void func(MyClass&amp;&amp; param);</code>函数变成了一个接受右值引用的函数，它成功地绑定到了我们传入的右值临时对象上。</p></li>
 </ul>
 
 		</div>
@@ -958,7 +978,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款 24：区分万能引用和右值引用</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E5%BF%86%E5%B7%A6%E5%80%BC%EF%BC%88Lvalue%EF%BC%89%E5%92%8C%E5%8F%B3%E5%80%BC%EF%BC%88Rvalue%EF%BC%89"><span class="nav-text">回忆左值（Lvalue）和右值（Rvalue）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%EF%BC%88Universal-Reference%EF%BC%89-%E8%BD%AC%E5%8F%91%E5%BC%95%E7%94%A8%EF%BC%88Forwarding-Reference%EF%BC%89"><span class="nav-text">万能引用（Universal Reference）&#x2F; 转发引用（Forwarding Reference）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%EF%BC%9A%E7%89%B9%E6%AE%8A%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0"><span class="nav-text">万能引用如何工作：特殊的类型推导与引用折叠</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E5%BF%86%E5%B7%A6%E5%80%BClvalue%E5%92%8C%E5%8F%B3%E5%80%BCrvalue"><span class="nav-text">回忆左值（Lvalue）和右值（Rvalue）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8universal-reference-%E8%BD%AC%E5%8F%91%E5%BC%95%E7%94%A8forwarding-reference"><span class="nav-text">万能引用（Universal
+Reference）&#x2F; 转发引用（Forwarding Reference）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%89%B9%E6%AE%8A%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0"><span class="nav-text">万能引用如何工作：特殊的类型推导与引用折叠</span></a></li></ol>
 
 	</div>
 </div>
@@ -987,11 +1008,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

@@ -742,15 +742,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -782,15 +782,15 @@ mjx-container[display="true"] + br {
 </div>
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -815,26 +815,30 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/26/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%87%BD%E6%95%B0/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%8F%8D%E5%BA%8F%E5%85%A5%E6%A0%88/">
-                            函数参数反序入栈
+                        <a href="/2025/10/11/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%8D%8F%E7%A8%8B/%E5%8D%8F%E7%A8%8B/">
+                            协程
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            函数参数反序入栈，也称为从右至左参数压栈，指的是在调用一个函数时，传递给该函数的参数不是按照代码中从左到右的顺序，而是从右到左的顺序依次被推入（push）到程序的调用栈（Call Stack）中。
-这是一种由**调用约定（Calling Convention）**规定的行为。最常见的采用这种方式的调用约定是 cdecl，它是 C 和 C++ 程序的默认调用约定。
-为什么需要反序入栈？你可能会...
+                            协程,
+也可以叫做轻量级的线程或者用户线程,
+它是一种执行过程中能够yield(暂停)和resume(恢复)的子程序.
+想象一下我们平时写的普通函数（Function/Subroutine）： -
+入口只有一个：从函数的第一行代码开始执行。 - 出口只有一个：执行到 return
+语句或函数末尾就结束了。 -
+中途不记事：一旦函数返回，它内部的所有局部变量都会被销毁，下次再调用，...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 26 2025 16:52:02 GMT+0800">
+            <span class="home-article-date" data-date="Sat Oct 11 2025 17:49:06 GMT+0800">
                 
-                    2025-09-26
+                    2025-10-11
                 
             </span>
         </span>
@@ -842,7 +846,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/26/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%87%BD%E6%95%B0/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%8F%8D%E5%BA%8F%E5%85%A5%E6%A0%88/">Read more<span class="seo-reader-text">函数参数反序入栈</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/11/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%8D%8F%E7%A8%8B/%E5%8D%8F%E7%A8%8B/">Read more<span class="seo-reader-text">协程</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -857,26 +861,199 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/26/web/Computer%20Network/%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6/5.%20%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6/">
-                            介质访问控制(Media Access Control, MAC)
+                        <a href="/2025/10/11/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%87%BD%E6%95%B0/Inline/">
+                            Inline 函数
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            我们之前讨论的可靠传输、流量控制等，大多是针对点对点 (Point-to-Point) 链路的，即链路上只有两个节点。但在很多网络中，多个节点需要共享同一条通信信道，这种信道被称为广播信道 (Broadcast Channel)。
-例如早期的总线型以太网（所有计算机共享一根同轴电缆），现在的无线局域网 Wi-Fi（所有设备共享同一频段的空口）。
-在广播信道上，如果两个或两个以上的节点同时发送...
+                            inline 是 C++
+中的一个关键字，用于向编译器提供一个建议，希望它将一个函数的调用替换为该函数体的直接展开。这是一种用空间（代码膨胀）换取时间（性能提升）的优化手段。
+inline 关键字在现代 C++
+中有两个主要作用，第二个作用甚至比第一个更重要。
+作用一：向编译器提议“内联展开”以提升性能
+这是 inline 最原始、最广为人知的作用。
+普通的函数调用涉及: - 参...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 26 2025 15:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sat Oct 11 2025 16:52:02 GMT+0800">
                 
-                    2025-09-26
+                    2025-10-11
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/CPP/%E5%87%BD%E6%95%B0/">函数</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/10/11/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%87%BD%E6%95%B0/Inline/">Read more<span class="seo-reader-text">Inline 函数</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/11/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%87%BD%E6%95%B0/%E5%87%BD%E6%95%B0%E5%92%8C%E6%A0%88/">
+                            函数和栈
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            我们通过下面这张图来整体理解函数调用和栈的关系： 
+这张图非常经典，它清晰地展示了计算机程序在执行函数调用时，内存中栈（Stack）的结构和工作原理。图中描述了一个场景：一个名为
+DrawSquare 的函数在执行过程中，调用了另一个名为 DrawLine 的函数。
+我们先理解下面两个概念: 函数调用栈 (Call Stack) 和 栈帧 (Stack
+Frame)。
+
+函数调用...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sat Oct 11 2025 16:52:02 GMT+0800">
+                
+                    2025-10-11
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/CPP/%E5%87%BD%E6%95%B0/">函数</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/10/11/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%87%BD%E6%95%B0/%E5%87%BD%E6%95%B0%E5%92%8C%E6%A0%88/">Read more<span class="seo-reader-text">函数和栈</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/11/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/%E4%BF%A1%E5%8F%B7%E9%87%8F/">
+                            信号量
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            信号量（Semaphore）是一种用于多线程或多进程编程中的同步机制，主要用于控制对共享资源的访问。它可以用来防止资源竞争和确保线程安全,
+一般可以实现为一个特殊的整数计数器，用于管理对有限资源的访问。它代表了可用资源的数量。
+
+当计数值大于0时，表示有可用的资源。
+当计数值等于0时，表示没有可用的资源。
+
+信号量的基本操作
+信号量主要有两个基本操作：P（Proberen，测试...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sat Oct 11 2025 00:00:00 GMT+0800">
+                
+                    2025-10-11
                 
             </span>
         </span>
@@ -894,6 +1071,16 @@ mjx-container[display="true"] + br {
                     
                     
                 
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/web/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
             </ul>
         </span>
         
@@ -907,17 +1094,12 @@ mjx-container[display="true"] + br {
                             <a href="/tags/web/">web</a>&nbsp;
                         </li>
                     
-                        <li>
-                            | 
-                            <a href="/tags/computer-network/">computer network</a>&nbsp;
-                        </li>
-                    
                 </ul>
             </span>
         
     </div>
 
-    <a href="/2025/09/26/web/Computer%20Network/%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6/5.%20%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6/">Read more<span class="seo-reader-text">介质访问控制(Media Access Control, MAC)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/11/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/%E4%BF%A1%E5%8F%B7%E9%87%8F/">Read more<span class="seo-reader-text">信号量</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -932,29 +1114,78 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/25/web/Computer%20Network/%E7%89%A9%E7%90%86%E5%B1%82/3.%20%E7%89%A9%E7%90%86%E5%B1%82/">
-                            物理层
+                        <a href="/2025/10/10/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E7%B1%BB/%E7%B1%BB%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80/">
+                            
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            通信基础要理解物理层的工作原理，我们首先需要掌握一些通信领域的基础理论。
-基本概念数据：是我们想要传送的信息，是信息的载体。可以是数字的（如文本文件）或模拟的（如语音）。
-信号：是数据在物理介质上的电气或电磁表现形式。信号是传输数据的方式。
-
-数字信号 (Digital Signal)：信号的状态是离散、不连续的，例如只有高、低两种电平。
-模拟信号 (Analog Signal)：信号的幅值...
+                            成员变量存储和访问
+存储顺序:
+成员变量在内存中的存储顺序与它们在类定义中出现的顺序一致。
+静态成员：静态成员变量不属于任何一个对象，而是存储在程序的数据段中，因此不占用类对象的内存空间
+。
+地址连续性：一个类对象的内存空间是连续的，其成员变量的地址也是依次排列的。后声明的成员变量拥有更高的内存地址。
+非静态成员变量与成员变量偏移值
+(Offset)
+非静态成员变量是构成 对...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 25 2025 23:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Fri Oct 10 2025 21:07:51 GMT+0800">
                 
-                    2025-09-25
+                    2025-10-10
+                
+            </span>
+        </span>
+        
+        
+    </div>
+
+    <a href="/2025/10/10/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E7%B1%BB/%E7%B1%BB%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80/">Read more<span class="seo-reader-text"></span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/10/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/Ractor/">
+                            Ractor
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            Reactor 模式，也称为“反应器模式”或“分发者模式”（Dispatcher
+Pattern），是一种用于处理并发服务请求的事件驱动设计模式。它的核心思想是将所有事件（如
+I/O
+事件、定时器事件等）的监听和分发任务交给一个中心化的组件（Reactor），当事件发生时，Reactor
+负责将事件分发给预先注册的、特定的处理程序（Event
+Handler）来进行处理。
+这种模...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Oct 10 2025 13:00:00 GMT+0800">
+                
+                    2025-10-10
                 
             </span>
         </span>
@@ -972,6 +1203,16 @@ mjx-container[display="true"] + br {
                     
                     
                 
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/web/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
             </ul>
         </span>
         
@@ -985,17 +1226,12 @@ mjx-container[display="true"] + br {
                             <a href="/tags/web/">web</a>&nbsp;
                         </li>
                     
-                        <li>
-                            | 
-                            <a href="/tags/computer-network/">computer network</a>&nbsp;
-                        </li>
-                    
                 </ul>
             </span>
         
     </div>
 
-    <a href="/2025/09/25/web/Computer%20Network/%E7%89%A9%E7%90%86%E5%B1%82/3.%20%E7%89%A9%E7%90%86%E5%B1%82/">Read more<span class="seo-reader-text">物理层</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/10/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/Ractor/">Read more<span class="seo-reader-text">Ractor</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1010,25 +1246,102 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/25/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/">
-                            进程间通信
+                        <a href="/2025/10/09/algorithms/Coding%E6%8A%80%E5%B7%A7/Coding%E6%8A%80%E5%B7%A7/">
+                            Coding技巧
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            Linux操作系统支持的进程间通信（IPC）机制主要包括以下几种：
-
+                            二分查找
+二分查找 (Binary Search)
+是一种高效的查找算法，适用于在有序数组或列表中查找特定元素。它通过不断将搜索范围减半来快速定位目标元素，从而大大减少了查找的时间复杂度。
+代码实现如下: 12345678910111213141516171819int binarySearch(const vector&lt;int&gt;&amp; nums, int target...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 25 2025 22:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Thu Oct 09 2025 22:00:00 GMT+0800">
                 
-                    2025-09-25
+                    2025-10-09
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/10/09/algorithms/Coding%E6%8A%80%E5%B7%A7/Coding%E6%8A%80%E5%B7%A7/">Read more<span class="seo-reader-text">Coding技巧</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/08/system/computer-architecture/RISC-V%20%E7%9A%84%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/">
+                            RISC-V 的调用约定
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            什么是调用约定
+首先，我们需要理解什么是调用约定（Calling
+Convention）。它是一套规则，用于规定函数在调用时如何进行交互。这套规则确保了由不同程序员编写、甚至由不同编译器编译的函数能够正确地相互调用。
+调用约定通常定义了以下内容：
+
+参数传递：如何将参数传递给函数（使用寄存器还是栈）。
+返回值：函数如何将返回值传回给调用者。
+寄存器使用：调用者（Caller）和...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Oct 08 2025 18:00:00 GMT+0800">
+                
+                    2025-10-08
                 
             </span>
         </span>
@@ -1042,16 +1355,6 @@ mjx-container[display="true"] + br {
                         
                         <li>
                             <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
                         </li>
                     
                     
@@ -1074,7 +1377,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/25/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/">Read more<span class="seo-reader-text">进程间通信</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/08/system/computer-architecture/RISC-V%20%E7%9A%84%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/">Read more<span class="seo-reader-text">RISC-V 的调用约定</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1089,227 +1392,31 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/25/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B/">
-                            进程
+                        <a href="/2025/10/02/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/">
+                            多路IO转接/IO Multiplexing（I/O 多路复用）
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            进程和程序 (Process and Program)程序(Program)是一组指令的集合，通常存储在磁盘等静态存储介质上。它本身是静态的、被动的，不占用系统的运行资源（如CPU时间、内存等）。
-进程(Process)是程序的一次执行实例。当程序被加载到内存中并开始执行时，就创建了一个进程。它是动态的、活动的，是操作系统资源分配（如内存、文件句柄）和CPU调度的基本单位(更精确的说法是将线...
+                            在我们之前创建的最基础的 Client-Server
+模型中，服务器是迭代式的：它一次只能处理一个客户端。当
+HandleRequest 函数正在为一个客户端服务时，其他所有新的客户端都必须在
+accept 的队列中等待。这在实际应用中是完全不可接受的。
+而进一步为了解决并发问题，我们实现了两种朴素的思路：
+
+多进程模型：主进程负责 accept 连接，每当有新连接到来时，就
+...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 25 2025 15:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Thu Oct 02 2025 19:00:00 GMT+0800">
                 
-                    2025-09-25
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/system/">system</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/25/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B/">Read more<span class="seo-reader-text">进程</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/25/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
-                            文件和系统调用
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            系统调用简介和实现什么是系统调用(system call)系统调用，顾名思义，说的是操作系统提供给用户程序调用的一组特殊接口，用户程序可以通过这个特殊接口来获得操作系统内核提供的服务
-
-系统调用的实现系统调用是属于操作系统内核的一部分，必须以某种方式提供给进程让它们去调用，相应的操作系统也有不同的运行级别–用户态和内核态，内核态可以毫无限制的访问各种资源，而用户态下的用户进程的各种操作都有限...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 25 2025 12:00:00 GMT+0800">
-                
-                    2025-09-25
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/system/">system</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/25/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">Read more<span class="seo-reader-text">文件和系统调用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/25/web/Computer%20Network/%E5%8D%8F%E8%AE%AE/">
-                            
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            ARP协议ARP (Address Resolution Protocol)，即“地址解析协议”, 用于在一个局域网（LAN）内，将一个已知的IP地址（逻辑地址）解析（翻译）成对应的MAC地址（物理地址）。
-当主机A想要给同一局域网内的主机B发送数据时，主机A通常只知道主机B的IP地址（例如，你在ping 192.168.1.101）。但是，数据在局域网内最终是以数据帧的形式传播的，而帧的头...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 25 2025 11:42:40 GMT+0800">
-                
-                    2025-09-25
-                
-            </span>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2025/09/25/web/Computer%20Network/%E5%8D%8F%E8%AE%AE/">Read more<span class="seo-reader-text"></span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/25/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/socket%E7%BC%96%E7%A8%8B/">
-                            Socket编程
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            预备知识网络字节序在计算机内存中，当一个数据类型（比如一个 32 位的整数 int）占用多个字节时，就存在一个如何排列这些字节的顺序问题，这就是字节序 (Byte Order) 或 Endianness (端序)。
-主要有两种字节序：
-
-小端字节序 (Little-Endian)：将数据的低位字节存放在内存的低地址处。这是目前绝大多数本地个人电脑（如 Intel, AMD 的 x86/x64...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 25 2025 00:00:00 GMT+0800">
-                
-                    2025-09-25
+                    2025-10-02
                 
             </span>
         </span>
@@ -1370,7 +1477,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/25/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/socket%E7%BC%96%E7%A8%8B/">Read more<span class="seo-reader-text">Socket编程</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/02/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/">Read more<span class="seo-reader-text">多路IO转接/IO Multiplexing（I/O 多路复用）</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1385,8 +1492,8 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/25/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
-                            线程池
+                        <a href="/2025/10/02/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91/">
+                            多进程并发和多线程并发
                         </a>
                     </h3>
 
@@ -1394,15 +1501,32 @@ mjx-container[display="true"] + br {
                         
                             
                             
+并发是指在单个CPU核心上，通过快速切换任务，使得多个任务看起来像在同时进行。
+并行是指在多个CPU核心上，多个任务真正在物理上同时进行。
+
+这两种都是经典的并发服务器设计模式，它们的核心目标相同：同时处理多个客户端请求,
+实现并发处理, 提高服务器的吞吐量和响应速度。
+
+
+
+
+
+
+
+
+特性维度
+多进程模型 (Fork)
+多线程模型 (Pthread)
+...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 25 2025 00:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Thu Oct 02 2025 00:00:00 GMT+0800">
                 
-                    2025-09-25
+                    2025-10-02
                 
             </span>
         </span>
@@ -1425,7 +1549,17 @@ mjx-container[display="true"] + br {
                             <li>></li>
                         
                         <li>
-                            <a href="/categories/web/system/">system</a>&nbsp;
+                            <a href="/categories/web/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/web/language/C/">C++</a>&nbsp;
                         </li>
                     
                     
@@ -1443,89 +1577,9 @@ mjx-container[display="true"] + br {
                             <a href="/tags/web/">web</a>&nbsp;
                         </li>
                     
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/25/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">Read more<span class="seo-reader-text">线程池</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/24/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/makefile/">
-                            Makefile
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            makefile： 用于管理项目。
-文件命名：只能是 makefile 或者 Makefile配置完成后直接使用 make 命令执行
-1 个规则：
-	目标：依赖条件
-	（一个tab缩进）命令
-
-要求: 目标的时间必须晚于依赖条件的时间，否则，更新目标      依赖条件如果不存在，找寻新的规则去产生依赖条件。
-ALL：指定 makefile 的终极目标。(因为makefile默认第一个目标文...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Sep 24 2025 10:00:00 GMT+0800">
-                
-                    2025-09-24
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
                         <li>
-                            <a href="/categories/system/">system</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/system/linux/">linux</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/system/">system</a>&nbsp;
+                            | 
+                            <a href="/tags/C/">C++</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1533,7 +1587,7 @@ ALL：指定 makefile 的终极目标。(因为makefile默认第一个目标文.
         
     </div>
 
-    <a href="/2025/09/24/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/makefile/">Read more<span class="seo-reader-text">Makefile</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/02/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91/">Read more<span class="seo-reader-text">多进程并发和多线程并发</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1543,7 +1597,7 @@ ALL：指定 makefile 的终极目标。(因为makefile默认第一个目标文.
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/3/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/5/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/3/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/5/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1571,11 +1625,11 @@ ALL：指定 makefile 的终极目标。(因为makefile默认第一个目标文.
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

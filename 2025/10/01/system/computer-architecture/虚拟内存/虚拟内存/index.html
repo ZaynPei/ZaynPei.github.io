@@ -1,0 +1,2566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/01/system/computer-architecture/虚拟内存/虚拟内存/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟内存">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/01/system/computer-architecture/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-01T03:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-29T15:44:36.053Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="language">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            虚拟内存 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">虚拟内存</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-01 11:00</span>
+        <span class="mobile">2025-10-01 11:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-29 23:44:36</span>
+            <span class="mobile">2025-10-29 23:44:36</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/language/">language</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>23k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>82 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="虚拟地址空间">虚拟地址空间</h2>
+<p>虚拟内存 (Virtual Memory)
+是现代操作系统中的一个重要概念。它通过将程序使用的地址空间<strong>虚拟化</strong>，使得每个进程都拥有一个独立的、连续的地址空间，从而实现了内存保护、内存共享和更高效的内存利用。</p>
+<p>目前,
+一个进程的<strong>虚拟地址空间</strong>通常被划分为以下几个部分:
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+-------------------+  (高地址)</span><br><span class="line">|      内核空间     |  &lt;- 内核专用地址空间, 用户态进程无法访问</span><br><span class="line">+-------------------+ </span><br><span class="line">|       栈 (Stack)  |  &lt;- 向下增长 (Grows Down)</span><br><span class="line">|        ...        |</span><br><span class="line">| (未使用的虚拟内存) |</span><br><span class="line">|        ...        |</span><br><span class="line">+===================+  &lt;- 当前的 "分断" (Program Break)  &lt;-- 堆的顶部</span><br><span class="line">|       堆 (Heap)   |  &lt;- 向上增长 (Grows Up)</span><br><span class="line">|        ...        |</span><br><span class="line">| (未使用的虚拟内存) |</span><br><span class="line">|        ...        |</span><br><span class="line">+-------------------+</span><br><span class="line">|    全局/静态数据  |  &lt;- 固定大小</span><br><span class="line">+-------------------+</span><br><span class="line">|       代码段      |  &lt;- 固定大小</span><br><span class="line">+-------------------+  (低地址)</span><br></pre></td></tr></table></figure></div> 也就是说,
+在进程的虚拟地址空间中不仅有<strong>用户</strong>代码和数据,
+还有操作系统<strong>内核的代码和数据</strong>。但用户态进程只能访问属于自己的那部分地址空间（代码段、数据段、堆和栈），无法访问内核空间。</p>
+<p>而且,
+不同进程的虚拟内存中的内核空间会映射到<strong>同一块物理内存</strong>区域,
+这样可以节省内存开销, 并且方便操作系统进行系统调用和中断处理。
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">───────────────────────────────         高地址</span><br><span class="line">|         内核空间 (Kernel Space)   |  ← 所有进程共享</span><br><span class="line">|         内核代码、数据结构、PCB   |</span><br><span class="line">|         页表、内核模块、驱动等    |</span><br><span class="line">───────────────────────────────  ← 通常在内核地址 KERNEL_BASE（如 0xFFFF_8000_0000_0000）</span><br><span class="line">|         用户空间 (User Space)    |  ← 每个进程独立</span><br><span class="line">|         代码段 / 堆 / 栈 / mmap区 |</span><br><span class="line">|         用户程序和数据           |    低地址</span><br><span class="line">───────────────────────────────</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="虚拟地址空间的由来">虚拟地址空间的由来</h3>
+<p>早期的计算机系统中,
+操作系统加载在物理内存的低地址，唯一的运行程序（进程）加载在它之后.
+这种设计存在几个严重的问题: 1. <strong>内存保护缺失</strong>:
+如果程序有bug, 它可能会意外地覆盖操作系统的代码或数据, 导致系统崩溃. 2.
+<strong>内存利用率低</strong>:
+程序必须<strong>完全装入内存</strong>才能运行, 这限制了程序的大小和数量.
+3. <strong>只有一个程序能运行</strong>, 无法实现多任务.</p>
+<p>后来,
+为了提高昂贵硬件的<strong>利用率</strong>（Efficiency）和满足用户对<strong>交互性</strong>（Interactivity）的需求，系统发展出了<strong>多道程序</strong>和<strong>时分共享</strong>。
+- 多道程序设计 (Multiprogramming): 允许多个程序同时驻留在物理内存中,
+操作系统负责调度它们的执行. - 时分共享 (Time-Sharing):
+通过快速切换程序的执行, 给用户一种“同时运行多个程序”的感觉.</p>
+<p>但是这样还是没有解决问题：当多个进程共享物理内存时，<strong>保护（Protection）</strong>成了关键问题。必须防止一个进程读取或修改另一个进程（或操作系统）的内存。</p>
+<p>为了解决上述保护和易用性问题，操作系统引入了“<strong>地址空间</strong>”这一抽象,
+每个进程都拥有自己独立的<strong>虚拟地址空间</strong> (Virtual Address
+Space)。这一设计有三大目标: -
+<strong>透明</strong>（Transparency）：程序不应感知到内存被虚拟化了。它应该感觉自己独占了内存。
+-
+<strong>效率</strong>（Efficiency）：虚拟化（尤其是地址转换）必须在时间（速度快）和空间（额外开销小）上都高效。
+-
+<strong>保护</strong>（Protection）：必须确保进程之间隔离（Isolation）。任何进程都不能访问其自身地址空间之外的内存。</p>
+<h3 id="初版地址转换">初版地址转换</h3>
+<p>在引入虚拟地址空间后，操作系统需要一种机制将<strong>虚拟地址</strong>
+(Virtual Address) 转换为<strong>物理地址</strong> (Physical
+Address)。也就是说,
+操作系统需要为每个进程提供一个私有的、从0开始的地址空间（Address
+Space）抽象。但在物理上，多个进程的地址空间必须“塞”进同一个物理内存中。</p>
+<p>本章提出的解决策略是：<strong>基于硬件的地址转换</strong>（Hardware-based
+Address Translation）。</p>
+<p>核心思想：不再让进程直接访问物理内存。相反，进程生成的所有地址（称为虚拟地址）都必须经过一个<strong>硬件单元</strong>的“翻译”，将其转换为实际的物理地址。这个硬件单元通常<strong>集成在
+CPU 内部</strong>，称为<strong>内存管理单元</strong> (Memory Management
+Unit, <strong>MMU</strong>)。 -
+硬件（MMU）：负责每一次<strong>内存访问</strong>的<strong>快速翻译</strong>。（实现高效）
+- 操作系统（OS）：负责设置硬件，管理内存分配与回收。（实现控制）</p>
+<p>动态重定位（基址+界限）是地址转换的<strong>初级版本</strong>。它在MMU中使用两个寄存器:
+- <strong>基址寄存器</strong>（Base Register）： -
+功能：存储该<strong>进程地址空间</strong>在<strong>物理内存</strong>中的<strong>起始地址</strong>（例如
+32KB）。 -
+作用：解决<strong>重定位（Relocation）</strong>问题。它在运行时动态地将虚拟地址“偏移”到正确的物理位置。
+- <strong>界限寄存器</strong>（Bound / Limit Register）： -
+功能：存储该<strong>进程地址空间的大小</strong>（例如 16KB）。 -
+作用：解决<strong>保护（Protection）</strong>问题。它划定了进程可以访问的合法虚拟地址范围。</p>
+<h4 id="地址转换的详细步骤">地址转换的详细步骤</h4>
+<p>当一个进程在用户模式下运行时，它产生的每一个内存访问（无论是取指令、读数据还是写数据）都会被硬件（MMU）自动按以下步骤处理：
+&gt; 前提：OS在<strong>切换</strong>到该进程时，已提前将该进程的
+base（例如 32KB）和 bound（例如
+16KB）值<strong>加载到MMU的寄存器</strong>中。</p>
+<p>进程发出一个虚拟地址（VA），例如 VA = 15KB：</p>
+<p>第1步：<strong>硬件</strong>进行<strong>保护检查</strong>（界限检查）,
+主要是检查 VA 是否在合法范围内。 - if (VA &lt; 0 OR VA &gt;= bound) -
+解释：检查该虚拟地址是否小于0（非法），或者是否大于等于地址空间的大小（bound）。示例：检查
+15KB 是否 &gt;= 16KB？否。检查通过。 - 如果失败（例如 VA = 17KB）：17KB
+&gt;=
+16KB，检查失败。硬件会立即停止该指令，触发一个<strong>异常</strong>（Exception），并将控制权交给<strong>操作系统</strong>（进入内核模式）。OS的“<strong>越界”异常处理程序</strong>会接管，通常的反应是<strong>终止</strong>这个行为不端的进程（这就是“段错误”的来源之一）。</p>
+<p>第2步：<strong>硬件</strong>进行<strong>地址转换</strong>（基址重定位）
+- 如果保护检查通过，硬件（MMU）使用基址寄存器计算物理地址（PA）。 -
+PhysicalAddress = VirtualAddress + base -
+解释：通过将<strong>虚拟地址</strong>与<strong>基址</strong>相加，将其重定位到物理内存中的正确位置。示例：PA
+= 15KB + 32KB = 47KB。</p>
+<p>第3步：访问物理内存 - 硬件（MMU）将计算出的物理地址 47KB
+发送到内存总线，进行数据读取或写入。 -
+关键点：这整个“检查-转换”过程完全由<strong>硬件</strong>在每一次内存访问中自动完成，速度极快（只有一个加法和一次比较），对进程完全透明。</p>
+<h4 id="硬件与操作系统的职责划分">硬件与操作系统的职责划分</h4>
+<p>要让这个机制工作，硬件和操作系统必须紧密配合。</p>
+<ol type="1">
+<li>硬件（CPU/MMU）的职责
+<ul>
+<li>两种CPU模式：用户模式（运行进程，受限制）和内核模式（运行OS，有特权）。</li>
+<li>基址和界限寄存器：提供这两个MMU寄存器。</li>
+<li>特权指令：提供只能在内核模式下运行的指令，用于修改 base 和 bound
+寄存器。这是为了保护。如果用户进程能随意修改 base
+寄存器，它就能访问任意物理内存，整个保护机制就失效了。</li>
+<li>异常机制：当发生<strong>保护违例</strong>（如越界）或<strong>特权违例</strong>（如用户模式试图修改
+base）时，CPU必须能触发异常，将控制权交给OS。</li>
+</ul></li>
+<li>操作系统（OS）的职责
+<ul>
+<li>进程创建时：OS必须在<strong>物理内存</strong>中查找一个连续的、<strong>足够大的空闲块</strong>（通过管理一个<strong>空闲列表
+Free List</strong>），来<strong>存放新进程的地址空间</strong>。
+<ul>
+<li>这个块的起始地址将作为该进程的 base 值，块的大小将作为 bound
+值。</li>
+<li>空闲列表是 OS
+维护的一个数据结构，记录了哪些物理内存块是空闲的，哪些是已分配的。</li>
+</ul></li>
+<li>进程终止时：OS必须<strong>回收</strong>该进程占用的物理内存块，并将其放回空闲列表，以备将来使用。</li>
+<li>上下文切换时（至关重要）：
+<ul>
+<li>保存（切换出）：当停止进程A时，OS（在内核模式下）必须读取
+<strong>base</strong> 和 <strong>bound</strong>
+寄存器的当前值，并将它们保存到进程A的<strong>进程控制块（PCB）</strong>中。</li>
+<li>恢复（切换入）：当启动进程B时，OS（在内核模式下）必须从进程B的PCB中取出它之前保存的
+base 和 bound
+值，并使用<strong>特权指令</strong>将它们<strong>加载到MMU的硬件寄存器</strong>中。</li>
+</ul></li>
+<li>异常处理时：
+<ul>
+<li>OS在启动时就必须告诉硬件，当异常发生时，应该跳转到哪里去执行OS的异常处理程序（<strong>Handler</strong>）。</li>
+<li>当硬件触发异常（如越界访问），OS的异常处理程序被激活，负责决定如何响应（通常是终止犯错的进程）。</li>
+</ul></li>
+</ul></li>
+</ol>
+<p>总之,
+本章介绍的<strong>动态重定位（基址+界限）</strong>机制是实现虚拟内存的伟大开端。</p>
+<p>优点： - 高效：<strong>硬件</strong>执行转换，开销极小。 -
+<strong>保护</strong>：bound 寄存器提供了强大的进程隔离和OS保护。 -
+透明：进程完全不知道自己的地址被转换了。</p>
+<p>致命缺陷： -
+<strong>空间效率低下</strong>：该机制假设地址空间是连续存放的,
+但实际情况往往不是这样。这会导致严重的<strong>内部碎片</strong>问题: -
+<strong>外部碎片</strong>（External
+Fragmentation）：随着进程的创建和终止，<strong>物理内存</strong>会变得支离破碎，<strong>难以找到足够大的连续块来满足新进程的需求</strong>。
+- <strong>内部碎片</strong>（Internal
+Fragmentation）：<strong>已分配的内存块中</strong>，<strong>未被使用的部分也会浪费掉</strong>。因为
+base 和 bound
+机制要求为<strong>整个地址空间</strong>（从0到bound）分配一块<strong>连续的物理内存</strong>，所以那块未使用的“栈堆之间”的巨大空洞，也必须占用宝贵的物理内存。这造成了极大的浪费。</p>
+<p>这个“内部碎片”问题，就是下一章（分段）试图解决的核心问题。</p>
+<h3 id="分段">分段</h3>
+<p>上一章遗留的问题是,
+如何高效地支持一个<strong>稀疏的地址空间</strong>，而不为这些未使用空间分配宝贵的物理内存？</p>
+<p>这一章提出的解决方案是<strong>泛化（Generalize）基址/界限机制</strong>。
+- 旧方法：使用一个 base/bound 对来管理<strong>整个地址空间</strong>。 -
+新方法（分段）：鉴于内存的使用是按照<strong>逻辑段</strong>（如代码段、数据段、堆段、栈段）划分的,
+我们可以为每个逻辑段分别维护一对 base/bound 寄存器。</p>
+<p>分段 (Segmentation)
+是对动态重定位（基址+界限）机制的改进。它将进程的地址空间划分为多个<strong>逻辑段</strong>
+(Segment)，每个段都有自己的<strong>基址</strong>和<strong>界限</strong>。这样,
+只有<strong>被使用的段才需要分配物理内存</strong>,
+未使用的段则不占用任何物理内存, 从而大大减少了内部碎片。</p>
+<p>一个典型的进程有3个逻辑段：<strong>代码段</strong>（Code）、<strong>堆段</strong>（Heap）和<strong>栈段</strong>（Stack）。</p>
+<p>通过分段，操作系统现在可以将这三个段放置到物理内存中<strong>三个不同的</strong>、<strong>非连续的位置</strong>。栈和堆之间那块巨大的“未使用”空洞，根本不需要占用任何物理内存。这就完美地解决了内部碎片问题。</p>
+<h4 id="硬件机制分段下的地址转换">硬件机制：分段下的地址转换</h4>
+<p>要支持分段，硬件（MMU）必须变得更复杂。它不再是只有一对 base/bound
+寄存器，而是在MMU中内置了<strong>多对 base/bound
+寄存器</strong>（例如，一个用于代码，一个用于堆，一个用于栈）。</p>
+<p>当进程发出一个虚拟地址时，硬件（MMU）如何知道这个地址属于哪个段（是代码、堆还是栈）？在该段内的偏移量（Offset）是多少？</p>
+<p>本章介绍了一种<strong>显式（Explicit）</strong>的方法：使用<strong>虚拟地址的最高几位来标识段</strong>。</p>
+<p>虚拟地址的结构：硬件将虚拟地址（VA）在内部“解析”为两部分： VA = [
+<strong>段标识符</strong> (Segment Identifier) |
+<strong>段内偏移量</strong> (Offset) ]</p>
+<p>假设14位虚拟地址空间, 我们使用最高2位作为“段标识符”：00 -&gt; 代码段,
+01 -&gt; 堆段, 10 -&gt; (未使用), 11 -&gt; 栈段;
+剩下的12位作为“段内偏移量”。</p>
+<p>假设MMU中存储着下列值：</p>
+<table>
+<thead>
+<tr>
+<th>段类型</th>
+<th>基址 (Base)</th>
+<th>界限 (Bound)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>代码段</td>
+<td>0KB</td>
+<td>8KB</td>
+</tr>
+<tr>
+<td>堆段</td>
+<td>34KB</td>
+<td>2KB</td>
+</tr>
+<tr>
+<td>栈段</td>
+<td>64KB</td>
+<td>4KB</td>
+</tr>
+</tbody>
+</table>
+<p>当进程发出一个虚拟地址时，硬件（MMU）按以下步骤进行处理： &gt;
+前提：OS在<strong>切换</strong>到该进程时，已提前将该进程的各段 base 和
+bound 值<strong>加载到MMU的寄存器</strong>中。</p>
+<p>当进程发出虚拟地址 VA = 4200 (二进制 01 0000 0110 1000) 时：</p>
+<p>第1步：<strong>硬件提取段标识符</strong> - 硬件查看最高2位，发现是
+01。 - 硬件立即知道这个地址属于堆段。它将使用堆的 base 和 bound
+寄存器。</p>
+<p>第2步：<strong>硬件提取偏移量</strong> - 硬件查看剩下的12位，0000
+0110 1000。 - 这是十进制的
+104。所以这个地址是“堆段内的第104个字节”(本书使用字节寻址)。</p>
+<p>第3步：<strong>硬件进行保护检查</strong>（界限检查） - 硬件将 Offset
+(104) 与堆的 bound 寄存器（2KB，即 2048）进行比较。 - if (Offset &gt;=
+bound), 104 &lt; 2048。检查通过。 - 如果失败（例如，访问 VA =
+7KB，其偏移量会超过 2KB），硬件会立即触发异常（即<strong>段错误</strong>
+/ Segmentation Fault），操作系统将介入并终止该进程。</p>
+<p>第4步：<strong>硬件进行地址转换</strong>（基址重定位） -
+如果保护检查通过，硬件将 Offset 与<strong>堆的</strong> base
+寄存器相加。 - PhysicalAddress = Offset + base, 这里 PA = 104 + 34KB (即
+34816) = 34920。</p>
+<p>第5步：访问物理内存 - MMU将计算出的物理地址 34920
+发送到内存总线。</p>
+<h4 id="分段机制的扩展与特性">分段机制的扩展与特性</h4>
+<ol type="1">
+<li>特殊情况：栈的处理</li>
+</ol>
+<p>栈是反向增长的（即从高地址向低地址增长）,
+这需要<strong>额外的硬件支持</strong>。硬件为每个段增加一个“<strong>增长方向</strong>”位（例如，1代表向上增长，0代表反向增长）。</p>
+<p>当硬件识别到这是一个栈段（例如 VA 高位为
+11）时，它会启用一套不同的翻译逻辑： - Offset
+会被计算为<strong>负值</strong>（例如，从段的最大可能大小中减去）。 -
+PhysicalAddress = base + NegativeOffset - bound
+检查也会相应调整（例如，检查负偏移量的<strong>绝对值</strong>是否超过了段大小）。</p>
+<p>例如, 当进程发出 VA = 1100 0000 0000 1000 (即 12KB) 时: - 段标识符 =
+11 -&gt; 栈段 - 偏移量 = 0000 0000 1000 = 8 - 保护检查: 8 &lt; 4KB
+(bound) 通过 - 地址转换: PA = base + (-8) = 64KB - 8 = 65528 -
+访问物理内存地址 65528。</p>
+<p>这种设计允许栈从高地址向低地址增长，同时仍然利用分段的保护和重定位机制。</p>
+<ol start="2" type="1">
+<li>新增优势：支持共享</li>
+</ol>
+<p>分段机制带来一个巨大的额外好处：内存共享。如果<strong>代码段是只读的</strong>，那么让多个进程<strong>共享同一块物理内存中的代码</strong>是完全安全的。</p>
+<p>硬件支持：为每个段增加保护位（Protection Bits），例如
+Read、Write、Execute。 - 代码段的保护位设置为 R-X（只读、可执行）。 -
+堆段的保护位设置为 RW-（可读、可写）。 - 栈段的保护位设置为
+RW-（可读、可写）。</p>
+<p>举例说明：假设有3个进程 P1、P2、P3，它们都运行同一个程序（例如 printf
+函数）。每个进程都有自己的堆和栈段，但它们的代码段是相同的。 -
+物理内存中，OS将一个共享库（例如 printf）的代码加载到物理内存A处一次。 -
+当进程1、2、3运行时，OS只需将它们各自的<strong>代码段 base
+寄存器</strong>都设置为指向物理地址A，并将保护位设为
+R-X（只读、可执行）。</p>
+<p>结果：内存被极大节省，而进程间的隔离性（因为它们都不能写这块内存）仍然保持。</p>
+<h4 id="操作系统os的职责与新问题">操作系统（OS）的职责与新问题</h4>
+<p>分段机制虽然解决了内部碎片，但也给OS带来了新的、更严峻的挑战。 -
+上下文切换：OS的工作量变大了。在切换进程时，它现在必须保存和恢复<strong>所有的段寄存器</strong>（Code
+base/bound、Heap base/bound、Stack
+base/bound）到各自的<strong>PCB</strong>中。 -
+空闲空间管理：这是分段引入的致命缺陷。</p>
+<p>新的致命缺陷：<strong>外部碎片</strong> -
+内部碎片（已解决）：发生在已分配的内存块内部的未使用空间（如栈堆之间的空洞）。
+-
+外部碎片（新问题）：发生在<strong>已分配的内存块之间</strong>的<strong>未使用空间</strong>。
+-
+问题根源：分段机制导致OS在物理内存中分配<strong>大小不等（Variable-sized）</strong>的块（代码段2KB，堆段500KB，栈段8KB…）。
+-
+当进程运行、终止、再运行…物理内存会被这些大小不一的段“切割”得支离破碎。最终，空闲内存变成了许多不连续的小“洞”（Holes）。</p>
+<p>后果是，系统可能总共有 24KB 的空闲内存，但这 24KB 是由三个分散的 8KB
+小洞组成的。此时，一个新进程请求一个 20KB
+的堆段，分配将会失败！尽管总空闲空间足够，但没有连续的 20KB 空间。</p>
+<p>解决方案（都不理想）： -
+<strong>内存紧凑</strong>（Compaction）：OS<strong>暂停所有进程</strong>，将所有已分配的段“搬家”到物理内存的一端，从而将所有小洞<strong>合并</strong>成一个大的连续空闲块。这个过程极其缓慢，会导致系统卡顿。
+- <strong>复杂的空闲列表算法</strong>：使用如 Best-fit
+(最优匹配)、First-fit (首次匹配)
+等算法来试图<strong>减少碎片的产生</strong>，但无法根除这个问题。</p>
+<p>总之,
+虚拟地址空间的分段技术完美解决了“基址+界限”的<strong>内部碎片</strong>问题,
+能够高效支持<strong>稀疏地址空间</strong>,
+且提供了一个<strong>逻辑上自然</strong>的内存视图（代码、堆、栈）。</p>
+<p>但是,
+分段机制由于分配的可变大小的块，引入了难以解决的外部碎片问题。这个“外部碎片”问题，就是推动操作系统设计者发明下一代内存管理技术——<strong>分页（Paging）</strong>的根本原因。</p>
+<h3 id="空闲空间管理">空闲空间管理</h3>
+<p>在上一章的结尾，我们遇到了“外部碎片”这个难题，即如何<strong>管理大小不等的内存块</strong>。本章就专门深入探讨这个问题。</p>
+<p>本章讨论的策略和机制是通用的，它们既适用于用户空间, 如C语言中的
+malloc() 和 free() 库，用于管理进程堆（Heap）上的空闲空间;
+也适用于内核空间：操作系统在实现分段时，用于管理物理内存的空闲空间。</p>
+<h4 id="底层三大机制">底层三大机制</h4>
+<p>在讨论具体策略（如“最优匹配”）之前，本章先介绍了几乎所有分配程序都必须实现的3个底层机制。</p>
+<ol type="1">
+<li>分割（Splitting）与 合并（Coalescing）
+<ul>
+<li>分割（Splitting）：当一个100字节的请求到来，而空闲列表中只有一个1000字节的大空闲块。分配程序需要将这个1000字节的块分割成两块：一块100字节（返回给用户），另一块900字节（保留在空闲列表中）。以避免浪费，满足小请求。</li>
+<li>合并（Coalescing）：当用户 free()
+一块内存时，这块新释放的内存恰好与空闲列表中的另一块（或两块）空闲内存在<strong>物理上相邻</strong>。分配程序必须检测到这种相邻关系，并将它们合并成一个更大的连续空闲块。这是对抗外部碎片的核心武器。它能将被割裂的小块重新组合成大块，提高未来大请求的成功率。</li>
+</ul></li>
+<li>追踪已分配空间的大小
+<ul>
+<li>问题：free(ptr) 接口没有 size 参数。那么 free
+库函数是如何知道要释放的这块内存到底有多大呢？</li>
+<li>机制：头块（Header Block）。</li>
+<li>当用户调用 malloc(20) 时，库实际上会分配大于20字节的空间（例如 20 +
+8 字节）。它在返回的指针 <strong>ptr
+之前</strong>的那8个字节（即头块）中，秘密存储了<strong>管理信息</strong>。</li>
+<li>头块内容有:
+<ul>
+<li>size：这块内存的实际大小（例如 20）。</li>
+<li>magic：一个“魔数”，用于<strong>完整性检查</strong>（例如，检查用户是否传了一个无效指针给
+free）。</li>
+</ul></li>
+<li>free(ptr) 的工作流：
+<ul>
+<li>通过指针运算 hptr = ptr <strong>- sizeof(header_t)</strong>
+找到头块。</li>
+<li>检查 hptr-&gt;magic 是否正确。</li>
+<li>读取 hptr-&gt;size，从而知道要释放的内存块大小。</li>
+<li>将这个大小为 size 的块放回空闲列表（并尝试进行合并）。</li>
+</ul></li>
+</ul></li>
+<li>嵌入空闲列表（Embedding the Free List）
+<ul>
+<li>问题：空闲列表本身（即那些记录“哪里空闲、有多大”的节点）需要空间来存储。但是我们无法
+malloc 一块内存来存放空闲列表节点，因为 malloc
+本身需要使用空闲列表来查询空闲空间。这是一个“鸡与蛋”的问题。</li>
+<li>机制：利用<strong>空闲空间本身</strong>来存储<strong>空闲列表的节点数据</strong>。一块内存，要么被用户使用，要么是空闲的。当它空闲时，它的内部空间是无用的。分配程序就利用这块无用的空间来存储空闲列表的节点数据。</li>
+<li>具体实现：定义一个 node_t 结构体，包含 size（块大小）和
+next（指向下一个空闲块的指针）。
+<ul>
+<li>当一块内存被 free()
+时，分配程序在<strong>这块内存的起始位置</strong>写入 node_t
+数据，包含这块内存的大小和指向下一个空闲块的指针。然后将这块内存插入到空闲列表中。</li>
+<li>当一块内存被 malloc() 分配出去时，这块内存的 node_t
+数据会被覆盖（因为现在归用户使用），同时它会从空闲列表中移除。</li>
+<li>``` free_list_head → [0x1000 | size=100 | next=0x2000 | 空闲块数据…
+] ↓ [0x2000 | size=4088 | next=NULL | 空闲块数据… ]</li>
+</ul></li>
+</ul></li>
+</ol>
+<h4 id="基本策略">基本策略</h4>
+<p>这里介绍了四种经典策略：</p>
+<p><strong>最优匹配</strong>（<strong>Best Fit</strong>）</p>
+<ul>
+<li>策略：<strong>遍历</strong>整个<strong>空闲列表</strong>，找到所有能<strong>满足请求</strong>的块（size
+&gt;= request），然后选择其中<strong>尺寸最小</strong>的那一块。</li>
+<li>理念：尽量不“浪费”大块内存。为15字节的请求分配一个16字节的块，只留下1字节的碎片，这看起来很“优”。</li>
+<li>缺点：
+<ul>
+<li>慢：每次分配都需要<strong>遍历</strong>整个列表。</li>
+<li>产生大量小碎片：容易在列表中留下许多几乎<strong>无法使用的小碎片</strong>（如1字节、2字节），加剧外部碎片。</li>
+</ul></li>
+</ul>
+<p><strong>最差匹配</strong>（<strong>Worst Fit</strong>） -
+策略：遍历整个空闲列表，找到<strong>尺寸最大</strong>的那一块进行分割。
+- 理念：留下来的剩余部分（Largest -
+request）仍然会是一个比较大的块，也许对未来有用。 - 缺点： -
+慢：同样需要遍历整个列表。 -
+性能差：研究和实践表明，这种策略会很快地“摧毁”所有的大块内存，导致外部碎片问题更严重。</p>
+<p><strong>首次匹配</strong>（<strong>First Fit</strong>） -
+策略：从列表头部开始遍历，找到<strong>第一个能满足请求</strong>的空闲块，立即分割并返回。
+- 优点：快。不需要遍历整个列表，分配速度很快。 -
+缺点：容易导致<strong>列表头部堆积大量小碎片</strong>，使得后续的小请求很快，但大请求总是要遍历很久才能找到合适的块。
+- 改进：如果列表按地址排序，可以使合并操作非常高效。</p>
+<p><strong>下次匹配</strong>（<strong>Next Fit</strong>） -
+策略：像首次匹配一样，但它维护一个“<strong>漫游指针</strong>”
+current_ptr，记录<strong>上次查找结束的位置</strong>。下次分配时，从
+current_ptr 开始查找。 -
+理念：让<strong>查找“均匀”地分布</strong>在整个列表中，而不是总从头部开始，避免了首次匹配中头部碎片堆积的问题。
+- 优点：速度和首次匹配一样快（摊销后），且列表碎片的分布更均匀。</p>
+<h4 id="高级方法">高级方法</h4>
+<p>除了上述基本策略，现代内存分配器还采用了一些更复杂的技术来提高效率和减少碎片。
+- <strong>分离空闲列表</strong>（Segregated Free
+Lists）：将空闲块按大小分类，维护多个空闲列表（如小块列表、大块列表）。这样，分配请求时只需查找对应大小类别的列表，减少查找时间。
+- <strong>位图分配</strong>（Bitmap
+Allocation）：使用位图来表示内存块的使用情况。每个位对应一个固定大小的内存块，1表示已分配，0表示空闲。适用于管理大量小块内存。
+- <strong>伙伴系统</strong>（Buddy
+System）：将内存划分为大小为2的幂次方的块。分配时，找到最小的满足请求的块，并在释放时尝试与相邻的“伙伴”块合并，减少碎片。</p>
+<p>其实,
+不存在一个“完美”的分配程序。一个好的分配程序必须根据具体的工作负载（Workload）来设计和调整，在速度、空间效率和可扩展性（尤其是在多核处理器上）之间做出明智的折中（Trade-off）。</p>
+<h3 id="分页">分页</h3>
+<p>分页是当下操作系统中最广泛使用的内存管理技术。它彻底解决了分段机制中的“<strong>外部碎片</strong>”问题，通过牺牲逻辑上的直观性（分段）来换取无可比拟的管理便利性（分页）。</p>
+<p>分页的思想：将空间分割成<strong>固定大小（Fixed-sized）</strong>的单元。</p>
+<p>我们将<strong>虚拟地址空间</strong>（Address
+Space）分割成固定大小的单元，称为<strong>页</strong>（<strong>Page</strong>）（或虚拟页，Virtual
+Page, VP）。 - 页的大小通常是
+<strong>4KB</strong>（4096字节），但也有更大（如
+2MB、1GB）的页，具体取决于硬件支持。</p>
+<p>我们将<strong>物理内存</strong>（Physical
+Memory）也分割成<strong>同样大小的单元</strong>，称为<strong>页帧</strong>（<strong>Frame</strong>）（或物理页帧,
+Physical Page Frame, PFN）。</p>
+<p>实现虚拟内存的核心任务，就是管理如何将进程的“页”<strong>映射</strong>（Map）到内存中的“页帧”。</p>
+<p>分页的优点: -
+灵活性（Flexibility）：操作系统不再关心堆和栈如何增长或使用。<strong>任何一个虚拟页</strong>都可以被放置到<strong>任何一个空闲的物理页帧</strong>中。
+- 空闲空间管理极其简单： -
+分段：OS需要<strong>搜索一个复杂的列表</strong>（Best-fit,
+First-fit…）来找到一个足够大且连续的空闲块。 -
+分页：OS只需要维护一个简单的<strong>空闲页帧列表</strong>（Free-frame
+List）。当一个进程需要4个页时，OS只需从这个列表中取出<strong>任意4个页帧</strong>即可，它们<strong>不需要是连续</strong>的。这就彻底消除了外部碎片。</p>
+<h4 id="地址转换机制">地址转换机制</h4>
+<p>这是本章的机制核心, 分页机制下的地址转换与分段完全不同。 -
+分段地址：[ 段标识符 | 偏移量 ] - 分页地址：[ <strong>虚拟页号</strong>
+(<strong>VPN</strong>) | 偏移量 (Offset) ]</p>
+<ol type="1">
+<li>虚拟地址的解析
+<ul>
+<li>硬件（MMU）将一个虚拟地址（VA）按固定边界（由页大小决定）拆分为两部分：
+<ul>
+<li>虚拟页号
+(VPN)：高位部分。用于在“<strong>页表</strong>”中进行查找。</li>
+<li>偏移量
+(Offset)：低位部分。用于<strong>在找到的物理页帧中定位具体的字节</strong>。</li>
+</ul></li>
+<li>示例：64字节地址空间（虚拟地址需要6位）, 16字节页大小（<span class="math inline">2<sup>4</sup></span>），因此需要4位作为偏移量。剩下的
+<span class="math inline">6 − 4 = 2</span> 位，就是虚拟页号 (VPN)。
+<ul>
+<li>虚拟地址 21（二进制 010101）：01 (VPN)表示这是虚拟页1, 0101
+(Offset)表示这是该页中的第5个字节（从0开始）。</li>
+</ul></li>
+</ul></li>
+<li>页表 (Page Table)
+<ul>
+<li>定义：页表是操作系统为<strong>每个进程</strong>维护的一个核心数据结构。</li>
+<li>功能：它存储了从虚拟页号 (VPN) 到物理页帧号 (PFN) 的映射关系。</li>
+<li>定位: OS在切换进程时会将该进程的页表地址加载到MMU中,
+起始地址存储在一个专用寄存器中，称为<strong>页表基址寄存器</strong>（Page
+Table Base Register, PTBR）。
+<ul>
+<li>类似于分段中的 base 寄存器，但这里存储的是页表的起始地址。</li>
+</ul></li>
+<li>最简单的形式（线性页表）：就是一个数组，VPN用作访问该数组的索引。
+<ul>
+<li>示例： | VPN | PFN | |—–|—–| | 0 | 5 | | 1 | 2 | | 2 | 8 | | 3 | 1
+|</li>
+</ul></li>
+</ul></li>
+</ol>
+<p>当进程访问虚拟地址 21（010101）时：</p>
+<p>第1步：<strong>硬件拆分地址</strong> - 硬件从 VA=21 中提取
+<strong>VPN</strong> = 01 (即1) 和 <strong>Offset</strong> = 0101
+(即5)。</p>
+<p>第2步：<strong>硬件查找页表</strong>（核心） - 硬件访问该进程的页表,
+它以 VPN=1 作为索引，查表得到 页表[1] 的内容，即 PFN = 7（二进制
+111）。</p>
+<p>第3步：<strong>硬件构建物理地址</strong>（PA） - 硬件将查到的
+PFN（111）和原始的 Offset（0101）重新组合（拼接）起来。 - PA = [ PFN |
+Offset ], 例如 PA = [ 111 | 0101 ] = 1110101（二进制），即十进制的 117。
+-
+关键：偏移量（Offset）永远不会被翻译，它只在虚拟页和物理页帧中指明<strong>同一个相对位置</strong>(因为页和页帧大小相同)。</p>
+<p>第4步：访问物理内存 - 硬件（MMU）将计算出的物理地址 117
+发送到内存总线，完成数据访问。</p>
+<h4 id="页表项pte的内部结构">页表项（PTE）的内部结构</h4>
+<p>页表中的每个条目称为<strong>页表项</strong>（Page Table Entry,
+PTE）。页表项内部除了“物理页帧号（PFN）”之外，还包含一些关键的控制位（Control
+Bits）：</p>
+<p><strong>有效位</strong> (<strong>Valid</strong> Bit)： -
+功能：指示该PTE是否有效（即<strong>该虚拟页是否被映射</strong>）。 -
+作用：这是实现稀疏地址空间的关键。对于栈和堆之间的巨大<strong>空洞</strong>，OS只需将这些页对应的<strong>PTE标记为“无效”</strong>。如果进程试图访问它们，硬件会立即触发异常（段错误）。OS<strong>不需要为这些无效页分配任何物理页帧</strong>。</p>
+<p><strong>保护位</strong> (<strong>Protection</strong> Bits)： -
+功能：标记该<strong>页</strong>是可读（R）、可写（W）还是可执行（X）。 -
+作用：提供<strong>权限保护</strong>。如果进程试图写入一个被标记为“只读”的页（如代码段），硬件会触发异常。</p>
+<p><strong>存在位</strong> (<strong>Present</strong> Bit)： -
+功能：标记该页是在物理内存中，还是在<strong>磁盘上</strong>（即被“换出”了）。
+-
+作用：这是实现<strong>交换</strong>（Swapping）的基础。如果硬件发现该位为0（不在内存），它会触发一个<strong>缺页异常</strong>（Page
+Fault），让OS去磁盘上把数据取回内存。</p>
+<p><strong>脏位</strong> (<strong>Dirty</strong> Bit)： -
+功能：硬件在<strong>写入</strong>一个页时，会自动设置该位。 -
+作用：优化。当OS决定将一个页<strong>换出到磁盘时</strong>，它会检查脏位。如果脏位为0（表示该页<strong>从未被修改</strong>过），OS就不必将其写回磁盘（因为磁盘上的版本已经是最新的）而是直接丢弃该页,
+从而节省了I/O时间。</p>
+<p><strong>访问位</strong> (<strong>Accessed</strong> Bit /
+<strong>Reference</strong> Bit)： -
+功能：硬件在<strong>读取或写入</strong>一个页时，会自动设置该位。 -
+作用：用于<strong>页面替换算法</strong>。OS可以定期检查此位，以了解哪些页最近被<strong>频繁使用</strong>（保留在内存中），哪些页无人问津（可以换出到磁盘）。</p>
+<h4 id="分页带来的两个新问题">分页带来的两个新问题</h4>
+<p>分页机制虽然在概念上完美地解决了碎片问题，但在工程实现上带来了两个全新的、巨大的挑战：页表可能非常大（<strong>空间开销</strong>）且访问页表可能非常慢（<strong>时间开销</strong>）。</p>
+<p>问题一：页表太大（空间开销） -
+问题：由于页表需要为<strong>每一个虚拟页</strong>都存储一个条目，它的大小与<strong>虚拟地址空间的大小</strong>成正比，与页大小成反比,
+而与进程实际使用的内存无关。 - 计算：一个32位地址空间（4GB）, 4KB（<span class="math inline">2<sup>12</sup></span>）的页大小。地址被分为 20位 VPN
+和 12位 Offset。 - 页表需要有 <span class="math inline">2<sup>20</sup></span>（约100万）个页表项
+(PTE)。假设每个PTE为4字节（用于存储PFN和各种标志位）。 -
+页表所占空间：100万 * 4字节 = 4MB。 - 结论：每个进程都需要一个 4MB
+大小的页表！如果有100个进程在运行，仅页表本身就会消耗 400MB
+物理内存。这在当时（甚至现在）都是难以接受的巨大开销。 -
+存储：因为页表如此巨大，它不能被存在CPU的快速寄存器上（不像分段的几个
+base/bound
+寄存器），它必须被存储在<strong>主内存</strong>（RAM）中。</p>
+<p>问题二：分页太慢（时间开销） -
+问题：由于<strong>页表存储在内存</strong>中，硬件在进行地址转换时，引发了“鸡生蛋，蛋生鸡”的悖论。
+- 访问流程：假设程序要执行
+<code>movl 21, %eax</code>（从虚拟地址21加载数据）。 - 硬件需要知道
+VA=21 对应的物理地址。为此，硬件需要去查页表，以 VPN=1 为索引，找到
+PTE[1]。 -
+但页表本身也在内存中！因此，硬件必须先发起一次内存访问，从内存中读取
+PTE[1] 的内容（PFN=7）。 - 然后，硬件才能计算出真正的物理地址 PA=117。 -
+最后，硬件再发起第二次内存访问，从 PA=117 处读取真正的数据。 -
+结论：每一次虚拟内存访问（无论是取指令还是读写数据），现在都变成了<strong>两次物理内存访问</strong>。第一次：访问页表（PTE）。第二次：访问真实数据。
+-
+后果：这会使系统的内存性能下降一倍（减慢50%），这是毁灭性的性能灾难。</p>
+<p>总之, 分页的胜利： - 彻底解决了外部碎片（通过固定大小的单元）。 -
+极度灵活（任何VP可以到任何PFN）。 -
+通过“有效位”完美支持了稀疏地址空间（解决了内部碎片）。</p>
+<p>分页的挑战： -
+空间问题：<strong>线性页表（作为数组）太大</strong>，浪费内存。 -
+时间问题：访问页表需要<strong>额外的内存访问</strong>，导致性能减半。</p>
+<p>本章成功地用“分页”取代了“分段”，成为了现代虚拟内存的基石。但它也留下了两个亟待解决的工程难题（页表太大、太慢）。接下来的两章（TLB
+和 多级页表）将专门用于解决这两个问题。</p>
+<h3 id="分页快速地址转换tlb">分页：快速地址转换（TLB）</h3>
+<p>在上一章中，我们建立了一个看似完美的虚拟内存机制——分页（Paging）。它通过将内存划分为固定大小的“页”和“页帧”，彻底解决了外部碎片问题，并能完美支持稀疏地址空间。</p>
+<p>然而，结尾也揭示了一个灾难性的性能问题：由于页表（Page
+Table）存储在主内存（RAM）中，导致每一次内存访问（如 movl 21,
+%eax）都变成了两次内存访问： - 第一次访问：访问内存中的页表，以查找 VPN
+-&gt; PFN 的映射。 -
+第二次访问：访问内存中的实际数据（在计算出的物理地址处）。</p>
+<p>这会使系统的内存性能直接减半。本章的核心就是解决这个性能灾难。</p>
+<h4 id="解决方案思路">解决方案思路</h4>
+<p>既然我们无法避免在<strong>概念上需要“查找页表”</strong>，我们该如何才能<strong>避免实际上去访问缓慢的主内存</strong>来进行查找？</p>
+<p>解决方案来自计算机科学中最强大的技术之一：<strong>缓存</strong>（Caching）。
+-
+核心思想：我们增加一个<strong>小型的</strong>、<strong>极快的</strong>、基于硬件的<strong>缓存</strong>，专门用于缓存<strong>最近使用过的地址转换</strong>（VPN
+-&gt; PFN）。 -
+名称：这个特殊的缓存被称为<strong>地址转换旁路缓冲</strong>（Translation-Lookaside
+Buffer），简称 <strong>TLB</strong>。</p>
+<p>TLB的成功依赖于程序的<strong>局部性</strong>（Locality）原理： -
+时间局部性（Temporal
+Locality）：如果一个程序<strong>刚刚</strong>访问了某个页（例如，循环中的指令），它很可能马上会再次访问它。
+- 空间局部性（Spatial Locality）：如果一个程序刚刚访问了某个页（例如
+a[0]），它很可能马上会访问同一个页中的<strong>邻近</strong>数据（例如
+a[1]、a[2]）。</p>
+<p>因此，只要我们将第一次查找的结果缓存到TLB中，后续的（大概率会发生的）访问就可以直接从TLB中获取，而无需访问主内存中的页表。</p>
+<h4 id="tlb的基本算法">TLB的基本算法</h4>
+<p>TLB被集成在<strong>CPU的内存管理单元</strong>（<strong>MMU</strong>）中。现在，硬件的地址转换流程变得更加复杂：</p>
+<ol type="1">
+<li>CPU生成一个虚拟地址（VA）要访问内存。</li>
+<li>硬件（<strong>MMU</strong>）将其<strong>拆分</strong>为 [ VPN |
+Offset ]。</li>
+<li>（关键步骤） 硬件首先拿着 VPN 去<strong>查询
+TLB</strong>。TLB是一个全相联的硬件缓存，它会并行地（非常快地）检查自己是否存有该
+VPN 的映射。接下来是两种可能：
+<ul>
+<li>情况一：TLB 命中 (TLB Hit), 即TLB中存在该 VPN
+的有效映射条目。这是最理想、最常见的情况。
+<ul>
+<li>硬件立即从TLB条目中获取 PFN（物理页帧号）。</li>
+<li>硬件检查保护位（例如，是否允许写入）。</li>
+<li>硬件将 PFN 和原始的 Offset 拼接成物理地址（PA）。</li>
+<li>硬件访问主内存（RAM）。</li>
+<li>性能：总共只需要一次内存访问（用于获取真实数据）。TLB的查找几乎不花时间（集成在CPU时钟周期内）。性能问题解决了！</li>
+</ul></li>
+</ul></li>
+<li>情况二：TLB 未命中 (TLB Miss), 即TLB中没有该 VPN
+的映射。这是我们不希望看到的慢速路径。硬件操作：
+<ul>
+<li>系统暂停当前指令的执行。</li>
+<li>系统现在必须执行上一章中那个缓慢的、原始的操作：
+<ul>
+<li>硬件（或OS）访问<strong>页表基址寄存器</strong>（PTBR），找到<strong>页表的位置</strong>。</li>
+<li>硬件（或OS）计算出<strong>PTE的地址</strong>（PTEAddr = PTBR + (VPN
+* sizeof(PTE))）。</li>
+<li>（第一次内存访问） 硬件（或OS）<strong>访问主内存，读取该
+PTE</strong>。</li>
+<li>硬件（或OS）从 PTE 中提取出 <strong>PFN</strong> 和保护位。</li>
+<li>（关键步骤） 硬件（或OS）将这个 [VPN -&gt; PFN]
+的映射<strong>更新（插入）到TLB中</strong>。如果TLB已满，将根据替换策略踢出一个旧条目。</li>
+</ul></li>
+</ul></li>
+<li>接着硬件重新启动导致未命中的那条指令。
+<ul>
+<li>这一次，指令会从步骤1重新开始，但必定会 TLB
+命中（因为我们刚把映射放进去了）。</li>
+<li>（第二次内存访问） 硬件访问主内存，获取真实数据。</li>
+<li>性能：总共需要两次内存访问（一次查PTE，一次查数据），外加处理未命中的额外开销。这非常非常慢，但我们希望它很少发生。</li>
+</ul></li>
+</ol>
+<h4 id="谁来处理tlb未命中">谁来处理TLB未命中</h4>
+<p>TLB未命中的处理方式取决于具体的CPU架构：</p>
+<p><strong>硬件管理</strong>的TLB（例如：x86 - CISC） -
+机制：硬件全权负责。硬件中固化了“遍历页表”的逻辑。 -
+要求：硬件必须知道页表在内存中的确切位置（通过 CR3 等寄存器, CR3 是 PTBR
+在 x86 CPU
+上的具体名字）以及页表的刚性数据结构（例如x86的固定多级页表）。 -
+优点：速度非常快。TLB未命中完全由硬件处理，对OS透明，开销较小。 -
+缺点：缺乏灵活性。操作系统必须使用硬件规定的页表格式。如果OS想尝试新的页表结构（如倒排页表），硬件不支持，就无法实现。</p>
+<p><strong>软件管理</strong>的TLB（例如：MIPS, SPARC - RISC） -
+机制：硬件不参与查找，只负责“上报问题”。 - 流程： - 硬件在TLB中查找
+VPN。 - TLB未命中！ -
+硬件立即停止，并触发一个特殊的异常（<strong>Trap</strong>），切换到<strong>内核模式</strong>，跳转到OS预设好的“<strong>TLB未命中处理程序</strong>”。
+-
+操作系统的代码开始运行。它在自己的数据结构（可以是数组、哈希表、树…）中查找
+VPN 对应的 PFN。 - OS找到后，使用一条<strong>特权指令</strong>（如
+TLB_Insert）手动将映射<strong>写入TLB</strong>。 -
+OS执行“从陷阱返回（return-from-trap）”指令。 -
+硬件重新启动那条导致未命中的指令（这一次，它会TLB命中）。</p>
+<p>优点：极度灵活。OS可以使用任何它喜欢的数据结构来作为页表，硬件根本不关心。</p>
+<p>缺点：处理未命中的开销更大（因为涉及到了<strong>OS的上下文切换和软件执行</strong>），但如果未命中率足够低，这种灵活性是值得的。</p>
+<h4 id="tlb的内容与上下文切换">TLB的内容与上下文切换</h4>
+<p>TLB的条目（Entry）不仅仅是 [VPN | PFN]，它还包含其他关键位：</p>
+<ul>
+<li>Valid bit：这个TLB条目是否有效？
+<ul>
+<li>这与PTE的Valid bit不同, TLB的Valid
+bit表示该TLB条目是否包含有效的映射, 而PTE的Valid
+bit表示该虚拟页是否被映射。</li>
+</ul></li>
+<li>Protection bits：保护位（R/W/X）。</li>
+<li>Dirty bit / Accessed bit：脏位和访问位。</li>
+</ul>
+<p><strong>上下文切换的挑战</strong></p>
+<p>问题：TLB缓存了进程A的映射（例如 VPN 10 -&gt; PFN
+100）。当OS切换到进程B时，进程B也可能访问它自己的 VPN
+10，但它的映射应该是 VPN 10 -&gt; PFN
+170。如果进程B使用了进程A的旧TLB条目，它将访问到错误的内存！</p>
+<p>关键问题：进程切换时如何管理TLB的内容？</p>
+<p>解决方案 1：<strong>清空TLB</strong> (Flush TLB) -
+机制：在每次<strong>上下文切换</strong>时，OS执行一条<strong>特权指令</strong>，将TLB中所有条目的
+<strong>Valid bit 设为0</strong>，即清空整个TLB。 -
+优点：简单、绝对安全。 -
+缺点：代价高昂。新换上的进程B开始运行时，它的<strong>TLB是“冷”的</strong>，它访问的每一个新页都会导致一次TLB未命中，直到它的“工作集”被重新缓存进TLB。</p>
+<p>解决方案 2：<strong>地址空间标识符</strong> (ASID) -
+机制：硬件为TLB条目增加一个额外的字段：ASID（Address Space
+Identifier）。ASID是一个（通常为8位的）ID，用于唯一<strong>标识当前正在运行的进程</strong>。
+- TLB条目变为：[ ASID | VPN | PFN | … ] - 上下文切换时的操作： -
+OS上下文切换时，不再需要清空TLB。OS只是告诉MMU：“现在请使用 ASID =
+2”（进程B的ID）。 - 硬件查找时的操作：硬件在查找TLB时，现在会匹配两者：
+<strong>TLB.ASID == Current_ASID</strong> 并且 TLB.VPN == VA.VPN</p>
+<ul>
+<li>优点：效率极高。进程B的旧映射（如果还在TLB中）可以被立即重用，<strong>避免了“冷启动”的开销</strong>。TLB现在可以<strong>同时持有多个进程的映射</strong>。</li>
+</ul>
+<h4 id="tlb替换策略">TLB替换策略</h4>
+<p>和一般的缓存一样，TLB是有限的（例如64项）。当发生TLB未命中，且TLB已满时，必须<strong>替换（Evict）</strong>一个旧条目。替换哪一个？
+&gt; 目标/benchmark：选择一个“未来最不可能被使用”的条目。 策略： -
+最近最少使用
+(LRU)：替换掉“最长时间没有被访问过”的条目。它在理论上利用局部性，效果很好，但在硬件中实现起来非常复杂。
+- 随机
+(Random)：随机选择一个条目并替换。实现起来极其简单（硬件只需要一个随机数生成器），并且巧妙地避免了一些“最坏情况”（例如，当程序循环访问65个页，而TLB只有64项时，LRU会每次都失败，而随机策略表现反而更好）。</p>
+<p>总之,
+<strong>TLB是让分页（Paging）机制变得可行的关键</strong>。没有TLB，分页带来的性能损失（每次访问都变两次）将是无法接受的。</p>
+<p>TLB是一个硬件缓存，它利用时间局部性和空间局部性，使得绝大多数（希望是
+&gt; 99%）的地址转换都极快（TLB Hit）。</p>
+<p>但TLB自身也引入了新的设计挑战： -
+未命中处理：由硬件还是软件负责？（CISC vs. RISC） -
+上下文切换：如何避免进程A的映射被进程B误用？（Flush vs. ASID） -
+替换策略：当TLB满了踢出谁？（LRU vs. Random）</p>
+<p>TLB覆盖范围（Coverage）：TLB的局限性在于它能“覆盖”的内存总量是
+<code>TLB条目数 * 页大小</code>。如果一个程序（如数据库）在短时间内随机访问大量内存（例如
+1000 * 4KB =
+4MB），超出了TLB的覆盖范围，就会频繁发生TLB未命中，性能急剧下降。这引出了后续章节对“大页（Large
+Pages）”的需求。</p>
+<h3 id="分页缩小页表所占空间多级页表">分页：缩小页表所占空间（多级页表）</h3>
+<p>之前，我们引入了“分页”作为理想的虚拟内存方案。在第上一章中，我们通过“TLB”解决了分页带来的<strong>速度</strong>问题（即避免了每次内存访问都变成两次）。</p>
+<p>现在，本章将集中火力解决分页带来的第二个大问题：空间问题。也就是,
+如何让页表更小？</p>
+<p>简单的线性页表（Linear Page
+Table，即一个大数组）太大了。一个32位系统、4KB页大小，每个进程的页表都需要
+4MB。100个进程就需要 400MB
+内存仅仅用来存页表。这无法接受。我们该如何设计数据结构来缩小它？</p>
+<p>本章探讨了四种主要的解决方案，从简单到复杂。</p>
+<h4 id="简单的解决方案更大的页">简单的解决方案：更大的页</h4>
+<p>这是最直观的解决方案。</p>
+<p>思想：页表的大小 = (虚拟地址空间大小 / 页大小) *
+PTE大小。要缩小页表，最简单的方法就是增大分母（页大小）,
+这样页表项数就会减少。例如： - 32位地址空间, 4KB 页 ( <span class="math inline">2<sup>12</sup></span> ) -&gt; <span class="math inline">2<sup>20</sup></span> (约100万) 个PTE -&gt; 4MB
+页表。 - 32位地址空间, 16KB 页 ( <span class="math inline">2<sup>14</sup></span> ) -&gt; <span class="math inline">2<sup>18</sup></span> (约26万) 个PTE -&gt; 1MB 页表
+(缩小为1/4)。</p>
+<p>优点：立竿见影地缩小了页表。而且还会增加TLB的覆盖范围。一个TLB条目现在可以映射16KB内存，而不是4KB，这大大减少了TLB未命中（尤其对大型应用）。</p>
+<p>致命缺点：内部碎片（Internal Fragmentation）,
+这又回到了我们最初试图解决的问题！如果一个应用程序只需要3KB内存，操作系统为了它分配一个16KB的页帧，就净浪费了13KB。这在小程序或稀疏使用内存的应用中会造成巨大的物理内存浪费。</p>
+<p>结论：因为内部碎片的代价太高，大多数系统仍然坚持使用较小的页（如4KB或8KB）作为默认。</p>
+<h4 id="混合方法分页和分段">混合方法：分页和分段</h4>
+<p>这是一种“取两家之长”的杂合（Hybrid）设计。</p>
+<p>思想：我们为什么要因<strong>未使用的地址空间</strong>（如栈和堆之间的巨大空洞）而惩罚自己，去为它们<strong>分配页表项</strong>呢？</p>
+<ul>
+<li>线性页表的问题是：它必须为所有可能的VPN都<strong>保留一个PTE槽位</strong>，即使它们是无效的（Invalid）。</li>
+<li>分段的优点是：它只为实际使用的段（代码、堆、栈）分配资源。</li>
+</ul>
+<p>杂合机制：我们不为整个地址空间维护一个大页表。我们为每个逻辑段（Segment）维护一个单独的、小型的线性页表。例如，一个进程有3个段（代码、堆、栈），它就有3个页表。</p>
+<p>CPU的MMU中不再只有一个页表基址寄存器（PTBR），而是像分段一样，有多对
+base/bound 寄存器（例如，CodeBase/Bound, HeapBase/Bound,
+StackBase/Bound）。</p>
+<p>关键区别：这里的 base
+寄存器指向的<strong>不再是段本身的物理地址</strong>，而是指向<strong>该段的页表的物理地址</strong>。bound
+寄存器则用于检查该段的页表有多大（即该段包含多少个有效的页）。</p>
+<p>地址转换流程 (TLB Miss的情况下)： - VA = [ SN | VPN | Offset ]
+(SN=段号, 如01=代码, 10=堆) - 硬件使用 SN (例如 10)
+来选择对应的寄存器对（HeapBase, HeapBound）。 - 硬件检查 VPN
+是否在界限内（VPN &lt; HeapBound）。如果越界，触发异常。 -
+硬件计算PTE的地址：PTEAddr = HeapBase + (VPN * sizeof(PTE))。 -
+（一次内存访问）硬件获取 PTE。 - 硬件从 PTE 中提取 PFN，并与 Offset
+组合成物理地址。</p>
+<p>优点：极大节省空间。栈和堆之间的巨大空洞完全不占用任何页表空间。</p>
+<p>缺点：不够灵活.
+它仍然依赖于分段的逻辑（代码/堆/栈），如果一个程序有一个巨大的、但<strong>稀疏使用的堆</strong>，这种方法仍然会浪费大量页表空间。</p>
+<p>外部碎片：页表本身（例如代码页表3项，堆页表500项）现在是大小不等的内存块。这又把我们努力解决的外部碎片问题带回来了！</p>
+<p>结论：虽然在某些旧系统（如Multics）上很优雅，但它不够通用，并且会重新引入外部碎片问题。</p>
+<h4 id="核心解决方案多级页表">核心解决方案：多级页表</h4>
+<p>这是现代操作系统（如Linux, Windows, macOS,
+x86）实际采用的主流解决方案。</p>
+<p>思想：如果我们能找到一种方法，只为有效的PTE分配空间，同时又不使用大小可变的“分段”，那该多好？</p>
+<p>这就是多级页表机制：</p>
+<ul>
+<li>我们将那个巨大的、连续的“线性页表”本身也进行分页。即，我们将4MB的页表切分成1024个4KB的“页表页（Page
+of Page Table）”。</li>
+<li>我们引入一个新结构，叫做页目录（<strong>Page
+Directory</strong>）。它是一个数组，大小刚好也是一页（4KB）。这个页目录有1024项，每一项（称为<strong>PDE</strong>）对应一个“页表页”。
+<ul>
+<li>如果一个“页表页”中所有的PTE都是无效的（例如，对应栈和堆之间的空洞），那么对应的页目录项（PDE）就标记为无效（Invalid）。操作系统根本不会为这个无效的“页表页”分配物理内存。</li>
+</ul></li>
+</ul>
+<p>如图20.2所示，我们用一个4KB的页目录，加上两个4KB的“页表页”，总共只用了12KB，就管理了原本需要4MB的线性页表所管理的空间。</p>
+<p>下面是详细的多级地址转换 (两级为例): - 地址拆分（x86 32位）：VA
+(32位) 被硬件拆分为三部分（不再是两部分）： - [ PD Index (10位) | PT
+Index (10位) | Offset (12位) ]</p>
+<ul>
+<li>TLB Miss 时的硬件流程：
+<ol type="1">
+<li>硬件从 PDBR（页目录基址寄存器，x86中是
+CR3）获取页目录的物理地址。</li>
+<li>硬件使用 PD Index（高10位）作为索引，计算 PDE 的地址：PDEAddr = PDBR
++ (PD Index * sizeof(PDE))。</li>
+<li>（第一次内存访问） 硬件从内存中读取 PDE。
+<ul>
+<li>硬件检查该 PDE 的有效位。</li>
+<li>如果无效，说明进程访问了未映射的巨大空洞，触发异常（SEGFAULT）。</li>
+<li>如果有效，PDE 会告诉硬件下一步该去哪里找。PDE 包含一个 PFN，这个 PFN
+指向的不是数据，而是下一级（L2）的“页表页”。</li>
+</ul></li>
+<li>硬件使用 PT Index（中间10位）作为索引，计算 PTE 的地址：PTEAddr =
+(PDE.PFN &lt;&lt; 12) + (PT Index * sizeof(PTE))。</li>
+<li>（第二次内存访问） 硬件从内存中读取这个 PTE。
+<ul>
+<li>硬件检查该 PTE 的有效位和保护位。</li>
+<li>PTE 包含最终数据的物理页帧号（PFN）。</li>
+</ul></li>
+<li>硬件将这个 PFN 和 Offset（低12位）拼接成最终物理地址。</li>
+<li>（硬件此时将 [VPN -&gt; PFN] 存入TLB）。</li>
+<li>（硬件重新启动指令，此时会TLB命中）。</li>
+<li>（第三次内存访问） 硬件最终访问数据。</li>
+</ol></li>
+</ul>
+<p>优点：</p>
+<p>极度节省空间：页表空间是按需分配的，与进程实际使用的内存量成正比。完美支持稀疏地址空间。</p>
+<p>易于管理：页目录和“页表页”本身都是固定大小（一页），OS管理它们就像管理其他页一样简单，没有外部碎片。</p>
+<p>缺点：</p>
+<p>时间开销：TLB 未命中时的代价变高了 - 线性页表：1次额外内存访问。 -
+两级页表：2次额外内存访问（1次查PDE，1次查PTE）。 -
+（x86-64的四级页表：4次额外内存访问！）</p>
+<p>复杂性：硬件和OS的实现都更加复杂。</p>
+<p>这是一个经典的时间-空间折中（Time-Space
+Trade-off）。我们用更慢的TLB未命中处理换取了极大的空间节省。鉴于TLB命中率通常非常高（&gt;99%），这个折中是完全值得的。</p>
+<h4 id="其他方案">其他方案</h4>
+<ol type="1">
+<li><p>反向页表 (Inverted Page Table)</p>
+<ul>
+<li>这是一种完全不同的、<strong>以物理内存为中心</strong>的设计。</li>
+<li>机制：
+<ul>
+<li>不再为每个进程维护一个页表。</li>
+<li><strong>全局只有一个页表</strong>，这个页表的大小与<strong>物理内存中的页帧数</strong>成正比（而不是与虚拟地址空间大小成正比）。</li>
+<li>InvertedPageTable[PFN] -&gt; [ PID, VPN ]</li>
+<li>翻译：当一个进程（PID=5）访问 VPN=10
+时，硬件（或OS）必须搜索整个反向页表，查找是否存在一个条目，其内容是 [5,
+10]。</li>
+</ul></li>
+<li>搜索问题：线性搜索这个大表太慢了，所以通常会使用一个<strong>哈希表（Hash
+Table）</strong>来加速查找。</li>
+<li>优点：极度节省空间，页表总大小只与物理内存相关，与进程数量或虚拟空间大小无关。</li>
+<li>缺点：哈希表的实现非常复杂，且处理哈希冲突等问题会增加开销。</li>
+</ul></li>
+<li><p>将<strong>页表交换到磁盘</strong></p>
+<ul>
+<li>思想：为什么我们假设页表（尤其是多级页表中那些<strong>不常用的“页表页”</strong>）必须一直待在物理内存中？
+<ul>
+<li>这和我们对待普通数据页的方式是一样的：不常用的数据页可以被换出到磁盘。</li>
+</ul></li>
+<li>机制：OS可以将页表本身也视为内核虚拟内存的一部分。当物理内存紧张时，OS可以将不常用的“页表页”换出（Swap
+out）到磁盘上。</li>
+<li>后果：这会导致“地狱般”的TLB未命中。当硬件试图查找一个PTE，而它的PDE指向的“页表页”又不在内存中时…
+<ol type="1">
+<li>TLB Miss。</li>
+<li>硬件查找PDE（内存访问1）。</li>
+<li>硬件试图查找PTE，但发现PTE所在的“页表页”的“存在位”为0（缺页异常！）。</li>
+<li>OS介入，从磁盘读回“页表页”（I/O操作）。</li>
+<li>OS重新执行指令，TLB Miss。</li>
+<li>硬件查找PDE（内存访问2）。</li>
+<li>硬件查找PTE（内存访问3）。</li>
+<li>硬件查找数据（内存访问4）。</li>
+</ol></li>
+<li>结论：这是一种终极的空间节省方案，但代价是极高的复杂性和潜在的性能悬崖。</li>
+</ul></li>
+</ol>
+<p>总之, 本章解决了分页带来的空间问题。</p>
+<ul>
+<li>简单的（坏）方案：大页（引入内部碎片）和分段+分页（引入外部碎片）。</li>
+<li>核心的（好）方案：多级页表。它通过增加<strong>间接层</strong>（Indirection）（即<strong>页目录</strong>），实现了页表的按需分配，极大地节省了空间，代价是TLB未命中时需要更多的内存访问。</li>
+</ul>
+<p>这是现代操作系统设计中一个完美的时间-空间折中案例。</p>
+<h3 id="超越物理内存-swap-机制">超越物理内存: Swap 机制</h3>
+<p>在前面的章节中，我们已经构建了一个高效、空间节省的分页系统（使用多级页表和TLB）。但是，这个系统仍然基于一个核心假设：<strong>所有进程的虚拟地址空间加起来</strong>，必须能<strong>完全装入物理内存</strong>（RAM）。</p>
+<p>然而，现实情况往往并非如此。现代应用程序（如浏览器、数据库、大数据处理）通常需要远远<strong>超过物理内存容量</strong>的内存空间。</p>
+<p>操作系统如何利用一个容量大但速度慢的设备（如硬盘），来<strong>透明</strong>地提供一个<strong>巨大的虚拟地址空间</strong>的假象？</p>
+<blockquote>
+<p>为什么需要这样做？ - 易用性（Ease of
+Use）：程序员不再需要担心“内存不够用”。他们可以按需分配<strong>巨大的数据结构</strong>，而无需手动编写“内存覆盖（memory
+overlays）”代码来管理数据在内存和磁盘间的移入移出。操作系统替他们完成了所有繁重的工作。
+-
+多道程序（Multiprogramming）：为了充分利用CPU，系统希望“同时”运行许多进程（例如100个）。但在早期的（或内存受限的）机器上，所有这些进程的内存总和远远超过了物理内存。通过<strong>只在内存中保留每个进程的“活动”部分</strong>，系统可以运行远超物理内存容量的进程总数。</p>
+</blockquote>
+<h4 id="核心机制交换swapping">核心机制：交换（Swapping）</h4>
+<p>为了实现这个假象，OS必须有能力将内存中“暂时不用”的页（Page）移出到慢速设备上，并在“需要时”再将它们移回。这个过程称为<strong>交换</strong>（Swapping）。为此，我们需要引入四个关键机制：</p>
+<p>机制一：<strong>交换空间</strong> (Swap Space)</p>
+<p>交换空间是操作系统在<strong>硬盘</strong>（HDD或SSD）上<strong>预先分配的一块专用空间</strong>。</p>
+<p>它充当<strong>RAM的“溢出区”</strong>。当物理内存（页帧）满了，OS可以将一个“受害者”页帧的内容写入（Page
+Out）到交换空间中；当稍后需要这个页时，再从交换空间读回（Page In）。</p>
+<p>OS的职责：OS必须为每个<strong>被换出的页</strong>记录其<strong>在磁盘上的地址</strong>（Disk
+Address）。</p>
+<blockquote>
+<p>特例：并非所有页都去交换空间。例如，程序的可执行代码页（Code
+Page），如果它们<strong>没有被修改过</strong>（是“干净的”），当内存紧张时，OS可以<strong>直接丢弃</strong>它们。因为如果将来再次需要，OS可以直接从<strong>磁盘上的原始二进制文件</strong>（例如
+a.out）中重新读取，而无需占用<strong>宝贵的交换空间</strong>。</p>
+</blockquote>
+<p>机制二：<strong>存在位</strong> (Present Bit)</p>
+<p>问题：当硬件（MMU）遍历页表时，它如何知道一个页是在RAM中（可以立即访问），还是在磁盘上（必须停止并通知OS）？</p>
+<p>机制：我们在页表项（PTE）中引入一个新的控制位，称为“存在位（Present
+Bit）”。 - Present = 1：页在<strong>物理内存</strong>中。PFN
+字段有效。硬件（TLB未命中后）可以正常获取 PFN，更新TLB，然后重试指令。 -
+Present = 0：页不在物理内存中（它在<strong>磁盘</strong>上）。PFN
+字段无效。硬件此时不能处理这个情况，它必须立即停止，并触发一个<strong>异常</strong>（Exception），将控制权交给OS。</p>
+<p>机制三：<strong>页错误</strong> (Page Fault) (21.2节)</p>
+<p>当硬件访问一个PTE，发现其存在位（Present Bit）为 0
+时，触发的异常（Exception / Trap），就称为“页错误（Page Fault）”。</p>
+<p>在这里需要区分两个概念：</p>
+<ul>
+<li>段错误 (Segmentation
+Fault)：是一个“<strong>真正的</strong>”错误。进程访问了一个<strong>无效（Invalid）的地址</strong>（PTE的
+<strong>Valid</strong> Bit = 0），OS会杀死该进程。</li>
+<li>页错误 (Page
+Fault)：不是一个错误！它是一个“<strong>合法的</strong>”事件。进程访问了一个有效的地址（Valid
+Bit = 1），但该页只是“恰好”<strong>不存在</strong>（Present Bit =
+0）<strong>于内存</strong>中。OS的职责是去磁盘把它取回来。 &gt;
+它更应该被称为“页未命中（Page
+Miss）”，但由于它使用与“错误”相同的异常机制，因此被称为“页错误”。</li>
+</ul>
+<p>机制四：<strong>页错误处理程序</strong> (<strong>Page-Fault
+Handler</strong>)</p>
+<p>这是OS中的一段<strong>特权</strong>代码，在“页错误”异常发生时被硬件自动调用。它的工作流程:</p>
+<ol type="1">
+<li><p>定位磁盘地址：OS需要知道去磁盘的哪个位置取回这个页。它通常会利用PTE中<strong>原本用于PFN的位来存储该页的磁盘地址</strong>（反正
+Present Bit = 0 时，PFN 字段是无用的）。</p></li>
+<li><p>寻找空闲帧：OS必须在物理内存中找到一个<strong>空闲的页帧（Free
+Page Frame）</strong>来存放即将读入的页。</p></li>
+<li><p>（如果内存已满）：如果没有空闲页帧，OS必须运行<strong>页交换策略</strong>（Page-Replacement
+Policy）来选择一个“受害者”页（Victim Page）并将其换出（Page
+Out）。</p></li>
+<li><p>发起I/O请求：OS向磁盘控制器发起一个<strong>异步读</strong>（Disk
+Read）请求，告诉它“将磁盘地址X的数据读入物理页帧Y中”。</p>
+<ul>
+<li>阻塞进程：磁盘I/O极其缓慢（毫秒级别）。OS不会让CPU空等。它会将导致页错误的进程状态置为“<strong>阻塞（Blocked）</strong>”，并<strong>调度</strong>运行另一个“<strong>就绪（Ready）</strong>”的进程。</li>
+<li>I/O完成中断：几毫秒后，磁盘完成读取，并向CPU发送一个<strong>I/O中断</strong>（Interrupt）。</li>
+</ul></li>
+<li><p>OS（中断处理程序）被唤醒：OS（此时可能正在运行另一个进程）接收到中断，知道“页的读入已完成”。</p></li>
+<li><p>更新页表：OS找到导致页错误的那个进程（它还在阻塞中）的页表，更新其PTE：</p>
+<ul>
+<li>Present Bit = 1</li>
+<li>PFN = Y （指向刚刚载入数据的那个页帧）</li>
+</ul></li>
+<li><p>唤醒进程：OS将被阻塞的进程状态改回“就绪（Ready）”。</p></li>
+<li><p>（稍后）重试指令：当调度器最终再次运行该进程时，该进程会重新执行那条导致页错误的指令。</p></li>
+</ol>
+<h4 id="完整的内存访问流程">完整的内存访问流程</h4>
+<p>结合第19、20、21章，一次内存访问的完整流程（如图21.2 - 硬件，图21.3 -
+软件）如下：</p>
+<p>（硬件） 硬件拆分 VA -&gt; [VPN | Offset]。</p>
+<p>（硬件） 硬件检查TLB。</p>
+<p>TLB 命中？</p>
+<p>是 (常见情况)：获取 PFN，组合 PA，访问内存。（访问结束）</p>
+<p>否 (TLB 未命中)：</p>
+<p>（硬件/OS） 访问多级页表（可能多次内存访问）以找到PTE。</p>
+<p>（硬件） 检查 PTE.Valid == 0？ -&gt; 是：段错误（Segmentation
+Fault），陷阱（Trap）到OS，OS杀死进程。（访问结束）</p>
+<p>（硬件） 检查 PTE.Protection？ -&gt; 访问非法？ -&gt;
+保护错误（Protection Fault），陷阱到OS，OS杀死进程。（访问结束）</p>
+<p>（硬件） 检查 PTE.Present == 1？</p>
+<p>是 (仅TLB未命中)：硬件将 PTE
+内容（PFN）载入TLB，然后重试指令（此时会TLB命中）。（访问结束）</p>
+<p>否 (PTE.Present == 0)：</p>
+<p>（硬件） 触发 页错误（PAGE_FAULT）异常，陷阱到OS。</p>
+<p>（OS - 页错误处理程序）</p>
+<p>OS从PTE中找到该页的磁盘地址。</p>
+<p>OS寻找一个空闲页帧。</p>
+<p>（如果内存已满）
+OS运行替换算法，选择一个“受害者”页。如果该页是“脏的”（Dirty=1），OS必须先将其<strong>写回（Page
+Out）</strong>交换空间（又一次I/O）。</p>
+<p>OS发起磁盘读（Page In），将数据读入空闲页帧。</p>
+<p>OS阻塞当前进程，调度其他进程运行。</p>
+<p>…（时间流逝，发生I/O中断）…</p>
+<p>OS（中断处理程序）更新PTE（Present=1, PFN=…）。</p>
+<p>OS将该进程设为就绪。</p>
+<p>OS返回（RetryInstruction）。</p>
+<p>（硬件）
+指令被重试（回到第1步），此时会发生TLB未命中（第3步），但会在第3.4步中发现
+Present=1，载入TLB，最终访问成功。</p>
+<h4 id="优化后台交换">优化：后台交换</h4>
+<p>上述流程是一个“<strong>懒惰的</strong>（Lazy）”或“按需的（On-demand）”策略。它会等到内存100%用满，然后在发生页错误时才去寻找“受害者”页并将其换出。</p>
+<p>这使得页错误变得极其缓慢。进程不仅要等待“页入（Page
+In）”的I/O，还可能要先等待“页出（Page Out）”的I/O。</p>
+<p>优化方案：<strong>主动</strong>（Proactive）地<strong>维护一个空闲页池</strong>。可以使用水位线（Watermarks）机制:
+- 低水位线
+(LW)：当空闲页帧的数量低于此线（例如低于1000个），OS就该警觉了。 -
+高水位线
+(HW)：OS的目标是释放内存，直到<strong>空闲页帧的数量高于此线</strong>（例如高于5000个）。</p>
+<p>还有一种机制是<strong>交换守护进程</strong> (Swap Daemon):
+它是一个在OS中后台运行的特殊线程（如Linux的 kswapd）。</p>
+<p>它大部分时间在<strong>休眠</strong>。当空闲内存低于LW时，OS唤醒这个守护进程,
+于是守护进程开始运行替换策略，寻找“不常用”的页，并将它们（如果是脏页）提前写出（Page
+Out）到磁盘，直到空闲内存高于HW。</p>
+<p>守护进程再次休眠。</p>
+<p>优点：</p>
+<p>页错误变快：当一个真正的页错误发生时，大概率已经有空闲页帧可用。处理程序只需等待“页入”，而无需等待“页出”。</p>
+<p>I/O效率（集群）：守护进程可以一次性收集（Cluster）多个脏页（例如32个），然后将它们作为一个大的、连续的I/O操作写入磁盘。这比32次单独的、随机的I/O操作要快得多。</p>
+<p>总之, 本章引入了将页“换出”到磁盘（交换空间）的机制。</p>
+<ul>
+<li>核心硬件支持是PTE中的“存在位（Present Bit）”。</li>
+<li>核心OS支持是“页错误处理程序（Page-Fault Handler）”。</li>
+</ul>
+<p>当内存已满时，OS必须运行“页交换策略（Page-Replacement
+Policy）”来换出（Evict）一个“受害者”页。</p>
+<p>这一切对进程是完全透明的，进程只看到一个巨大的地址空间，但代价是某些内存访问（页错误时）会变得极其缓慢。</p>
+<p>通过后台守护进程和水位线机制，OS可以主动管理内存，使页错误的开销降到最低。</p>
+<h3 id="超越物理内存替换策略">超越物理内存：替换策略</h3>
+<p>我们已经学习了实现“超越物理内存”的<strong>机制</strong>（Mechanisms），即<strong>交换</strong>（Swapping）、<strong>存在位</strong>（Present
+Bit）和<strong>页错误</strong>（Page Fault）。</p>
+<p>本章则专注于探讨一个至关重要的问题：当内存已满，一个新页需要被调入时，我们必须选择一个“受害者”页将其踢出（Evict）。我们如何选择这个受害者？这就是替换策略（Replacement
+Policy）。</p>
+<p>鉴于页错误的高昂代价（毫秒级别的I/O），选择一个好的替换策略对于系统性能至关重要。我们的目标是<strong>最小化页错误率</strong>（Page
+Fault Rate）。</p>
+<p>我们的 benchmark
+是：在一系列内存访问中，选择一个“<strong>未来最不可能被访问</strong>”的页作为受害者，从而最大限度地减少未来的页错误。</p>
+<h4 id="简单但有缺陷的策略">简单（但有缺陷）的策略</h4>
+<p>先入先出 (FIFO):
+最简单的策略。维护一个队列，替换掉“<strong>最早进入</strong>”内存的那个页（即在<strong>队列头部</strong>的页）。</p>
+<ul>
+<li>优点：实现非常简单。</li>
+<li>缺点：
+<ul>
+<li>逻辑缺陷：一个页“进来得早”和它“是否重要”毫无关系。它可能会踢出一个刚刚被载入、且即将被频繁访问的核心页。</li>
+<li>Belady异常（Belady’s
+Anomaly）：在极少数情况下，增加物理内存（增加缓存大小）反而会导致未命中率上升！这是违反直觉的，也是一个致命缺陷。</li>
+</ul></li>
+</ul>
+<p>随机 (Random): 当需要替换时，随机选择一个受害者页将其踢出。</p>
+<ul>
+<li>优点：
+<ul>
+<li>实现极其简单。</li>
+<li>无最坏情况：在某些特定工作负载（如循环访问）下，它甚至比FIFO和LRU表现得更好，因为它不会陷入某种策略性的“陷阱”。</li>
+</ul></li>
+<li>缺点：性能完全不可控，全凭运气。</li>
+</ul>
+<h4 id="核心策略利用历史-lru">核心策略：利用历史 (LRU)</h4>
+<p>FIFO和Random失败的根本原因在于它们忽视了程序的行为。</p>
+<p>局部性原理（Principle of
+Locality）：这是现代计算机系统（包括CPU缓存、TLB和本章的页面替换）的基石。
+- 时间局部性
+(Temporal)：最近被访问过的东西，很可能马上会再次被访问（例如循环中的代码）。
+- 空间局部性
+(Spatial)：被访问过的东西附近的数据，很可能马上会被访问（例如数组元素）。</p>
+<p>策略（LRU - Least Recently
+Used）：替换掉“<strong>最近最少使用</strong>”的那个页（即在“最久远的过去”被访问的页）。
+- 理念：如果一个页很久都没被用过了，那么它在将来被使用的概率也很低。 -
+实现：可以使用一个<strong>链表</strong>或栈来维护页的访问顺序。每次访问一个页时，将其移动到链表/栈的顶部。当需要替换时，踢出链表/栈底部的页。
+- 优点： - 性能优秀：在大多数真实工作负载中，性能非常接近“最优策略”。 -
+没有Belady异常：LRU具有“<strong>栈特性</strong>”，增加内存只会让命中率更好（或持平）。
+- 栈特性(Stack Property)：对于任何给定的工作负载，假设有两种缓存大小 S1
+&lt; S2。如果一个页在大小为 S1 的缓存中命中，那么它在大小为 S2
+的缓存中也一定会命中。</p>
+<ul>
+<li>缺点：
+<ul>
+<li>最坏情况：在“循环顺序”工作负载中，LRU的表现是最差的。例如，循环访问50个页，但只有49个页帧，LRU会每次访问都导致未命中（0%命中率），因为它总是踢出下一个即将被访问的页。</li>
+<li>实现成本极高。</li>
+</ul></li>
+</ul>
+<p>由于要实现“完美”的LRU，操作系统必须在每一次内存访问时（包括取指令、读、写）都<strong>知道访问了哪个页</strong>，然后<strong>更新一个数据结构</strong>（例如一个链表，将被访问的页移到表头）。
+这100%是无法接受的。在每次内存访问时都陷入OS或更新数据结构，会使系统慢到瘫痪。</p>
+<p>于是, 近似LRU (Approximate LRU)被提出:
+我们不需要找到绝对“最少最近使用”的页，我们只需要找到一个“比较久没用过”的页。</p>
+<ul>
+<li>硬件支持：<strong>使用位</strong> (Use Bit)（也叫引用位，Reference
+Bit）
+<ul>
+<li>OS在PTE中增加一个“Use Bit”。</li>
+<li>硬件的职责：当一个页被（读或写）访问时，硬件自动将该页PTE中的 Use
+Bit 设置为 1。</li>
+<li>OS的职责：OS负责在<strong>某个时刻</strong>将 Use Bit 清除为
+0。</li>
+</ul></li>
+<li>核心算法：<strong>时钟算法</strong> (Clock Algorithm),
+这是实现近似LRU的最经典、最高效的算法。
+<ul>
+<li>OS将<strong>所有的物理页帧</strong>组织成一个<strong>循环列表</strong>（像一个钟表）。</li>
+<li>一个“时钟指针（Clock Hand）”指向列表中的某一个页帧。</li>
+<li>当需要替换一个页时（发生页错误且内存已满），OS开始顺时针转动指针,
+检查指针指向的页P：
+<ul>
+<li>Use Bit == 1? (最近被用过)
+<ul>
+<li>OS的动作：OS给它“第二次机会”。</li>
+<li>将 Use Bit 清零 (置为 0)。</li>
+<li>指针前进到下一页 (P+1)，并重复检查新的指向的页。</li>
+</ul></li>
+<li>Use Bit == 0? (最近没被用过)
+<ul>
+<li>OS的动作：找到受害者了！</li>
+<li>踢出（Evict）这个页P。</li>
+<li>指针前进到下一页 (P+1)，算法结束。</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>时钟算法是一个优雅的折中。它通过 Use Bit
+快速地（最坏情况下O(N)）<strong>跳过“最近被用过”的页</strong>，并最终找到一个“<strong>比较久没用过</strong>”的页（Use
+Bit 为 0 的页）来替换。</p>
+<p>还可以对策略进一步优化, 考虑脏页 (Dirty Pages) :
+从而计算“换出成本”。</p>
+<ul>
+<li>硬件支持：脏位 (Dirty Bit)（也叫修改位，Modified Bit）
+<ul>
+<li>硬件在写入一个页时，自动将该页PTE中的 Dirty Bit 设置为 1。</li>
+</ul></li>
+<li>成本分析：
+<ul>
+<li>踢出一个<strong>干净</strong>（Clean）的页（Dirty =
+0）：成本低。OS可以直接丢弃它（如果是代码页）或用新页覆盖它。</li>
+<li>踢出一个脏（Dirty）的页（Dirty =
+1）：成本极高。OS必须先将这个页写回磁盘（一次昂贵的I/O），然后才能用新页覆盖它。</li>
+</ul></li>
+</ul>
+<p>因此, 改进的时钟算法中, OS在扫描时，会优先寻找 (Use=0, Dirty=0)
+的页（<strong>未使用</strong>、<strong>干净</strong>）作为受害者。如果第一圈找不到，OS会继续扫描，在扫描过程中将
+<strong>Use=1 的页清零</strong>。</p>
+<p>第二圈时，它会寻找 (Use=0, Dirty=1)
+的页（未使用、但很脏）。如果找到，OS会启动一个后台写操作将其写回磁盘，但继续扫描，看能否找到更好的
+(0, 0) 页。从而尽可能避免踢出脏页。</p>
+<p>此外, 还有一些优化, 比如: - 预取
+(Prefetching)：OS“猜测”程序即将访问某些页，并提前将它们调入。例如，当检测到程序正在顺序访问
+P、P+1 时，OS可能会猜测它即将访问 P+2 并提前调入。 - 聚集/分组写入
+(Clustering)：OS（如 kswapd
+守护进程）不会在踢出一个脏页时马上写回磁盘。它会“收集”多个相邻的脏页，然后将它们一次性（作为一整个I/O操作）写入磁盘，这比多次小I/O要快得多。</p>
+<h4 id="极端情况抖动-thrashing">极端情况：抖动 (Thrashing)</h4>
+<p>当<strong>内存</strong>被<strong>严重超额使用</strong>（Over-subscribed）时，即所有正在运行的进程的“活跃工作集”（它们真正需要的页）之和远远大于物理内存时，系统会陷入“抖动（Thrashing）”状态。</p>
+<p>表现： - 进程A运行，访问页A，踢出页B。 -
+OS切换到进程B，进程B访问页B，踢出页A。 -
+OS切换到进程A，进程A访问页A，踢出页C…</p>
+<p>使得CPU利用率急剧下降，磁盘I/O达到100%。系统所有的时间都花在了“换页”上，没有任何“有效工作”在推进。</p>
+<p>解决方案： - 准入控制 (Admission
+Control)：OS检测到抖动时，“暂停”一个或多个进程，<strong>释放它们的内存</strong>，直到剩下的进程可以“舒适地”运行。
+- 内存不足杀手 (OOM
+Killer)：更激进的方案（如Linux）。当系统检测到内存严重不足时，它会启动一个“<strong>杀手”进程</strong>，选择一个（通常是内存占用最大的）进程并将其杀死，以强行释放内存。</p>
+<h2 id="内存操作-api">内存操作 API</h2>
+<h3 id="malloc-和-free-的底层实现原理">malloc 和 free
+的底层实现原理</h3>
+<p>malloc 和
+free是C语言中用于动态内存分配和释放的<strong>函数</strong>。需要注意的是,
+它们<strong>不是系统调用</strong>, 而是C标准库提供的接口,
+底层实现通常会调用系统调用如 <strong>brk/sbrk</strong> 或
+<strong>mmap</strong> 来管理内存。</p>
+<p>这个实现是为了提高内存分配的效率和灵活性,
+避免每次分配内存都直接调用系统调用带来的开销。这个设计的核心目的只有一个：<strong>最小化昂贵的“系统调用”</strong>
+(System Calls)。</p>
+<p>系统调用 (System Call)： - 代价高昂：当程序执行一个系统调用（如
+brk），它会触发一个“陷阱”(<strong>trap</strong>)。CPU 必须从用户态 (User
+Mode) 切换到内核态 (Kernel Mode)。 -
+这个切换需要保存当前程序的所有<strong>寄存器状态</strong>，<strong>加载内核的状态</strong>，<strong>执行内核代码</strong>（内核需要检查权限、更新页表等），然后再<strong>切换回用户态</strong>。这个上下文切换的开销远大于一次普通的函数调用。</p>
+<p>库调用 (Library Call)： - 代价低廉：当程序调用
+malloc()，它只是在用户态调用了 C
+运行时库（<strong>libc</strong>）中的一个<strong>普通函数</strong>。这就像调用你自己写的任何其他函数一样，只涉及一个<strong>函数栈帧的压入和弹出</strong>，速度极快。
+- 如果每次 malloc(16)
+这样的小请求都去执行一次系统调用，那么程序的性能将会惨不忍睹。</p>
+<p>为了解决这个问题，malloc
+库和操作系统内核实现了一种<strong>两级管理模型</strong>: - 内核
+(OS)：作为批发商。它只按“大块”（<strong>Page</strong>，通常是 4KB
+或更大）来管理物理内存和虚拟内存。 - malloc
+库：作为零售商。它在用户态运行，负责<strong>精细化的内存管理</strong>。</p>
+<p>在 Linux 进程的经典内存布局中，内存被分为几个段： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">+-------------------+  (高地址)</span><br><span class="line">|       栈 (Stack)  |  &lt;- 向下增长 (Grows Down)</span><br><span class="line">|        ...        |</span><br><span class="line">| (未使用的虚拟内存) |</span><br><span class="line">|        ...        |</span><br><span class="line">+===================+  &lt;- 当前的 "分断" (Program Break)  &lt;-- 堆的*顶部*</span><br><span class="line">|                   |</span><br><span class="line">|   堆 (Heap)       |  &lt;- 向上增长 (Grows Up)</span><br><span class="line">+-------------------+  &lt;- 堆的*起始点* (紧挨着BSS的末尾)</span><br><span class="line">| BSS 段 (未初始化) |</span><br><span class="line">+-------------------+</span><br><span class="line">| Data 段 (已初始化) |</span><br><span class="line">+-------------------+</span><br><span class="line">| Text 段 (代码)    |</span><br><span class="line">+-------------------+  (低地址)</span><br></pre></td></tr></table></figure></div> - 堆
+(Heap)：就是动态分配内存（malloc 或 new）的地方。 - 分断
+(Break)：就是堆的顶部边界。</p>
+<h4 id="brk-和-sbrk-系统调用">brk() 和 sbrk() 系统调用</h4>
+<p>brk() 和 sbrk() 是 malloc
+库用来向内核“进货”的系统调用。它们管理的是一个单一、连续的内存区域，即堆
+(Heap)。</p>
+<ul>
+<li>void* sbrk(intptr_t increment);
+<ul>
+<li>功能：告诉内核：“请把我的<strong>分断点向上移动 increment
+字节</strong>”</li>
+<li>操作：内核收到请求后，会更新进程的虚拟地址空间，将<strong>堆的上限扩大</strong>。这并<strong>不会立即分配物理内存</strong>，而只是<strong>标记这块虚拟地址“合法”</strong>。当你第一次访问这块新地址时，才会触发“<strong>缺页中断</strong>”(Page
+Fault)，由<strong>内核分配一个实际的物理内存页</strong>。</li>
+<li>这是一个昂贵的内核态操作。</li>
+</ul></li>
+<li>int brk(void* addr);
+<ul>
+<li>功能：直接告诉内核：“请把我的‘分断’点设置到 addr 这个新地址” sbrk
+只<strong>是 brk 的一个简单封装</strong>。</li>
+<li>操作：内核会将堆的上限设置为 addr
+指定的位置，同样不会立即分配物理内存。</li>
+<li>这是一个昂贵的内核态操作。</li>
+</ul></li>
+</ul>
+<h4 id="malloc-和-free-库调用">malloc() 和 free() 库调用</h4>
+<p>malloc
+库在内部维护着一个“<strong>空闲内存池</strong>”（freelist）。当调用
+malloc(size_t size) 时：</p>
+<ul>
+<li>第一步（零售）：malloc
+库首先检查自己<strong>内部的空闲内存池</strong>，看有没有大小合适的“空闲块”可以满足你的
+size 请求。
+<ul>
+<li>如果找到：它会把这个空闲块<strong>标记为“已使用”</strong>，可能会从块上分割出你请求的大小，然后把<strong>指向这块内存的指针返回</strong>给你。这个过程完全在用户态发生，没有系统调用，速度极快。</li>
+<li>如果没找到（或内存池为空）：malloc 发现自己的“库存”不够了。</li>
+</ul></li>
+<li>第二步（批发）：malloc
+库会决定向内核“进一大批货”。它不会只申请你想要的
+size（比如32字节），而是会<strong>申请一个更大的块</strong>（例如
+128KB）。
+<ul>
+<li>malloc 库调用
+<strong>sbrk</strong>(131072)。这触发了一次<strong>系统调用</strong>，进入内核态，将堆的“分断”点向上移动了
+128KB。</li>
+<li>返回用户态后：malloc 库现在拥有了 128KB
+的新“原始”内存。它会从这块内存中取出你请求的 32
+字节，返回给你，然后把剩下的（128KB - 32字节）
+放入它自己的空闲内存池，以备未来的 malloc 请求使用。</li>
+</ul></li>
+</ul>
+<p>当调用 free(void* ptr) 时：</p>
+<ul>
+<li>free 库函数接收到指针 ptr。</li>
+<li>它根据 ptr 找到<strong>相关的元数据</strong>（通常存储在 <strong>ptr
+指向的内存块之前</strong>），得知这个<strong>块的大小</strong>。</li>
+<li>它将这个内存块标记为“空闲”，并将其<strong>归还到 malloc
+库的空闲内存池</strong>中。</li>
+</ul>
+<p>这个过程完全在用户态发生，没有系统调用。这块内存并没有还给操作系统，它仍然属于你的进程，只是可以被你的下一个
+malloc 请求“循环利用”。 &gt; 特殊情况：只有当 free
+发现一个非常大的空闲块，并且这个块正好位于堆的顶部（“分断”点旁边）时，malloc
+库才可能会决定调用 brk()
+并传入一个更低的地址，真正地将这块内存“退还”给操作系统。</p>
+<h4 id="mmapmunmap-系统调用">mmap/munmap 系统调用</h4>
+<p>现代的 malloc 实现（如 glibc 的
+ptmalloc）更加复杂，它们混合使用了两种系统调用：</p>
+<ul>
+<li><strong>brk/sbrk</strong>：用于相对较小的、连续的内存分配。</li>
+<li><strong>mmap() /
+munmap()</strong>：当程序请求一个<strong>非常大的内存块</strong>时（例如大于
+128KB），malloc
+库可能会决定<strong>不使用堆（brk）</strong>，而是转而使用
+<strong>mmap()</strong> 系统调用。
+<ul>
+<li>mmap()
+会在进程的<strong>虚拟地址空间</strong>中（<strong>独立于堆</strong>）映射一块新的、匿名的内存区域。</li>
+<li>当这块<strong>大内存被 free 时</strong>，库会直接调用
+<strong>munmap()</strong>，这会立即、完整地将这块内存归还给操作系统，避免了“堆碎片”问题。</li>
+</ul></li>
+</ul>
+<h3 id="new-和-delete-的底层实现原理">new 和 delete 的底层实现原理</h3>
+<p>new 和 delete 是 C++ 的操作符
+(Operators)。它们的核心职责是管理<strong>对象的生命周期</strong> (Object
+Lifetime)，而<strong>不仅仅是内存</strong>。</p>
+<h4 id="new-操作符两步走">new 操作符：两步走</h4>
+<p>当写下 MyClass* p = new MyClass(10); 这样一行代码时，new
+操作符在底层执行了两个截然不同的操作：</p>
+<p>第 1 步：<strong>内存分配</strong> (调用 <strong>operator
+new</strong> 函数) - new 操作符首先需要一块原始内存。它通过调用一个名为
+operator new 的全局函数来获取这块内存。 - operator new
+是一个<strong>可以被重载</strong>（overload）的函数。 -
+在默认情况下，C++ 标准库中的全局 ::operator new(size_t size)
+函数，其标准实现通常就是<strong>简单地调用 malloc(size)</strong>。 -
+也可以为特定类重载 operator new，从而实现自定义的内存分配策略,
+例如内存池 (Memory Pool)。</p>
+<ul>
+<li>步骤说明：
+<ol type="1">
+<li>new MyClass(10); 启动。</li>
+<li>编译器计算 MyClass 需要多少字节（例如 sizeof(MyClass) 是 32
+字节）。</li>
+<li>new 操作符调用 operator new(32) 函数。</li>
+<li>默认的 operator new(32) 函数内部调用 malloc(32)。</li>
+<li>malloc 使用我们之前讨论的 brk 或 mmap 机制，返回一个 void*
+指针（例如 0x5000）</li>
+<li>operator new 函数将这个 void* 指针返回给 new 操作符。</li>
+</ol></li>
+</ul>
+<p>第 2 步：<strong>对象构造</strong> (调用<strong>构造函数</strong>),
+这是 new 和 malloc 的<strong>根本区别</strong>。</p>
+<ul>
+<li>new 操作符拿到了 operator new 返回的原始内存地址（0x5000）。</li>
+<li>它会在这块<strong>原始内存</strong>上调用 MyClass
+的<strong>构造函数</strong>，并将<strong>参数</strong>（10）传递过去。这个过程在技术上称为“定位
+new” (Placement New)。</li>
+<li>步骤说明：
+<ol type="1">
+<li>new 操作符在 0x5000 这个地址上执行 MyClass::MyClass(10)。</li>
+<li>构造函数运行，初始化对象的所有成员变量，设置虚函数表（vtable）指针等。</li>
+<li>此时，0x5000 处不再是一块“原始内存”，而是一个“活生生”的、类型为
+MyClass 的对象。</li>
+<li>new 操作符最后返回这个地址，但类型是 MyClass*（即 p =
+0x5000;）。</li>
+</ol></li>
+</ul>
+<h4 id="delete-操作符也是两步走">delete 操作符：也是两步走</h4>
+<p>当调用 delete p; 时，delete 操作符会逆向执行两个操作：</p>
+<p>第 1 步：<strong>对象析构</strong> (调用<strong>析构函数</strong>),
+这是 delete 和 free 的根本区别。</p>
+<ul>
+<li>delete 操作符首先会检查 p 是否为
+nullptr（如果是，则什么也不做）。</li>
+<li>如果 p 不是 nullptr，它会调用 p
+指向对象的<strong>析构函数</strong>（p-&gt;~MyClass()）。</li>
+<li>步骤说明：
+<ol type="1">
+<li>delete p; 启动（假设 p 是 0x5000）。</li>
+<li>delete 操作符调用 MyClass::~MyClass()（p 的析构函数）。</li>
+<li>析构函数运行，释放该对象在构造时可能申请的任何内部资源（例如，如果
+MyClass 内部有一个指针，它可能会在析构函数中 delete 那个指针）</li>
+<li>析构函数完成后，0x5000
+处的对象“死亡”了，它又变回了一块“原始内存”。</li>
+</ol></li>
+</ul>
+<p>第 2 步：<strong>内存释放</strong> (调用 <strong>operator
+delete</strong> 函数) - 在对象“死亡”后，delete
+操作符必须归还这块原始内存。 - 它通过调用一个名为 operator delete
+的全局函数来实现。 - 和 operator new 对应，默认的全局 ::operator
+delete(void* p) 函数，其标准实现通常就是简单地调用
+<strong>free(p)</strong>。 - 步骤说明： 1. delete 操作符调用 operator
+delete(0x5000)。 2. 默认的 operator delete(0x5000) 函数内部调用
+free(0x5000)。 3. free 函数将这块内存归还给 <strong>malloc
+的空闲池</strong>，或者通过 <strong>munmap
+归还给操作系统</strong>（如果是大块内存）。</p>
+<h4 id="数组的特殊情况new-和-delete">数组的特殊情况：new[] 和
+delete[]</h4>
+<p>这就是为什么 new[] 必须配对 delete[]，new 必须配对 delete。</p>
+<ul>
+<li><code>MyClass* arr = new MyClass[10];</code> (new[])
+<ul>
+<li><strong>分配</strong>：调用 <strong>operator
+new[]</strong>。这个函数不仅会申请 10 * sizeof(MyClass)
+的内存。它几乎总是会<strong>多申请几个字节</strong>（例如 4 或 8
+字节），用来<strong>存储数组的长度
+10</strong>。这个<strong>元数据</strong>（“cookie”）通常放在<strong>返回的指针地址之前</strong>。
+<ul>
+<li>例如, 如果 sizeof(MyClass) 是 32 字节, 那么 operator new[] 会调用
+malloc(10 * 32 + 8)（假设 8 字节用于存储长度）, 假设获取到的内存地址是
+0x6000 到 0x60C0, 那么它会在 0x6000 处存储整数
+10（数组长度），然后返回给用户的指针是 0x6008。</li>
+</ul></li>
+<li><strong>构造</strong>：new[]
+操作符会进入一个循环，在分配好的内存上（跳过”cookie”）<strong>连续调用
+10 次 MyClass 的默认构造函数</strong> (MyClass::MyClass())。</li>
+</ul></li>
+</ul>
+<p><code>delete[] arr;</code> (delete[]) -
+<strong>析构</strong>：delete[]
+操作符会首<strong>先去读取那个“cookie”</strong>（例如，在 arr
+指针之前的几个字节），发现数组长度是 10。然后，它会进入一个循环，从
+arr[9] 到 arr[0] 逆序调用 10 次析构函数（~MyClass()）。</p>
+<ul>
+<li><strong>释放</strong>：在所有对象都被析构后，它会调用 operator
+delete[] 来释放整个内存块（包括存储”cookie”的那几个字节）。</li>
+</ul>
+<p>为什么混用是灾难？假设 <code>delete arr;</code> (用在 new[]
+分配的内存上):</p>
+<p>delete
+<strong>不会去查找”cookie”</strong>。它只会<strong>调用一次析构函数</strong>（即
+arr[0].~MyClass()）。<strong>其他 9
+个对象永远不会被析构</strong>，导致严重的资源泄漏。</p>
+<p>它调用 operator delete(arr)，而不是 operator
+delete[]。这可能会导致堆损坏，因为 operator delete
+没有正确处理”cookie”所占用的空间。</p>
+<h2 id="分段和分页">分段和分页</h2>
+<p>操作系统通过<strong>分段</strong> (Segmentation) 和
+<strong>分页</strong> (Paging)
+两种机制来管理内存。它们都用于解决同一个核心问题：如何将程序看到的“<strong>虚拟地址</strong>”安全、高效地转换为“<strong>物理地址</strong>”（即
+RAM 上的真实地址）。</p>
+<h4 id="分段-segmentation">分段 (Segmentation)</h4>
+<p>分段是一种<strong>面向程序员</strong>和<strong>逻辑结构</strong>的管理方式。它认为<strong>一个程序</strong>天然就由<strong>几个逻辑部分</strong>组成，比如<strong>代码段</strong>
+(Code Segment), <strong>数据段</strong> (Data
+Segment),和<strong>堆栈段</strong> (Stack Segment)
+等。每个段都有自己的<strong>基地址</strong> (Base) 和
+<strong>界限</strong>
+(Limit)，操作系统通过这些信息来进行地址转换和保护。 &gt;
+比喻：把内存想象成一本书，书被分成了若干“章”（段）。</p>
+<p>分段的工作方式:</p>
+<ul>
+<li>块大小：<strong>可变的</strong> (Variable-sized),
+每个段的大小根据程序的需要动态变化</li>
+<li>地址形式：一个虚拟地址由两部分组成：<strong>（段号，段内偏移量）</strong>,
+假设数据段是段号 2，基地址是 0x2000，界限是 0x1000（4KB），那么虚拟地址
+(2, 0x0500) 实际对应的物理地址是 0x2000 + 0x0500 = 0x2500。</li>
+<li>管理机制 (段表 Segment Table)：
+<ul>
+<li>操作系统为每个进程维护一个<strong>段表</strong>，记录每个段的<strong>基地址</strong>和<strong>界限</strong>。</li>
+<li>当程序访问一个虚拟地址时，硬件会查找段表，找到对应段的基地址和界限，然后进行地址转换和边界检查。</li>
+<li>例如, 一个段表可能是这样的: <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">段号 | 基地址  | 界限</span><br><span class="line">------------------------</span><br><span class="line"> 0   | 0x0000  | 0x1FFF  (代码段)</span><br><span class="line"> 1   | 0x2000  | 0x2FFF  (数据段)</span><br><span class="line"> 2   | 0x3000  | 0x3FFF  (堆栈段)</span><br></pre></td></tr></table></figure></div></li>
+</ul></li>
+<li>寻址过程：
+<ol type="1">
+<li>程序生成一个虚拟地址 (段号, 偏移量)。</li>
+<li>硬件查找段表，获取该段的基地址和界限。</li>
+<li>检查偏移量是否在界限内。</li>
+<li>如果合法，计算物理地址 = 基地址 + 偏移量。</li>
+<li>如果越界，触发异常 (段错误, Segmentation Fault),
+表示访问了非法内存。</li>
+</ol></li>
+</ul>
+<p>优点： - 逻辑清晰：与程序结构一致，易于理解。 -
+保护简单：可以轻松地给整个“代码段”设置“只读”权限，给“数据段”设置“读写”权限。</p>
+<p>致命缺点：外部碎片 (External Fragmentation)</p>
+<p>由于段的大小是可变的，随着程序的运行，内存中会出现许多<strong>不连续的小空闲块</strong>，这些小块可能无法满足新的内存分配请求，导致内存利用率低下。</p>
+<h4 id="分页-paging">分页 (Paging)</h4>
+<p>分页是一种<strong>面向硬件</strong>和<strong>固定大小块</strong>的管理方式。它将内存划分为<strong>固定大小的块</strong>，称为<strong>页</strong>
+(Page)，通常是 4KB 或
+8KB。程序的虚拟地址空间也被划分为同样大小的页。分页通过<strong>页表</strong>
+(Page Table) 来实现虚拟地址到物理地址的映射。 &gt;
+比喻：把内存想象成一本书，书被分成了若干“页”。</p>
+<p>分页的工作方式: - 块大小：<strong>固定的</strong> (Fixed-sized),
+每页的大小是预定义的（例如 4KB）。 -
+地址形式：一个虚拟地址被划分为两部分：<strong>（页号，页内偏移量）</strong>,
+假设页大小是 4KB (0x1000)，那么虚拟地址 0x2500 可以分解为页号 2 (0x2000
+/ 0x1000) 和页内偏移量 0x0500 (0x2500 % 0x1000)。 - 管理机制 (页表 Page
+Table)： -
+操作系统为每个进程维护一个<strong>页表</strong>，记录每个虚拟页号对应的物理页框号。
+-
+当程序访问一个虚拟地址时，硬件会查找页表，找到对应的物理页框，然后进行地址转换。
+- 例如, 一个页表可能是这样的: <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">虚拟页号 | 物理页框号</span><br><span class="line">------------------------</span><br><span class="line">   0     |    5</span><br><span class="line">   1     |    3</span><br><span class="line">   2     |    8</span><br></pre></td></tr></table></figure></div> - 寻址过程： 1.
+程序生成一个虚拟地址 (页号, 偏移量)。 2.
+硬件查找页表，获取该虚拟页号对应的物理页框号。 3. 计算物理地址 =
+(物理页框号 * 页大小) + 偏移量。 4.
+如果<strong>虚拟页号不存在于页表中</strong>，触发异常 (缺页中断, Page
+Fault), 由操作系统处理。 优点： -
+无外部碎片：由于页的大小是固定的，内存中不会出现无法利用的小空闲块。 -
+灵活性高：可以轻松地将虚拟页映射到任意物理页框，实现内存的高效利用。</p>
+<p>缺点： -
+内存开销：页表需要占用额外的内存空间，尤其是对于大地址空间的程序。 -
+地址转换开销：每次内存访问都需要查找页表，可能会影响性能。为了解决这个问题，现代
+CPU 引入了<strong>快表</strong> (TLB, Translation Lookaside Buffer)
+来缓存最近使用的页表项，加速地址转换过程。</p>
+<h4 id="缺页中断-page-fault和段错误-segmentation-fault">缺页中断 (Page
+Fault)和段错误 (Segmentation Fault)</h4>
+<p>缺页中断和段错误是两种不同的内存访问异常,
+可以将它们理解为“事件”和“判决”的关系：</p>
+<ul>
+<li>当进程试图访问一个内存地址时, 硬件 (MMU)负责检查“页表”(Page Table)
+来翻译这个地址。</li>
+<li>假如MMU
+在页表中发现这个地址有问题（例如，权限不对，或者根本不在物理内存中）。硬件立即停下，并触发一个缺页错误
+(Page Fault) 异常。</li>
+<li>内核 (OS)接管这个异常，开始处理:
+<ul>
+<li>情况A (合法的，“好”的 Page
+Fault)：内核发现这个页只是被“<strong>换出</strong>”到磁盘了（Swap）。因此内核<strong>从磁盘读回数据到
+RAM</strong>，<strong>更新页表</strong>，然后重新启动刚才失败的指令。程序继续运行，毫不知情。
+<ul>
+<li>换出磁盘的页通常是因为内存不足，操作系统需要腾出空间给其他进程使用。</li>
+</ul></li>
+<li>情况B (非法的，“坏”的 Page
+Fault)：内核发现这个<strong>地址是完全非法的</strong>（例如 NULL
+指针，或一个野指针）。它向该进程发送一个 <strong>SIGSEGV</strong> 信号。
+<ul>
+<li>当进程收到 SIGSEGV
+信号，默认动作是终止，并向控制台打印消息：“Segmentation fault”。</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>所以，“段错误”是“非法缺页错误”导致的一种后果,
+指的是程序试图访问一个它<strong>不被允许访问的内存区域</strong>。不过尽管名字里有“段”(Segment)二字,
+但现代操作系统中的段错误实际上是由<strong>分页机制</strong>引起的,
+只不过由于历史原因, 这个术语沿用下来。</p>
+<h4 id="现代系统如-linux-windows如何运作">现代系统（如 Linux,
+Windows）如何运作</h4>
+<p>现代 64 位系统（x86-64,
+ARM）压倒性地以“<strong>分页</strong>”为核心。不过硬件（x86-64
+架构）为了向后兼容，仍然保留了“分段”机制。</p>
+<p>具体做法：Linux 和 Windows 等现代 OS 采取了一种“扁平化
+(Flat)”策略来“绕过”分段。</p>
+<ul>
+<li>操作系统在启动时，会设置一个（或几个）“段”。</li>
+<li>它将这个段的基地址 (Base) 设为 0, 界限 (Limit)
+设为最大可能值（例如，整个 64 位地址空间）。</li>
+<li>结果是 物理地址 = Base + 偏移量 变成了 物理地址 = 0 + 偏移量; 偏移量
+&lt; Limit 这个检查永远为真。</li>
+<li>分段机制在功能上被“禁用”了。所有的地址翻译、内存保护、安全检查工作，全部交由更高效、更灵活的“分页”机制来完成。</li>
+</ul>
+<p>不过，分段机制仍然存在于硬件中，并且在某些特殊情况下（如内核态代码）可能会被使用，但对于大多数用户态程序来说，分页才是主角。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/language/">#language</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/01/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A0%86/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">堆</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/1.%20%E7%BA%BF%E7%A8%8B%E7%AE%A1%E7%90%86/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">1. 线程管理</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">虚拟内存</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="nav-text">虚拟地址空间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E7%9A%84%E7%94%B1%E6%9D%A5"><span class="nav-text">虚拟地址空间的由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E7%89%88%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2"><span class="nav-text">初版地址转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E7%9A%84%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4"><span class="nav-text">地址转换的详细步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%81%8C%E8%B4%A3%E5%88%92%E5%88%86"><span class="nav-text">硬件与操作系统的职责划分</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%AE%B5"><span class="nav-text">分段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E6%9C%BA%E5%88%B6%E5%88%86%E6%AE%B5%E4%B8%8B%E7%9A%84%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2"><span class="nav-text">硬件机制：分段下的地址转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E6%9C%BA%E5%88%B6%E7%9A%84%E6%89%A9%E5%B1%95%E4%B8%8E%E7%89%B9%E6%80%A7"><span class="nav-text">分段机制的扩展与特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fos%E7%9A%84%E8%81%8C%E8%B4%A3%E4%B8%8E%E6%96%B0%E9%97%AE%E9%A2%98"><span class="nav-text">操作系统（OS）的职责与新问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B2%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-text">空闲空间管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E4%B8%89%E5%A4%A7%E6%9C%BA%E5%88%B6"><span class="nav-text">底层三大机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%AD%96%E7%95%A5"><span class="nav-text">基本策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E6%96%B9%E6%B3%95"><span class="nav-text">高级方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%A1%B5"><span class="nav-text">分页</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E6%9C%BA%E5%88%B6"><span class="nav-text">地址转换机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E8%A1%A8%E9%A1%B9pte%E7%9A%84%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84"><span class="nav-text">页表项（PTE）的内部结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E5%B8%A6%E6%9D%A5%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%96%B0%E9%97%AE%E9%A2%98"><span class="nav-text">分页带来的两个新问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E5%BF%AB%E9%80%9F%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2tlb"><span class="nav-text">分页：快速地址转换（TLB）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%80%9D%E8%B7%AF"><span class="nav-text">解决方案思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tlb%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%AE%97%E6%B3%95"><span class="nav-text">TLB的基本算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%81%E6%9D%A5%E5%A4%84%E7%90%86tlb%E6%9C%AA%E5%91%BD%E4%B8%AD"><span class="nav-text">谁来处理TLB未命中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tlb%E7%9A%84%E5%86%85%E5%AE%B9%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-text">TLB的内容与上下文切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tlb%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5"><span class="nav-text">TLB替换策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E7%BC%A9%E5%B0%8F%E9%A1%B5%E8%A1%A8%E6%89%80%E5%8D%A0%E7%A9%BA%E9%97%B4%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8"><span class="nav-text">分页：缩小页表所占空间（多级页表）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%9B%B4%E5%A4%A7%E7%9A%84%E9%A1%B5"><span class="nav-text">简单的解决方案：更大的页</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E6%96%B9%E6%B3%95%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5"><span class="nav-text">混合方法：分页和分段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8"><span class="nav-text">核心解决方案：多级页表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%96%B9%E6%A1%88"><span class="nav-text">其他方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E8%B6%8A%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98-swap-%E6%9C%BA%E5%88%B6"><span class="nav-text">超越物理内存: Swap 机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%BA%A4%E6%8D%A2swapping"><span class="nav-text">核心机制：交换（Swapping）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%B5%81%E7%A8%8B"><span class="nav-text">完整的内存访问流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%90%8E%E5%8F%B0%E4%BA%A4%E6%8D%A2"><span class="nav-text">优化：后台交换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E8%B6%8A%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5"><span class="nav-text">超越物理内存：替换策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E4%BD%86%E6%9C%89%E7%BC%BA%E9%99%B7%E7%9A%84%E7%AD%96%E7%95%A5"><span class="nav-text">简单（但有缺陷）的策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AD%96%E7%95%A5%E5%88%A9%E7%94%A8%E5%8E%86%E5%8F%B2-lru"><span class="nav-text">核心策略：利用历史 (LRU)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%81%E7%AB%AF%E6%83%85%E5%86%B5%E6%8A%96%E5%8A%A8-thrashing"><span class="nav-text">极端情况：抖动 (Thrashing)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%93%8D%E4%BD%9C-api"><span class="nav-text">内存操作 API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#malloc-%E5%92%8C-free-%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-text">malloc 和 free
+的底层实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#brk-%E5%92%8C-sbrk-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-text">brk() 和 sbrk() 系统调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#malloc-%E5%92%8C-free-%E5%BA%93%E8%B0%83%E7%94%A8"><span class="nav-text">malloc() 和 free() 库调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mmapmunmap-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-text">mmap&#x2F;munmap 系统调用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#new-%E5%92%8C-delete-%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-text">new 和 delete 的底层实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#new-%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%B8%A4%E6%AD%A5%E8%B5%B0"><span class="nav-text">new 操作符：两步走</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#delete-%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%B9%9F%E6%98%AF%E4%B8%A4%E6%AD%A5%E8%B5%B0"><span class="nav-text">delete 操作符：也是两步走</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5new-%E5%92%8C-delete"><span class="nav-text">数组的特殊情况：new[] 和
+delete[]</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E5%92%8C%E5%88%86%E9%A1%B5"><span class="nav-text">分段和分页</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%AE%B5-segmentation"><span class="nav-text">分段 (Segmentation)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E9%A1%B5-paging"><span class="nav-text">分页 (Paging)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%BA%E9%A1%B5%E4%B8%AD%E6%96%AD-page-fault%E5%92%8C%E6%AE%B5%E9%94%99%E8%AF%AF-segmentation-fault"><span class="nav-text">缺页中断 (Page
+Fault)和段错误 (Segmentation Fault)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3%E7%B3%BB%E7%BB%9F%E5%A6%82-linux-windows%E5%A6%82%E4%BD%95%E8%BF%90%E4%BD%9C"><span class="nav-text">现代系统（如 Linux,
+Windows）如何运作</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

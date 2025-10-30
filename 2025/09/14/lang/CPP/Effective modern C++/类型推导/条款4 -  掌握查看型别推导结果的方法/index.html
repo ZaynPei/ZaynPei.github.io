@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,112 +833,205 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="typeid介绍"><a href="#typeid介绍" class="headerlink" title="typeid介绍"></a>typeid介绍</h3><p>typeid 是一个 C++ 内置的运算符（就像 sizeof 或 decltype 一样）, 是 C++ <strong>运行时类型识别</strong>（Runtime Type Information, RTTI）机制的核心组成部分。它允许你的程序在代码运行时查询一个对象的动态类型（Dynamic Type）, 当然也可以进行静态类型的查询。</p>
+			<h3 id="typeid介绍">typeid介绍</h3>
+<p>typeid 是一个 C++ 内置的运算符（就像 sizeof 或 decltype 一样）, 是
+C++ <strong>运行时类型识别</strong>（Runtime Type Information,
+RTTI）机制的核心组成部分。它允许你的程序在代码运行时查询一个对象的动态类型（Dynamic
+Type）, 当然也可以进行静态类型的查询。</p>
 <blockquote>
-<p>RTTI 并非没有代价（它会给对象增加额外的开销，主要是虚函数表 vtable 中的类型信息指针），因此大多数 C++ 编译器允许你通过选项（如 GCC/Clang 的 -fno-rtti）来禁用它。如果 RTTI 被禁用，typeid 在某些情况下（尤其是多态类型）将无法按预期工作。</p>
+<p>RTTI 并非没有代价（它会给对象增加额外的开销，主要是虚函数表 vtable
+中的类型信息指针），因此大多数 C++ 编译器允许你通过选项（如 GCC/Clang 的
+-fno-rtti）来禁用它。如果 RTTI 被禁用，typeid
+在某些情况下（尤其是多态类型）将无法按预期工作。</p>
 </blockquote>
-<p>具体来说, 它可以用于获取一个类型或一个表达式的类型信息。它有两种使用形式：</p>
+<p>具体来说,
+它可以用于获取一个类型或一个表达式的类型信息。它有两种使用形式：</p>
 <ul>
-<li>typeid(Type)：直接传递一个类型名称, 如<code>std::cout &lt;&lt; (typeid(int).name()) &lt;&lt; std::endl;   // 输出 "int" </code>。</li>
-<li>typeid(expression)：传递一个表达式（例如一个变量名）,下面主要考虑这一点 。</li>
+<li>typeid(Type)：直接传递一个类型名称,
+如<code>std::cout &lt;&lt; (typeid(int).name()) &lt;&lt; std::endl;   // 输出 "int"</code>。</li>
+<li>typeid(expression)：传递一个表达式（例如一个变量名）,下面主要考虑这一点
+。</li>
 </ul>
-<p>不过, typeid 的真正威力体现在它处理**多态（Polymorphic）**类型时的能力。一个类如果拥有至少一个 virtual 函数，它就是多态类型。</p>
-<ol>
+<p>不过, typeid
+的真正威力体现在它处理<strong>多态（Polymorphic）</strong>类型时的能力。一个类如果拥有至少一个
+virtual 函数，它就是多态类型。</p>
+<ol type="1">
 <li>情况一：非多态类型（或静态类型查询）</li>
 </ol>
-<p>当你对一个非多态类型（如 int、struct，或没有虚函数的类），或者对一个指针（ptr）本身（而不是它指向的内容 *ptr），或者对一个类型名称使用 typeid 时，它返回的是静态类型（Static Type）。</p>
-<p>静态类型是对象在编译时被声明的类型。这个操作是在编译期完成的。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line">std::string s = <span class="string">"hello"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这些都是静态类型查询</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(<span class="type">int</span>).<span class="built_in">name</span>()) &lt;&lt; std::endl;   <span class="comment">// 输出 "int" (或其修饰名)</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(x).<span class="built_in">name</span>()) &lt;&lt; std::endl;     <span class="comment">// x 是 int，输出 "int"</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(s).<span class="built_in">name</span>()) &lt;&lt; std::endl;     <span class="comment">// 输出 "std::string" (或其修饰名)</span></span><br></pre></td></tr></table></figure></div>
-
-<ol start="2">
+<p>当你对一个非多态类型（如
+int、struct，或没有虚函数的类），或者对一个指针（ptr）本身（而不是它指向的内容
+*ptr），或者对一个类型名称使用 typeid 时，它返回的是静态类型（Static
+Type）。</p>
+<p>静态类型是对象在编译时被声明的类型。这个操作是在编译期完成的。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line">std::string s = <span class="string">"hello"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这些都是静态类型查询</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(<span class="type">int</span>).<span class="built_in">name</span>()) &lt;&lt; std::endl;   <span class="comment">// 输出 "int" (或其修饰名)</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(x).<span class="built_in">name</span>()) &lt;&lt; std::endl;     <span class="comment">// x 是 int，输出 "int"</span></span><br><span class="line">std::cout &lt;&lt; (<span class="built_in">typeid</span>(s).<span class="built_in">name</span>()) &lt;&lt; std::endl;     <span class="comment">// 输出 "std::string" (或其修饰名)</span></span><br></pre></td></tr></table></figure></div></p>
+<ol start="2" type="1">
 <li>情况二：多态类型（动态类型查询）</li>
 </ol>
-<p>这是 typeid 最重要的用途。当你将 typeid 应用于一个多态类型的左值表达式（通常是对一个基类指针或引用的解引用）时，它会执行运行时查询，以确定该对象的动态类型（Dynamic Type）。</p>
-<p>动态类型是对象在内存中被创建时的“真正”类型，即其派生最深的类型 (most derived type)。</p>
+<p>这是 typeid 最重要的用途。当你将 typeid
+应用于一个多态类型的左值表达式（通常是对一个基类指针或引用的解引用）时，它会执行运行时查询，以确定该对象的动态类型（Dynamic
+Type）。</p>
+<p>动态类型是对象在内存中被创建时的“真正”类型，即其派生最深的类型 (most
+derived type)。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span> <span class="comment">// 必须包含此头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Base</span> {</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">foo</span><span class="params">()</span> </span>{} <span class="comment">// 关键：必须有虚函数才能成为多态类型</span></span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base {</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">override</span> </span>{}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">OtherDerived</span> : <span class="keyword">public</span> Base {</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">override</span> </span>{}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Base b_obj;</span><br><span class="line">    Derived d_obj;</span><br><span class="line">    Base* ptr_b = <span class="keyword">new</span> <span class="built_in">Derived</span>(); <span class="comment">// 基类指针，指向派生类对象</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 静态类型 vs 动态类型 ---</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. ptr_b 本身是一个指针变量，变量类型是 Base* (非多态)</span></span><br><span class="line">    <span class="comment">// 静态类型查询：</span></span><br><span class="line">    std::cout &lt;&lt; (<span class="built_in">typeid</span>(ptr_b).<span class="built_in">name</span>()) &lt;&lt; std::endl; </span><br><span class="line">    <span class="comment">// 输出: "Base *" (或其修饰名，如 "P4Base")</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. *ptr_b 是对指针的解引用，这是一个多态类型的左值</span></span><br><span class="line">    <span class="comment">// 动态类型查询：</span></span><br><span class="line">    std::cout &lt;&lt; (<span class="built_in">typeid</span>(*ptr_b).<span class="built_in">name</span>()) &lt;&lt; std::endl; </span><br><span class="line">    <span class="comment">// 输出: "Derived" (或其修饰名，如 "7Derived")</span></span><br><span class="line">    <span class="comment">// 尽管 ptr_b 是 Base*，RTTI 发现它实际指向一个 Derived 对象</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">delete</span> ptr_b;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>在这种情况下, 如果 typeid 运算符被应用于一个指向<strong>多态类型的空指针的解引用</strong>，它将抛出一个 std::bad_typeid 异常。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Base* null_b_ptr = <span class="literal">nullptr</span>;</span><br><span class="line"><span class="keyword">try</span> {</span><br><span class="line">    <span class="built_in">typeid</span>(*null_b_ptr); <span class="comment">// 试图解引用一个多态类型的空指针</span></span><br><span class="line">} <span class="built_in">catch</span> (<span class="type">const</span> std::bad_typeid&amp; e) {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Caught exception: "</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="std-type-info-类"><a href="#std-type-info-类" class="headerlink" title="std::type_info 类"></a>std::type_info 类</h3><p>std::type_info：是一个定义在 <typeinfo> 头文件中的类。前面的 typeid 运算符的返回值就是一个对 std::type_info 对象的常量引用 (const std::type_info&amp;), 这个对象中存储了关于特定类型的信息。</typeinfo></p>
-<p>C++ 标准保证对于程序中的每一种类型，都只有一个 std::type_info 对象实例与之对应。这使得我们可以安全地使用 == 和 != 来比较它们。</p>
+<p>在这种情况下, 如果 typeid
+运算符被应用于一个指向<strong>多态类型的空指针的解引用</strong>，它将抛出一个
+std::bad_typeid 异常。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Base* null_b_ptr = <span class="literal">nullptr</span>;</span><br><span class="line"><span class="keyword">try</span> {</span><br><span class="line">    <span class="built_in">typeid</span>(*null_b_ptr); <span class="comment">// 试图解引用一个多态类型的空指针</span></span><br><span class="line">} <span class="built_in">catch</span> (<span class="type">const</span> std::bad_typeid&amp; e) {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Caught exception: "</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="stdtype_info-类">std::type_info 类</h3>
+<p>std::type_info：是一个定义在 <typeinfo> 头文件中的类。前面的 typeid
+运算符的返回值就是一个对 std::type_info 对象的常量引用 (const
+std::type_info&amp;), 这个对象中存储了关于特定类型的信息。</typeinfo></p>
+<p>C++ 标准保证对于程序中的每一种类型，都只有一个 std::type_info
+对象实例与之对应。这使得我们可以安全地使用 == 和 != 来比较它们。</p>
 <p>std::type_info 类的主要成员函数包括：</p>
 <ul>
-<li>operator== 和 operator!=：用于比较两个类型是否相同, 例如<code>typeid(*ptr) == typeid(Derived)</code>。</li>
-<li>name()：返回一个 const char*，代表该类型的名称。<ul>
-<li>值得注意的是, C++ 标准没有规定这个名称的具体格式，它只要求这个名称是唯一的。在实际中，大多数编译器会返回一个“<strong>修饰过的名称</strong>”（mangled name）, 有时候并不易读（例如，7MyClass 而不是 MyClass）。</li>
-<li>这个函数主要用于调试和日志记录，不应该依赖它返回的字符串内容来进行程序逻辑判断（例如，不要写 if (strcmp(typeid(T).name(), “MyClass”) == 0)）。</li>
-</ul>
-</li>
-</ul>
-<h3 id="Boost"><a href="#Boost" class="headerlink" title="Boost"></a>Boost</h3><p>Boost 库是一个庞大、高质量、经过同行评审（peer-reviewed）且可移植的 C++ 库集合, 我们可以将其理解为 C++ 标准库的“扩展包”和“试验场”。许多在 Boost 库中经过多年开发、测试和广泛使用的组件，最终被 C++ 标准委员会采纳，并成为了 C++ 标准库的一部分, 例如: </p>
+<li>operator== 和 operator!=：用于比较两个类型是否相同,
+例如<code>typeid(*ptr) == typeid(Derived)</code>。</li>
+<li>name()：返回一个 const char*，代表该类型的名称。
 <ul>
-<li><p>智能指针 (Smart Pointers)： C++11 中的 std::shared_ptr 和 std::weak_ptr 直接源自 Boost 中的 boost::shared_ptr。</p>
-</li>
-<li><p>线程库 (Threading)： C++11 的 std::thread, std::mutex 等多线程工具，其设计和 API 大量借鉴了 Boost.Thread 库。</p>
-</li>
-<li><p>可选值：C++17 的 std::optional 源于 boost::optional。</p>
-</li>
-<li><p>类型特征 (Type Traits)：C++11 <type_traits> 头文件中的许多工具，最早在 Boost.TypeTraits 中实现。</type_traits></p>
-</li>
-<li><p>函数对象包装器：C++11 的 std::function 源于 boost::function。</p>
-</li>
+<li>值得注意的是, C++
+标准没有规定这个名称的具体格式，它只要求这个名称是唯一的。在实际中，大多数编译器会返回一个“<strong>修饰过的名称</strong>”（mangled
+name）, 有时候并不易读（例如，7MyClass 而不是 MyClass）。</li>
+<li>这个函数主要用于调试和日志记录，不应该依赖它返回的字符串内容来进行程序逻辑判断（例如，不要写
+if (strcmp(typeid(T).name(), “MyClass”) == 0)）。</li>
+</ul></li>
 </ul>
-<h4 id="Boost-TypeIndex"><a href="#Boost-TypeIndex" class="headerlink" title="Boost.TypeIndex"></a>Boost.TypeIndex</h4><p>Boost.TypeIndex 是 Boost 库中的一个具体组件（子库），它提供了一套可移植的、功能更强的**运行时类型识别（RTTI）**机制，旨在作为 C++ 标准 RTTI（即 typeid 操作符和 std::type_info 类）的替代品或增强版。</p>
-<h5 id="为什么需要-TypeIndex？（标准-RTTI-的问题）"><a href="#为什么需要-TypeIndex？（标准-RTTI-的问题）" class="headerlink" title="为什么需要 TypeIndex？（标准 RTTI 的问题）"></a>为什么需要 TypeIndex？（标准 RTTI 的问题）</h5><p>要理解 Boost.TypeIndex 的价值，首先必须了解 C++ 标准 typeid 的局限性：</p>
+<h3 id="boost">Boost</h3>
+<p>Boost 库是一个庞大、高质量、经过同行评审（peer-reviewed）且可移植的
+C++ 库集合, 我们可以将其理解为 C++ 标准库的“扩展包”和“试验场”。许多在
+Boost 库中经过多年开发、测试和广泛使用的组件，最终被 C++
+标准委员会采纳，并成为了 C++ 标准库的一部分, 例如: - 智能指针 (Smart
+Pointers)： C++11 中的 std::shared_ptr 和 std::weak_ptr 直接源自 Boost
+中的 boost::shared_ptr。</p>
 <ul>
-<li><p>不可移植的类型名称：C++ 标准只规定 typeid(T).name() 必须返回一个字符串，但没有规定这个字符串的具体内容。在实际中，不同编译器返回的是“重整”（mangled）后的内部名称。例如，对于 std::vector<int>, GCC/Clang 可能返回类似：St6vectorIiSaIiEE, 而MSVC 可能返回类似：.NSt3__16vectorIiNS_9allocatorIiEEEE. 这种字符串对开发者来说几乎不可读，且在不同平台和编译器之间完全不一致，导致调试和日志记录非常困难。</int></p>
-</li>
-<li><p>对 RTTI 开关的依赖：typeid 的功能依赖于编译器开启 RTTI 选项。在许多高性能、游戏开发或嵌入式项目中，开发者会选择关闭 RTTI（例如在 GCC/Clang 上使用 -fno-rtti 标志）来减少二进制文件大小和潜在的虚函数表开销。而一旦 RTTI 被关闭，typeid 对多态类型（带有虚函数的类）的操作将失效（通常会导致编译错误或运行时异常），这使得依赖 typeid 的代码不具备健壮性。</p>
-</li>
-<li><p>CVR 限定符的丢失：标准的 typeid 在计算类型时，会自动忽略顶层的 const（常量）、volatile（易失）和 reference（引用）限定符（统称 CVR 限定符）。例如，typeid(int)、typeid(const int) 和 typeid(const int&amp;) 这三者返回的 std::type_info 对象是完全相同的，它们都代表 int 类型。在某些需要精确类型区分的元编程或泛型编程场景中，这是致命的缺陷。</p>
-</li>
+<li><p>线程库 (Threading)： C++11 的 std::thread, std::mutex
+等多线程工具，其设计和 API 大量借鉴了 Boost.Thread 库。</p></li>
+<li><p>可选值：C++17 的 std::optional 源于 boost::optional。</p></li>
+<li><p>类型特征 (Type Traits)：C++11 <type_traits>
+头文件中的许多工具，最早在 Boost.TypeTraits 中实现。</type_traits></p></li>
+<li><p>函数对象包装器：C++11 的 std::function 源于
+boost::function。</p></li>
 </ul>
-<h5 id="Boost-TypeIndex-的解决方案"><a href="#Boost-TypeIndex-的解决方案" class="headerlink" title="Boost.TypeIndex 的解决方案"></a>Boost.TypeIndex 的解决方案</h5><p>Boost.TypeIndex 通过引入核心类 boost::typeindex::type_index 来解决上述所有问题：</p>
+<h4 id="boost.typeindex">Boost.TypeIndex</h4>
+<p>Boost.TypeIndex 是 Boost
+库中的一个具体组件（子库），它提供了一套可移植的、功能更强的<strong>运行时类型识别（RTTI）</strong>机制，旨在作为
+C++ 标准 RTTI（即 typeid 操作符和 std::type_info
+类）的替代品或增强版。</p>
+<h5 id="为什么需要-typeindex标准-rtti-的问题">为什么需要
+TypeIndex？（标准 RTTI 的问题）</h5>
+<p>要理解 Boost.TypeIndex 的价值，首先必须了解 C++ 标准 typeid
+的局限性：</p>
 <ul>
-<li><p>可移植的“美化”名称 (Pretty Name)：Boost.TypeIndex 提供了 .pretty_name() 成员函数, 无论在哪个编译器上，也不论 RTTI 是否开启，它都会尽最大努力返回一个人类可读的、统一的类型名称。例如，对于 std::vector<int>，它将一致地返回字符串 “std::vector&lt;int, std::allocator<int> &gt;” （或类似的清晰形式），而不是混乱的重整名称。</int></int></p>
-</li>
-<li><p>独立于 RTTI 开关：Boost.TypeIndex 具有智能的回退机制. 如果 RTTI 开启：它在内部优先使用 typeid，以获得最高效、最准确的多态类型识别; 如果 RTTI 关闭：它会自动切换到一套基于编译时模板元编程的机制来模拟类型信息（对于非多态类型）。这使得代码无论在哪种编译配置下都能工作。</p>
-</li>
-<li><p>保留 CVR 限定符：Boost.TypeIndex 提供了两种获取类型信息的方式，以满足不同需求：</p>
-<ul>
-<li>boost::typeindex::type_id<t>()：<ul>
-<li>功能说明：这个函数模拟标准 typeid 的行为，返回去除 CVR 限定符后的基础类型。适用于需要“模糊”匹配类型的场景。</li>
+<li><p>不可移植的类型名称：C++ 标准只规定 typeid(T).name()
+必须返回一个字符串，但没有规定这个字符串的具体内容。在实际中，不同编译器返回的是“重整”（mangled）后的内部名称。例如，对于
+std::vector<int>, GCC/Clang 可能返回类似：St6vectorIiSaIiEE, 而MSVC
+可能返回类似：.NSt3__16vectorIiNS_9allocatorIiEEEE.
+这种字符串对开发者来说几乎不可读，且在不同平台和编译器之间完全不一致，导致调试和日志记录非常困难。</int></p></li>
+<li><p>对 RTTI 开关的依赖：typeid 的功能依赖于编译器开启 RTTI
+选项。在许多高性能、游戏开发或嵌入式项目中，开发者会选择关闭
+RTTI（例如在 GCC/Clang 上使用 -fno-rtti
+标志）来减少二进制文件大小和潜在的虚函数表开销。而一旦 RTTI
+被关闭，typeid
+对多态类型（带有虚函数的类）的操作将失效（通常会导致编译错误或运行时异常），这使得依赖
+typeid 的代码不具备健壮性。</p></li>
+<li><p>CVR 限定符的丢失：标准的 typeid 在计算类型时，会自动忽略顶层的
+const（常量）、volatile（易失）和 reference（引用）限定符（统称 CVR
+限定符）。例如，typeid(int)、typeid(const int) 和 typeid(const int&amp;)
+这三者返回的 std::type_info 对象是完全相同的，它们都代表 int
+类型。在某些需要精确类型区分的元编程或泛型编程场景中，这是致命的缺陷。</p></li>
 </ul>
-</t></li>
-<li>boost::typeindex::type_id_with_cvr<t>()：<ul>
+<h5 id="boost.typeindex-的解决方案">Boost.TypeIndex 的解决方案</h5>
+<p>Boost.TypeIndex 通过引入核心类 boost::typeindex::type_index
+来解决上述所有问题：</p>
+<ul>
+<li><p>可移植的“美化”名称 (Pretty Name)：Boost.TypeIndex 提供了
+.pretty_name() 成员函数, 无论在哪个编译器上，也不论 RTTI
+是否开启，它都会尽最大努力返回一个人类可读的、统一的类型名称。例如，对于
+std::vector<int>，它将一致地返回字符串 “std::vector&lt;int,
+std::allocator<int> &gt;”
+（或类似的清晰形式），而不是混乱的重整名称。</int></int></p></li>
+<li><p>独立于 RTTI 开关：Boost.TypeIndex 具有智能的回退机制. 如果 RTTI
+开启：它在内部优先使用 typeid，以获得最高效、最准确的多态类型识别; 如果
+RTTI
+关闭：它会自动切换到一套基于编译时模板元编程的机制来模拟类型信息（对于非多态类型）。这使得代码无论在哪种编译配置下都能工作。</p></li>
+<li><p>保留 CVR 限定符：Boost.TypeIndex
+提供了两种获取类型信息的方式，以满足不同需求：</p>
+<ul>
+<li>boost::typeindex::type_id<t>()：
+<ul>
+<li>功能说明：这个函数模拟标准 typeid 的行为，返回去除 CVR
+限定符后的基础类型。适用于需要“模糊”匹配类型的场景。</li>
+</ul></t></li>
+<li>boost::typeindex::type_id_with_cvr<t>()：
+<ul>
 <li>功能说明：这是关键的增强功能。它返回包含 CVR 限定符的精确类型。</li>
+</ul></t></li>
+<li>例如：type_id_with_cvr&lt;const int&amp;&gt;() 返回的 type_index
+对象的 .pretty_name() 将是 “int const&amp;”，这与
+type_id_with_cvr<int>()（返回
+“int”）是截然不同的，从而允许开发者进行精确的类型区分。</int></li>
+</ul></li>
 </ul>
-</t></li>
-<li>例如：type_id_with_cvr&lt;const int&amp;&gt;() 返回的 type_index 对象的 .pretty_name() 将是 “int const&amp;”，这与 type_id_with_cvr<int>()（返回 “int”）是截然不同的，从而允许开发者进行精确的类型区分。</int></li>
-</ul>
-</li>
-</ul>
-<h3 id="不同阶段用来查看编译器类型推导结果的技术"><a href="#不同阶段用来查看编译器类型推导结果的技术" class="headerlink" title="不同阶段用来查看编译器类型推导结果的技术"></a>不同阶段用来查看编译器类型推导结果的技术</h3><p>了解了上述内容之后, 我们可以总结出三种在软件开发不同阶段(<strong>撰写代码阶段、编译阶段和运行时阶段</strong>)用来查看编译器类型推导结果的技术。这些方法可以帮助开发者确认模板、auto 或 decltype 推导出的类型是否符合预期。</p>
-<ol>
+<h3 id="不同阶段用来查看编译器类型推导结果的技术">不同阶段用来查看编译器类型推导结果的技术</h3>
+<p>了解了上述内容之后,
+我们可以总结出三种在软件开发不同阶段(<strong>撰写代码阶段、编译阶段和运行时阶段</strong>)用来查看编译器类型推导结果的技术。这些方法可以帮助开发者确认模板、auto
+或 decltype 推导出的类型是否符合预期。</p>
+<ol type="1">
 <li>IDE 编辑器</li>
 </ol>
-<p>在IDE的代码编辑器中，将<strong>鼠标指针悬停</strong>在变量、参数或函数上时，编辑器通常会显示该实体的推导类型 。</p>
-<p>其局限性在于, 这种方法需要代码基本处于<strong>可编译状态</strong>，因为IDE依赖<strong>内嵌的编译器前端</strong>来进行分析 。对于简单的类型（如int）显示良好，但对于复杂的类型，IDE显示的型别信息可能非常冗长且难以阅读，实用性会降低 。</p>
-<ol start="2">
+<p>在IDE的代码编辑器中，将<strong>鼠标指针悬停</strong>在变量、参数或函数上时，编辑器通常会显示该实体的推导类型
+。</p>
+<p>其局限性在于,
+这种方法需要代码基本处于<strong>可编译状态</strong>，因为IDE依赖<strong>内嵌的编译器前端</strong>来进行分析
+。对于简单的类型（如int）显示良好，但对于复杂的类型，IDE显示的型别信息可能非常冗长且难以阅读，实用性会降低
+。</p>
+<ol start="2" type="1">
 <li>编译器诊断信息</li>
 </ol>
-<p>我们可以通过故意制造一个编译错误，来迫使编译器在诊断信息中报告出它所推导出的类型 。</p>
-<p>一种方式是, 我们声明一个类模板，但不去定义它（例如 <code>template&lt;typename T&gt; class TD;</code>）。</p>
-<p>接着尝试使用你想查看的类型来具现这个模板（例如，<code>TD&lt;decltype(x)&gt; xType;</code>） 。</p>
-<p>编译器在试图创建 xType 对象时，会因为 TD 是一个不完整类型 (incomplete type) 而报错，错误信息中几乎必然会包含 T 被推导出的完整类型（例如 “aggregate ‘TD<int> xType’ has incomplete type”）。</int></p>
-<ol start="3">
+<p>我们可以通过故意制造一个编译错误，来迫使编译器在诊断信息中报告出它所推导出的类型
+。</p>
+<p>一种方式是, 我们声明一个类模板，但不去定义它（例如
+<code>template&lt;typename T&gt; class TD;</code>）。</p>
+<p>接着尝试使用你想查看的类型来具现这个模板（例如，<code>TD&lt;decltype(x)&gt; xType;</code>）
+。</p>
+<p>编译器在试图创建 xType 对象时，会因为 TD 是一个不完整类型 (incomplete
+type) 而报错，错误信息中几乎必然会包含 T 被推导出的完整类型（例如
+“aggregate ‘TD<int> xType’ has incomplete type”）。</int></p>
+<ol start="3" type="1">
 <li>运行时输出</li>
 </ol>
-<p>一种不太可靠的方法是使用typeid, 例如通过<code>typeid(x).name()</code> 来在运行时打印类型名称。然而, 根据C++标准，<code>std::type_info::name</code> 在处理类型时，会如同<strong>函数按值传递形参</strong>一样。这意味着它会忽略类型的引用（&amp;）属性，并移除顶层的 const 和 volatile 修饰符(CVR丢失)。这会导致输出错误的类型，例如，一个 const Widget* const&amp; 类型可能会被错误地报告为 const Widget*(详见条款1的情况2部分):</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模板函数定义</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个返回 std::vector 的工厂函数</span></span><br><span class="line"><span class="function">std::vector&lt;Widget&gt; <span class="title">createVec</span><span class="params">()</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用工厂函数返回值初始化 vw</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> vw = <span class="built_in">createVec</span>(); </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!vw.<span class="built_in">empty</span>()) { </span><br><span class="line">    <span class="comment">// 调用模板函数</span></span><br><span class="line">    <span class="built_in">f</span>(&amp;vw[<span class="number">0</span>]); </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span> </span></span><br><span class="line"><span class="function"></span>{ </span><br><span class="line">    <span class="keyword">using</span> std::cout; </span><br><span class="line">    cout &lt;&lt; <span class="string">"T = "</span> &lt;&lt; <span class="built_in">typeid</span>(T).<span class="built_in">name</span>() &lt;&lt; <span class="string">'\n'</span>;       <span class="comment">// 显示 T 的类型</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"param = "</span> &lt;&lt; <span class="built_in">typeid</span>(param).<span class="built_in">name</span>() &lt;&lt; <span class="string">'\n'</span>; <span class="comment">// 显示 param 的类型</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>上述结果的输出为:<code>T = class Widget const * param = class Widget const *</code><br>而显而易见, 在模板 f 中，形参 param 被声明为 const T&amp;。无论 T 被推导成什么，param 的类型都应该是在 T 的基础上增加了 const 和 &amp; 限定符（或者根据引用折叠规则）。T 和 param（即 const T&amp;）不可能是同一个类型。</p>
-<p>出现这个问题的原因就在于std::type_info::name的腐化性(丢失CVR): C++ 标准规定，typeid 在返回 name() 之前，会像**函数按值传递（pass-by-value）**那样来处理它获取到的类型。</p>
-<p>应用到我们的例子：根据原理, 我们推导出了<code>T = const Widget*</code>和<code>param = const (const Widget*) &amp;</code>. 对于 typeid(T), 它分析 const Widget*。这是一个指针类型，不是引用，它的 const 是底层的（指向 const），不是顶层的。因此，按值传递规则不会移除任何东西。</p>
-<p>但是对于 typeid(param), 它分析 const Widget* const &amp;, 首先 &amp; 被移除，类型变为 const Widget* const (一个指向 const Widget 的 const 指针)。接着因为该类型有一个顶层的 const（即指针本身的常量性）。这个 const 被移除。结果是和T一样的const Widget* 。</p>
-<h4 id="更可靠的方法-Boost-TypeIndex-："><a href="#更可靠的方法-Boost-TypeIndex-：" class="headerlink" title="更可靠的方法 (Boost.TypeIndex)："></a>更可靠的方法 (Boost.TypeIndex)：</h4><p>一个更准确的运行时解决方案是使用 Boost 库的 TypeIndex 。</p>
-<p>使用 <code>boost::typeindex::type_id_with_cvr&lt;T&gt;().pretty_name() </code> 可以获取一个包含人类可读的、精确类型表示的字符串。其名称中的 “cvr” 表明它会保留 const、volatile 和引用饰词，从而提供准确的类型信息 。</p>
+<p>一种不太可靠的方法是使用typeid, 例如通过<code>typeid(x).name()</code>
+来在运行时打印类型名称。然而,
+根据C++标准，<code>std::type_info::name</code>
+在处理类型时，会如同<strong>函数按值传递形参</strong>一样。这意味着它会忽略类型的引用（&amp;）属性，并移除顶层的
+const 和 volatile 修饰符(CVR丢失)。这会导致输出错误的类型，例如，一个
+const Widget* const&amp; 类型可能会被错误地报告为 const
+Widget*(详见条款1的情况2部分): <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模板函数定义</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个返回 std::vector 的工厂函数</span></span><br><span class="line"><span class="function">std::vector&lt;Widget&gt; <span class="title">createVec</span><span class="params">()</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用工厂函数返回值初始化 vw</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> vw = <span class="built_in">createVec</span>(); </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!vw.<span class="built_in">empty</span>()) { </span><br><span class="line">    <span class="comment">// 调用模板函数</span></span><br><span class="line">    <span class="built_in">f</span>(&amp;vw[<span class="number">0</span>]); </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span> </span></span><br><span class="line"><span class="function"></span>{ </span><br><span class="line">    <span class="keyword">using</span> std::cout; </span><br><span class="line">    cout &lt;&lt; <span class="string">"T = "</span> &lt;&lt; <span class="built_in">typeid</span>(T).<span class="built_in">name</span>() &lt;&lt; <span class="string">'\n'</span>;       <span class="comment">// 显示 T 的类型</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"param = "</span> &lt;&lt; <span class="built_in">typeid</span>(param).<span class="built_in">name</span>() &lt;&lt; <span class="string">'\n'</span>; <span class="comment">// 显示 param 的类型</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+上述结果的输出为:<code>T = class Widget const * param = class Widget const *</code>
+而显而易见, 在模板 f 中，形参 param 被声明为 const T&amp;。无论 T
+被推导成什么，param 的类型都应该是在 T 的基础上增加了 const 和 &amp;
+限定符（或者根据引用折叠规则）。T 和 param（即 const
+T&amp;）不可能是同一个类型。</p>
+<p>出现这个问题的原因就在于std::type_info::name的腐化性(丢失CVR): C++
+标准规定，typeid 在返回 name()
+之前，会像<strong>函数按值传递（pass-by-value）</strong>那样来处理它获取到的类型。</p>
+<p>应用到我们的例子：根据原理,
+我们推导出了<code>T = const Widget*</code>和<code>param = const (const Widget*) &amp;</code>.
+对于 typeid(T), 它分析 const Widget*。这是一个指针类型，不是引用，它的
+const 是底层的（指向
+const），不是顶层的。因此，按值传递规则不会移除任何东西。</p>
+<p>但是对于 typeid(param), 它分析 const Widget* const &amp;, 首先 &amp;
+被移除，类型变为 const Widget* const (一个指向 const Widget 的 const
+指针)。接着因为该类型有一个顶层的 const（即指针本身的常量性）。这个
+const 被移除。结果是和T一样的const Widget* 。</p>
+<h4 id="更可靠的方法-boost.typeindex">更可靠的方法
+(Boost.TypeIndex)：</h4>
+<p>一个更准确的运行时解决方案是使用 Boost 库的 TypeIndex 。</p>
+<p>使用
+<code>boost::typeindex::type_id_with_cvr&lt;T&gt;().pretty_name()</code>
+可以获取一个包含人类可读的、精确类型表示的字符串。其名称中的 “cvr”
+表明它会保留 const、volatile 和引用饰词，从而提供准确的类型信息 。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/type_index.hpp&gt;</span> <span class="comment">// 引入 Boost.TypeIndex 库</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>           </span></span><br><span class="line"><span class="keyword">using</span> std::cout; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 导入 Boost.TypeIndex 的核心函数，用于获取包含 const/volatile/&amp; 的精确类型</span></span><br><span class="line"><span class="keyword">using</span> boost::typeindex::type_id_with_cvr; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span> </span></span><br><span class="line"><span class="function"></span>{ </span><br><span class="line">    cout &lt;&lt; <span class="string">"T  = "</span> </span><br><span class="line">         &lt;&lt; <span class="built_in">type_id_with_cvr</span>&lt;T&gt;().<span class="built_in">pretty_name</span>() </span><br><span class="line">         &lt;&lt; <span class="string">'\n'</span>; </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 显示 param 的类型</span></span><br><span class="line">    <span class="comment">// 在这个函数签名中，param 的类型永远是 const T&amp;。</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"param = "</span> </span><br><span class="line">         &lt;&lt; <span class="built_in">type_id_with_cvr</span>&lt;<span class="keyword">decltype</span>(param)&gt;().<span class="built_in">pretty_name</span>() </span><br><span class="line">         &lt;&lt; <span class="string">'\n'</span>; </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> cx = <span class="number">20</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span>&amp; rx = x;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">"--- 调用 f(x) --- (x 是 int)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(x); </span><br><span class="line">    cout &lt;&lt; <span class="string">"\n--- 调用 f(cx) --- (cx 是 const int)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(cx);</span><br><span class="line">    cout &lt;&lt; <span class="string">"\n--- 调用 f(rx) --- (rx 是 const int&amp;)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(rx);</span><br><span class="line">    cout &lt;&lt; <span class="string">"\n--- 调用 f(42) --- (42 是右值)\n"</span>;</span><br><span class="line">    <span class="built_in">f</span>(<span class="number">42</span>); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
 		</div>
 
 		
@@ -1000,7 +1093,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款4：掌握查看型别推导结果的方法</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#typeid%E4%BB%8B%E7%BB%8D"><span class="nav-text">typeid介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-type-info-%E7%B1%BB"><span class="nav-text">std::type_info 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Boost"><span class="nav-text">Boost</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Boost-TypeIndex"><span class="nav-text">Boost.TypeIndex</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-TypeIndex%EF%BC%9F%EF%BC%88%E6%A0%87%E5%87%86-RTTI-%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%89"><span class="nav-text">为什么需要 TypeIndex？（标准 RTTI 的问题）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Boost-TypeIndex-%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">Boost.TypeIndex 的解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E9%98%B6%E6%AE%B5%E7%94%A8%E6%9D%A5%E6%9F%A5%E7%9C%8B%E7%BC%96%E8%AF%91%E5%99%A8%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E7%BB%93%E6%9E%9C%E7%9A%84%E6%8A%80%E6%9C%AF"><span class="nav-text">不同阶段用来查看编译器类型推导结果的技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E5%8F%AF%E9%9D%A0%E7%9A%84%E6%96%B9%E6%B3%95-Boost-TypeIndex-%EF%BC%9A"><span class="nav-text">更可靠的方法 (Boost.TypeIndex)：</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#typeid%E4%BB%8B%E7%BB%8D"><span class="nav-text">typeid介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdtype_info-%E7%B1%BB"><span class="nav-text">std::type_info 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#boost"><span class="nav-text">Boost</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#boost.typeindex"><span class="nav-text">Boost.TypeIndex</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-typeindex%E6%A0%87%E5%87%86-rtti-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">为什么需要
+TypeIndex？（标准 RTTI 的问题）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#boost.typeindex-%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">Boost.TypeIndex 的解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E9%98%B6%E6%AE%B5%E7%94%A8%E6%9D%A5%E6%9F%A5%E7%9C%8B%E7%BC%96%E8%AF%91%E5%99%A8%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E7%BB%93%E6%9E%9C%E7%9A%84%E6%8A%80%E6%9C%AF"><span class="nav-text">不同阶段用来查看编译器类型推导结果的技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E5%8F%AF%E9%9D%A0%E7%9A%84%E6%96%B9%E6%B3%95-boost.typeindex"><span class="nav-text">更可靠的方法
+(Boost.TypeIndex)：</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1029,11 +1124,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

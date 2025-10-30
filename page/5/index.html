@@ -742,15 +742,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -782,15 +782,15 @@ mjx-container[display="true"] + br {
 </div>
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -815,66 +815,41 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE42%20-%20%E8%80%83%E8%99%91%E7%BD%AE%E5%85%A5%E8%80%8C%E9%9D%9E%E6%8F%92%E5%85%A5/">
-                            条款42 ：考虑置入而非插入
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA/">
+                            内存分区
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            该条款的核心是介绍 C++11 引入的“置入函数”（如 emplace_back, emplace 等），并将其与传统的“插入函数”（如 push_back, insert 等）进行比较。在许多情况下，置入函数比插入函数更高效。这是因为置入函数避免了不必要的复制或移动操作，直接在容器中构造对象，而插入函数则需要先构造对象，然后再将其复制或移动到容器中。
-插入函数和置入函数的根本区别在于它们接...
+                            程序的内存布局 (Process
+Memory Layout)
+一个程序运行起来后，操作系统会为其分配一块虚拟内存空间。这块空间在逻辑上通常分为以下几个部分：
+
+栈 (Stack)：
+
+用途：用于存储函数的局部变量（也叫临时变量）、函数参数、返回地址等。
+特点：由编译器自动分配和释放。内存区域通常较小，且向下增长（即从高地址向低地址扩展）。每个线程都有自己独立的栈。
+
+堆 ...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 21:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 21:57:27 GMT+0800">
                 
-                    2025-09-23
+                    2025-10-01
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE42%20-%20%E8%80%83%E8%99%91%E7%BD%AE%E5%85%A5%E8%80%8C%E9%9D%9E%E6%8F%92%E5%85%A5/">Read more<span class="seo-reader-text">条款42 ：考虑置入而非插入</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA/">Read more<span class="seo-reader-text">内存分区</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -889,68 +864,39 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE41%20-%20%E9%92%88%E5%AF%B9%E5%8F%AF%E5%A4%8D%E5%88%B6%E7%9A%84%E5%BD%A2%E5%8F%82%EF%BC%8C%E5%9C%A8%E7%A7%BB%E5%8A%A8%E6%88%90%E6%9C%AC%E4%BD%8E%E5%B9%B6%E4%B8%94%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%A2%AB%E5%A4%8D%E5%88%B6%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%EF%BC%8C%E8%80%83%E8%99%91%E5%B0%86%E5%85%B6%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/">
-                            条款41 ：针对可复制的形参，在移动成本低并且一定会被复制的前提下，考虑将其按值传递
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/Volatile%E5%92%8C%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96/">
+                            Volatile 和编译器优化
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            该条款探讨了一种在特定情况下，可以替代“为左值和右值分别重载”这一常规做法的编码技巧。C++98 的一条重要准则是“避免按值传递用户定义类型”，而该条款则解释了在C++11的移动语义下，这条准则何时可以被“打破”。
-当一个函数需要持有其参数的一个副本时（例如，将其存入一个数据成员），在 C++11 中最常见的做法是提供两个重载版本：
+                            编译器优化的核心目标是在不改变程序原始逻辑（即可观察行为）的前提下，对生成的机器码进行修改，以提升程序的运行效率或减小其体积。这些改进通常体现在两个方面：
 
-一个版本接受 const T&amp;（左值），并在函数...
+执行速度：减少程序运行所需的总时钟周期。
+代码体积：减小程序编译后生成的可执行文件的大小。
+
+GCC
+提供了一系列丰富的优化选项，让开发者可以根据具体需求在编译时间、调试便利性、运行速度和代码大小之间做出权衡。
+具体操作是...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 21:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 17:49:06 GMT+0800">
                 
-                    2025-09-23
+                    2025-10-01
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE41%20-%20%E9%92%88%E5%AF%B9%E5%8F%AF%E5%A4%8D%E5%88%B6%E7%9A%84%E5%BD%A2%E5%8F%82%EF%BC%8C%E5%9C%A8%E7%A7%BB%E5%8A%A8%E6%88%90%E6%9C%AC%E4%BD%8E%E5%B9%B6%E4%B8%94%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%A2%AB%E5%A4%8D%E5%88%B6%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%EF%BC%8C%E8%80%83%E8%99%91%E5%B0%86%E5%85%B6%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/">Read more<span class="seo-reader-text">条款41 ：针对可复制的形参，在移动成本低并且一定会被复制的前提下，考虑将其按值传递</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/Volatile%E5%92%8C%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96/">Read more<span class="seo-reader-text">Volatile 和编译器优化</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -965,65 +911,38 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE39%20-%20%E8%80%83%E8%99%91%E9%92%88%E5%AF%B9%E4%B8%80%E6%AC%A1%E6%80%A7%E4%BA%8B%E4%BB%B6%E9%80%9A%E4%BF%A1%E4%BD%BF%E7%94%A8%E4%BB%A5%20void%20%E4%B8%BA%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E5%AE%9E%E5%8F%82%E7%9A%84%E6%9C%9F%E5%80%BC/">
-                            条款39 ：考虑针对一次性事件通信使用以 void 为模板型别实参的期值
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/%E4%B8%89-%E4%BA%94-%E9%9B%B6%E6%B3%95%E5%88%99/">
+                            三-五-零法则
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            
+                            这个法则是关于如何正确管理类中的资源（尤其是动态分配的内存），避免内存泄漏和悬挂指针等问题的指导方针。它们是C++语言演化过程中逐步形成的三个阶段性法则。
+法则一：三法则 (The
+Rule of Three) - C++98/03时代
+核心思想：如果一个类需要程序员显式地定义析构函数、拷贝构造函数或拷贝赋值运算符
+中的任意一个，那么它极有可能也需要定义所有这三个。
+
+析构函数 ...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 21:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 17:49:06 GMT+0800">
                 
-                    2025-09-23
+                    2025-10-01
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE39%20-%20%E8%80%83%E8%99%91%E9%92%88%E5%AF%B9%E4%B8%80%E6%AC%A1%E6%80%A7%E4%BA%8B%E4%BB%B6%E9%80%9A%E4%BF%A1%E4%BD%BF%E7%94%A8%E4%BB%A5%20void%20%E4%B8%BA%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E5%AE%9E%E5%8F%82%E7%9A%84%E6%9C%9F%E5%80%BC/">Read more<span class="seo-reader-text">条款39 ：考虑针对一次性事件通信使用以 void 为模板型别实参的期值</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/%E4%B8%89-%E4%BA%94-%E9%9B%B6%E6%B3%95%E5%88%99/">Read more<span class="seo-reader-text">三-五-零法则</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1038,329 +957,27 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE40%20-%20%E5%AF%B9%E5%B9%B6%E5%8F%91%E4%BD%BF%E7%94%A8%20std%20atomic%EF%BC%8C%E5%AF%B9%E7%89%B9%E7%A7%8D%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%20volatile/">
-                            条款40 ：对并发使用 std atomic，对特种内存使用 volatile
+                        <a href="/2025/10/01/lang/CPP/%E5%9F%BA%E7%A1%80/%E6%A6%82%E5%BF%B5/">
+                            概念
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            
+                            变量相关
+全局变量若在其他文件中使用，需要用extern关键字声明(告诉编译器该变量在其他文件中定义)，否则会报错”未定义的引用”。
+12// file1.cppint globalVar = 42; // 定义全局变量 12// file2.cppextern int globalVar; // 声明全局变量
+若用”static”修饰的全局变量，仅限当前文件使用，避免与其他文件同名变...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 21:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
                 
-                    2025-09-23
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE40%20-%20%E5%AF%B9%E5%B9%B6%E5%8F%91%E4%BD%BF%E7%94%A8%20std%20atomic%EF%BC%8C%E5%AF%B9%E7%89%B9%E7%A7%8D%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%20volatile/">Read more<span class="seo-reader-text">条款40 ：对并发使用 std atomic，对特种内存使用 volatile</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE37%20-%20%E4%BD%BF%20std%20thread%20%E5%9E%8B%E5%88%AB%E5%AF%B9%E8%B1%A1%E5%9C%A8%E6%89%80%E6%9C%89%E8%B7%AF%E5%BE%84%E7%9A%86%E4%B8%8D%E5%8F%AF%E8%81%94%E7%BB%93/">
-                            条款37 ：使 std::thread 型别对象在所有路径皆不可联结
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            该条款的核心论点是，由于销毁一个可联结（joinable）的 std::thread 对象会导致程序终止，因此开发者必须确保在 std::thread 对象被销毁前，在代码的所有可能路径上都将其变为不可联结状态(设定join()或detach())。
-std::thread 的可联结性 (Joinability)一个 std::thread 对象存在两种状态：
-
-可联结 (Joinable)...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 21:00:00 GMT+0800">
-                
-                    2025-09-23
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE37%20-%20%E4%BD%BF%20std%20thread%20%E5%9E%8B%E5%88%AB%E5%AF%B9%E8%B1%A1%E5%9C%A8%E6%89%80%E6%9C%89%E8%B7%AF%E5%BE%84%E7%9A%86%E4%B8%8D%E5%8F%AF%E8%81%94%E7%BB%93/">Read more<span class="seo-reader-text">条款37 ：使 std::thread 型别对象在所有路径皆不可联结</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE38%20-%20%E5%AF%B9%E5%8F%98%E5%8C%96%E5%A4%9A%E7%AB%AF%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%8F%A5%E6%9F%84%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E8%A1%8C%E4%B8%BA%E4%BF%9D%E6%8C%81%E5%85%B3%E6%B3%A8/">
-                            条款38 ：对变化多端的线程句柄析构函数行为保持关注
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            该条款的核心论点是，std::thread 和期值（std::future / std::shared_future）虽然都可以看作是系统线程的句柄，但它们的析构函数行为却截然不同，这种差异对于编写健壮的并发代码至关重要。
-对于std::thread, 正如前面所说, 其析构函数的行为非常严格和明确：如果 std::thread 对象是可联结的 (joinable)，其析构函数的调用将导致程...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 21:00:00 GMT+0800">
-                
-                    2025-09-23
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE38%20-%20%E5%AF%B9%E5%8F%98%E5%8C%96%E5%A4%9A%E7%AB%AF%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%8F%A5%E6%9F%84%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E8%A1%8C%E4%B8%BA%E4%BF%9D%E6%8C%81%E5%85%B3%E6%B3%A8/">Read more<span class="seo-reader-text">条款38 ：对变化多端的线程句柄析构函数行为保持关注</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/vector/">
-                            vector
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            std::vector 是 C++ 标准模板库 (STL) 中最常用的序列容器之一。它提供了动态数组的功能，允许在运行时动态调整大小，并且支持高效的随机访问。
-12#include &lt;vector&gt;std::vector&lt;T&gt; vector_name;
-
-T: 存储的元素类型。
-
-常用接口添加元素std::vector 有两个向末尾添加元素的方法：push_back ...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 13:00:00 GMT+0800">
-                
-                    2025-09-23
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/cpp/">cpp</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/23/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/vector/">Read more<span class="seo-reader-text">vector</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/23/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.%20%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
-                            线程池
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            线程池 (Thread Pool) 是一种并发设计模式，它预先创建并维护一组可复用的工作线程，而不是在需要时才创建新线程。这些线程“池化”在一起，等待执行分配给它们的任务。
-它的核心思想是将“任务的提交”与“任务的执行”解耦。应用程序的各个部分可以将任务提交给线程池，而无需关心任务具体由哪个线程执行、何时执行。
-一个典型的线程池包含以下几个关键部分：
-
-任务队列 (std::queue)：一...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 23 2025 12:00:00 GMT+0800">
-                
-                    2025-09-23
+                    2025-10-01
                 
             </span>
         </span>
@@ -1388,16 +1005,6 @@ T: 存储的元素类型。
                     
                     
                 
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
-                        </li>
-                    
-                    
-                
             </ul>
         </span>
         
@@ -1416,7 +1023,7 @@ T: 存储的元素类型。
         
     </div>
 
-    <a href="/2025/09/23/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.%20%E7%BA%BF%E7%A8%8B%E6%B1%A0/">Read more<span class="seo-reader-text">线程池</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/%E5%9F%BA%E7%A1%80/%E6%A6%82%E5%BF%B5/">Read more<span class="seo-reader-text">概念</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1431,24 +1038,30 @@ T: 存储的元素类型。
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/7.%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/">
-                            异步/并发编程模型
+                        <a href="/2025/10/01/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A0%86/">
+                            堆
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            在C++并发编程中，核心挑战之一是在不同线程间安全、高效地传递数据。特别是当一个线程（生产者/Provider）需要将一个计算结果（值或异常）传递给另一个线程（消费者/Consumer）时。std::future, std::promise, std::packaged_task, 和 std::async 共同构成了一个异步编程模型，其设计哲学是关注点分离 (Separation of C...
+                            堆 (Heap)
+堆也称作优先队列,
+是一种特殊的树形数据结构，满足堆性质：在最大堆中，父节点的值总是大于等于其子节点的值；在最小堆中，父节点的值总是小于等于其子节点的值。
+在 C++ 中，可以使用标准库中的 std::priority_queue
+来实现堆, 需要头文件
+&lt;queue&gt;。默认情况下，std::priority_queue
+实现的是最大堆。如果需要实现...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 23:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
                 
-                    2025-09-22
+                    2025-10-01
                 
             </span>
         </span>
@@ -1476,16 +1089,6 @@ T: 存储的元素类型。
                     
                     
                 
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
-                        </li>
-                    
-                    
-                
             </ul>
         </span>
         
@@ -1504,7 +1107,7 @@ T: 存储的元素类型。
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/7.%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/">Read more<span class="seo-reader-text">异步/并发编程模型</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A0%86/">Read more<span class="seo-reader-text">堆</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1519,26 +1122,29 @@ T: 存储的元素类型。
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/5.%20%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
-                            条件变量和多线程数据共享
+                        <a href="/2025/10/01/system/computer-architecture/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">
+                            虚拟内存
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            条件变量 (Condition Variable) 是一种同步原语，它允许一个或多个线程等待（阻塞），直到另一个线程修改了某个共享状态并通知它们。
-它的核心思想不是为了“锁住”资源，而是提供一种“等待-通知” (Wait-Notify) 机制。线程可以高效地等待某个特定条件 (Condition) 变为真，而无需通过循环不断地检查（这种低效的方式称为忙等待 (Busy-Waiting)）。
-...
+                            虚拟地址空间
+虚拟内存 (Virtual Memory)
+是现代操作系统中的一个重要概念。它通过将程序使用的地址空间虚拟化，使得每个进程都拥有一个独立的、连续的地址空间，从而实现了内存保护、内存共享和更高效的内存利用。
+目前,
+一个进程的虚拟地址空间通常被划分为以下几个部分:
+1234567891011121314151617+-------------------+  (高地址)...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 22 2025 17:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
                 
-                    2025-09-22
+                    2025-10-01
                 
             </span>
         </span>
@@ -1566,12 +1172,81 @@ T: 存储的元素类型。
                     
                     
                 
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/10/01/system/computer-architecture/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">Read more<span class="seo-reader-text">虚拟内存</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/1.%20%E7%BA%BF%E7%A8%8B%E7%AE%A1%E7%90%86/">
+                            1. 线程管理
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            
+
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
+                
+                    2025-10-01
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
                     
                         
                             <li>></li>
                         
                         <li>
-                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
                         </li>
                     
                     
@@ -1594,7 +1269,259 @@ T: 存储的元素类型。
         
     </div>
 
-    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/5.%20%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">Read more<span class="seo-reader-text">条件变量和多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/1.%20%E7%BA%BF%E7%A8%8B%E7%AE%A1%E7%90%86/">Read more<span class="seo-reader-text">1. 线程管理</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/6.%20%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1/">
+                            6. 无锁并发数据结构设计
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            无锁并发数据结构的定义
+首先, 在探讨无锁和有锁之前, 我们先回顾一下阻塞 (Blocking) vs. 非阻塞
+(Non-blocking)
+阻塞 (Blocking)
+数据结构/算法：这是我们前面章节（特别是第3、4、6章）主要讨论的方式。它们依赖于阻塞式的同步原语，如：
+- 互斥量 (std::mutex)：调用 lock() 可能导致线程被挂起。
+- 条件变量 (std:...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
+                
+                    2025-10-01
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/6.%20%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1/">Read more<span class="seo-reader-text">6. 无锁并发数据结构设计</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/2.%20%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/">
+                            2. 线程间共享数据
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            共享数据带来的问题
+并发编程为我们带来了更高的性能和响应能力，但也引入了新的挑战，尤其是在多个线程需要访问和修改共享数据时。正确地管理这些共享数据对于确保程序的正确性和稳定性至关重要。
+条件竞争 (Race Condition)
+这一节是理解并发编程为何困难的基石。它主要阐述了两个核心概念：不变量
+(Invariants) 的破坏是问题的表现形式，而
+数据竞争 (Data Race...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
+                
+                    2025-10-01
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/2.%20%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/">Read more<span class="seo-reader-text">2. 线程间共享数据</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/3.%20%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E6%93%8D%E4%BD%9C/">
+                            3. 线程间的等待与通知
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            这一章是继上一章“保护共享数据”之后的进阶，核心是解决线程间的“等待”与“通知”问题，即一个线程如何高效地等待另一个线程完成某个操作。
+等待一个事件
+假如你正在坐一趟夜间火车,
+你需要在正确的站点下车。现在有三种策略可以选择：
+策略1：忙等待 (Busy-Waiting),
+也就是整晚不睡，每到一站都探出头去看。优点是绝对不会错过下车点,
+但缺点是极度疲劳（浪费CPU）。
+策略...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Oct 01 2025 11:00:00 GMT+0800">
+                
+                    2025-10-01
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/3.%20%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E6%93%8D%E4%BD%9C/">Read more<span class="seo-reader-text">3. 线程间的等待与通知</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1604,7 +1531,7 @@ T: 存储的元素类型。
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/4/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/6/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/4/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/6/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1632,11 +1559,11 @@ T: 存储的元素类型。
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

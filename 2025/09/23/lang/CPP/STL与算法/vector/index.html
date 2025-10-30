@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-23T05:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-30T15:48:20.296Z">
+<meta property="article:modified_time" content="2025-10-25T08:12:52.594Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="cpp">
@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -770,8 +770,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-30 23:48:20</span>
-            <span class="mobile">2025-09-30 23:48:20</span>
+            <span class="desktop">2025-10-25 16:12:52</span>
+            <span class="mobile">2025-10-25 16:12:52</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -813,12 +813,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.2k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.2k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>9 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>13 Mins</span>
         </span>
     
     
@@ -833,57 +833,135 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>std::vector 是 C++ 标准模板库 (STL) 中最常用的序列容器之一。它提供了动态数组的功能，允许在运行时动态调整大小，并且支持高效的随机访问。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line">std::vector&lt;T&gt; vector_name;</span><br></pre></td></tr></table></figure></div>
-<ul>
-<li>T: 存储的元素类型。</li>
-</ul>
-<h2 id="常用接口"><a href="#常用接口" class="headerlink" title="常用接口"></a>常用接口</h2><h3 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h3><p>std::vector 有两个向末尾添加元素的方法：push_back 和 emplace_back。</p>
-<ul>
-<li>push_back(T&amp;&amp; value)：接受一个<strong>已经构造好的对象</strong>，然后将其<strong>拷贝</strong>或<strong>移动</strong>到容器的末尾。</li>
-<li>emplace_back(Args&amp;&amp;… args)：接受<strong>构造对象所需的参数</strong>，然后<strong>在容器的末尾直接构造这个对象</strong>。它避免了创建临时对象再进行拷贝或移动的开销，效率更高。</li>
-</ul>
-<h3 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h3><p>在 C++ 中，vector 的 erase 函数用于删除元素，它有两种主要的参数形式, 都是传递迭代器类型参数</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">iterator <span class="title">erase</span><span class="params">(iterator position)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">iterator <span class="title">erase</span><span class="params">(iterator first, iterator last)</span></span>;</span><br></pre></td></tr></table></figure></div>
-<p>第一种: 删除 position 所指向的<strong>单个元素</strong>, 返回一个迭代器，指向被删除元素之后的下一个元素。<br>第二种: 删除从 first 到 last（不包括 last）之间的所有元素, 返回一个迭代器，指向被删除区域之后的第一个元素。</p>
-<p>需要十分注意的点: </p>
-<ul>
-<li>删除成功后容器的迭代器失效, 不过<strong>erase()的返回值会返回指向下一个元素的迭代器</strong>, 这在for循环中必须额外处理, 使得只有在删除失败时才it++</li>
-<li>删除操作会导致<strong>后续元素前移</strong>，容器大小(size)减小，但容量(capacity)不变。</li>
-</ul>
-<p>另外, erase()函数<strong>不接受反向迭代器</strong>作为参数, 只能传递正向迭代器. 为了传递反向迭代器, 需要使用 base() 方法将其转换为正向迭代器, 但要注意转换后的迭代器指向的是<strong>反向迭代器所指元素的下一个位置</strong>。</p>
+			<p>std::vector 是 C++ 标准模板库 (STL)
+中最常用的序列容器之一。它提供了动态数组的功能，允许在运行时动态调整大小，并且支持高效的随机访问。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line">std::vector&lt;T&gt; vector_name;</span><br></pre></td></tr></table></figure></div> - T: 存储的元素类型。</p>
+<h2 id="常用接口">常用接口</h2>
+<h3 id="获取元素">获取元素</h3>
+<p>std::vector 提供了多种方式来获取元素： - operator[]:
+通过下标访问元素，返回对元素的引用。 - at():
+通过下标访问元素，返回对元素的引用，并进行边界检查。 - front():
+返回对第一个元素的引用。 - <strong>back()</strong>:
+返回对最后一个元素的引用。 - data(): 返回指向元素数组的指针。</p>
+<h3 id="添加元素-push_back-emplace_back">添加元素: push_back,
+emplace_back</h3>
+<p>std::vector 有两个向末尾添加元素的方法：push_back 和 emplace_back。 -
+push_back(T&amp;&amp;
+value)：接受一个<strong>已经构造好的对象</strong>，然后将其<strong>拷贝</strong>或<strong>移动</strong>到容器的末尾。
+- emplace_back(Args&amp;&amp;…
+args)：接受<strong>构造对象所需的参数</strong>，然后<strong>在容器的末尾直接构造这个对象</strong>。它避免了创建临时对象再进行拷贝或移动的开销，效率更高。</p>
+<blockquote>
+<p>注意, 如果要使用这两种方法填充vector, 在声明vector时就不能指定大小,
+否则会导致默认将指定大小的空间初始化,
+之后再push_back或emplace_back元素到后面. 例如: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">v</span><span class="params">(<span class="number">10</span>)</span></span>; <span class="comment">// 声明时指定大小为10, 这时v已经有10个元素了</span></span><br><span class="line">v.<span class="built_in">push_back</span>(<span class="number">1</span>); <span class="comment">// 这时v会变成11个元素, 不是在原有10个元素上覆盖</span></span><br></pre></td></tr></table></figure></div> ####
+拼接</p>
+</blockquote>
+<p>std::vector 还提供了 insert 方法，可以将另一个 vector
+或一段范围内的元素插入到指定位置。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">iterator <span class="title">insert</span><span class="params">( iterator pos, InputIt first, InputIt last )</span></span>;</span><br></pre></td></tr></table></figure></div> - pos:
+插入位置的迭代器。 - first, last: 要插入的元素范围。 - 返回值:
+指向插入的第一个新元素的迭代器。</p>
+<p>示例: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; v1 = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};</span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v2 = {<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>};</span><br><span class="line">v<span class="number">1.</span><span class="built_in">insert</span>(v<span class="number">1.</span><span class="built_in">end</span>(), v<span class="number">2.</span><span class="built_in">begin</span>(), v<span class="number">2.</span><span class="built_in">end</span>()); <span class="comment">// v1 现在是 {1, 2, 3, 4, 5, 6}</span></span><br></pre></td></tr></table></figure></div></p>
+<h3 id="删除元素">删除元素</h3>
+<p>在 C++ 中，vector 的 erase 函数用于删除元素，它有两种主要的参数形式,
+都是传递迭代器类型参数 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">iterator <span class="title">erase</span><span class="params">(iterator position)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">iterator <span class="title">erase</span><span class="params">(iterator first, iterator last)</span></span>;</span><br></pre></td></tr></table></figure></div> 第一种: 删除 position
+所指向的<strong>单个元素</strong>,
+返回一个迭代器，指向被删除元素之后的下一个元素。 第二种: 删除从 first 到
+last（不包括 last）之间的所有元素,
+返回一个迭代器，指向被删除区域之后的第一个元素。</p>
+<p>需要十分注意的点: - 删除成功后容器的迭代器失效,
+不过<strong>erase()的返回值会返回指向下一个元素的迭代器</strong>,
+这在for循环中必须额外处理, 使得只有在删除失败时才it++ -
+删除操作会导致<strong>后续元素前移</strong>，容器大小(size)减小，但容量(capacity)不变。</p>
+<p>另外, erase()函数<strong>不接受反向迭代器</strong>作为参数,
+只能传递正向迭代器. 为了传递反向迭代器, 需要使用 base()
+方法将其转换为正向迭代器,
+但要注意转换后的迭代器指向的是<strong>反向迭代器所指元素的下一个位置</strong>。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; v = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};</span><br><span class="line"><span class="keyword">auto</span> rit = v.<span class="built_in">rbegin</span>() ; <span class="comment">// 指向元素 5</span></span><br><span class="line">v.<span class="built_in">erase</span>(rit.<span class="built_in">base</span>() - <span class="number">1</span>); <span class="comment">// 删除元素 5</span></span><br><span class="line"><span class="comment">// rit 现在无效，需要重新获取</span></span><br><span class="line">rit = v.<span class="built_in">rbegin</span>(); <span class="comment">// 现在指向新的最后一个元素 4</span></span><br></pre></td></tr></table></figure></div>
-<p>rit.base() 返回的是当前反向迭代器指向元素的下一个位置(正向来看)，所以你需要减去 1 才能正确删除 rit 所指的元素。</p>
-<p>同时, 由于 <strong>erase() 返回的是正向迭代器</strong>, 如果需要继续使用反向迭代器, 只能重新获取反向迭代器而不能直接重新赋值.</p>
+<p>rit.base()
+返回的是当前反向迭代器指向元素的下一个位置(正向来看)，所以你需要减去 1
+才能正确删除 rit 所指的元素。</p>
+<p>同时, 由于 <strong>erase() 返回的是正向迭代器</strong>,
+如果需要继续使用反向迭代器,
+只能重新获取反向迭代器而不能直接重新赋值.</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>正向迭代器标准处理流程</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> it = lst.<span class="built_in">begin</span>(); it != lst.<span class="built_in">end</span>();) {</span><br><span class="line">        <span class="keyword">if</span> (*it % <span class="number">2</span> == <span class="number">0</span>) {</span><br><span class="line">            it = lst.<span class="built_in">erase</span>(it);  <span class="comment">// 删除后，it指向下一个元素</span></span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            ++it;                <span class="comment">// 未删除时手动递增</span></span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="查找元素"><a href="#查找元素" class="headerlink" title="查找元素"></a>查找元素</h3><p>在 C++ 中，vector 本身并没有内建的查找函数，但我们可以使用 STL 提供的算法来实现查找功能</p>
-<p><strong>std::find</strong>: 查找等于某个值的元素，返回<strong>找到的元素的迭代器</strong>(成功)或末尾迭代器(失败), 输入参数是迭代器(查找范围)的始末位置和要查找的值。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> it = std::<span class="built_in">find</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), target);</span><br><span class="line"><span class="keyword">if</span> (it != v.<span class="built_in">end</span>()) { <span class="comment">/* 找到了 */</span> }</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>std::binary_search</strong>: 用于<strong>已排序</strong>的 vector，判断某个值是否存在, 但只能返回<strong>bool值代表是否存在</strong>而不能定位。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>());</span><br><span class="line"><span class="type">bool</span> found = std::<span class="built_in">binary_search</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), target);</span><br></pre></td></tr></table></figure></div>
-<h3 id="迭代器遍历"><a href="#迭代器遍历" class="headerlink" title="迭代器遍历"></a>迭代器遍历</h3><p><strong>反向迭代器</strong>: 指的是从容器的末尾向前遍历元素的迭代器。C++ STL 提供了 rbegin() 和 rend() 成员函数来获取反向迭代器, 它们分别指向容器的最后一个元素和第一个元素之前的位置。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> rit = v.<span class="built_in">rbegin</span>(); rit != v.<span class="built_in">rend</span>(); ++rit) {</span><br><span class="line">    std::cout &lt;&lt; *rit &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h2><p>std::vector 底层通常是通过一个动态分配的数组来实现的。它维护了三个关键属性：</p>
-<ul>
-<li><strong>_start</strong>: 指向数组的起始位置。</li>
-<li><strong>_finish</strong>: 指向当前最后一个元素的下一个位置。</li>
-<li><strong>_end_of_storage</strong>: 指向分配的内存的末尾。</li>
-</ul>
+<p>此外, vector 还提供了 <strong>pop_back()</strong>
+方法，用于删除容器末尾的元素。这个方法不返回被删除的元素,
+也不会调整容量(capacity)。</p>
+<h3 id="查找元素">查找元素</h3>
+<p>在 C++ 中，vector 本身并没有内建的查找函数，但我们可以使用 STL
+提供的算法来实现查找功能</p>
+<p><strong>std::find</strong>:
+查找等于某个值的元素，返回<strong>找到的元素的迭代器</strong>(成功)或末尾迭代器(失败),
+输入参数是迭代器(查找范围)的始末位置和要查找的值。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> it = std::<span class="built_in">find</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), target);</span><br><span class="line"><span class="keyword">if</span> (it != v.<span class="built_in">end</span>()) { <span class="comment">/* 找到了 */</span> }</span><br></pre></td></tr></table></figure></div></p>
+<p><strong>std::binary_search</strong>: 用于<strong>已排序</strong>的
+vector，判断某个值是否存在,
+但只能返回<strong>bool值代表是否存在</strong>而不能定位。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>());</span><br><span class="line"><span class="type">bool</span> found = std::<span class="built_in">binary_search</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), target);</span><br></pre></td></tr></table></figure></div>
+### 迭代器遍历</p>
+<p><strong>反向迭代器</strong>:
+指的是从容器的末尾向前遍历元素的迭代器。C++ STL 提供了 rbegin() 和
+rend() 成员函数来获取反向迭代器,
+它们分别指向容器的最后一个元素和第一个元素之前的位置。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> rit = v.<span class="built_in">rbegin</span>(); rit != v.<span class="built_in">rend</span>(); ++rit) {</span><br><span class="line">    std::cout &lt;&lt; *rit &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="元素去重">元素去重</h3>
+<h4 id="使用-stdunique">使用 std::unique</h4>
+<p>C++ STL 提供了 std::<strong>unique</strong>
+算法来移除相邻的重复元素。它需要先对 vector 进行排序，然后使用
+std::unique 来将重复元素移动到容器的末尾，最后使用 erase
+删除这些重复元素。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>};</span><br><span class="line">std::<span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>());</span><br><span class="line"><span class="keyword">auto</span> last = std::<span class="built_in">unique</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>());</span><br><span class="line">v.<span class="built_in">erase</span>(last, v.<span class="built_in">end</span>());</span><br></pre></td></tr></table></figure></div>
+<p>这里的 std::unique 原型为: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> ForwardIt &gt;</span></span><br><span class="line"><span class="function">ForwardIt <span class="title">unique</span><span class="params">( ForwardIt first, ForwardIt last )</span></span>;</span><br></pre></td></tr></table></figure></div>
+其作用是重新排列范围<code>[first, last)</code>中的元素，使得每个元素只出现一次，并返回一个指向<strong>新逻辑结尾</strong>的迭代器。而其他重复的元素会被移动到范围的末尾,
+因此需要使用 erase 方法将这些多余的元素删除。</p>
+<p>需要注意的是，std::unique
+只会移除<strong>相邻的重复元素</strong>，因此在使用之前通常需要先对容器进行排序。</p>
+<h4 id="使用-stdset">使用 std::set</h4>
+<p>另一种去重的方法是使用
+std::set，它是一个自动排序且不允许重复元素的容器。可以将 vector
+的元素插入到 set 中，然后再将 set 的元素复制回 vector。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>};</span><br><span class="line"><span class="function">std::set&lt;<span class="type">int</span>&gt; <span class="title">s</span><span class="params">(v.begin(), v.end())</span></span>; <span class="comment">// 利用 set 去重</span></span><br><span class="line">v.<span class="built_in">assign</span>(s.<span class="built_in">begin</span>(), s.<span class="built_in">end</span>());        <span class="comment">// 复制回 vector</span></span><br></pre></td></tr></table></figure></div>
+<p>需要注意的是，使用 std::set 会改变元素的顺序，因为 set
+会对元素进行排序。</p>
+<p>这里的std::assign函数原型为: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> InputIt &gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">assign</span><span class="params">( InputIt first, InputIt last )</span></span>;</span><br></pre></td></tr></table></figure></div>
+它的作用是将范围<code>[first, last)</code>内的元素复制到容器中，替换掉原有的所有元素。</p>
+<p>而另一个类似的函数std::copy则是将元素复制到指定位置, 例如:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> InputIt, <span class="keyword">class</span> OutputIt &gt;</span></span><br><span class="line"><span class="function">OutputIt <span class="title">copy</span><span class="params">( InputIt first, InputIt last, OutputIt d_first )</span></span>;</span><br></pre></td></tr></table></figure></div></p>
+<p>例如, 将set中的元素复制到vector的开头: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">copy</span>(s.<span class="built_in">begin</span>(), s.<span class="built_in">end</span>(), std::<span class="built_in">back_inserter</span>(v));</span><br></pre></td></tr></table></figure></div></p>
+<p>这里的std::back_inserter是一个<strong>适配器</strong>，用于将元素插入到容器的开头。可能有人会问,
+为什么不使用std::vector的begin()作为输出迭代器? 因为std::back_inserter
+是一个特殊的输出迭代器，它不会直接进行赋值，而是每次写入时都调用目标容器的
+push_back() 方法。这会动态地为 std::vector
+<strong>分配内存</strong>并添加元素。如果直接使用 begin()
+作为输出迭代器, 那么在复制过程中如果目标容器的大小不足以容纳所有元素,
+就会导致未定义行为。</p>
+<h2 id="底层实现">底层实现</h2>
+<p>std::vector
+底层通常是通过一个动态分配的数组来实现的。它维护了三个关键属性： -
+**_start<strong>: 指向数组的起始位置。 - </strong>_finish<strong>:
+指向当前最后一个元素的下一个位置。 - </strong>_end_of_storage**:
+指向分配的内存的末尾。</p>
 <p>下面是一个简化版的 std::vector 实现示例，展示了其核心机制：</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span>   <span class="comment">// for size_t</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span>    <span class="comment">// for std::allocator, std::uninitialized_copy, etc. (高级实现)</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;utility&gt;</span>   <span class="comment">// for std::move</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdexcept&gt;</span> <span class="comment">// for std::out_of_range</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>  <span class="comment">// for debugging output</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyVector</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// --- 1. 构造函数, 析构函数, 和赋值运算符 (Rule of Five) ---</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 默认构造函数</span></span><br><span class="line">    <span class="built_in">MyVector</span>() <span class="keyword">noexcept</span> : _start(<span class="literal">nullptr</span>), _finish(<span class="literal">nullptr</span>), _end_of_storage(<span class="literal">nullptr</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"[Default Constructor]\n"</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝构造函数</span></span><br><span class="line">    <span class="built_in">MyVector</span>(<span class="type">const</span> MyVector&amp; other) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"[Copy Constructor]\n"</span>;</span><br><span class="line">        <span class="comment">// 分配足够大的新空间</span></span><br><span class="line">        _start = <span class="keyword">new</span> T[other.<span class="built_in">size</span>()];</span><br><span class="line">        <span class="comment">// 逐个拷贝元素</span></span><br><span class="line">        std::<span class="built_in">uninitialized_copy</span>(other._start, other._finish, _start);</span><br><span class="line">        _finish = _start + other.<span class="built_in">size</span>();</span><br><span class="line">        _end_of_storage = _finish; <span class="comment">// 容量等于大小</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动构造函数</span></span><br><span class="line">    <span class="built_in">MyVector</span>(MyVector&amp;&amp; other) <span class="keyword">noexcept</span></span><br><span class="line">        : _start(other._start), _finish(other._finish), _end_of_storage(other._end_of_storage) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"[Move Constructor]\n"</span>;</span><br><span class="line">        <span class="comment">// “窃取”资源后，将源对象置为空状态，防止其析构函数释放我们刚窃取的内存</span></span><br><span class="line">        other._start = other._finish = other._end_of_storage = <span class="literal">nullptr</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝赋值运算符 (使用 copy-and-swap 惯用法)</span></span><br><span class="line">    MyVector&amp; <span class="keyword">operator</span>=(<span class="type">const</span> MyVector&amp; other) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"[Copy Assignment Operator]\n"</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other) {</span><br><span class="line">            <span class="function">MyVector <span class="title">temp</span><span class="params">(other)</span></span>; <span class="comment">// 调用拷贝构造函数</span></span><br><span class="line">            <span class="built_in">swap</span>(*<span class="keyword">this</span>, temp);   <span class="comment">// 交换内部指针</span></span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动赋值运算符</span></span><br><span class="line">    MyVector&amp; <span class="keyword">operator</span>=(MyVector&amp;&amp; other) <span class="keyword">noexcept</span> {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"[Move Assignment Operator]\n"</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other) {</span><br><span class="line">            <span class="built_in">free</span>(); <span class="comment">// 释放当前对象的资源</span></span><br><span class="line">            <span class="comment">// 窃取源对象的资源</span></span><br><span class="line">            _start = other._start;</span><br><span class="line">            _finish = other._finish;</span><br><span class="line">            _end_of_storage = other._end_of_storage;</span><br><span class="line">            <span class="comment">// 将源对象置空</span></span><br><span class="line">            other._start = other._finish = other._end_of_storage = <span class="literal">nullptr</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 析构函数</span></span><br><span class="line">    ~<span class="built_in">MyVector</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"[Destructor] Cleaning up "</span> &lt;&lt; <span class="built_in">size</span>() &lt;&lt; <span class="string">" elements.\n"</span>;</span><br><span class="line">        <span class="built_in">free</span>();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 2. 容量相关 ---</span></span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">size</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{ <span class="keyword">return</span> _finish - _start; }</span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">capacity</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{ <span class="keyword">return</span> _end_of_storage - _start; }</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{ <span class="keyword">return</span> _start == _finish; }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 3. 元素访问 ---</span></span><br><span class="line">    T&amp; <span class="keyword">operator</span>[](<span class="type">size_t</span> n) { <span class="keyword">return</span> _start[n]; }</span><br><span class="line">    <span class="type">const</span> T&amp; <span class="keyword">operator</span>[](<span class="type">size_t</span> n) <span class="type">const</span> { <span class="keyword">return</span> _start[n]; }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 4. 修改器 ---</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push_back</span><span class="params">(<span class="type">const</span> T&amp; value)</span> </span>{ <span class="comment">// 拷贝版本</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"push_back (copy)\n"</span>;</span><br><span class="line">        <span class="keyword">if</span> (_finish == _end_of_storage) {</span><br><span class="line">            <span class="built_in">reallocate</span>();</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 使用 placement new 在已分配的原始内存上构造对象</span></span><br><span class="line">        <span class="keyword">new</span> (_finish) <span class="built_in">T</span>(value);</span><br><span class="line">        ++_finish;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push_back</span><span class="params">(T&amp;&amp; value)</span> </span>{ <span class="comment">// 移动版本</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"push_back (move)\n"</span>;</span><br><span class="line">        <span class="keyword">if</span> (_finish == _end_of_storage) {</span><br><span class="line">            <span class="built_in">reallocate</span>();</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 使用 placement new 并通过 std::move 转发，调用移动构造函数</span></span><br><span class="line">        <span class="keyword">new</span> (_finish) <span class="built_in">T</span>(std::<span class="built_in">move</span>(value));</span><br><span class="line">        ++_finish;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 5. 迭代器 (简化版，仅为指针) ---</span></span><br><span class="line">    <span class="function">T* <span class="title">begin</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>{ <span class="keyword">return</span> _start; }</span><br><span class="line">    <span class="function">T* <span class="title">end</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>{ <span class="keyword">return</span> _finish; }</span><br><span class="line">    <span class="function"><span class="type">const</span> T* <span class="title">begin</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{ <span class="keyword">return</span> _start; }</span><br><span class="line">    <span class="function"><span class="type">const</span> T* <span class="title">end</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{ <span class="keyword">return</span> _finish; }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// --- 6. 私有辅助函数 ---</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">free</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (_start) {</span><br><span class="line">            <span class="comment">// 必须先手动调用析构函数</span></span><br><span class="line">            <span class="keyword">for</span> (T* p = _start; p != _finish; ++p) {</span><br><span class="line">                p-&gt;~<span class="built_in">T</span>();</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">// 再释放原始内存</span></span><br><span class="line">            <span class="keyword">delete</span>[] <span class="built_in">reinterpret_cast</span>&lt;<span class="type">char</span>*&gt;(_start);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">reallocate</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="comment">// 策略：容量为0时分配1，否则加倍, 这里是两倍的策略</span></span><br><span class="line">        <span class="type">size_t</span> new_capacity = <span class="built_in">size</span>() == <span class="number">0</span> ? <span class="number">1</span> : <span class="number">2</span> * <span class="built_in">capacity</span>();</span><br><span class="line">        <span class="type">size_t</span> old_size = <span class="built_in">size</span>();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 分配原始内存，注意这里用 char* 是为了避免调用T的默认构造</span></span><br><span class="line">        T* new_start = <span class="built_in">reinterpret_cast</span>&lt;T*&gt;(<span class="keyword">new</span> <span class="type">char</span>[new_capacity * <span class="built_in">sizeof</span>(T)]);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 移动旧元素到新内存</span></span><br><span class="line">        <span class="comment">// 使用 std::uninitialized_move 来处理移动并构造，更安全高效</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; old_size; ++i) {</span><br><span class="line">            <span class="keyword">new</span> (new_start + i) <span class="built_in">T</span>(std::<span class="built_in">move</span>(_start[i]));</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放旧内存</span></span><br><span class="line">        <span class="built_in">free</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新指针</span></span><br><span class="line">        _start = new_start;</span><br><span class="line">        _finish = _start + old_size;</span><br><span class="line">        _end_of_storage = _start + new_capacity;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 友元函数，用于 copy-and-swap</span></span><br><span class="line">    <span class="function"><span class="keyword">friend</span> <span class="type">void</span> <span class="title">swap</span><span class="params">(MyVector&amp; first, MyVector&amp; second)</span> <span class="keyword">noexcept</span> </span>{</span><br><span class="line">        <span class="keyword">using</span> std::swap;</span><br><span class="line">        <span class="built_in">swap</span>(first._start, second._start);</span><br><span class="line">        <span class="built_in">swap</span>(first._finish, second._finish);</span><br><span class="line">        <span class="built_in">swap</span>(first._end_of_storage, second._end_of_storage);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    T* _start;  <span class="comment">// 指向数据的起始位置</span></span><br><span class="line">    T* _finish;  <span class="comment">// 指向当前最后一个元素的下一个位置</span></span><br><span class="line">    T* _end_of_storage;  <span class="comment">// 指向分配的内存的末尾</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
 <p>这里的std::uninitialized_copy和std::uninitialized_move是C++标准库中的两个函数模板，分别用于在<strong>未初始化的内存区域中拷贝和移动对象</strong>。它们通常用于容器类的实现中，以便在分配新内存后正确地构造对象。</p>
-<h3 id="底层实现的关键：size-vs-capacity"><a href="#底层实现的关键：size-vs-capacity" class="headerlink" title="底层实现的关键：size vs capacity"></a>底层实现的关键：size vs capacity</h3><p>要深入理解 std::vector，就必须明白它内部的内存管理机制，这涉及到两个核心概念：大小 (size) 和 容量 (capacity)。</p>
+<h3 id="底层实现的关键size-vs-capacity">底层实现的关键：size vs
+capacity</h3>
+<p>要深入理解
+std::vector，就必须明白它内部的内存管理机制，这涉及到两个核心概念：大小
+(size) 和 容量 (capacity)。</p>
 <ul>
-<li>大小 (Size)：指容器中当前<strong>实际存储的元素数量</strong>。你可以通过 size() 成员函数获取。</li>
-<li>容量 (Capacity)：指在不重新分配内存的情况下，容器<strong>最多可以容纳的元素数量</strong>。你可以通过 capacity() 成员函数获取。</li>
+<li>大小
+(Size)：指容器中当前<strong>实际存储的元素数量</strong>。你可以通过
+size() 成员函数获取。</li>
+<li>容量
+(Capacity)：指在不重新分配内存的情况下，容器<strong>最多可以容纳的元素数量</strong>。你可以通过
+capacity() 成员函数获取。</li>
 </ul>
-<p>可以在上述实现中看到, size 是通过 _finish - _start 计算得到的, 而 capacity 是通过 _end_of_storage - _start 计算得到的。</p>
-<p>当你向 vector 添加元素时（例如通过 push_back），如果当前的 size 达到了 capacity，vector 会调用 reallocate() 函数来分配一块更大的内存区域，通常是当前容量的两倍。然后，它会将旧元素移动到新内存中，并释放旧内存。</p>
-<p>这个过程是昂贵的，因为它涉及内存分配和所有元素的移动。但是，由于每次扩容都是指数级增长，这种昂贵的操作不会频繁发生。因此，push_back 的平均时间复杂度（<strong>摊还时间复杂度</strong>）依然是 <strong>O(1)</strong>。</p>
+<p>可以在上述实现中看到, size 是通过 _finish - _start 计算得到的, 而
+capacity 是通过 _end_of_storage - _start 计算得到的。</p>
+<p>当你向 vector 添加元素时（例如通过 push_back），如果当前的 size
+达到了 capacity，vector 会调用 reallocate()
+函数来分配一块更大的内存区域，通常是当前容量的两倍。然后，它会将旧元素移动到新内存中，并释放旧内存。</p>
+<p>这个过程是昂贵的，因为它涉及内存分配和所有元素的移动。但是，由于每次扩容都是指数级增长，这种昂贵的操作不会频繁发生。因此，push_back
+的平均时间复杂度（<strong>摊还时间复杂度</strong>）依然是
+<strong>O(1)</strong>。</p>
 
 		</div>
 
@@ -946,7 +1024,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">vector</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%8E%A5%E5%8F%A3"><span class="nav-text">常用接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0"><span class="nav-text">添加元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="nav-text">删除元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0"><span class="nav-text">查找元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E9%81%8D%E5%8E%86"><span class="nav-text">迭代器遍历</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-text">底层实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%85%B3%E9%94%AE%EF%BC%9Asize-vs-capacity"><span class="nav-text">底层实现的关键：size vs capacity</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%8E%A5%E5%8F%A3"><span class="nav-text">常用接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0"><span class="nav-text">获取元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0-push_back-emplace_back"><span class="nav-text">添加元素: push_back,
+emplace_back</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="nav-text">删除元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0"><span class="nav-text">查找元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E5%8E%BB%E9%87%8D"><span class="nav-text">元素去重</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-stdunique"><span class="nav-text">使用 std::unique</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-stdset"><span class="nav-text">使用 std::set</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-text">底层实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%85%B3%E9%94%AEsize-vs-capacity"><span class="nav-text">底层实现的关键：size vs
+capacity</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -975,11 +1055,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

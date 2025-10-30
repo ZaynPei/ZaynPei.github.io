@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -780,7 +780,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>446 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>447 Words</span>
         </span>
     
     
@@ -800,15 +800,25 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="ReAct"><a href="#ReAct" class="headerlink" title="ReAct"></a>ReAct</h2><p>ReAct (Reason + Act) 核心思想是模仿人类解决问题的方式，将<strong>推理</strong> (Reasoning) 与<strong>行动</strong> (Acting) 显式地结合起来，形成一个“<strong>思考-行动-观察</strong>”的<strong>循环</strong>。</p>
-<p>在ReAct诞生之前，主流的方法可以分为两类：一类是“<strong>纯思考</strong>”型，如思维链 (<strong>Chain-of-Thought</strong>)，它能引导模型进行复杂的逻辑推理，但无法与外部世界交互，容易产生事实幻觉；另一类是“<strong>纯行动</strong>”型，模型<strong>直接输出</strong>要执行的动作，但缺乏规划和纠错能力。</p>
+			<h2 id="react">ReAct</h2>
+<p>ReAct (Reason + Act)
+核心思想是模仿人类解决问题的方式，将<strong>推理</strong> (Reasoning)
+与<strong>行动</strong> (Acting)
+显式地结合起来，形成一个“<strong>思考-行动-观察</strong>”的<strong>循环</strong>。</p>
+<p>在ReAct诞生之前，主流的方法可以分为两类：一类是“<strong>纯思考</strong>”型，如思维链
+(<strong>Chain-of-Thought</strong>)，它能引导模型进行复杂的逻辑推理，但无法与外部世界交互，容易产生事实幻觉；另一类是“<strong>纯行动</strong>”型，模型<strong>直接输出</strong>要执行的动作，但缺乏规划和纠错能力。</p>
 <p>ReAct的巧妙之处在于，它认识到思考与行动是相辅相成的。思考指导行动，而行动的结果又反过来修正思考。为此，ReAct范式通过一种特殊的提示工程来引导模型，使其每一步的输出都遵循一个固定的轨迹：</p>
 <ul>
-<li><strong>Thought</strong> (思考): 这是智能体的“内心独白”。它会分析当前情况、分解任务、制定下一步计划，或者反思上一步的结果。</li>
-<li><strong>Action</strong> (行动): 这是智能体决定采取的具体动作，通常是调用一个外部工具，例如 Search[‘华为最新款手机’]。</li>
-<li><strong>Observation</strong> (观察): 这是执行Action后从外部工具返回的结果，例如搜索结果的摘要或API的返回值。</li>
+<li><strong>Thought</strong> (思考):
+这是智能体的“内心独白”。它会分析当前情况、分解任务、制定下一步计划，或者反思上一步的结果。</li>
+<li><strong>Action</strong> (行动):
+这是智能体决定采取的具体动作，通常是调用一个外部工具，例如
+Search[‘华为最新款手机’]。</li>
+<li><strong>Observation</strong> (观察):
+这是执行Action后从外部工具返回的结果，例如搜索结果的摘要或API的返回值。</li>
 </ul>
-<p>智能体将不断重复这个 Thought -&gt; Action -&gt; Observation 的循环，将新的观察结果追加到历史记录中，形成一个不断增长的上下文，直到它在Thought中认为已经找到了最终答案，然后输出结果。这个过程形成了一个强大的协同效应：推理使得行动更具目的性，而行动则为推理提供了事实依据。</p>
+<p>智能体将不断重复这个 Thought -&gt; Action -&gt; Observation
+的循环，将新的观察结果追加到历史记录中，形成一个不断增长的上下文，直到它在Thought中认为已经找到了最终答案，然后输出结果。这个过程形成了一个强大的协同效应：推理使得行动更具目的性，而行动则为推理提供了事实依据。</p>
 
 		</div>
 
@@ -822,12 +832,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/29/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/Set/">
+				<a class="prev" rel="prev" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E7%94%9F%E6%88%90%E5%99%A8/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48"></span>
+						<span class="post-nav-title-item truncate max-w-48">生成器</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -859,7 +869,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">智能体范式</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ReAct"><span class="nav-text">ReAct</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#react"><span class="nav-text">ReAct</span></a></li></ol>
 
 	</div>
 </div>
@@ -888,11 +898,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

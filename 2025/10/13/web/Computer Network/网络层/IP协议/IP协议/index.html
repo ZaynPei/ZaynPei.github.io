@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/13/web/computer network/网络层/ip协议/ip协议/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IP协议">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/13/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/IP%E5%8D%8F%E8%AE%AE/IP%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-13T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-13T12:47:48.301Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="computer network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            IP协议 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">IP协议</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-13 15:00</span>
+        <span class="mobile">2025-10-13 15:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-13 20:47:48</span>
+            <span class="mobile">2025-10-13 20:47:48</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/web/">web</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/computer-network/">computer network</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>8k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>29 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>IP协议是网络层的核心协议，负责在不同网络之间传输数据包。在网络层中,
+与IP协议密切相关的还有ICMP协议和ARP协议, 即Internet Control Message
+Protocol (ICMP) 和 Address Resolution Protocol
+(ARP)。前者用于传递控制信息和错误报告，后者用于将IP地址解析为物理地址（MAC地址）。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-1.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<blockquote>
+<p>这里的IGMP是Internet Group Management Protocol,
+用于管理主机组成员资格, 主要用于IP多播通信中,
+允许主机动态加入或离开多播组。而RARP已经基本被废弃,
+现在主要使用DHCP来实现类似功能。</p>
+</blockquote>
+<h2 id="异构网络互连">异构网络互连</h2>
+<p>因特网并非一个单一的网络，而是由全球数以百万计的、拓扑结构、性能和协议各不相同的异构网络，通过路由器互连而成的
+。要让这些千差万别的网络能够顺畅通信，就需要解决诸如不同的寻址方案、路由技术、最大分组长度等问题
+。</p>
+<p>IP协议正是解决这个问题的关键。通过让所有异构网络都使用相同的网际协议（IP），从网络层的角度看，整个因特网就好像是一个统一的、无缝的
+IP网
+。当主机在这个IP网上通信时，它们无需关心底层网络的具体异构细节，就好像在一个单一网络上通信一样
+。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-2.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h2 id="ipv4地址及其编址方法">IPv4地址及其编址方法</h2>
+<p>IPv4地址是分配给IP网上每一个<strong>主机</strong>或<strong>路由器接口</strong>的一个全球唯一的32比特标识符。为了方便人类读写，32位的二进制地址通常采用
+<strong>点分十进制</strong>
+表示。即将32位二进制数每8位为一组，将每组转换为十进制数，并用点号.分隔。</p>
+<p>例如：二进制 00001010 11110000 00001111 10101010 转换为点分十进制就是
+10.240.15.170 。</p>
+<p>IPv4地址的编址方法经历了三个历史阶段：分类编址 (Classful
+Addressing)–&gt;划分子网 (Subnetting)–&gt;无分类编址 (Classless
+Inter-Domain Routing, CIDR)</p>
+<h3 id="分类编址">分类编址</h3>
+<p>这是最古老的编址方法，将32位IP地址分为 <strong>网络号</strong> 和
+<strong>主机号</strong> 两部分。
+网络号用于标识主机所在的网络，主机号用于标识网络中的具体主机。同一个网络内的所有主机具有相同的网络号,
+而主机号则唯一标识该网络中的每一台主机。</p>
+<p>分类编址将IP地址划分为A、B、C、D、E五类,
+其中A、B、C类地址用于主机寻址, D类地址用于多播,
+E类地址保留供将来使用。</p>
+<ul>
+<li>A类地址: 网络号占8位, 主机号占24位, 适用于超大型网络,
+其中网络号的首位固定为0。</li>
+<li>B类地址: 网络号占16位, 主机号占16位, 适用于中到大型网络,
+其中网络号的前两位固定为10。</li>
+<li>C类地址: 网络号占24位, 主机号占8位, 适用于小型网络,
+其中网络号的前三位固定为110。</li>
+<li>D类地址: 用于多播, 网络号占前4位, 其余位用于标识多播组,
+其中网络号的前四位固定为1110。</li>
+<li>E类地址: 保留地址, 供将来使用, 其中网络号的前四位固定为1111。</li>
+</ul>
+<p>除此之外, 还要注意<strong>主机号全为0</strong>的地址是
+<strong>网络地址</strong>，<strong>全为1</strong>的地址是
+<strong>广播地址</strong>，都不能分配给具体设备。网络号127被保留用于
+<strong>本地环回测试</strong>, 不能用于实际网络通信。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-3.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>A类地址：</p>
+<p>结构：8位网络号，24位主机号 。首位固定为0。</p>
+<p>网络范围：1.0.0.0 至 126.0.0.0。</p>
+<p>主机容量：每个网络可容纳约1677万台主机 (2 24 −2) 。</p>
+<p>用途：为极少数超大型网络设计。</p>
+<p>B类地址：</p>
+<p>结构：16位网络号，16位主机号 。前两位固定为10。</p>
+<p>网络范围：128.0.0.0 至 191.255.0.0。</p>
+<p>主机容量：每个网络可容纳65,534台主机 (2 16 −2) 。</p>
+<p>用途：为中到大型网络设计。</p>
+<p>C类地址：</p>
+<p>结构：24位网络号，8位主机号 。前三位固定为110。</p>
+<p>网络范围：192.0.0.0 至 223.255.255.0。</p>
+<p>主机容量：每个网络可容纳254台主机 (2 8 −2) 。</p>
+<p>用途：为大量的小型网络设计。</p>
+<p>重要规则：主机号全为0的地址是 网络地址，全为1的地址是
+广播地址，都不能分配给具体设备 。网络号127被保留用于 本地环回测试 。</p>
+<h3 id="划分子网-subnetting">划分子网 (Subnetting)</h3>
+<blockquote>
+<p>假如一个C类网络
+(例如192.168.1.0/24)，它的主机号部分有8位，去掉网络地址和广播地址后可用的主机地址是254个,
+而现在有一个小型办公室只有10台主机, 这就浪费了244个地址;
+另一个大型企业有1000台主机, 但C类网络最多只能容纳254台主机,
+这就不够用了, 需要使用B类地址, 但B类地址又太大, 浪费了很多地址。</p>
+</blockquote>
+<p>为了解决分类编址<strong>不够灵活</strong>、<strong>容易浪费地址</strong>的问题，引入了划分子网技术
+。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>核心思想是：从原有分类地址的<strong>主机号</strong>部分<strong>借用若干位作为子网号</strong>，将一个大的网络划分成多个<strong>更小的子网</strong>。这使得IP地址从二级结构（网络号+主机号）演变为<strong>三级结构</strong>（网络号+子网号+主机号）。</p>
+<p>子网掩码 (Subnet
+Mask)：一个32位的数值，用于指明IP地址中哪些位是网络号和子网号，哪些位是主机号。子网掩码中连续的<strong>1对应网络号和子网号</strong>，连续的<strong>0对应主机号</strong>。我们只需要将一个IP地址与其子网掩码进行<strong>按位与</strong>（AND）运算，可以得到该IP地址所在的子网的网络地址
+。</p>
+<p>下面是使用子网掩码划分子网的一个例子：</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-4.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>默认子网掩码指的是分类编址中每类地址的标准掩码,
+这可以看作是子网掩码的特殊情况, 即没有借用主机号位作为子网号。</p>
+<h3 id="无分类编址-cidr">无分类编址 (CIDR)</h3>
+<p>划分子网的方法虽然提高了地址利用率，但仍然存在灵活性不足的问题。例如C类地址的主机号部分只有8位，最多只能划分出256个子网，而每个子网的主机数越划分越少，这仍然不够灵活。为此，引入了无分类编址
+(Classless Inter-Domain Routing, CIDR)。</p>
+<p>CIDR是目前因特网正在使用的编址方法，它消除了A、B、C类的概念，可以更有效地分配IP地址。</p>
+<p>核心思想是：IP地址再次回归二级结构，但更加灵活：<strong>网络前缀</strong>
+(Network-Prefix) + <strong>主机号</strong>。网络前缀的长度是可变的。</p>
+<p>一般采用的记法是CIDR记法（斜线记法）：在IP地址后面加上<strong>斜线/</strong>和<strong>网络前缀的位数</strong>来表示地址块。例如：128.14.35.7/20
+表示前20位是网络前缀，后12位是主机号,
+转换为二进制是<code>10000000.00001110.00100011.00000111</code>,
+其中前20位 <code>10000000.00001110.0010</code> 是网络前缀，后12位
+<code>0011.00000111</code> 是主机号。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-5.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>使用CIDR的一个好处是可以更灵活地划分网络。例如，假设一个组织需要一个包含1000台主机的网络。使用CIDR，可以选择一个合适的前缀长度来满足这个需求。</p>
+<p>另一个好处是CIDR支持<strong>路由聚合</strong> (Route
+Aggregation)，也称为构造<strong>超网</strong>(Supernetting),
+可以根据<strong>共同前缀</strong>将多个<strong>连续的网络地址块</strong>合并成一个更大的地址块，从而减少路由表的规模，提高路由效率。</p>
+<h2 id="ipv4地址的应用规划">IPv4地址的应用规划</h2>
+<p>IPv4地址的应用规划，指的是将一个给定的IPv4地址块（无论是传统的分类网络还是CIDR地址块），根据实际网络拓扑的需求，将其划分成若干个更小的地址块（即<strong>子网</strong>），然后将这些子网分配给互联网中的不同网络，并最终为各网络中的主机和路由器接口配置具体的IP地址的过程
+。</p>
+<p>这个规划过程主要有两种方法 ：</p>
+<ul>
+<li>采用<strong>定长的子网掩码</strong> (Fixed Length Subnet Mask,
+<strong>FLSM</strong>)</li>
+<li>采用<strong>变长的子网掩码</strong> (Variable Length Subnet Mask,
+<strong>VLSM</strong>)</li>
+</ul>
+<h3 id="定长的子网掩码-flsm">定长的子网掩码 (FLSM)</h3>
+<p>在使用定长子网掩码（FLSM）进行子网划分时，所有划分出的子网都必须使用同一个子网掩码
+。这意味着<strong>每个子网分配到的IP地址数量是完全相同的</strong>，这种“一刀切”的方式虽然简单，但非常容易造成IP地址资源的浪费。</p>
+<p>假设我们申请到了一个C类网络
+218.75.230.0，需要为下图所示的5个网络进行地址分配。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-6.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>第一步：统计各网络地址需求:
+我们需要计算每个网络总共需要多少个IP地址（包括主机、路由器接口、网络地址和广播地址）。</p>
+<p>第二步：确定子网掩码:
+确定所需子网数量：我们总共有5个独立的网络，需要划分出至少5个子网。我们需要从C类地址的8位<strong>主机号</strong>中<strong>借</strong>位来创建子网。如果借用n位作为子网号，则可以划分出<span class="math inline">2<sup><em>n</em></sup></span>
+个子网。因此，必须借3位，这样可以划分出 2^3 =8 个子网，满足需求。</p>
+<p>C类网络的默认掩码是 255.255.255.0 (即
+/24)。从主机位借走3位后，新的子网掩码变为 /27 (24+3=27)。/27
+对应的二进制掩码是 11111111.11111111.11111111.11100000,
+转换成点分十进制就是
+255.255.255.224。在FLSM中，所有5个网络都将使用这个掩码 。</p>
+<p>第三步：分配子网: 借用3位后，每个子网的主机位还剩下 8−3=5
+位，因此每个子网的大小为 2^5 =32
+个地址。我们可以从划分出的8个子网中任选5个进行分配 。 - 子网1 (000):
+218.75.230.0/27 (地址范围 .0 - .31) -&gt; 分配给网络1 - 子网2 (001):
+218.75.230.32/27 (地址范围 .32 - .63) -&gt; 分配给网络4 - 子网3 (010):
+218.75.230.64/27 (地址范围 .64 - .95) -&gt; 分配给网络2 …以此类推</p>
+<p>FLSM的<strong>缺点</strong>: 这种方法的弊端非常明显：地址浪费严重。以
+网络5
+为例，它实际只需要4个IP地址，但我们却不得不分配给它一个包含32个地址的子网，造成了28个地址的巨大浪费
+。</p>
+<h3 id="变长的子网掩码-vlsm">变长的子网掩码 (VLSM)</h3>
+<p>变长子网掩码（VLSM）允许对同一个主网络划分出的不同子网使用<strong>不同的子网掩码</strong>。这样就可以根据每个子网的实际需求来精确分配地址数量，从而最大限度地减少地址浪费。</p>
+<p>同样是上面的网络需求，但这次我们使用VLSM来从地址块 218.75.230.0/24
+进行规划。</p>
+<p>第一步：按需求排序并确定各子网所需的前缀长度</p>
+<p>我们通常将需求按<strong>从大到小</strong>的顺序排列，以方便划分，避免地址碎片。</p>
+<p>网络2 (需28个地址)：需要一个至少包含28个地址的块。2^5
+=32，满足需求。主机位需要5位，因此网络前缀为 32 - 5 = 27，即 /27。</p>
+<p>网络3 (需15个地址)：需要一个至少包含15个地址的块。2^4
+=16，满足需求。主机位需要4位，因此网络前缀为 32 - 4 = 28，即 /28。</p>
+<p>网络4 (需13个地址)：同样需要一个16个地址的块，前缀为 /28 。</p>
+<p>网络1 (需9个地址)：同样需要一个16个地址的块，前缀为 /28。</p>
+<p>网络5 (需4个地址)：需要一个至少包含4个地址的块。2^2
+=4，满足需求。主机位需要2位，因此网络前缀为 32 - 2 = 30，即 /30 。</p>
+<p>第二步：从大到小，依次划分地址块</p>
+<p>我们从 218.75.230.0/24
+这个大地址池中，像切蛋糕一样，一块一块地切分出去 。</p>
+<ul>
+<li>分配给网络2 (/27)：切出第一个块 218.75.230.0/27 (范围 .0 - .31),
+变成二进制是
+<code>11011010.01001011.11100110.000xxxxx</code>，其中前27位
+<code>11011010.01001011.11100110.000</code> 是网络前缀，后5位
+<code>xxxxx</code> 是主机号。</li>
+<li>分配给网络1 (/28)：从未分配的地址（从 .32 开始）中切出第二个块
+218.75.230.32/28 (范围 .32 - .47)。变成二进制是
+<code>11011010.01001011.11100110.0010xxxx</code>，其中前28位
+<code>11011010.01001011.11100110.0010</code> 是网络前缀，后4位
+<code>xxxx</code> 是主机号。</li>
+<li>分配给网络3 (/28)：继续切出第三个块 218.75.230.48/28 (范围 .48 -
+.63)。 变成二进制是
+<code>11011010.01001011.11100110.0011xxxx</code>，其中前28位
+<code>11011010.01001011.11100110.0011</code> 是网络前缀，后4位
+<code>xxxx</code> 是主机号。</li>
+<li>分配给网络4 (/28)：继续切出第四个块 218.75.230.64/28 (范围 .64 -
+.79) 。</li>
+<li>分配给网络5 (/30)：最后切出第五个块 218.75.230.80/30 (范围 .80 -
+.83) 。</li>
+</ul>
+<p>VLSM的优点:
+通过这种方式，每个子网都得到了<strong>大小最合适的地址块</strong>，实现了按需分配。网络5
+只需要4个地址，我们就精确地给了它一个包含4个地址的 /30
+块，完全没有造成地址浪费
+。剩余的172个地址（从.84到.255）可以留作未来扩展使用
+，极大地提高了IP地址的利用率。</p>
+<h2 id="ipv4地址与mac地址对比">IPv4地址与MAC地址对比</h2>
+<p>首先，我们需要理解这两种地址在TCP/IP协议体系结构中的位置。</p>
+<p>IP地址工作在网络层,
+它是一个<strong>逻辑地址</strong>，用于在整个<strong>因特网范围内</strong>唯一标识一台<strong>主机</strong>或路由器。在封装数据时，源IP地址
+和 目的IP地址 被封装在 <strong>IP数据报的首部</strong> 中 。</p>
+<p>MAC地址工作在网络接口层中的数据链路层。它是一个<strong>物理地址</strong>或硬件地址，固化在网络接口卡（网卡）上，用于在同一个<strong>局域网</strong>（或同一段链路）内标识一个<strong>具体的网络设备</strong>。在封装数据时，源MAC地址
+和 目的MAC地址 被封装在<strong>帧的首部</strong>中。</p>
+<p>如下图所示，应用层的数据逐层向下封装，IP地址在网络层添加，而MAC地址在更下一层的数据链路层添加。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-7.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>并且,
+当一个数据包从源主机H1发送到不同网络的目的主机H2，途中经过路由器R1和R2时，两种地址的变化规律是截然不同的。</p>
+<p>IP地址：始终不变. 在整个传输过程中，IP数据报首部中的 源IP地址 (IP1)
+和目的IP地址 (IP2) 始终保持不变
+。它们标识的是通信的<strong>最初发起者</strong>和<strong>最终接收者</strong>。</p>
+<p>MAC地址：逐跳改变.
+数据链路层的帧首部中的源MAC地址和目的MAC地址在每一“跳”（hop）都会改变
+。它们标识的是<strong>当前这一段链路</strong>上的<strong>发送者</strong>和<strong>接收者</strong>。</p>
+<p>也就是说,
+IP地址负责“全程导航”（从起点到终点），而MAC地址负责“分段带路”（从当前一站到下一站）。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-8.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>到这里,
+可能一个常见的问题是：既然最终数据是在链路上靠MAC地址找到设备的，为什么不直接只用MAC地址通信，而要引入IP地址呢？结论是,
+如果仅使用MAC地址进行通信，将会面临巨大的挑战 ：</p>
+<ul>
+<li>路由表爆炸：全世界每台路由器的路由表中，都必须记录因特网上所有主机和路由器接口的MAC地址
+。这是一个天文数字，完全不具备可扩展性。</li>
+<li>管理极其困难：手工配置如此庞大的路由表是不可能的。即使使用路由协议自动构建，海量的MAC地址信息也会严重占用网络带宽和路由器的存储空间
+。</li>
+</ul>
+<p>而使用IP地址则完美地解决了这个问题。IP地址的<strong>层级结构</strong>（网络号+主机号）使得路由器只需记录<strong>到目标网络</strong>的路由，而无需记录网络内每一台主机的地址。这使得路由表的规模大大减小。</p>
+<p>但是这就引出了另一个问题：路由器根据目的IP地址查路由表，知道了下一跳路由器的IP地址，但它不知道下一跳的MAC地址，数据链路层无法封装帧，怎么办？</p>
+<p>这个“IP地址到MAC地址的最后一公里映射问题”，正是由地址解析协议（ARP）来解决的
+。ARP负责在<strong>局域网</strong>内动态地查询IP地址对应的MAC地址，从而将网络层的IP寻址和数据链路层的MAC寻址无缝地衔接起来。</p>
+<h2 id="arp-协议">ARP 协议</h2>
+<p>ARP (Address Resolution Protocol)，即“地址解析协议”,
+用于在一个<strong>局域网</strong>（LAN）内，将一个已知的<strong>IP地址</strong>（逻辑地址）解析（翻译）成对应的<strong>MAC地址</strong>（物理地址）。</p>
+<p>当主机A想要给同一局域网内的主机B发送数据时，主机A通常只知道主机B的IP地址（例如，你在ping
+192.168.1.101）。但是，数据在<strong>局域网</strong>内最终是以<strong>数据帧</strong>的形式传播的，而帧的头部必须包含目标MAC地址。交换机根据这个MAC地址来转发帧。因此，主机A在发送数据之前，必须先获得主机B的MAC地址。</p>
+<h3 id="arp的工作原理">ARP的工作原理</h3>
+<p>ARP的工作过程可以分为两个核心步骤：ARP请求 和
+ARP应答。我们通过一个例子来说明。</p>
+<p>假设局域网内有两台主机：</p>
+<ul>
+<li>主机A: IP地址 192.168.1.100，MAC地址 AA-AA-AA-AA-AA-AA</li>
+<li>主机B: IP地址 192.168.1.101，MAC地址 BB-BB-BB-BB-BB-BB</li>
+</ul>
+<p>现在，主机A 想要向 主机B 发送数据。</p>
+<p><strong>步骤1</strong>：<strong>检查ARP缓存</strong>
+主机A首先会检查自己的 ARP缓存表（ARP
+Cache）。这是一个存储了<strong>近期IP地址与MAC地址映射关系的动态表格</strong>(为了提高效率，避免每次通信都进行一次广播查询)。</p>
+<p>如果找到 192.168.1.101
+对应的MAC地址，则直接使用该地址封装数据帧并发送，整个ARP过程结束;
+如果没有找到，则进入下一步。</p>
+<p><strong>步骤2</strong>：<strong>发送ARP请求（广播）</strong>
+主机A会在<strong>局域网内</strong>发送一个 ARP请求（ARP Request）
+报文。</p>
+<p>这个请求的核心信息是：“谁的IP地址是 192.168.1.101？请告诉我的IP地址
+192.168.1.100，我的MAC地址是 AA-AA-AA-AA-AA-AA”。</p>
+<p>这个ARP请求报文会被封装在一个以太网帧中。这个帧的特殊之处在于源MAC地址是主机A的MAC地址
+(AA-AA-AA-AA-AA-AA),
+<strong>目标MAC地址</strong>却是一个特殊的<strong>广播地址</strong>
+(<strong>FF-FF-FF-FF-FF-FF</strong>)。使用广播地址意味着这个帧会被发送到该<strong>局域网内的所有设备</strong>。</p>
+<p><strong>步骤3</strong>：<strong>网络中所有主机处理ARP请求</strong>
+局域网内的所有设备（包括主机B和其他主机）都会接收到这个广播帧。</p>
+<p>其他主机会检查ARP请求中的目标IP地址（192.168.1.101），发现与自身的IP地址不符，因此会静默丢弃这个请求，不作任何响应。</p>
+<p>而主机发现ARP请求中的目标IP地址正是自己的IP地址, 执行下一个阶段。</p>
+<p><strong>步骤4</strong>：<strong>发送ARP应答</strong>（单播）
+主机B在确认请求是发给自己的之后，会构造一个 ARP应答（ARP Reply）
+报文。</p>
+<p>报文内容：应答的核心信息是：“我就是 192.168.1.101，我的MAC地址是
+BB-BB-BB-BB-BB-BB”。</p>
+<p>这个ARP应答报文也会被封装在一个以太网帧中，但这次是单播：源MAC地址是主机B的MAC地址
+(BB-BB-BB-BB-BB-BB), 目标MAC地址是主机A的MAC地址
+(AA-AA-AA-AA-AA-AA)。主机B之所以知道主机A的MAC地址，是因为它在最初的ARP请求中已经包含了。</p>
+<p>单播可以直接将应答信息发送给请求者（主机A），而不需要再打扰网络中的其他设备。</p>
+<p><strong>步骤5</strong>：<strong>更新ARP缓存并通信</strong>
+主机A收到主机B的ARP应答后，就获取了 192.168.1.101 对应的MAC地址
+BB-BB-BB-BB-BB-BB。</p>
+<p>接着,
+主机A会将这个映射关系存入自己的ARP缓存表，并设置一个老化时间（例如2分钟）。在老化时间内，再次向
+192.168.1.101
+发送数据时，就可以直接从缓存中查找，无需再次发送ARP请求。</p>
+<p>主机A现在可以愉快地将数据封装成以太网帧（目标MAC为BB-BB-BB-BB-BB-BB），并通过交换机准确地发送给主机B了。</p>
+<p>总之, ARP
+协议可以认为是网络层在与数据链路层交互时所使用的一个“工具”或“接口”,
+利用网络层的IP地址获取数据链路层的MAC地址，以便在物理网络上进行通信</p>
+<h3 id="arp高速缓存表">ARP高速缓存表</h3>
+<p>ARP缓存表中的记录分为两种类型 ：</p>
+<ul>
+<li><p>动态
+(Dynamic)：通过ARP协议自动获取的记录。它们有一个生命周期（例如2分钟），到期后会自动删除，以适应网络中可能发生的变化（如某台主机的网卡更换导致MAC地址改变）。</p></li>
+<li><p>静态 (Static)：由网络管理员手动配置的记录，通常不会自动过期
+。</p></li>
+</ul>
+<h3 id="arp的范围限制">ARP的范围限制</h3>
+<p>一个非常重要的概念是，ARP协议只能在同一个局域网（或同一个广播域）上使用，不能跨网络（即跨路由器）工作
+。</p>
+<p>当主机H1要给另一个网络的主机H2发送数据时，它实际上是使用ARP来查找它的
+<strong>默认网关</strong>（路由器R1）
+的MAC地址。数据包在跨越多个网络的<strong>每一段链路</strong>（例如 H1
+-&gt; R1, R1 -&gt; R2, R2 -&gt;
+H2）上，都会独立地使用一次ARP协议来解析下一跳的MAC地址 。</p>
+<h2 id="ip数据报的发送和转发过程">IP数据报的发送和转发过程</h2>
+<p>该过程包含两个主要部分：<strong>主机</strong>如何<strong>发送</strong>IP数据报，以及<strong>路由器</strong>如何<strong>转发</strong>IP数据报。</p>
+<p><strong>主机发送IP数据报</strong>:
+主机发送IP数据报时，首先需要判断目的主机是在同一个网络还是在不同的网络，这决定了数据报的交付方式
+。</p>
+<ul>
+<li>直接交付：当源主机和目的主机在同一个网络中时，它们之间可以直接通信。
+<ul>
+<li>源主机会通过ARP协议获取目的主机的MAC地址，然后将IP数据报封装成帧直接发送给对方</li>
+</ul></li>
+<li>间接交付：当源主机和目的主机位于不同网络时，通信需要通过它们的默认网关（<strong>路由器</strong>）来中转。
+<ul>
+<li>源主机会将IP数据报发送给自己的
+默认网关，由网关来负责后续的转发。</li>
+</ul></li>
+</ul>
+<p>至于如何判断目的主机是否在同一网络，源主机会通过一个简单的计算来判断:
+将源主机的IP地址和<strong>子网掩码</strong>进行按位与运算，得到<strong>源主机的网络地址</strong>；然后将目的主机的IP地址和同样的子网掩码进行按位与运算，得到<strong>目的主机的网络地址</strong>。如果两个网络地址<strong>相同</strong>，则说明两台主机在<strong>同一个网络中</strong>；否则，它们在不同的网络中。</p>
+<p><strong>路由器转发IP数据报</strong>:
+当路由器收到一个IP数据报后，如果数据报是有效的（首部无误码且生存时间未耗尽），它会基于数据报首部中的目的IP地址，在自己的<strong>路由表</strong>中进行查询
+。</p>
+<ul>
+<li>如果查询到匹配的路由条目，就按照该条目的指示进行转发 。</li>
+<li>如果查询不到匹配的条目，路由器会<strong>丢弃该IP数据报</strong>，并向源主机发送一个<strong>ICMP差错报告报文</strong></li>
+</ul>
+<p>路由器查表转发过程: 假设主机A向主机D发送一个IP数据报，其源地址为
+192.168.0.1，目的地址为 192.168.0.129
+。该数据报通过间接交付被发送到路由器R。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-9.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>首先,
+路由器R收到数据报后，首先<strong>检查数据报的完整性和生存时间</strong>。如果数据报有效，R会提取目的IP地址
+192.168.0.129
+。然后，R会在自己的路由表中查找该目的地址的最佳匹配条目。</p>
+<p>逐条匹配路由表：路由器R会用<strong>路由表中每条条目的地址掩码</strong>与<strong>数据报的目的地址</strong>进行<strong>按位与</strong>运算，并将结果与该条目的目的网络地址进行比较。</p>
+<ul>
+<li>匹配第一条：将 192.168.0.129 与第一条路由的掩码 255.255.255.128
+(/25) 进行“与”运算，结果是 192.168.0.128 。这个结果与第一条的目的网络
+192.168.0.0 不匹配 。</li>
+<li>匹配第二条：将 192.168.0.129 与第二条路由的掩码 255.255.255.128
+(/25) 进行“与”运算，结果是 192.168.0.128 。这个结果与第二条的目的网络
+192.168.0.128 匹配 。</li>
+</ul>
+<p>执行转发：路由器R找到了匹配的第二条路由条目,
+该条目的“下一跳”指示为“接口1直连”
+。这意味着目的主机D就在路由器R的接口1所连接的网络上。路由器R会通过ARP协议获取主机D的MAC地址，然后将IP数据报封装成帧，从接口1直接交付给主机D
+。</p>
+<p>对广播数据报的处理:
+<strong>路由器是隔离广播域的</strong>。如果路由器收到的是一个目的地址为广播地址（如
+192.168.0.127 或
+255.255.255.255）的IP数据报，它不会对这种数据报进行转发。这样做是为了防止广播数据报在整个因特网中泛滥，造成巨大的网络风暴和资源浪费。</p>
+<h2 id="ip数据报的首部格式">IP数据报的首部格式</h2>
+<p>IP数据报的首部格式及其内容是实现IP协议所有功能的基础
+。IPv4数据报的首部由一个 20字节的固定部分 和一个最大 40字节的可变部分
+组成
+。固定部分是每个IPv4数据报都必须包含的，而可变部分（可选字段）则用于增加一些特殊功能，但很少被使用
+。</p>
+<p>在TCP/IP标准中，数据格式常以32比特（4字节）为单位来描述，首部格式的每一行都代表4个字节</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-10.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>以下是IPv4数据报首部中各个字段的详细含义：</p>
+<ol type="1">
+<li><p>版本 (Version)</p>
+<ul>
+<li>长度：4比特 。</li>
+<li>功能：用来表示IP协议的版本 。通信双方使用的IP协议版本必须一致
+。目前广泛使用的版本号为4，即IPv4 。</li>
+</ul></li>
+<li><p>首部长度 (Header Length)、可选字段和填充</p>
+<ul>
+<li>首部长度：
+<ul>
+<li>长度：4比特 。</li>
+<li>功能：该字段的取值以 4字节 为单位，用来表示整个IPv4数据报首部的长度
+。</li>
+<li>取值范围：最小值为二进制0101（即十进制5），表示首部长度为 5×4=20
+字节，此时首部只包含固定部分
+。最大值为二进制1111（即十进制15），表示首部长度为 15×4=60 字节 。</li>
+</ul></li>
+<li>可选字段 (Options)：
+<ul>
+<li>长度：从1字节到40字节不等 。</li>
+<li>功能：用来支持排错、测量以及安全等措施
+。但由于它会增加路由器处理数据报的开销，因此很少被使用 。</li>
+</ul></li>
+<li>填充 (Padding)：
+<ul>
+<li>功能：由于可选字段的长度可变，可能导致首部总长度不是4字节的整数倍。填充字段用全0来补足，以确保首部长度始终是4字节的整数倍
+。</li>
+</ul></li>
+</ul></li>
+<li><p>区分服务 (Differentiated Services)</p>
+<ul>
+<li>长度：8比特 。</li>
+<li>功能：用来获得更好的服务质量（QoS）
+。这个字段在旧标准中被称为服务类型（ToS），但一直未被广泛使用
+。一般情况下不使用该字段 。</li>
+</ul></li>
+<li><p>总长度 (Total Length)</p>
+<ul>
+<li>长度：16比特 。</li>
+<li>功能：该字段的取值以 字节
+为单位，用来表示整个IPv4<strong>数据报</strong>的长度（即<strong>首部长度</strong>
++ <strong>数据载荷</strong>长度） 。</li>
+<li>取值范围：最大值为 <span class="math inline">2<sup>16</sup></span>
+−1 = 65535 字节 。</li>
+</ul></li>
+<li><p>标识 (Identification)、标志 (Flags) 和 片偏移 (Fragment Offset)
+这三个字段共同用于IP数据报的 分片与重组
+。当一个IP数据报的长度超过了链路的最大传送单元（MTU）时，就必须将其分割成更小的片段（分片）进行传输
+。</p>
+<ul>
+<li>标识 (Identification)：
+<ul>
+<li>长度：16比特 。</li>
+<li>功能：这是一个唯一的标识符。当一个数据报被分片后，所有这些分片都具有
+相同的标识值，这样目的主机就能知道哪些分片属于同一个原始数据报 。</li>
+</ul></li>
+<li>标志 (Flags)：
+<ul>
+<li>长度：3比特 。</li>
+<li>功能：
+<ul>
+<li>最低位 (MF - More Fragments)：MF=1 表示后面还有分片；MF=0
+表示这是最后一个分片 。</li>
+<li>中间位 (DF - Don’t Fragment)：DF=1 表示不允许分片；DF=0 表示允许分片
+。</li>
+<li>最高位：保留位，必须为0 。</li>
+</ul></li>
+</ul></li>
+<li>片偏移 (Fragment Offset)：
+<ul>
+<li>长度：13比特 。</li>
+<li>功能：该字段的取值以 8字节
+为单位，用于指明<strong>当前分片的数据载荷部分</strong>相对于<strong>原始数据报数据载荷部分</strong>的起始位置
+。</li>
+</ul></li>
+</ul></li>
+<li><p>生存时间 (Time To Live, TTL)</p>
+<ul>
+<li>长度：8比特 。</li>
+<li>功能：该字段的目的是防止IP数据报在网络中因路由环路而无限循环 。</li>
+<li>工作机制：每经过一个路由器，该字段的值就 减1
+。当TTL的值变为0时，路由器会丢弃该数据报，并向源主机发送一个ICMP时间超过的差错报告
+。</li>
+</ul></li>
+<li><p>协议 (Protocol)</p>
+<ul>
+<li>长度：8比特 。</li>
+<li>功能：用来指明该IP数据报的数据载荷部分封装的是哪一种上层协议的数据单元（PDU）
+。</li>
+<li>常用协议值：TCP为6，UDP为17，ICMP为1，OSPF为89 。</li>
+</ul></li>
+<li><p>首部检验和 (Header Checksum)</p>
+<ul>
+<li>长度：16比特 。</li>
+<li>功能：用于检测IPv4数据报的<strong>首部</strong>在传输过程中是否出现了差错。它<strong>不检验数据载荷</strong>部分，以减少计算量。</li>
+<li>工作机制：
+<ul>
+<li>发送方：将首部划分为多个16比特的字，然后用反码算术运算求和，最后将结果的反码写入检验和字段
+。</li>
+<li>接收方/路由器：将收到的首部所有16比特字（包括检验和字段本身）再次用反码算术运算求和。如果结果为全1（取反码后为0），则表示首部没有出错；否则表示出现差错，丢弃该数据报
+。</li>
+<li>由于TTL字段在每经过一个路由器时都会改变，所以
+每个路由器都必须重新计算首部检验和 。</li>
+</ul></li>
+<li>在IPv6中，取消了首部检验和字段，以简化路由器的处理流程，提高转发效率
+。</li>
+</ul></li>
+<li><p>源IP地址 (Source IP Address) 和 目的IP地址 (Destination IP
+Address)</p>
+<ul>
+<li>长度：均为32比特 。</li>
+<li>功能：分别用来填写发送该IP数据报的源主机的IP地址和接收该IP数据报的目的主机的IP地址
+。</li>
+</ul></li>
+</ol>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/web/">#web</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/computer-network/">#computer network</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/14/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/0.%20C%E9%A3%8E%E6%A0%BC%E7%BA%BF%E7%A8%8B/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">C风格线程的基本使用</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/13/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E8%B7%AF%E7%94%B1/%E8%B7%AF%E7%94%B1/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">路由</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">IP协议</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%9E%84%E7%BD%91%E7%BB%9C%E4%BA%92%E8%BF%9E"><span class="nav-text">异构网络互连</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv4%E5%9C%B0%E5%9D%80%E5%8F%8A%E5%85%B6%E7%BC%96%E5%9D%80%E6%96%B9%E6%B3%95"><span class="nav-text">IPv4地址及其编址方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E7%BC%96%E5%9D%80"><span class="nav-text">分类编址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91-subnetting"><span class="nav-text">划分子网 (Subnetting)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E5%88%86%E7%B1%BB%E7%BC%96%E5%9D%80-cidr"><span class="nav-text">无分类编址 (CIDR)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv4%E5%9C%B0%E5%9D%80%E7%9A%84%E5%BA%94%E7%94%A8%E8%A7%84%E5%88%92"><span class="nav-text">IPv4地址的应用规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E9%95%BF%E7%9A%84%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81-flsm"><span class="nav-text">定长的子网掩码 (FLSM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%95%BF%E7%9A%84%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81-vlsm"><span class="nav-text">变长的子网掩码 (VLSM)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipv4%E5%9C%B0%E5%9D%80%E4%B8%8Emac%E5%9C%B0%E5%9D%80%E5%AF%B9%E6%AF%94"><span class="nav-text">IPv4地址与MAC地址对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arp-%E5%8D%8F%E8%AE%AE"><span class="nav-text">ARP 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arp%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">ARP的工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arp%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98%E8%A1%A8"><span class="nav-text">ARP高速缓存表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arp%E7%9A%84%E8%8C%83%E5%9B%B4%E9%99%90%E5%88%B6"><span class="nav-text">ARP的范围限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ip%E6%95%B0%E6%8D%AE%E6%8A%A5%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E8%BD%AC%E5%8F%91%E8%BF%87%E7%A8%8B"><span class="nav-text">IP数据报的发送和转发过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ip%E6%95%B0%E6%8D%AE%E6%8A%A5%E7%9A%84%E9%A6%96%E9%83%A8%E6%A0%BC%E5%BC%8F"><span class="nav-text">IP数据报的首部格式</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

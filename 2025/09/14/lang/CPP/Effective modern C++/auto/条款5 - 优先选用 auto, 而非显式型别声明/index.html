@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,10 +833,15 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>在现代C++开发中, auto 关键字通过要求初始化、正确推导类型以及适应代码重构，避免了许多由于显式类型声明而导致的微妙的正确性和效率问题, 应当作为大部分情况下的首选项来使用。</p>
-<h3 id="std-function"><a href="#std-function" class="headerlink" title="std::function"></a>std::function</h3><p>std::function 是 C++11 引入的一个非常强大且核心的工具，位于 <functional> 头文件中。</functional></p>
+			<p>在现代C++开发中, auto
+关键字通过要求初始化、正确推导类型以及适应代码重构，避免了许多由于显式类型声明而导致的微妙的正确性和效率问题,
+应当作为大部分情况下的首选项来使用。</p>
+<h3 id="stdfunction">std::function</h3>
+<p>std::function 是 C++11 引入的一个非常强大且核心的工具，位于
+<functional> 头文件中。</functional></p>
 <p>它是一个通用的、多态的<strong>函数包装器</strong>。它的核心价值在于，它可以用一个统一的类型来存储、传递和调用任何符合特定函数签名的“可调用对象”。</p>
-<h4 id="std-function-是什么？"><a href="#std-function-是什么？" class="headerlink" title="std::function 是什么？"></a>std::function 是什么？</h4><p>在 C++ 中，“可调用对象”（Callable Object）有多种形式，例如：</p>
+<h4 id="stdfunction-是什么">std::function 是什么？</h4>
+<p>在 C++ 中，“可调用对象”（Callable Object）有多种形式，例如：</p>
 <ul>
 <li>普通函数</li>
 <li>函数指针</li>
@@ -844,48 +849,90 @@ mjx-container[display="true"] + br {
 <li>函数对象（Functor，即重载了 operator() 的类实例）</li>
 <li>类的成员函数（需要绑定到特定对象实例上）</li>
 </ul>
-<p>std::function 是一个类模板，它提供了一个统一的类型来“包装”所有这些不同类型的可调用对象，只要它们的调用签名（即参数列表和返回值类型）相匹配, 例如:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个 std::function 变量 'func'</span></span><br><span class="line"><span class="comment">// 它可以持有任何“接受一个 int 和一个 double，并返回一个 bool”的可调用对象</span></span><br><span class="line">std::function&lt;<span class="type">bool</span>(<span class="type">int</span>, <span class="type">double</span>)&gt; func;</span><br></pre></td></tr></table></figure></div>
-
-<h4 id="为什么需要-std-function？"><a href="#为什么需要-std-function？" class="headerlink" title="为什么需要 std::function？"></a>为什么需要 std::function？</h4><p>在 C++11 之前，存储不同类型的可调用对象非常困难，因为它们各自拥有完全不同的、不兼容的 C++ 类型：函数指针的类型是 R(*)(Args…); 每个 Lambda 表达式都有一个由编译器生成的、独一无二的匿名闭包类型; 每个函数对象都有其自定义的类类型（例如 MyFunctor）。</p>
-<p>如果没有 std::function，我们无法创建一个变量或一个容器（如 std::vector）来同时持有上述这些不同类型的对象，即使它们的调用签名完全相同。</p>
-<p>而 std::function 提供了单一的、具体的类型（例如 std::function&lt;void(int)&gt;），它可以持有任何符合 void(int) 签名的可调用物。它实现了“类型擦除”（Type Erasure）机制，隐藏了底层可调用对象的原始类型，只暴露统一的调用接口。</p>
-<h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><p>假设我们需要一个可以执行“接受一个 int 并返回 bool”操作的包装器, 我们可以让 myFunc 持有以下任何一种对象。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">std::function&lt;<span class="type">bool</span>(<span class="type">int</span>)&gt; myFunc;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 普通函数</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isEven</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> x % <span class="number">2</span> == <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">myFunc = isEven;  <span class="comment">// 这里 myFunc 直接持有了函数 isEven 的指针。</span></span><br><span class="line">std::cout &lt;&lt; <span class="string">"函数调用: "</span> &lt;&lt; <span class="built_in">myFunc</span>(<span class="number">10</span>) &lt;&lt; std::endl; <span class="comment">// 输出 1 (true)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. Lambda 表达式（可以带状态）</span></span><br><span class="line"><span class="type">int</span> divisor = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">auto</span> isDivisible = [divisor](<span class="type">int</span> x) -&gt; <span class="type">bool</span> {</span><br><span class="line">    <span class="keyword">return</span> x % divisor == <span class="number">0</span>;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line">myFunc = isDivisible;  <span class="comment">// 这是 std::function 最强大的用途之一。它能够存储 Lambda 表达式，包括 Lambda 捕获的状态（这里捕获了 divisor）。</span></span><br><span class="line">std::cout &lt;&lt; <span class="string">"Lambda 调用: "</span> &lt;&lt; <span class="built_in">myFunc</span>(<span class="number">9</span>) &lt;&lt; std::endl; <span class="comment">// 输出 1 (true)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 函数对象</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">IsGreaterThan</span> {</span><br><span class="line">    <span class="type">int</span> limit;</span><br><span class="line">    <span class="built_in">IsGreaterThan</span>(<span class="type">int</span> val) : <span class="built_in">limit</span>(val) {}</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">int</span> x)</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> x &gt; limit;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function">IsGreaterThan <span class="title">comparator</span><span class="params">(<span class="number">100</span>)</span></span>;</span><br><span class="line">myFunc = comparator;  <span class="comment">// std::function 会在内部存储 comparator 对象的一个副本（或移动后的版本）。</span></span><br><span class="line">std::cout &lt;&lt; <span class="string">"Functor 调用: "</span> &lt;&lt; <span class="built_in">myFunc</span>(<span class="number">101</span>) &lt;&lt; std::endl; <span class="comment">// 输出 1 (true)</span></span><br></pre></td></tr></table></figure></div>
-
-<p>最后, 需要注意的是 std::function 不是零成本抽象。为了实现类型擦除和存储任意可调用对象（特别是带状态的 Lambda），它通常需要在堆上进行动态内存分配（尽管许多实现带有“小缓冲区优化”(SBO) 来避免对小型对象的堆分配）。</p>
-<p>且调用 std::function 通常涉及一次间接函数调用（类似于虚函数调用），这比直接函数调用或模板化的函数调用要慢。</p>
-<h3 id="auto可以解决未初始化变量问题"><a href="#auto可以解决未初始化变量问题" class="headerlink" title="auto可以解决未初始化变量问题"></a>auto可以解决未初始化变量问题</h3><p>在 C++ 中，显式声明类型允许变量不被初始化，这可能导致不确定的行为。而 auto 通过类型推导工作，它必须<strong>从变量的初始化物中推导类型</strong>。这就带来一个巨大的优势：使用 auto 声明的变量必须被初始化，否则代码将无法通过编译。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x; <span class="comment">// 有潜在的未初始化风险</span></span><br><span class="line"><span class="keyword">auto</span> x; <span class="comment">// 编译错误！必须有初始化物</span></span><br><span class="line"><span class="keyword">auto</span> x = <span class="number">0</span>; <span class="comment">// 没问题，x 被明确定义</span></span><br></pre></td></tr></table></figure></div>
-<p>这从根本上消除了一整类由于忘记初始化而导致的问题。</p>
-<h3 id="auto处理冗长及编译器才知的类型"><a href="#auto处理冗长及编译器才知的类型" class="headerlink" title="auto处理冗长及编译器才知的类型"></a>auto处理冗长及编译器才知的类型</h3><p>auto 可以极大地简化代码，特别是当类型名称非常冗长或难以书写时。例如，在 C++98 中获取迭代器所指向的值的类型非常繁琐, 而使用 auto，代码变得清晰简洁：</p>
+<p>std::function
+是一个类模板，它提供了一个统一的类型来“包装”所有这些不同类型的可调用对象，只要它们的调用签名（即参数列表和返回值类型）相匹配,
+例如: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个 std::function 变量 'func'</span></span><br><span class="line"><span class="comment">// 它可以持有任何“接受一个 int 和一个 double，并返回一个 bool”的可调用对象</span></span><br><span class="line">std::function&lt;<span class="type">bool</span>(<span class="type">int</span>, <span class="type">double</span>)&gt; func;</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="为什么需要-stdfunction">为什么需要 std::function？</h4>
+<p>在 C++11
+之前，存储不同类型的可调用对象非常困难，因为它们各自拥有完全不同的、不兼容的
+C++ 类型：函数指针的类型是 R(*)(Args…); 每个 Lambda
+表达式都有一个由编译器生成的、独一无二的匿名闭包类型;
+每个函数对象都有其自定义的类类型（例如 MyFunctor）。</p>
+<p>如果没有 std::function，我们无法创建一个变量或一个容器（如
+std::vector）来同时持有上述这些不同类型的对象，即使它们的调用签名完全相同。</p>
+<p>而 std::function 提供了单一的、具体的类型（例如
+std::function&lt;void(int)&gt;），它可以持有任何符合 void(int)
+签名的可调用物。它实现了“类型擦除”（Type
+Erasure）机制，隐藏了底层可调用对象的原始类型，只暴露统一的调用接口。</p>
+<h4 id="使用示例">使用示例</h4>
+<p>假设我们需要一个可以执行“接受一个 int 并返回 bool”操作的包装器,
+我们可以让 myFunc 持有以下任何一种对象。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">std::function&lt;<span class="type">bool</span>(<span class="type">int</span>)&gt; myFunc;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 普通函数</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isEven</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> x % <span class="number">2</span> == <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">myFunc = isEven;  <span class="comment">// 这里 myFunc 直接持有了函数 isEven 的指针。</span></span><br><span class="line">std::cout &lt;&lt; <span class="string">"函数调用: "</span> &lt;&lt; <span class="built_in">myFunc</span>(<span class="number">10</span>) &lt;&lt; std::endl; <span class="comment">// 输出 1 (true)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. Lambda 表达式（可以带状态）</span></span><br><span class="line"><span class="type">int</span> divisor = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">auto</span> isDivisible = [divisor](<span class="type">int</span> x) -&gt; <span class="type">bool</span> {</span><br><span class="line">    <span class="keyword">return</span> x % divisor == <span class="number">0</span>;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line">myFunc = isDivisible;  <span class="comment">// 这是 std::function 最强大的用途之一。它能够存储 Lambda 表达式，包括 Lambda 捕获的状态（这里捕获了 divisor）。</span></span><br><span class="line">std::cout &lt;&lt; <span class="string">"Lambda 调用: "</span> &lt;&lt; <span class="built_in">myFunc</span>(<span class="number">9</span>) &lt;&lt; std::endl; <span class="comment">// 输出 1 (true)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 函数对象</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">IsGreaterThan</span> {</span><br><span class="line">    <span class="type">int</span> limit;</span><br><span class="line">    <span class="built_in">IsGreaterThan</span>(<span class="type">int</span> val) : <span class="built_in">limit</span>(val) {}</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">int</span> x)</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> x &gt; limit;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function">IsGreaterThan <span class="title">comparator</span><span class="params">(<span class="number">100</span>)</span></span>;</span><br><span class="line">myFunc = comparator;  <span class="comment">// std::function 会在内部存储 comparator 对象的一个副本（或移动后的版本）。</span></span><br><span class="line">std::cout &lt;&lt; <span class="string">"Functor 调用: "</span> &lt;&lt; <span class="built_in">myFunc</span>(<span class="number">101</span>) &lt;&lt; std::endl; <span class="comment">// 输出 1 (true)</span></span><br></pre></td></tr></table></figure></div></p>
+<p>最后, 需要注意的是 std::function
+不是零成本抽象。为了实现类型擦除和存储任意可调用对象（特别是带状态的
+Lambda），它通常需要在堆上进行动态内存分配（尽管许多实现带有“小缓冲区优化”(SBO)
+来避免对小型对象的堆分配）。</p>
+<p>且调用 std::function
+通常涉及一次间接函数调用（类似于虚函数调用），这比直接函数调用或模板化的函数调用要慢。</p>
+<h3 id="auto可以解决未初始化变量问题">auto可以解决未初始化变量问题</h3>
+<p>在 C++ 中，显式声明类型允许变量不被初始化，这可能导致不确定的行为。而
+auto
+通过类型推导工作，它必须<strong>从变量的初始化物中推导类型</strong>。这就带来一个巨大的优势：使用
+auto 声明的变量必须被初始化，否则代码将无法通过编译。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x; <span class="comment">// 有潜在的未初始化风险</span></span><br><span class="line"><span class="keyword">auto</span> x; <span class="comment">// 编译错误！必须有初始化物</span></span><br><span class="line"><span class="keyword">auto</span> x = <span class="number">0</span>; <span class="comment">// 没问题，x 被明确定义</span></span><br></pre></td></tr></table></figure></div>
+这从根本上消除了一整类由于忘记初始化而导致的问题。</p>
+<h3 id="auto处理冗长及编译器才知的类型">auto处理冗长及编译器才知的类型</h3>
+<p>auto
+可以极大地简化代码，特别是当类型名称非常冗长或难以书写时。例如，在 C++98
+中获取迭代器所指向的值的类型非常繁琐, 而使用 auto，代码变得清晰简洁：
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typename</span> std::iterator_traits&lt;It&gt;::value_type currValue = *b;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> currValue = *b;</span><br></pre></td></tr></table></figure></div>
-<p>更重要的是，有些类型只有编译器知道，开发者根本无法显式写出，最典型的例子就是 lambda 表达式生成的闭包 (closure) 类型。auto 是存储闭包的理想且唯一直接的方式。</p>
-<p>当然, 虽然可以使用 std::function 来存储闭包，但这与 auto 相比存在显著差异：</p>
+更重要的是，有些类型只有编译器知道，开发者根本无法显式写出，最典型的例子就是
+lambda 表达式生成的闭包 (closure) 类型。auto
+是存储闭包的理想且唯一直接的方式。</p>
+<p>当然, 虽然可以使用 std::function 来存储闭包，但这与 auto
+相比存在显著差异：</p>
 <ul>
-<li>auto：使用 auto 声明的、存储闭包的变量与该闭包是同一类型，它占用的内存量与闭包完全相同。</li>
-<li>std::function：这是一个模板的实例，它占有固定尺寸的内存。如果这个尺寸对于它要存储的闭包不够用，std::function 的构造函数会分配堆内存来存储该闭包。</li>
+<li>auto：使用 auto
+声明的、存储闭包的变量与该闭包是同一类型，它占用的内存量与闭包完全相同。</li>
+<li>std::function：这是一个模板的实例，它占有固定尺寸的内存。如果这个尺寸对于它要存储的闭包不够用，std::function
+的构造函数会分配堆内存来存储该闭包。</li>
 </ul>
-<p>因此，std::function 的方法通常比 auto 方法占用更多内存，速度更慢（可能导致堆分配和间接函数调用），而 auto 则避免了这些开销。</p>
-<h3 id="auto避免“类型捷径”带来的正确性与效率问题"><a href="#auto避免“类型捷径”带来的正确性与效率问题" class="headerlink" title="auto避免“类型捷径”带来的正确性与效率问题"></a>auto避免“类型捷径”带来的正确性与效率问题</h3><p>这是优先选用 auto 最有力的论据之一。开发者在显式指定类型时，有时会不经意间写下“错误”的类型，这可能导致隐式类型转换，从而引发正确性或效率问题。auto 可以保证推导出正确的类型。</p>
+<p>因此，std::function 的方法通常比 auto
+方法占用更多内存，速度更慢（可能导致堆分配和间接函数调用），而 auto
+则避免了这些开销。</p>
+<h3 id="auto避免类型捷径带来的正确性与效率问题">auto避免“类型捷径”带来的正确性与效率问题</h3>
+<p>这是优先选用 auto
+最有力的论据之一。开发者在显式指定类型时，有时会不经意间写下“错误”的类型，这可能导致隐式类型转换，从而引发正确性或效率问题。auto
+可以保证推导出正确的类型。</p>
 <p>一个示例是下面的v.size() 与 unsigned 的陷阱:</p>
-<p>标准规定 std::vector::size() 返回的类型是 std::vector<int>::size_type。但在实际编码中，很多程序员会“偷懒”地将其存储在 unsigned 中。</int></p>
+<p>标准规定 std::vector::size() 返回的类型是
+std::vector<int>::size_type。但在实际编码中，很多程序员会“偷懒”地将其存储在
+unsigned 中。</int></p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; v;</span><br><span class="line"><span class="type">unsigned</span> sz = v.<span class="built_in">size</span>(); <span class="comment">// 显式类型，但可能不正确</span></span><br></pre></td></tr></table></figure></div>
-<p>这种写法存在移植性问题。例如，在32位 Windows 上，unsigned 和 std::vector<int>::size_type 都是32位；但在64位 Windows 上，unsigned 仍然是32位，而 size_type 却是64位。如果容器中的元素超过 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="7.147ex" height="2.071ex" role="img" focusable="false" viewbox="0 -833.2 3159 915.2"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mn"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"/></g><g data-mml-node="mn" transform="translate(533,363) scale(0.707)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"/></g></g><g data-mml-node="mn" transform="translate(936.6,0)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"/></g><g data-mml-node="mo" transform="translate(1658.8,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"/></g><g data-mml-node="mn" transform="translate(2659,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"/></g></g></g></svg></mjx-container>，这段代码在64位系统上就会表现异常。</int></p>
-<p>使用 auto 则完全避免了这个问题，它保证推导出正确的类型：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> sz = v.<span class="built_in">size</span>(); <span class="comment">// 正确，sz 的类型是 std::vector&lt;int&gt;::size_type</span></span><br></pre></td></tr></table></figure></div>
-
+<p>这种写法存在移植性问题。例如，在32位 Windows 上，unsigned 和
+std::vector<int>::size_type 都是32位；但在64位 Windows 上，unsigned
+仍然是32位，而 size_type 却是64位。如果容器中的元素超过 <span class="math inline">2<sup>32</sup> − 1</span>，这段代码在64位系统上就会表现异常。</int></p>
+<p>使用 auto 则完全避免了这个问题，它保证推导出正确的类型：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> sz = v.<span class="built_in">size</span>(); <span class="comment">// 正确，sz 的类型是 std::vector&lt;int&gt;::size_type</span></span><br></pre></td></tr></table></figure></div></p>
 <p>还有个示例是遍历 std::unordered_map 的陷阱:</p>
-<p>在遍历 std::unordered_map 时，很多程序员会写出如下代码：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::unordered_map&lt;std::string, <span class="type">int</span>&gt; m;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">const</span> std::pair&lt;std::string, <span class="type">int</span>&gt;&amp; p : m) {</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>这段代码看起来完全合理，但其实是错误的。std::unordered_map 中键值对的实际类型是 std::pair&lt;const std::string, int&gt;（因为键是 const 的），这与循环变量 p 的类型 std::pair&lt;std::string, int&gt; 并不匹配。</p>
-<p>为了让代码通过编译，编译器会在循环的每次迭代中，复制哈希表中的元素来创建一个临时对象，然后将引用 p 绑定到那个临时对象上。这会导致不必要的复制开销，而且如果对 p 取址，得到的将是一个指向临时对象的指针。</p>
-<p>使用 auto 可以轻松解决这个微妙的错误：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; p : m) {</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>auto 会被正确推导为 std::pair&lt;const std::string, int&gt;，引用 p 会被直接绑定到 map 中的元素，既高效又正确。</p>
-<p>同时, 使用 auto 的代码更具适应性。如果一个函数的返回类型发生了变化（例如，从 int 改为 long），调用该函数并将结果存储在 auto 变量中的客户端代码，在下次编译时会自动更新变量类型。如果代码显式指定了 int，则需要开发者手动查找并修改所有调用点。</p>
+<p>在遍历 std::unordered_map 时，很多程序员会写出如下代码：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::unordered_map&lt;std::string, <span class="type">int</span>&gt; m;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">const</span> std::pair&lt;std::string, <span class="type">int</span>&gt;&amp; p : m) {</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 这段代码看起来完全合理，但其实是错误的。std::unordered_map
+中键值对的实际类型是 std::pair&lt;const std::string, int&gt;（因为键是
+const 的），这与循环变量 p 的类型 std::pair&lt;std::string, int&gt;
+并不匹配。</p>
+<p>为了让代码通过编译，编译器会在循环的每次迭代中，复制哈希表中的元素来创建一个临时对象，然后将引用
+p 绑定到那个临时对象上。这会导致不必要的复制开销，而且如果对 p
+取址，得到的将是一个指向临时对象的指针。</p>
+<p>使用 auto 可以轻松解决这个微妙的错误： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; p : m) {</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> auto
+会被正确推导为 std::pair&lt;const std::string, int&gt;，引用 p
+会被直接绑定到 map 中的元素，既高效又正确。</p>
+<p>同时, 使用 auto
+的代码更具适应性。如果一个函数的返回类型发生了变化（例如，从 int 改为
+long），调用该函数并将结果存储在 auto
+变量中的客户端代码，在下次编译时会自动更新变量类型。如果代码显式指定了
+int，则需要开发者手动查找并修改所有调用点。</p>
 <blockquote>
-<p>最后, 虽然有些开发者担心 auto 会降低代码的可读性（因为无法一眼看出类型），但现代 IDE 通常可以显示推导出的类型。而且在很多情况下，了解变量的抽象概念（例如它是一个“容器”或“计数器”）比知道它的精确类型更重要，这可以通过良好的变量命名来传达。</p>
+<p>最后, 虽然有些开发者担心 auto
+会降低代码的可读性（因为无法一眼看出类型），但现代 IDE
+通常可以显示推导出的类型。而且在很多情况下，了解变量的抽象概念（例如它是一个“容器”或“计数器”）比知道它的精确类型更重要，这可以通过良好的变量命名来传达。</p>
 </blockquote>
 
 		</div>
@@ -949,7 +996,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款5：优先选用 auto, 而非显式型别声明</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-function"><span class="nav-text">std::function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#std-function-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">std::function 是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-std-function%EF%BC%9F"><span class="nav-text">为什么需要 std::function？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-text">使用示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98"><span class="nav-text">auto可以解决未初始化变量问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E5%A4%84%E7%90%86%E5%86%97%E9%95%BF%E5%8F%8A%E7%BC%96%E8%AF%91%E5%99%A8%E6%89%8D%E7%9F%A5%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">auto处理冗长及编译器才知的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E9%81%BF%E5%85%8D%E2%80%9C%E7%B1%BB%E5%9E%8B%E6%8D%B7%E5%BE%84%E2%80%9D%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%80%A7%E4%B8%8E%E6%95%88%E7%8E%87%E9%97%AE%E9%A2%98"><span class="nav-text">auto避免“类型捷径”带来的正确性与效率问题</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#stdfunction"><span class="nav-text">std::function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#stdfunction-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">std::function 是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-stdfunction"><span class="nav-text">为什么需要 std::function？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-text">使用示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98"><span class="nav-text">auto可以解决未初始化变量问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E5%A4%84%E7%90%86%E5%86%97%E9%95%BF%E5%8F%8A%E7%BC%96%E8%AF%91%E5%99%A8%E6%89%8D%E7%9F%A5%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">auto处理冗长及编译器才知的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E9%81%BF%E5%85%8D%E7%B1%BB%E5%9E%8B%E6%8D%B7%E5%BE%84%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%80%A7%E4%B8%8E%E6%95%88%E7%8E%87%E9%97%AE%E9%A2%98"><span class="nav-text">auto避免“类型捷径”带来的正确性与效率问题</span></a></li></ol>
 
 	</div>
 </div>
@@ -978,11 +1025,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

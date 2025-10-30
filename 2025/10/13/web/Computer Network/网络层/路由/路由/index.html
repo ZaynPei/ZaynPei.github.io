@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/13/web/computer network/网络层/路由/路由/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="路由">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/13/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E8%B7%AF%E7%94%B1/%E8%B7%AF%E7%94%B1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-13T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-13T15:19:29.459Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="computer network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            路由 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">路由</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-13 15:00</span>
+        <span class="mobile">2025-10-13 15:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-13 23:19:29</span>
+            <span class="mobile">2025-10-13 23:19:29</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/web/">web</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/computer-network/">computer network</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>7.7k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>26 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="路由器">路由器</h2>
+<p>路由器（Router）是一种计算机网络设备，它工作在OSI模型和TCP/IP模型中的第三层——网络层
+(Network Layer)。它拥有多个输入端口和输出端口,
+专门用于连接不同的网络，并负责在这些网络之间转发数据包 (Packet) 。</p>
+<p>与工作在第二层（数据链路层）的交换机（Switch）不同：</p>
+<ul>
+<li><p>交换机：主要负责在同一个局域网（LAN）内部转发数据，它根据设备的物理地址（MAC地址）来做决策</p></li>
+<li><p>路由器：则负责连接<strong>不同的网络</strong>（例如，你家的局域网与互联网），它根据逻辑地址（IP地址）来做决策</p></li>
+</ul>
+<p>网络层的两大功能是<strong>分组转发</strong>和<strong>路由选择</strong>,
+而路由器的所有功能都围绕这两个问题展开，具体体现在以下几个方面：</p>
+<p><strong>逻辑寻址</strong> (Logical Addressing):
+网络层使用IP地址作为设备的逻辑地址。这个地址是分层的，包含了网络部分和主机部分，这使得路由器能够判断一个设备是否属于同一个网络。</p>
+<p>当路由器收到一个数据包时，它会检查其“信封”上的目的IP地址。这是路由器做出所有决策的基础。它通过这个地址来识别数据包最终要去往的那个遥远的网络。</p>
+<h3 id="路径选择-path-determination-routing"><strong>路径选择</strong>
+(Path Determination / Routing)</h3>
+<p>这是路由器最“智能”的部分。路由器内部维护着一张名为<strong>路由表
+(Routing
+Table</strong>)的动态地图。这张表详细记录了去往各个已知网络的路径信息。</p>
+<p>一张路由表通常包含以下关键信息： - 目标网络 (Destination
+Network)：要去往的网络的地址。 - 子网掩码 (Subnet
+Mask)：用于确定目标网络的范围。 - 下一跳 (Next
+Hop)：要到达目标网络，应该将数据包交给的下一个路由器的IP地址。 - 出接口
+(Outgoing Interface)：将数据包从本路由器的哪个物理端口（如
+GigabitEthernet0/1）发出去。 - 度量值
+(Metric)：一个衡量路径“好坏”的数值。度量值越小，路径通常越优。</p>
+<p>路由器通过三种方式学习并构建这张“地图”：</p>
+<ul>
+<li><strong>直连网络</strong> (Directly
+Connected)：路由器启动后，会自动识别与其物理端口直接相连的网络。</li>
+<li><strong>静态路由</strong> (Static
+Routing)：由网络管理员手动配置的永久性路由。适用于网络结构简单且固定的场景。</li>
+<li><strong>动态路由</strong> (Dynamic
+Routing)：<strong>路由器之间</strong>通过运行特定的<strong>路由协议</strong>（如OSPF,
+BGP,
+RIP等）来自动<strong>交换路由信息</strong>，动态地学习网络拓扑结构，并自动计算出最佳路径。这是大型网络保持高效运行的关键。</li>
+</ul>
+<blockquote>
+<p>此外, 转发表 (Forwarding Table)
+是路由器用来实际执行数据包转发的表格。它通常是从路由表中提取和优化而来，结构更简单，便于<strong>快速查找</strong>。</p>
+</blockquote>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-8.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h3 id="数据包转发-packet-forwarding">数据包转发 (Packet
+Forwarding)</h3>
+<p>一个数据分组从<strong>进入路由器</strong>到<strong>离开</strong>的完整流程如下：</p>
+<ol type="1">
+<li><p>输入端口接收：</p>
+<ul>
+<li>物理层：信号从某个输入端口进入路由器，物理层将其从电信号转换为比特流
+。</li>
+<li>数据链路层：数据链路层从比特流中识别出完整的帧，去掉帧头和帧尾后，将内部的数据分组（IP数据报）向上交付给网络层处理
+。</li>
+</ul></li>
+<li><p>网络层处理：网络层会根据分组的类型进行不同的处理：</p>
+<ul>
+<li>情况一：普通待转发的数据分组
+<ul>
+<li>查表转发：网络层会提取分组首部中的目的IP地址，在 转发表
+中进行快速查找 。
+<ul>
+<li>如果找不到匹配的转发条目，该分组将被丢弃 。</li>
+<li>如果找到匹配条目，则按照条目中指示的输出端口进行转发 。</li>
+</ul></li>
+<li>首部更新：在转发前，网络层会更新数据分组首部中的某些字段，最典型的就是将
+生存时间 (TTL) 减1 。</li>
+<li>交付输出：更新后的分组被向下交付给相应输出端口的<strong>数据链路层</strong>
+。</li>
+</ul></li>
+<li>情况二：携带<strong>路由报文</strong>的<strong>路由分组</strong>
+<ul>
+<li>当网络层识别出这是一个路由协议的分组时（如RIP或OSPF报文），它不会被转发，而是被送交给路由选择处理机
+。</li>
+<li>路由选择处理机根据路由报文的内容来更新自己的路由表 。</li>
+</ul></li>
+</ul></li>
+<li><p>交换结构 (Switching
+Fabric)：这是路由器的关键构件，负责将分组从输入端口物理地传送到正确的输出端口,
+其速率对路由器的整体性能至关重要 。</p></li>
+<li><p>输出端口发送：</p>
+<ul>
+<li>数据链路层：从网络层接收到数据分组后，将其重新封装成帧（添加新的帧头和帧尾）
+。</li>
+<li>物理层：将帧看作比特流，并将其转换为相应的电信号，通过物理链路发送出去
+。</li>
+</ul></li>
+</ol>
+<p>此外, 路由器还具备输入缓冲区,
+用于暂存新进入路由器但还来不及处理的分组, 和输出缓冲区,
+用于暂存已经处理完毕但还来不及发送的分组，例如当输出链路繁忙时。</p>
+<h2 id="静态路由配置">静态路由配置</h2>
+<p>静态路由配置是指由用户或网络运维人员通过路由器的相关命令，<strong>手动</strong>为路由器添加<strong>路由表条目</strong>的一种方式。这种方式<strong>不依赖于任何路由选择协议</strong>，路由信息<strong>不会自动更新</strong>或交换，完全由<strong>人工</strong>维护。</p>
+<p>优点：这种方法实现简单，对路由器的处理开销小 。
+缺点：它不能自动适应网络状态（如流量、拓扑结构等）的变化。因此通常只在<strong>小规模的网络</strong>中采用
+。</p>
+<h3 id="直连路由-directly-connected-route和非直连路由-non-directly-connected-route">直连路由
+(Directly Connected Route)和非直连路由 (Non-Directly Connected
+Route)</h3>
+<p>当网络运维人员为路由器的<strong>各个接口</strong>配置了<strong>IP地址</strong>和<strong>地址掩码</strong>后，路由器能够自行得出它直接连接了哪些网络。这些由路由器<strong>自动生成</strong>的、指向其<strong>直连网络</strong>的路由条目，就称为直连路由
+。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>如图, 路由器R1的接口0配置了IP地址
+192.168.1.254/24，因此R1自动知道它与网络 192.168.1.0/24 是直连的 。</p>
+<p>同样，R1的接口1配置了IP地址 10.0.0.1/30，因此它也自动知道与网络
+10.0.0.0/30 是直连的 。</p>
+<p>这两条路由被自动记录在R1的路由表中，类型为“直连” 。</p>
+<p>而对于那些不是直接连接的网络，路由器无法自动知道如何到达。此时，需要通过人工配置（即<strong>静态路由配置</strong>）或<strong>动态路由选择协议</strong>来告诉路由器如何到达这些网络。通过人工配置的条目就是非直连的静态路由。</p>
+<p>在上图中, 路由器R1并不知道如何到达网络
+192.168.2.0/24，因为它与该网络非直连 。</p>
+<p>网络管理员需要手动为R1配置一条静态路由，告诉它：“要去往目的网络
+192.168.2.0/24，下一跳地址是 10.0.0.2（即R2的接口地址）” 。</p>
+<p>这条手动添加的路由条目就属于非直连路由，类型为“静态” 。</p>
+<h3 id="默认路由和特定主机路由">默认路由和特定主机路由</h3>
+<p>除了上述两种路由，运维人员还可以配置两种特殊的静态路由：默认路由和特定主机路由
+。</p>
+<p><strong>默认路由</strong> (Default Route):
+当路由器在路由表中查找一个目的地址，但找<strong>不到任何匹配的路由条目</strong>时，如果没有默认路由，它会丢弃该数据包
+。如果配置了默认路由，路由器就会按照默认路由条目中指示的“<strong>下一跳</strong>”地址进行转发
+。</p>
+<p>它是一种特殊的路由条目，用于匹配所有未在路由表中明确列出的目的网络地址。它相当于一个“<strong>兜底</strong>”的选项，确保路由器不会因为找不到匹配的路由而丢弃数据包
+。</p>
+<p>优点：使用默认路由可以极大地减少路由表的大小和搜索路由表所耗费的时间。</p>
+<p>配置方式：默认路由的目的网络地址通常被配置为
+<strong>0.0.0.0/0</strong> 。其中 0.0.0.0 代表任意网络，而网络前缀 /0
+是<strong>最短的网络前缀</strong>，这意味着它的<strong>匹配优先级最低</strong>，只有在所有其他路由都不匹配时才会被使用
+。</p>
+<p><strong>特定主机路由</strong> (Specific Host Route):
+这是一种专门为<strong>某一台特定的主机</strong>配置的路由条目，通常用于网络管理、测试或出于安全考虑
+。</p>
+<p>配置方式：特定主机路由的目的网络地址被配置为该主机的IP地址，并且网络前缀为
+<strong>/32</strong>（地址掩码为 255.255.255.255） 。/32
+是最长的网络前缀，根据“最长前缀匹配”原则，这条路由的<strong>匹配优先级是最高的</strong>。</p>
+<p>优点：特定主机路由允许网络管理员为某个主机指定一条独特的路径，绕过常规的路由选择逻辑。这在某些情况下非常有用，例如需要对某个服务器进行特殊的流量管理或监控时。</p>
+<h2 id="因特网采用分层次的路由选择协议">因特网采用分层次的路由选择协议</h2>
+<p>因特网/Internet
+是全球规模最大的互联网，要在如此庞大的网络中高效、准确地找到数据传输的路径，单一的路由选择策略是不可行的。因此，因特网采用了具有以下三个主要特点的路由选择协议
+：</p>
+<ul>
+<li><p><strong>自适应
+(Adaptive)</strong>：因特网采用<strong>动态路由选择</strong>，能够根据网络流量和拓扑结构的变化自动调整路由，而不是依赖人工干预
+。</p></li>
+<li><p><strong>分布式
+(Distributed)</strong>：因特网中的路由器通过<strong>相互交换信息</strong>，共同协作来完成路由的计算和更新，而不是由一个中央控制器来决定所有路径
+。</p></li>
+<li><p><strong>分层次
+(Hierarchical)</strong>：这是最关键的特点。它将整个庞大的因特网划分为许多较小的、可管理的部分，称为
+<strong>自治系统</strong> (Autonomous System, AS) 。</p>
+<ul>
+<li>一个自治系统（AS）是在一个单一技术管理机构下的路由器和网络的集合。例如，一个大型的互联网服务提供商（ISP）、一所大学或一个大型公司的网络都可以被视为一个自治系统
+。</li>
+<li>目的：通过将因特网划分为多个AS，可以将复杂的路由问题分解为两个层次来处理：<strong>自治系统内部</strong>的路由选择和<strong>自治系统之间</strong>的路由选择。</li>
+</ul></li>
+</ul>
+<h3 id="两种层次的路由选择协议">两种层次的路由选择协议</h3>
+<p>基于自治系统的划分，路由选择协议也被相应地分为了两大类 ：</p>
+<p><strong>域内路由选择</strong> (Intradomain Routing):
+在一个自治系统内部进行的路由选择。</p>
+<ul>
+<li><p>使用的协议：<strong>内部网关协议</strong> (Interior Gateway
+Protocol, <strong>IGP</strong>)。</p></li>
+<li><p>常见的IGP协议：<strong>路由信息协议</strong>
+(RIP)、<strong>开放最短路径优先</strong> (OSPF)。</p></li>
+<li><p>特点：每个自治系统可以自由选择适合自己的IGP，而无需考虑其他AS使用什么协议。例如，图4-61中，自治系统AS1内部使用RIP协议，而AS2内部使用OSPF协议，它们互不影响。</p></li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-1.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p><strong>域间路由选择</strong> (Interdomain Routing):
+在不同的自治系统之间进行的路由选择。</p>
+<ul>
+<li><p>使用的协议：<strong>外部网关协议</strong> (External Gateway
+Protocol, <strong>EGP</strong>)。</p></li>
+<li><p>常见的EGP协议：<strong>边界网关协议</strong> (BGP)
+是目前事实上的标准。</p></li>
+<li><p>特点：EGP负责在各个<strong>AS的边界路由器之间</strong>交换可达性信息，从而将整个因特网连接成一个整体。</p></li>
+</ul>
+<blockquote>
+<p>在早期的RFC文档中，“路由器”被称为“网关”(Gateway)。因此，协议名称中的“网关”实际上指的就是“路由器”。所以，IGP和EGP也可以被称为内部路由协议（IRP）和外部路由协议（ERP）。</p>
+</blockquote>
+<p>通过这种分层次的结构，因特网的路由问题被有效地简化了。AS内部的路由器只需关注内部网络的拓扑细节，而AS之间的路由器则只需关注如何到达其他AS，无需了解对方内部的复杂情况。这种“内部精细，外部概括”的策略，是因特网能够扩展到全球规模的关键所在。</p>
+<h2 id="路由信息协议-routing-information-protocol-rip">路由信息协议
+(Routing Information Protocol, RIP)</h2>
+<p>路由信息协议（RIP）是最早得到广泛使用的内部网关协议（IGP）之一。它是一种基于<strong>距离向量</strong>
+(Distance-Vector) 算法的协议。</p>
+<p>下面是几个RIP的关键概念：</p>
+<ul>
+<li><p><strong>距离向量</strong>：RIP要求自治系统内的<strong>每个路由器</strong>都维护一张<strong>路由表</strong>，表中记录了从它自己到AS内其他每一个网络的“距离”
+。</p></li>
+<li><p><strong>距离度量</strong> (Metric)：RIP使用 <strong>跳数</strong>
+(Hop Count)
+作为衡量到达目的网络距离的度量。路由器到其直连网络的距离定义为 1,
+到非直连网络的距离定义为所经过的路由器数量加1 。</p>
+<ul>
+<li>且 RIP 规定一条路径最多只能包含15个路由器，即最大跳数为15
+。当距离达到 16
+时，即被认为是不可达。这个限制使得RIP只适用于<strong>小型互联网</strong>。</li>
+</ul></li>
+<li><p><strong>路由更新</strong>：RIP路由器通过周期性地（通常每隔30秒）向其所有邻居路由器广播自己的完整路由表来交换路由信息
+。此外，当网络拓扑发生变化时，路由器会立即发送更新信息，这被称为触发更新
+。</p></li>
+<li><p><strong>最佳路由选择</strong>：RIP认为“好”的路由就是“<strong>距离短</strong>”的路由，也就是所经过路由器数量最少的路径。即使某条路径带宽更高、速度更快，但只要其经过的路由器数量多，RIP也不会认为它是最佳路径。</p></li>
+<li><p><strong>等价负载均衡</strong>：当到达同一个目的网络有<strong>多条距离（跳数）相等</strong>的路径时，RIP可以将通信流量<strong>均衡地分布</strong>到这几条等价的路径上。</p></li>
+</ul>
+<p>RIP的三个重要特点：</p>
+<ul>
+<li>和谁交换信息：仅和相邻的路由器交换信息（即中间没有其他路由器的直连路由器）
+。</li>
+<li>交换什么信息：交换的信息是路由器 自己的完整路由表 。</li>
+<li>何时交换信息：周期性地（例如每隔30秒）交换
+。此外，当<strong>网络拓扑发生变化</strong>时，路由器会<strong>立即</strong>发送更新信息，这被称为<strong>触发更新</strong>。</li>
+</ul>
+<h3 id="rip的基本工作过程">RIP的基本工作过程</h3>
+<ol type="1">
+<li><p>初始化：路由器刚开始工作时，它的路由表中只包含到达其直连网络的信息，距离为1。</p></li>
+<li><p>信息交换与更新：每个路由器周期性地向其所有相邻路由器发送自己的路由表。收到信息的路由器会根据后述的<strong>距离向量算法</strong>来更新自己的路由表
+。</p></li>
+<li><p>收敛：经过若干次交换和更新后，网络中所有的路由器最终都会学习到到达本自治系统内所有网络的最短距离和下一跳地址。这个<strong>所有路由表都达到稳定</strong>、一致状态的过程，称为收敛。</p></li>
+</ol>
+<h3 id="rip的距离向量算法">RIP的距离向量算法</h3>
+<p>当一个路由器（如D）收到其相邻路由器（如C）发来的RIP更新报文（即C的路由表）后，它会按以下规则更新自己的路由表：</p>
+<ol type="1">
+<li><p>修改收到的路由信息：路由器D首先会对收到的C的路由表进行修改：将所有路由条目的<strong>下一跳地址改为C</strong>，并将所有条目的距离（跳数）加1。这是因为D要通过C才能到达那些网络，所以距离自然要增加一跳。</p></li>
+<li><p>更新自己的路由表：然后，D将修改后的信息与自己的现有路由表进行比较，并按以下规则更新：</p>
+<ul>
+<li><strong>新网络</strong>：如果收到的路由信息中包含一个<strong>D的路由表中没有</strong>的网络，则<strong>直接添加</strong>这条新路由。</li>
+<li><strong>相同下一跳</strong>：如果到达某个目的网络的下一跳本来就是C，那么无论C通告来的<strong>新距离是变大还是变小</strong>，D都<strong>更新为这个最新的距离</strong>。
+<ul>
+<li>这会保持路由信息的最新性，但也可能引入不稳定性（如路由环路）。</li>
+</ul></li>
+<li><strong>不同下一跳</strong>：如果到达某个目的网络的下一跳不是C，则根据新距离与原距离的比较，采取不同的更新策略：
+<ul>
+<li>距离更短：如果通过C到达的新距离比原来的距离更短，则D更新路由条目，将下一跳改为C，并更新距离。</li>
+<li>距离相等：如果通过C到达的距离与原来的距离相等，则D添加这条新路由，用于等价负载均衡。</li>
+<li>距离更长：如果通过C到达的新距离比原来的距离更长，则不更新，保留原来的更优路径。</li>
+</ul></li>
+</ul></li>
+</ol>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-2.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h3 id="rip存在的问题">RIP存在的问题</h3>
+<p>RIP最著名的问题是
+“<strong>坏消息传播得慢</strong>”，也称为<strong>路由环路</strong>或距离无穷计数问题
+。</p>
+<p>问题成因：当网络中某个链路出现故障（“坏消息”）时，路由器可能不会立即收到这个故障信息，反而会从邻居那里收到一个基于旧拓扑的、错误的“好”路由信息。这会导致两个或多个路由器之间形成一个数据包的转发环路
+。它们会相互更新路由，导致到达目标网络的距离不断增加，直到达到16（不可达）为止
+。这个过程可能持续数分钟，严重影响网络收敛速度 。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-3.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>如图, R1已经无法到达网络N1,
+但是当R1收到R2发来的路由信息时，R1会被误导, 认为还可以通过R2到达网络,
+因此R1会更新自己的路由表, 将到达网络的下一跳改为R2, 并将距离加1.
+然而实际上, R2本来就是通过R1到达该网络的, 但是由于不知道R1那边已经断开,
+错误地发送了更新报文, 而R1对于距离更短的报文是一律接受的.
+现在R1又通过R2到达该网络, 这样就形成了一个环路.
+数据包会在R1和R2之间不断循环, 跳数也会不断增加, 直到达到16（不可达）为止
+。</p>
+<p>解决措施： -
+限制最大跳数：将最大距离限制为15，使得距离可以快速增长到16（不可达），从而打破环路
+。 -
+触发更新：当路由表<strong>变化时</strong>立即发送更新，而不是等待周期计时器
+。 - <strong>水平分割</strong> (Split
+Horizon)：路由器<strong>不应将从一个接口学到的路由信息再通过同一个接口发回</strong>
+。</p>
+<p>注意：这些措施只能减少问题发生的概率，但无法从根本上彻底解决距离向量算法的这个固有问题
+。</p>
+<p>现在总结一下RIP的优缺点：</p>
+<p>优点： - 实现简单，对路由器开销小 。 -
+“好消息”（发现更短的路径）传播得很快 。</p>
+<p>缺点： - 最大15跳的限制使得网络规模受限 。 -
+交换的是完整路由表，随着网络规模扩大，开销也随之增加 。 -
+“坏消息传播得慢”，导致收敛时间过长
+。因此，对于规模较大的网络，应使用OSPF协议</p>
+<h2 id="开放最短路径优先-open-shortest-path-first-ospf">开放最短路径优先
+(Open Shortest Path First, OSPF)</h2>
+<p>开放最短路径优先 (OSPF) 协议是为了克服路由信息协议 (RIP)
+的缺点而开发的一种内部网关协议 (IGP) 。它基于<strong>链路状态</strong>
+(Link State)
+算法，而不是RIP所使用的距离向量算法，这从根本上保证了不会产生路由环路
+。OSPF具有更新效率高、收敛速度快且不限制网络规模的特点 。</p>
+<p>OSPF的几个关键概念：</p>
+<ul>
+<li><p>链路状态 (Link
+State)：指本路由器与哪些路由器<strong>相邻</strong>，以及到每个相邻路由器的链路“<strong>代价(cost)</strong>”是多少
+。</p></li>
+<li><p>代价
+(Cost)：是一个用于衡量<strong>路径优劣</strong>的指标，可以代表费用、距离、时延或带宽等，由网络管理员决定。例如,
+代价可以根据链路带宽计算（100Mb/s 除以链路带宽,
+带宽越大，代价越小）</p></li>
+<li><p>邻居关系的建立：OSPF路由器之间通过周期性地交互<strong>问候
+(Hello)</strong> 分组来发现和维护邻居关系
+。Hello分组通常每10秒发送一次，如果40秒内未收到邻居的Hello分组，则认为该邻居不可达
+。</p></li>
+<li><p><strong>链路状态通告</strong>
+(LSA)：每个路由器都会产生链路状态通告
+(LSA)，其中包含了<strong>该路由器直连网络</strong>的<strong>链路状态信息</strong>以及其所有<strong>邻居路由器</strong>的<strong>链路状态信息</strong>
+。</p></li>
+<li><p><strong>链路状态更新</strong> (LSU)
+与洪泛法(Flooding)：LSA被封装在<strong>链路状态更新分组</strong> (LSU)
+中，并采用洪泛法 (Flooding)
+在整个区域内发送。洪泛法指路由器将信息从所有接口发送给<strong>所有邻居</strong>，邻居再<strong>继续转发</strong>，最终使得区域内<strong>所有路由器</strong>都收到该信息
+。</p></li>
+<li><p><strong>链路状态数据库</strong>
+(LSDB)：每个运行OSPF的路由器都有一个链路状态数据库
+(LSDB)，用于存储收集到的所有LSA
+。通过洪泛，最终区域内<strong>所有路由器的LSDB将达到一致和同步</strong>
+。</p></li>
+<li><p><strong>最短路径优先计算</strong>：当LSDB同步后，每个路由器都会基于这个完整的拓扑数据库，使用
+<strong>Dijkstra</strong>提出的<strong>最短路径算法</strong>，计算出<strong>以自己为根节点到区域内所有其他节点的最短路径</strong>，从而构建出自己的路由表
+。</p></li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-6.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h3 id="ospf的五种分组类型">OSPF的五种分组类型</h3>
+<p>OSPF协议定义了五种不同类型的分组来完成其工作 ：</p>
+<ul>
+<li>问候 (Hello) 分组：用于发现和维护邻居路由器的可达性 。</li>
+<li>数据库描述 (DBD)
+分组：向邻居路由器发送自己LSDB中所有链路状态项目的摘要信息 。</li>
+<li>链路状态请求 (LSR) 分组：向邻居请求发送某些链路状态项目的详细信息
+。</li>
+<li>链路状态更新 (LSU) 分组：用于洪泛发送具体的链路状态信息 。</li>
+<li>链路状态确认 (LSAck) 分组：对收到的LSU分组进行确认 。</li>
+</ul>
+<h3 id="ospf的基本工作过程">OSPF的基本工作过程</h3>
+<p>下图是OSPF的基本工作流程： <img lazyload src="/images/loading.svg" data-src="image-4.png" alt="alt text"></p>
+<ol type="1">
+<li>邻居发现与建立：路由器通过发送Hello分组来发现和建立邻居关系。收到Hello分组的路由器会回复一个Hello分组，确认邻居关系的建立。</li>
+<li>数据库同步：邻居关系建立后，路由器会通过数据库描述 (DBD)
+分组交换各自的链路状态信息，确保彼此的链路状态数据库 (LSDB) 一致。</li>
+<li>假设路由器R1收到R2的DBD分组，发现R2有一些R1没有的链路状态信息，于是R1发送链路状态请求
+(LSR) 分组，向R2请求这些缺失的LSA。</li>
+<li>R2收到LSR后，会将缺失的LSA封装在链路状态更新 (LSU)
+分组中，发送给R1。</li>
+<li>R1收到LSU后，更新自己的LSDB，并发送链路状态确认 (LSAck)
+分组给R2，确认已收到这些LSA。</li>
+<li>假如R1的LSDB发生了变化（例如，某个链路状态改变），它会生成新的LSA，并通过LSU分组洪泛发送给所有邻居。邻居收到后，更新自己的LSDB，并继续洪泛转发，直到整个区域内的所有路由器都收到该信息。</li>
+<li>当LSDB同步完成后，每个路由器都会使用Dijkstra最短路径算法，基于LSDB计算出从自己到区域内所有其他节点的最短路径，并更新自己的路由表。</li>
+</ol>
+<h3 id="ospf划分区域-area和在多点接入网络中的优化">OSPF划分区域
+(Area)和在多点接入网络中的优化</h3>
+<p>在以太网这样的多点接入网络中，如果所有路由器都互相建立邻居关系，将会产生大量的Hello分组和LSU分组，造成不必要的开销
+。</p>
+<p>为了减少分组数量，OSPF会选举一个<strong>指定路由器</strong>
+(Designated Router, DR) 和一个<strong>备用的指定路由器</strong> (Backup
+Designated Router,
+BDR)。网络中所有其他的普通路由器只与DR和BDR建立邻居关系并交换信息，而不再互相通信。这大大减少了网络中的邻居关系数量和路由更新流量。</p>
+<p>同时,
+为了使OSPF能够应用于规模非常大的网络，OSPF允许将一个自治系统（AS）再划分为若干个更小的范围，称为<strong>区域
+(Area)</strong>。划分区域后，LSA的洪泛范围被限制在每个区域内部，而不是整个AS，这极大地减少了网络上的路由通信量
+。</p>
+<ul>
+<li><p>主干区域 (Backbone
+Area)：所有区域都必须连接到一个特殊的核心区域，即主干区域（区域0或0.0.0.0）。主干区域负责连通所有其他非主干区域
+。</p></li>
+<li><p>路由器角色也根据其所在区域的不同而有所区别：</p>
+<ul>
+<li>区域内路由器：所有接口都在同一个区域内的路由器,
+只负责该区域内的路由选择和转发 。</li>
+<li>主干路由器：至少有一个接口连接到主干区域的路由器
+。它们负责在主干区域和其他非主干区域之间传递路由信息 。</li>
+<li>区域边界路由器
+(ABR)：连接主干区域和一个或多个非主干区域的路由器。它们负责在不同区域之间传递路由信息
+。</li>
+<li>自治系统边界路由器
+(ASBR)：负责与本AS之外的<strong>其他AS</strong>交换路由信息的路由器
+。</li>
+</ul></li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-5.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h2 id="边界网关协议-border-gateway-protocol-bgp">边界网关协议 (Border
+Gateway Protocol, BGP)</h2>
+<p>边界网关协议 (BGP) 属于外部网关协议 (EGP) 类别，专门用于在不同的
+自治系统 (AS) 之间进行路由选择。</p>
+<p>首先, 我们需要明确一个概念: BGP 寻找的并非“最佳路由”.
+在不同的自治系统之间，寻找一条统一标准下的“最佳”路由是无意义的，主要原因如下：</p>
+<ul>
+<li><p>度量标准不统一：不同的自治系统可能使用完全不同的标准来衡量路径的好坏。例如，AS1可能以“时延”为度量，AS2以“跳数”为度量，而AS3则以“带宽”为度量
+。由于没有统一的度量单位，因此无法在多条跨越不同AS的路径之间进行优劣比较。</p></li>
+<li><p>策略驱动路由：AS之间的路由选择必须考虑很多路由协议本身之外的策略因素
+。这些策略通常由网络管理员根据政治、经济、安全等需求进行设置 。</p>
+<ul>
+<li>安全策略：例如，一个国家内部的两个站点通信时，应避免数据报绕道经过某些有安全威胁的国家
+。</li>
+<li>经济策略：例如，AS3可能不愿意让不相关的AS4和AS5的数据报免费穿过自己的网络，而AS2则可能提供付费的
+transit (中转) 服务 。</li>
+</ul></li>
+</ul>
+<p>因此，BGP协议的设计目标是力求寻找一条<strong>能够到达</strong>目的网络且<strong>比较好</strong>的、<strong>不会兜圈子</strong>的路由，而不是寻找一条绝对的“最佳”路由。</p>
+<h3 id="bgp-发言人-bgp-speaker">BGP 发言人 (BGP Speaker)</h3>
+<p>在配置BGP时，每个AS的管理员需要选择至少一个路由器作为该AS的“BGP发言人”
+。这个发言人通常就是位于<strong>AS边界</strong>的<strong>BGP边界路由器</strong>。不同AS的BGP发言人之间通过以下步骤交换路由信息
+：</p>
+<ul>
+<li>建立TCP连接：首先在两个发言人之间建立一个TCP连接，使用的端口号为179。
+<ul>
+<li>使用TCP连接交换路由信息的两个BGP发言人，彼此称为对方的邻站
+(neighbor) 或 对等站 (peer) 。</li>
+</ul></li>
+<li>建立BGP会话：在此TCP连接之上交换BGP报文，以建立BGP会话 。</li>
+<li>交换路由信息：利用BGP会话来交换路由信息，例如通告新路由、撤销过时路由等。
+<ul>
+<li>BGP发言人除了运行BGP协议外，还必须运行其所在AS内部使用的IGP协议（如RIP或OSPF）。</li>
+</ul></li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-7.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>我们要知道,
+BGP发言人交换的是“<strong>网络可达性信息</strong>”，即要到达某个目标网络所需要经过的一系列自治系统。这个AS序列被称为路径向量。当BGP发言人互相交换了路径向量信息后，每个发言人就可以根据这些信息来构建自己的路由表,
+即构造出到达各个目的网络的路径。</p>
+<p>此外,
+路径向量机制可以非常有效地避免路由环路。当一个BGP发言人收到一条路由信息时，它会检查其路径向量。如果发现<strong>路径向量中已经包含了自身的AS号</strong>，那么就说明采用这条路径会形成环路，因此会丢弃这条路由信息。</p>
+<h3 id="bgp-4-的四种报文">BGP-4 的四种报文</h3>
+<p>BGP-4是目前使用最广泛的版本。它规定了四种主要的报文类型 ：</p>
+<ul>
+<li>OPEN (打开)
+报文：用于与相邻的另一个BGP发言人建立对等关系，进行通信初始化 。</li>
+<li>UPDATE (更新)
+报文：这是BGP的核心报文，用于通告新的路由信息，或撤销多条过时的路由
+。一个UPDATE报文可以撤销多条路由，但一次只能增加一条新路由 。</li>
+<li>KEEPALIVE (保活)
+报文：在BGP会话建立后，双方会周期性地（通常每30秒）发送KEEPALIVE报文，以确认邻站的连通性，维持会话状态
+。</li>
+<li>NOTIFICATION (通知) 报文：用于在检测到差错时，向对等站发送通知
+。</li>
+</ul>
+<p>BGP在刚运行时会交换整个BGP路由表，但在之后<strong>仅在路由发生变化时</strong>才发送<strong>UPDATE</strong>报文，这样做可以节省网络带宽和路由器的处理开销
+。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/web/">#web</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/computer-network/">#computer network</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/13/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/IP%E5%8D%8F%E8%AE%AE/IP%E5%8D%8F%E8%AE%AE/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">IP协议</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/12/algorithms/Coding%E6%8A%80%E5%B7%A7/%E5%9B%9E%E6%BA%AF/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">回溯</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">路由</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-text">路由器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E9%80%89%E6%8B%A9-path-determination-routing"><span class="nav-text">路径选择
+(Path Determination &#x2F; Routing)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8C%85%E8%BD%AC%E5%8F%91-packet-forwarding"><span class="nav-text">数据包转发 (Packet
+Forwarding)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1%E9%85%8D%E7%BD%AE"><span class="nav-text">静态路由配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E8%BF%9E%E8%B7%AF%E7%94%B1-directly-connected-route%E5%92%8C%E9%9D%9E%E7%9B%B4%E8%BF%9E%E8%B7%AF%E7%94%B1-non-directly-connected-route"><span class="nav-text">直连路由
+(Directly Connected Route)和非直连路由 (Non-Directly Connected
+Route)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E8%B7%AF%E7%94%B1%E5%92%8C%E7%89%B9%E5%AE%9A%E4%B8%BB%E6%9C%BA%E8%B7%AF%E7%94%B1"><span class="nav-text">默认路由和特定主机路由</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E9%87%87%E7%94%A8%E5%88%86%E5%B1%82%E6%AC%A1%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE"><span class="nav-text">因特网采用分层次的路由选择协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E5%B1%82%E6%AC%A1%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE"><span class="nav-text">两种层次的路由选择协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E4%BF%A1%E6%81%AF%E5%8D%8F%E8%AE%AE-routing-information-protocol-rip"><span class="nav-text">路由信息协议
+(Routing Information Protocol, RIP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rip%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="nav-text">RIP的基本工作过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rip%E7%9A%84%E8%B7%9D%E7%A6%BB%E5%90%91%E9%87%8F%E7%AE%97%E6%B3%95"><span class="nav-text">RIP的距离向量算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rip%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">RIP存在的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E4%BC%98%E5%85%88-open-shortest-path-first-ospf"><span class="nav-text">开放最短路径优先
+(Open Shortest Path First, OSPF)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ospf%E7%9A%84%E4%BA%94%E7%A7%8D%E5%88%86%E7%BB%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">OSPF的五种分组类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ospf%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="nav-text">OSPF的基本工作过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ospf%E5%88%92%E5%88%86%E5%8C%BA%E5%9F%9F-area%E5%92%8C%E5%9C%A8%E5%A4%9A%E7%82%B9%E6%8E%A5%E5%85%A5%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-text">OSPF划分区域
+(Area)和在多点接入网络中的优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%B9%E7%95%8C%E7%BD%91%E5%85%B3%E5%8D%8F%E8%AE%AE-border-gateway-protocol-bgp"><span class="nav-text">边界网关协议 (Border
+Gateway Protocol, BGP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bgp-%E5%8F%91%E8%A8%80%E4%BA%BA-bgp-speaker"><span class="nav-text">BGP 发言人 (BGP Speaker)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bgp-4-%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%8A%A5%E6%96%87"><span class="nav-text">BGP-4 的四种报文</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

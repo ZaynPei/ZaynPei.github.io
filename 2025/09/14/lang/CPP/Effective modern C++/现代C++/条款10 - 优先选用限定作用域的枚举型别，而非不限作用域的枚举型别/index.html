@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,50 +833,77 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>C++98 风格的枚举（现在称为不限作用域的枚举型别）存在两个主要缺陷。C++11 引入的限定作用域的枚举型别（也称“枚举类”）则直接解决了这两个问题。</p>
-<h3 id="了解枚举"><a href="#了解枚举" class="headerlink" title="了解枚举"></a>了解枚举</h3><p>在 C++ 中，枚举 (Enumeration, 简称 enum) 是一种用户自定义的数据类型，它允许我们为一组相关的<strong>整型常量</strong>赋予具有<strong>描述性的名称</strong>。</p>
-<p>使用枚举的主要目的是增强代码的可读性和类型安全，避免在代码中直接使用“魔术数字”（Magic Numbers，即未经解释的字面常量）。</p>
+			<p>C++98
+风格的枚举（现在称为不限作用域的枚举型别）存在两个主要缺陷。C++11
+引入的限定作用域的枚举型别（也称“枚举类”）则直接解决了这两个问题。</p>
+<h3 id="了解枚举">了解枚举</h3>
+<p>在 C++ 中，枚举 (Enumeration, 简称 enum)
+是一种用户自定义的数据类型，它允许我们为一组相关的<strong>整型常量</strong>赋予具有<strong>描述性的名称</strong>。</p>
+<p>使用枚举的主要目的是增强代码的可读性和类型安全，避免在代码中直接使用“魔术数字”（Magic
+Numbers，即未经解释的字面常量）。</p>
 <p>C++ 语言中存在两种截然不同的枚举类型：</p>
 <ul>
 <li>不限定作用域的枚举（Unscoped Enumerations，也称为 C 风格枚举）</li>
-<li>限定作用域的枚举（Scoped Enumerations，C++11 引入，使用 enum class 关键字）</li>
+<li>限定作用域的枚举（Scoped Enumerations，C++11 引入，使用 enum class
+关键字）</li>
 </ul>
-<h4 id="不限定作用域的枚举-C-风格"><a href="#不限定作用域的枚举-C-风格" class="headerlink" title="不限定作用域的枚举 (C 风格)"></a>不限定作用域的枚举 (C 风格)</h4><p>这是从 C 语言继承而来的传统枚举, 它使用 enum 关键字定义。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个表示颜色的枚举</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> {</span><br><span class="line">    RED,    <span class="comment">// 默认值为 0</span></span><br><span class="line">    GREEN,  <span class="comment">// 默认值为 1</span></span><br><span class="line">    BLUE    <span class="comment">// 默认值为 2</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Status</span> {</span><br><span class="line">    Pending = <span class="number">10</span>,</span><br><span class="line">    Processing,   <span class="comment">// 未指定，值为前一个 + 1，即 11</span></span><br><span class="line">    Completed = <span class="number">20</span>,</span><br><span class="line">    Failed        <span class="comment">// 值为 21</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>这里我们定义了一个名为 Color 的新类型。RED、GREEN 和 BLUE 是这个类型的枚举器（Enumerators）。其赋值的默认规则是，第一个枚举器（RED）的值为 0，后续枚举器依次递增 1; 我们也可以为枚举器指定具体的值，如 Pending = 10, Completed = 20。</p>
+<h4 id="不限定作用域的枚举-c-风格">不限定作用域的枚举 (C 风格)</h4>
+<p>这是从 C 语言继承而来的传统枚举, 它使用 enum 关键字定义。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个表示颜色的枚举</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> {</span><br><span class="line">    RED,    <span class="comment">// 默认值为 0</span></span><br><span class="line">    GREEN,  <span class="comment">// 默认值为 1</span></span><br><span class="line">    BLUE    <span class="comment">// 默认值为 2</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Status</span> {</span><br><span class="line">    Pending = <span class="number">10</span>,</span><br><span class="line">    Processing,   <span class="comment">// 未指定，值为前一个 + 1，即 11</span></span><br><span class="line">    Completed = <span class="number">20</span>,</span><br><span class="line">    Failed        <span class="comment">// 值为 21</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 这里我们定义了一个名为 Color 的新类型。RED、GREEN 和 BLUE
+是这个类型的枚举器（Enumerators）。其赋值的默认规则是，第一个枚举器（RED）的值为
+0，后续枚举器依次递增 1; 我们也可以为枚举器指定具体的值，如 Pending =
+10, Completed = 20。</p>
 <p>尽管 C 风格枚举提高了可读性，但它在 C++ 中存在两大严重问题：</p>
-<ol>
-<li>缺陷一：作用域污染 (Scope Pollution): C 风格枚举的枚举器会泄漏到其<strong>外围作用域</strong>（例如，全局作用域或所在的命名空间/类）。</li>
+<ol type="1">
+<li>缺陷一：作用域污染 (Scope Pollution): C
+风格枚举的枚举器会泄漏到其<strong>外围作用域</strong>（例如，全局作用域或所在的命名空间/类）。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> { RED, GREEN, BLUE };</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">TrafficLight</span> { RED, YELLOW, GREEN }; <span class="comment">// 编译错误！</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误原因：RED 和 GREEN 在同一作用域内被重复定义了。</span></span><br><span class="line"><span class="comment">// 编译器无法区分 Color 的 RED 和 TrafficLight 的 RED。</span></span><br></pre></td></tr></table></figure></div></li>
+<li>缺陷二：弱类型与隐式转换 (Weak Typing): C
+风格枚举的枚举器会自动地、隐式地转换为整型（如 int）。这破坏了类型安全。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Color myColor = RED;</span><br><span class="line"><span class="type">int</span> colorValue = myColor; <span class="comment">// 合法，myColor (值为 0) 被隐式转换为 int 0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (myColor == <span class="number">0</span>) { <span class="comment">// 合法，但不推荐</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更糟糕的是，不同枚举类型之间也可能进行比较（只要它们底层值相同）</span></span><br><span class="line">TrafficLight light = RED; <span class="comment">// 假设 TrafficLight 的 RED 也是 0</span></span><br><span class="line"><span class="keyword">if</span> (myColor == light) { <span class="comment">// 编译通过！</span></span><br><span class="line">    <span class="comment">// 这种比较在逻辑上是无意义的，但编译器允许</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></li>
 </ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> { RED, GREEN, BLUE };</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">TrafficLight</span> { RED, YELLOW, GREEN }; <span class="comment">// 编译错误！</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误原因：RED 和 GREEN 在同一作用域内被重复定义了。</span></span><br><span class="line"><span class="comment">// 编译器无法区分 Color 的 RED 和 TrafficLight 的 RED。</span></span><br></pre></td></tr></table></figure></div>
-<ol start="2">
-<li>缺陷二：弱类型与隐式转换 (Weak Typing): C 风格枚举的枚举器会自动地、隐式地转换为整型（如 int）。这破坏了类型安全。</li>
-</ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Color myColor = RED;</span><br><span class="line"><span class="type">int</span> colorValue = myColor; <span class="comment">// 合法，myColor (值为 0) 被隐式转换为 int 0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (myColor == <span class="number">0</span>) { <span class="comment">// 合法，但不推荐</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更糟糕的是，不同枚举类型之间也可能进行比较（只要它们底层值相同）</span></span><br><span class="line">TrafficLight light = RED; <span class="comment">// 假设 TrafficLight 的 RED 也是 0</span></span><br><span class="line"><span class="keyword">if</span> (myColor == light) { <span class="comment">// 编译通过！</span></span><br><span class="line">    <span class="comment">// 这种比较在逻辑上是无意义的，但编译器允许</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="限定作用域的枚举-C-11-enum-class"><a href="#限定作用域的枚举-C-11-enum-class" class="headerlink" title="限定作用域的枚举 (C++11 enum class)"></a>限定作用域的枚举 (C++11 enum class)</h3><p>为了解决上述所有问题，C++11 引入了“限定作用域的枚举”，也称为“枚举类”。这是在现代 C++ 中定义枚举的首选方式。它使用 enum class 关键字（或者等效的 enum struct）来定义。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Color</span> {</span><br><span class="line">    RED,</span><br><span class="line">    GREEN,</span><br><span class="line">    BLUE</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">TrafficLight</span> {</span><br><span class="line">    RED,</span><br><span class="line">    YELLOW,</span><br><span class="line">    GREEN</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
-<p>它的优势一是<strong>强作用域 (Strongly Scoped)</strong>: enum class 的枚举器被<strong>严格限制在枚举类型的花括号内</strong>，不会泄漏到外部作用域。不过也正因此, 访问这些枚举器时，必须使用枚举类型名称作为限定符。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 必须通过类型名::枚举器 来访问</span></span><br><span class="line">Color myColor = Color::RED; </span><br><span class="line">TrafficLight light = TrafficLight::RED;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译通过！</span></span><br><span class="line"><span class="comment">// Color::RED 和 TrafficLight::RED 位于不同作用域，互不干扰。</span></span><br><span class="line"></span><br><span class="line">Color c = RED; <span class="comment">// 编译错误！RED 不在当前作用域中。</span></span><br></pre></td></tr></table></figure></div>
-
-<p>优势二是强类型，禁止隐式转换为整型. 这是 enum class 提供的最关键的类型安全保证。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Color myColor = Color::RED;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> colorValue = myColor; <span class="comment">// 编译错误！</span></span><br><span class="line">                        <span class="comment">// 无法将 Color 类型隐式转换为 int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (myColor == <span class="number">0</span>) { <span class="comment">// 编译错误！</span></span><br><span class="line">                  <span class="comment">// 无法在 Color 类型和 int 类型之间进行比较</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不同枚举类型之间也不能比较</span></span><br><span class="line"><span class="keyword">if</span> (myColor == TrafficLight::RED) { <span class="comment">// 编译错误！</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
+<h3 id="限定作用域的枚举-c11-enum-class">限定作用域的枚举 (C++11 enum
+class)</h3>
+<p>为了解决上述所有问题，C++11
+引入了“限定作用域的枚举”，也称为“枚举类”。这是在现代 C++
+中定义枚举的首选方式。它使用 enum class 关键字（或者等效的 enum
+struct）来定义。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Color</span> {</span><br><span class="line">    RED,</span><br><span class="line">    GREEN,</span><br><span class="line">    BLUE</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">TrafficLight</span> {</span><br><span class="line">    RED,</span><br><span class="line">    YELLOW,</span><br><span class="line">    GREEN</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<p>它的优势一是<strong>强作用域 (Strongly Scoped)</strong>: enum class
+的枚举器被<strong>严格限制在枚举类型的花括号内</strong>，不会泄漏到外部作用域。不过也正因此,
+访问这些枚举器时，必须使用枚举类型名称作为限定符。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 必须通过类型名::枚举器 来访问</span></span><br><span class="line">Color myColor = Color::RED; </span><br><span class="line">TrafficLight light = TrafficLight::RED;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译通过！</span></span><br><span class="line"><span class="comment">// Color::RED 和 TrafficLight::RED 位于不同作用域，互不干扰。</span></span><br><span class="line"></span><br><span class="line">Color c = RED; <span class="comment">// 编译错误！RED 不在当前作用域中。</span></span><br></pre></td></tr></table></figure></div></p>
+<p>优势二是强类型，禁止隐式转换为整型. 这是 enum class
+提供的最关键的类型安全保证。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Color myColor = Color::RED;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> colorValue = myColor; <span class="comment">// 编译错误！</span></span><br><span class="line">                        <span class="comment">// 无法将 Color 类型隐式转换为 int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (myColor == <span class="number">0</span>) { <span class="comment">// 编译错误！</span></span><br><span class="line">                  <span class="comment">// 无法在 Color 类型和 int 类型之间进行比较</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不同枚举类型之间也不能比较</span></span><br><span class="line"><span class="keyword">if</span> (myColor == TrafficLight::RED) { <span class="comment">// 编译错误！</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
 <blockquote>
-<p>如果确实需要将枚举值转换为整数，我们必须使用显式类型转换（通常是 static_cast）。强制使用 static_cast 表明程序员是有意图地要将这个具有强类型的枚举值转换为一个普通的整数，这使得代码意图更加清晰。</p>
+<p>如果确实需要将枚举值转换为整数，我们必须使用显式类型转换（通常是
+static_cast）。强制使用 static_cast
+表明程序员是有意图地要将这个具有强类型的枚举值转换为一个普通的整数，这使得代码意图更加清晰。</p>
 </blockquote>
-<h3 id="两者的底层类型"><a href="#两者的底层类型" class="headerlink" title="两者的底层类型"></a>两者的底层类型</h3><p>在C++98的默认情况下，编译器会为枚举选择一个足够大的整数类型（如 int）来存储所有枚举值, 但这必须要求枚举定义完成之后(也就是C++98无法实现枚举的前向声明)。但在 C++11 中，我们可以为两种枚举（C 风格和 enum class）显式指定底层存储类型, 主要的好处在于: </p>
+<h3 id="两者的底层类型">两者的底层类型</h3>
+<p>在C++98的默认情况下，编译器会为枚举选择一个足够大的整数类型（如
+int）来存储所有枚举值,
+但这必须要求枚举定义完成之后(也就是C++98无法实现枚举的前向声明)。但在
+C++11 中，我们可以为两种枚举（C 风格和 enum class）显式指定底层存储类型,
+主要的好处在于:</p>
 <ul>
-<li>内存控制： 当枚举值范围很小时（例如 0-255），可以指定一个小的类型（如 std::uint8_t，即无符号 8 位整数），这在定义大型数组或内存敏感的结构体时非常重要。</li>
-<li>API 兼容性： 确保与需要特定整数宽度（如 32 位）的 C API 或库函数兼容。</li>
-<li>前向声明： <strong>enum</strong> 如果指定了底层类型，就可以被前向声明（在头文件中提前声明类型，而在 .cpp 中定义具体内容）。<ul>
-<li>限定作用域(enum class)的枚举默认的底层类型是 int , 由于底层类型总是已知的（要么是默认的 int，要么是用户指定的），因此它们总是可以被前置声明(总之限定作用域的枚举更优越) 。</li>
-<li>不限作用域(enum)的枚举没有默认的底层类型, 因此必须显式指定了底层类型，不限作用域的枚举才可以被前置声明 。</li>
+<li>内存控制： 当枚举值范围很小时（例如
+0-255），可以指定一个小的类型（如 std::uint8_t，即无符号 8
+位整数），这在定义大型数组或内存敏感的结构体时非常重要。</li>
+<li>API 兼容性： 确保与需要特定整数宽度（如 32 位）的 C API
+或库函数兼容。</li>
+<li>前向声明： <strong>enum</strong>
+如果指定了底层类型，就可以被前向声明（在头文件中提前声明类型，而在 .cpp
+中定义具体内容）。
+<ul>
+<li>限定作用域(enum class)的枚举默认的底层类型是 int ,
+由于底层类型总是已知的（要么是默认的
+int，要么是用户指定的），因此它们总是可以被前置声明(总之限定作用域的枚举更优越)
+。</li>
+<li>不限作用域(enum)的枚举没有默认的底层类型,
+因此必须显式指定了底层类型，不限作用域的枚举才可以被前置声明 。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 语法：enum class 类型名 : 底层整数类型 { ... };</span></span><br><span class="line"><span class="comment">// 这个枚举将使用一个 8 位的无符号字节来存储</span></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">CompactColor</span> : std::<span class="type">uint8_t</span> {</span><br><span class="line">    RED,</span><br><span class="line">    GREEN,</span><br><span class="line">    BLUE</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 语法：enum class 类型名 : 底层整数类型 { ... };</span></span><br><span class="line"><span class="comment">// 这个枚举将使用一个 8 位的无符号字节来存储</span></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">CompactColor</span> : std::<span class="type">uint8_t</span> {</span><br><span class="line">    RED,</span><br><span class="line">    GREEN,</span><br><span class="line">    BLUE</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
 		</div>
 
 		
@@ -901,12 +928,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/15/algorithms/Computing%20Theory/Index/">
+				<a class="prev" rel="prev" href="/2025/09/14/algorithms/Computing%20Theory/%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">计算理论简介</span>
+						<span class="post-nav-title-item truncate max-w-48">预备知识</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -938,7 +965,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款10：优先选用限定作用域的枚举型别，而非不限作用域的枚举型别</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3%E6%9E%9A%E4%B8%BE"><span class="nav-text">了解枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E9%99%90%E5%AE%9A%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE-C-%E9%A3%8E%E6%A0%BC"><span class="nav-text">不限定作用域的枚举 (C 风格)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E5%AE%9A%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE-C-11-enum-class"><span class="nav-text">限定作用域的枚举 (C++11 enum class)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E8%80%85%E7%9A%84%E5%BA%95%E5%B1%82%E7%B1%BB%E5%9E%8B"><span class="nav-text">两者的底层类型</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3%E6%9E%9A%E4%B8%BE"><span class="nav-text">了解枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E9%99%90%E5%AE%9A%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE-c-%E9%A3%8E%E6%A0%BC"><span class="nav-text">不限定作用域的枚举 (C 风格)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E5%AE%9A%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE-c11-enum-class"><span class="nav-text">限定作用域的枚举 (C++11 enum
+class)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E8%80%85%E7%9A%84%E5%BA%95%E5%B1%82%E7%B1%BB%E5%9E%8B"><span class="nav-text">两者的底层类型</span></a></li></ol>
 
 	</div>
 </div>
@@ -967,11 +995,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

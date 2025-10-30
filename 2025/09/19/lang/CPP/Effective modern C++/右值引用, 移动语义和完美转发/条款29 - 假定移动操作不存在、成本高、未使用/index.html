@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -834,27 +834,54 @@ mjx-container[display="true"] + br {
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
 			<p>该条款旨在为开发者对C++11移动语义的性能预期“降温”，提醒我们移动语义并非万能的性能优化选择。在编写代码时，尤其是在编写通用代码（如模板）时，更安全的做法是假定移动操作可能不存在、可能成本高昂，或者在特定上下文中可能不会被使用。</p>
-<p>移动语义是C++11的标志性特性，它允许编译器用成本低廉的移动操作来代替昂贵的复制操作，甚至在某些情况下，只需重新编译C++98的代码就能获得性能提升 。然而，这种“传奇”般的描述常常掩盖了现实中的复杂性。本条款的目的就是揭示这些复杂性，让我们对移动语义有一个更现实的期望。</p>
-<h3 id="移动语义可能不会带来好处的四种场景"><a href="#移动语义可能不会带来好处的四种场景" class="headerlink" title="移动语义可能不会带来好处的四种场景"></a>移动语义可能不会带来好处的四种场景</h3><p>在以下几种情况中，你将无法从移动语义中获得预期的性能增益：</p>
-<ol>
-<li><strong>没有移动操作</strong> (No move operations): 待移动的对象根本没有提供移动操作（移动构造函数和移动赋值运算符）。</li>
+<p>移动语义是C++11的标志性特性，它允许编译器用成本低廉的移动操作来代替昂贵的复制操作，甚至在某些情况下，只需重新编译C++98的代码就能获得性能提升
+。然而，这种“传奇”般的描述常常掩盖了现实中的复杂性。本条款的目的就是揭示这些复杂性，让我们对移动语义有一个更现实的期望。</p>
+<h3 id="移动语义可能不会带来好处的四种场景">移动语义可能不会带来好处的四种场景</h3>
+<p>在以下几种情况中，你将无法从移动语义中获得预期的性能增益：</p>
+<ol type="1">
+<li><strong>没有移动操作</strong> (No move operations):
+待移动的对象根本没有提供移动操作（移动构造函数和移动赋值运算符）。</li>
 </ol>
-<p>实际上, 许多为C++11之前编写的遗留代码中的类没有移动操作。即使在C++11中，如果一个类显式声明了复制操作、移动操作或析构函数中的任何一个，编译器都不会自动为其生成移动操作（参见条款17）。</p>
-<p>当代码请求移动一个没有移动操作的对象时，编译器会退而求其次，转而执行复制操作 。</p>
-<ol start="2">
-<li>移动未能更快 (Move is not faster): 待移动的对象虽然提供了移动操作，但其实现并不比复制操作更快。</li>
+<p>实际上,
+许多为C++11之前编写的遗留代码中的类没有移动操作。即使在C++11中，如果一个类显式声明了复制操作、移动操作或析构函数中的任何一个，编译器都不会自动为其生成移动操作（参见条款17）。</p>
+<p>当代码请求移动一个没有移动操作的对象时，编译器会退而求其次，转而执行复制操作
+。</p>
+<ol start="2" type="1">
+<li>移动未能更快 (Move is not faster):
+待移动的对象虽然提供了移动操作，但其实现并不比复制操作更快。</li>
 </ol>
-<p>例如 std::array 的内容是直接存储在对象内部的，不像 std::vector 那样在堆上分配内存并只持有一个指针。因此，移动一个 std::array 必须逐个移动其内部的所有元素, 这是一个线性时间的操作，其成本与复制一个 std::array 相当，远非人们想象中“像复制指针一样快” 。</p>
-<p>再比如 std::string 与小型字符串优化 (SSO), 许多 std::string 的实现采用了SSO技术，即将短字符串直接存储在 std::string 对象内部的缓冲区中，<strong>避免了堆内存分配</strong>。当移动一个采用了SSO的短字符串时，其操作本质上就是复制内部缓冲区，因此其成本与复制操作并无区别 。</p>
-<ol start="3">
-<li>移动不可用 (Move is not available): 在某些需要强异常安全保证的语境下，移动操作只有在被声明为 noexcept 时才会被调用。</li>
+<p>例如 std::array 的内容是直接存储在对象内部的，不像 std::vector
+那样在堆上分配内存并只持有一个指针。因此，移动一个 std::array
+必须逐个移动其内部的所有元素, 这是一个线性时间的操作，其成本与复制一个
+std::array 相当，远非人们想象中“像复制指针一样快” 。</p>
+<p>再比如 std::string 与小型字符串优化 (SSO), 许多 std::string
+的实现采用了SSO技术，即将短字符串直接存储在 std::string
+对象内部的缓冲区中，<strong>避免了堆内存分配</strong>。当移动一个采用了SSO的短字符串时，其操作本质上就是复制内部缓冲区，因此其成本与复制操作并无区别
+。</p>
+<ol start="3" type="1">
+<li>移动不可用 (Move is not available):
+在某些需要强异常安全保证的语境下，移动操作只有在被声明为 noexcept
+时才会被调用。</li>
 </ol>
-<p>以 std::vector 扩容为例，如果元素的移动构造函数可能会抛出异常，vector 在移动了一半元素后若发生异常，将无法恢复到原始状态，破坏了强异常安全保证。为了维持异常安全，如果<strong>一个类型的移动操作没有被标记为 noexcept</strong>，那么在这些需要强异常安全的场景中（如 std::vector 扩容），编译器会<strong>强制调用复制操作</strong>，即使移动操作本身存在且可能更高效 。</p>
-<ol start="4">
-<li>源对象是个左值 (Source object is an lvalue): 移动操作的源通常必须是右值（例如，临时对象或通过 std::move 转换的对象。如果尝试从一个左值“移动”，实际上会触发复制操作，除非显式使用了 std::move</li>
+<p>以 std::vector 扩容为例，如果元素的移动构造函数可能会抛出异常，vector
+在移动了一半元素后若发生异常，将无法恢复到原始状态，破坏了强异常安全保证。为了维持异常安全，如果<strong>一个类型的移动操作没有被标记为
+noexcept</strong>，那么在这些需要强异常安全的场景中（如 std::vector
+扩容），编译器会<strong>强制调用复制操作</strong>，即使移动操作本身存在且可能更高效
+。</p>
+<ol start="4" type="1">
+<li>源对象是个左值 (Source object is an lvalue):
+移动操作的源通常必须是右值（例如，临时对象或通过 std::move
+转换的对象。如果尝试从一个左值“移动”，实际上会触发复制操作，除非显式使用了
+std::move</li>
 </ol>
-<p>最后需要指出, 本条款的建议并非是完全放弃对移动语义的依赖，而是要采取一种<strong>审慎的态度</strong>。在通用代码中（如模板）：由于你无法预知将要处理的类型 T 是否支持高效且不抛异常的移动，最安全的做法是假定移动成本高昂，像在C++98中那样谨慎地对待复制操作 。</p>
-<p>而在特定代码中, 如果你明确知道正在使用的类型（例如 std::vector 或 std::string）的移动语义细节，并且确定它们在你的使用场景中是高效且会被调用的，那么你完全可以依赖移动语义来提升性能 。</p>
+<p>最后需要指出,
+本条款的建议并非是完全放弃对移动语义的依赖，而是要采取一种<strong>审慎的态度</strong>。在通用代码中（如模板）：由于你无法预知将要处理的类型
+T
+是否支持高效且不抛异常的移动，最安全的做法是假定移动成本高昂，像在C++98中那样谨慎地对待复制操作
+。</p>
+<p>而在特定代码中, 如果你明确知道正在使用的类型（例如 std::vector 或
+std::string）的移动语义细节，并且确定它们在你的使用场景中是高效且会被调用的，那么你完全可以依赖移动语义来提升性能
+。</p>
 
 		</div>
 
@@ -946,11 +973,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

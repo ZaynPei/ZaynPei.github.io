@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,34 +833,78 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>进入现代C++, 传统的指针由于容易出现资源泄露等缺点, 智能指针成为了管理资源的重要工具. C++11 中共有四种智能指针：std::auto _ptr, std::unique_ptr, std::shared_ptr 和 std: :weak_ptr。所有这些智能指针都是为管理动态分配对象的生命期而设计的，其中, <code>std::unique_ptr</code> 是一种<strong>独占式智能指针</strong>, 它确保在任何时候只有一个指针指向资源. 这使得 <code>std::unique_ptr</code> 成为了管理具备专属所有权的资源的理想选择.</p>
-<p>而且在一般情况下, std::unique_ptr 应该是智能指针的默认首选, 它在效率上也几乎与裸指针无异 </p>
+			<p>进入现代C++, 传统的指针由于容易出现资源泄露等缺点,
+智能指针成为了管理资源的重要工具. C++11 中共有四种智能指针：std::auto
+_ptr, std::unique_ptr, std::shared_ptr 和 std:
+:weak_ptr。所有这些智能指针都是为管理动态分配对象的生命期而设计的，其中,
+<code>std::unique_ptr</code> 是一种<strong>独占式智能指针</strong>,
+它确保在任何时候只有一个指针指向资源. 这使得
+<code>std::unique_ptr</code>
+成为了管理具备专属所有权的资源的理想选择.</p>
+<p>而且在一般情况下, std::unique_ptr 应该是智能指针的默认首选,
+它在效率上也几乎与裸指针无异</p>
 <blockquote>
-<p>std::auto_ptr 是从 C++98 中残留下来的弃用特性, 现在已经基本被std::unique_ptr 所替代.</p>
+<p>std::auto_ptr 是从 C++98 中残留下来的弃用特性,
+现在已经基本被std::unique_ptr 所替代.</p>
 </blockquote>
-<h3 id="专属所有权与移动语义"><a href="#专属所有权与移动语义" class="headerlink" title="专属所有权与移动语义"></a>专属所有权与移动语义</h3><p>std::unique_ptr 体现了“专属所有权”的概念，即一个非空的 std::unique_ptr 总是拥有其所指向的资源 。任何时刻，<strong>资源都只有一个所有者</strong>。这确保了资源的安全释放，避免了内存泄漏和悬空指针的问题。</p>
-<p>轻量且高效：在默认情况下（即使用 delete 作为删除器），std::unique_ptr 的<strong>尺寸与裸指针完全相同</strong>，并且其操作（如解引用）的执行<strong>效率也与裸指针相同</strong> 。这使得它即使在对性能和内存要求极为苛刻的场景下也同样适用 。</p>
-<p><strong>移动</strong>专属 (Move-Only)：std::unique_ptr <strong>不允许复制</strong>, 如果你尝试复制一个 std::unique_ptr，代码将无法通过编译。这是为了保证所有权的唯一性。因此要转移资源的所有权，只能且必须使用 <strong>std::move</strong> 。当一个 std::unique_ptr 被移动后，源指针将被置为 nullptr 。</p>
-<p>自动资源管理：当一个 std::unique_ptr 被销毁时（例如<strong>离开作用域</strong>），它会<strong>自动销毁其所拥有的资源</strong> 。默认情况下，它通过在其内部的裸指针上调用 delete 来完成这一操作 。</p>
-<h3 id="典型用例：工厂函数"><a href="#典型用例：工厂函数" class="headerlink" title="典型用例：工厂函数"></a>典型用例：工厂函数</h3><p>std::unique_ptr 最常见的用法之一，是作为工厂函数的返回类型 。工厂函数通常在堆上创建一个对象并返回一个指向它的指针，而调用者则负责该对象的生命周期, 这与 std::unique_ptr 的专属所有权语义完美契合。工厂函数通过返回一个<br>std::unique_ptr，清晰地将新创建的对象的所有权转移给调用方 。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设 Investment 是一个多态基类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Investment</span> { ... };</span><br><span class="line"></span><br><span class="line"><span class="comment">// 工厂函数返回一个 unique_ptr，将所有权转移给调用者</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;Investment&gt; <span class="title">makeInvestment</span><span class="params">(Ts&amp;&amp;... params)</span></span>;</span><br><span class="line"></span><br><span class="line">{</span><br><span class="line">    <span class="comment">// 调用工厂函数，获取资源的所有权</span></span><br><span class="line">    <span class="keyword">auto</span> pInvestment = <span class="built_in">makeInvestment</span>(arguments);</span><br><span class="line">    </span><br><span class="line">} <span class="comment">// pInvestment 在此处离开作用域，其管理的 Investment 对象被自动销毁</span></span><br></pre></td></tr></table></figure></div>
-<p>调用方的代码将变得非常安全和简洁，因为当 pInvestment 离开作用域时，std::unique_ptr 的析构函数会自动确保资源被正确释放，即使在发生异常时也是如此 。</p>
-<h3 id="自定义删除器"><a href="#自定义删除器" class="headerlink" title="自定义删除器"></a>自定义删除器</h3><p>std::unique_ptr 不仅限于使用 delete 来释放资源，它还支持<strong>自定义删除器</strong> (custom deleter) 。删除器可以是任意函数或函数对象（包括 lambda 表达式），用于在 std::unique_ptr 销毁时执行特定的清理操作。自定义删除器的类型是 std::unique_ptr 模板的第二个参数 。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义删除器，在删除前先写入日志</span></span><br><span class="line"><span class="keyword">auto</span> delInvmt = [](Investment* pInvestment) {</span><br><span class="line">    <span class="built_in">makeLogEntry</span>(pInvestment);</span><br><span class="line">    <span class="keyword">delete</span> pInvestment;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 unique_ptr 的类型中指定删除器的类型</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;Investment, <span class="title">decltype</span><span class="params">(delInvmt)</span>&gt;</span></span><br><span class="line"><span class="function">    <span class="title">pInv</span><span class="params">(<span class="literal">nullptr</span>, delInvmt)</span></span>;</span><br></pre></td></tr></table></figure></div>
-<p>需要注意的是, 自定义删除器可能会增加 std::unique_ptr 的尺寸 。</p>
-<p>函数指针删除器：如果删除器是一个<strong>函数指针</strong>，std::unique_ptr 的尺寸通常会从一个字长（裸指针的大小）增加到两个字长（一个用于裸指针，一个用于函数指针）。</p>
-<p>函数对象删除器（包括 lambda）：如果删除器是一个函数对象，其尺寸取决于该函数对象中存储了多少状态。如果是一个无捕获的 lambda，它不包含任何状态，编译器通常可以将其完全优化掉，此时 std::unique_ptr 的尺寸不会增加，仍然和一个裸指针一样大 。</p>
-<p>因此，当需要自定义删除器时，使用无捕获的 lambda 是比使用函数指针更高效的选择 。</p>
-<h3 id="std-unique-ptr-的两种形式：单个对象与数组"><a href="#std-unique-ptr-的两种形式：单个对象与数组" class="headerlink" title="std::unique_ptr 的两种形式：单个对象与数组"></a>std::unique_ptr 的两种形式：单个对象与数组</h3><p>std::unique_ptr 提供两种形式：一种用于单个对象，一种用于数组 。</p>
+<h3 id="专属所有权与移动语义">专属所有权与移动语义</h3>
+<p>std::unique_ptr 体现了“专属所有权”的概念，即一个非空的
+std::unique_ptr 总是拥有其所指向的资源
+。任何时刻，<strong>资源都只有一个所有者</strong>。这确保了资源的安全释放，避免了内存泄漏和悬空指针的问题。</p>
+<p>轻量且高效：在默认情况下（即使用 delete 作为删除器），std::unique_ptr
+的<strong>尺寸与裸指针完全相同</strong>，并且其操作（如解引用）的执行<strong>效率也与裸指针相同</strong>
+。这使得它即使在对性能和内存要求极为苛刻的场景下也同样适用 。</p>
+<p><strong>移动</strong>专属 (Move-Only)：std::unique_ptr
+<strong>不允许复制</strong>, 如果你尝试复制一个
+std::unique_ptr，代码将无法通过编译。这是为了保证所有权的唯一性。因此要转移资源的所有权，只能且必须使用
+<strong>std::move</strong> 。当一个 std::unique_ptr
+被移动后，源指针将被置为 nullptr 。</p>
+<p>自动资源管理：当一个 std::unique_ptr
+被销毁时（例如<strong>离开作用域</strong>），它会<strong>自动销毁其所拥有的资源</strong>
+。默认情况下，它通过在其内部的裸指针上调用 delete 来完成这一操作 。</p>
+<h3 id="典型用例工厂函数">典型用例：工厂函数</h3>
+<p>std::unique_ptr 最常见的用法之一，是作为工厂函数的返回类型
+。工厂函数通常在堆上创建一个对象并返回一个指向它的指针，而调用者则负责该对象的生命周期,
+这与 std::unique_ptr 的专属所有权语义完美契合。工厂函数通过返回一个
+std::unique_ptr，清晰地将新创建的对象的所有权转移给调用方 。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设 Investment 是一个多态基类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Investment</span> { ... };</span><br><span class="line"></span><br><span class="line"><span class="comment">// 工厂函数返回一个 unique_ptr，将所有权转移给调用者</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;Investment&gt; <span class="title">makeInvestment</span><span class="params">(Ts&amp;&amp;... params)</span></span>;</span><br><span class="line"></span><br><span class="line">{</span><br><span class="line">    <span class="comment">// 调用工厂函数，获取资源的所有权</span></span><br><span class="line">    <span class="keyword">auto</span> pInvestment = <span class="built_in">makeInvestment</span>(arguments);</span><br><span class="line">    </span><br><span class="line">} <span class="comment">// pInvestment 在此处离开作用域，其管理的 Investment 对象被自动销毁</span></span><br></pre></td></tr></table></figure></div> 调用方的代码将变得非常安全和简洁，因为当 pInvestment
+离开作用域时，std::unique_ptr
+的析构函数会自动确保资源被正确释放，即使在发生异常时也是如此 。</p>
+<h3 id="自定义删除器">自定义删除器</h3>
+<p>std::unique_ptr 不仅限于使用 delete
+来释放资源，它还支持<strong>自定义删除器</strong> (custom deleter)
+。删除器可以是任意函数或函数对象（包括 lambda 表达式），用于在
+std::unique_ptr 销毁时执行特定的清理操作。自定义删除器的类型是
+std::unique_ptr 模板的第二个参数 。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义删除器，在删除前先写入日志</span></span><br><span class="line"><span class="keyword">auto</span> delInvmt = [](Investment* pInvestment) {</span><br><span class="line">    <span class="built_in">makeLogEntry</span>(pInvestment);</span><br><span class="line">    <span class="keyword">delete</span> pInvestment;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 unique_ptr 的类型中指定删除器的类型</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;Investment, <span class="title">decltype</span><span class="params">(delInvmt)</span>&gt;</span></span><br><span class="line"><span class="function">    <span class="title">pInv</span><span class="params">(<span class="literal">nullptr</span>, delInvmt)</span></span>;</span><br></pre></td></tr></table></figure></div> 需要注意的是,
+自定义删除器可能会增加 std::unique_ptr 的尺寸 。</p>
+<p>函数指针删除器：如果删除器是一个<strong>函数指针</strong>，std::unique_ptr
+的尺寸通常会从一个字长（裸指针的大小）增加到两个字长（一个用于裸指针，一个用于函数指针）。</p>
+<p>函数对象删除器（包括
+lambda）：如果删除器是一个函数对象，其尺寸取决于该函数对象中存储了多少状态。如果是一个无捕获的
+lambda，它不包含任何状态，编译器通常可以将其完全优化掉，此时
+std::unique_ptr 的尺寸不会增加，仍然和一个裸指针一样大 。</p>
+<p>因此，当需要自定义删除器时，使用无捕获的 lambda
+是比使用函数指针更高效的选择 。</p>
+<h3 id="stdunique_ptr-的两种形式单个对象与数组">std::unique_ptr
+的两种形式：单个对象与数组</h3>
+<p>std::unique_ptr 提供两种形式：一种用于单个对象，一种用于数组 。</p>
 <ul>
-<li><p>std::unique_ptr<t>：用于单个对象。它提供了 operator* 和 operator-&gt;。</t></p>
-</li>
-<li><p>std::unique_ptr&lt;T[]&gt;：用于数组。它提供了 operator[] 索引运算符，但不提供 * 和 -&gt; 。</p>
-</li>
+<li><p>std::unique_ptr<t>：用于单个对象。它提供了 operator* 和
+operator-&gt;。</t></p></li>
+<li><p>std::unique_ptr&lt;T[]&gt;：用于数组。它提供了 operator[]
+索引运算符，但不提供 * 和 -&gt; 。</p></li>
 </ul>
-<p>不过, 在现代 C++ 中，std::array、std::vector 和 std::string 等标准容器几乎总是比裸数组更好的选择，因此 std::unique_ptr&lt;T[]&gt; 的使用场景非常有限 。</p>
-<h3 id="转换为-std-shared-ptr"><a href="#转换为-std-shared-ptr" class="headerlink" title="转换为 std::shared_ptr"></a>转换为 std::shared_ptr</h3><p>std::unique_ptr 的一个非常吸引人的特性是，它可以方便且高效地转换为 std::shared_ptr。</p>
-<p>并且通常来说, std::unique_ptr 是构建 std::shared_ptr 的完美来源。这使得 std::unique_ptr 成为工厂函数的理想返回类型。工厂函数返回一个高效的 std::unique_ptr，将专属所有权交给调用者。如果调用者后续需要共享这个资源，他们可以自行决定将其转换为 std::shared_ptr，从而将所有权模型从专属升级为共享 。</p>
+<p>不过, 在现代 C++ 中，std::array、std::vector 和 std::string
+等标准容器几乎总是比裸数组更好的选择，因此 std::unique_ptr&lt;T[]&gt;
+的使用场景非常有限 。</p>
+<h3 id="转换为-stdshared_ptr">转换为 std::shared_ptr</h3>
+<p>std::unique_ptr 的一个非常吸引人的特性是，它可以方便且高效地转换为
+std::shared_ptr。</p>
+<p>并且通常来说, std::unique_ptr 是构建 std::shared_ptr
+的完美来源。这使得 std::unique_ptr
+成为工厂函数的理想返回类型。工厂函数返回一个高效的
+std::unique_ptr，将专属所有权交给调用者。如果调用者后续需要共享这个资源，他们可以自行决定将其转换为
+std::shared_ptr，从而将所有权模型从专属升级为共享 。</p>
 
 		</div>
 
@@ -886,7 +930,7 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/15/algorithms/Computing%20Theory/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E4%B8%8E%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/">
+				<a class="prev" rel="prev" href="/2025/09/15/algorithms/Computing%20Theory/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E5%92%8C%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E4%B8%8E%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
@@ -923,7 +967,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款 18 - 使用 std::unique_ptr 管理具备专属所有权的资源</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%93%E5%B1%9E%E6%89%80%E6%9C%89%E6%9D%83%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89"><span class="nav-text">专属所有权与移动语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E7%94%A8%E4%BE%8B%EF%BC%9A%E5%B7%A5%E5%8E%82%E5%87%BD%E6%95%B0"><span class="nav-text">典型用例：工厂函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%A0%E9%99%A4%E5%99%A8"><span class="nav-text">自定义删除器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-unique-ptr-%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%BD%A2%E5%BC%8F%EF%BC%9A%E5%8D%95%E4%B8%AA%E5%AF%B9%E8%B1%A1%E4%B8%8E%E6%95%B0%E7%BB%84"><span class="nav-text">std::unique_ptr 的两种形式：单个对象与数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E4%B8%BA-std-shared-ptr"><span class="nav-text">转换为 std::shared_ptr</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%93%E5%B1%9E%E6%89%80%E6%9C%89%E6%9D%83%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89"><span class="nav-text">专属所有权与移动语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E7%94%A8%E4%BE%8B%E5%B7%A5%E5%8E%82%E5%87%BD%E6%95%B0"><span class="nav-text">典型用例：工厂函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%A0%E9%99%A4%E5%99%A8"><span class="nav-text">自定义删除器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdunique_ptr-%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%BD%A2%E5%BC%8F%E5%8D%95%E4%B8%AA%E5%AF%B9%E8%B1%A1%E4%B8%8E%E6%95%B0%E7%BB%84"><span class="nav-text">std::unique_ptr
+的两种形式：单个对象与数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E4%B8%BA-stdshared_ptr"><span class="nav-text">转换为 std::shared_ptr</span></a></li></ol>
 
 	</div>
 </div>
@@ -952,11 +997,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

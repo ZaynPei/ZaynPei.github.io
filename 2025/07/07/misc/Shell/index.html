@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -808,7 +808,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>378 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>379 Words</span>
         </span>
     
     
@@ -828,16 +828,16 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="什么是-Shell"><a href="#什么是-Shell" class="headerlink" title="什么是 Shell"></a>什么是 Shell</h2><p>Shell 是一个命令行解释器，它为用户提供了一个向操作系统内核发送请求以便运行程序的界面系统级程序。</p>
-<h2 id="什么是-Shell-脚本-sh-文件"><a href="#什么是-Shell-脚本-sh-文件" class="headerlink" title="什么是 Shell 脚本/.sh 文件"></a>什么是 Shell 脚本/.sh 文件</h2><p>.sh 文件，全称为 Shell 脚本文件 (Shell Script File)，是一种为 Shell 编写的脚本程序。它的核心作用是将一系列需要执行的 Shell 命令按照顺序预先写在一个文件里，然后让 Shell 像执行剧本一样，从上到下自动地、依次地执行这些命令，从而实现任务的自动化。</p>
+			<h2 id="什么是-shell">什么是 Shell</h2>
+<p>Shell
+是一个命令行解释器，它为用户提供了一个向操作系统内核发送请求以便运行程序的界面系统级程序。</p>
+<h2 id="什么是-shell-脚本.sh-文件">什么是 Shell 脚本/.sh 文件</h2>
+<p>.sh 文件，全称为 Shell 脚本文件 (Shell Script File)，是一种为 Shell
+编写的脚本程序。它的核心作用是将一系列需要执行的 Shell
+命令按照顺序预先写在一个文件里，然后让 Shell
+像执行剧本一样，从上到下自动地、依次地执行这些命令，从而实现任务的自动化。</p>
 <p>下面是一个简单的文件备份脚本：</p>
 <div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 这是一个简单的文件备份脚本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --- 1. 定义变量 ---</span></span><br><span class="line"><span class="comment"># 设置要备份的源目录和存放备份的目标目录</span></span><br><span class="line">SOURCE_DIR=<span class="string">"/home/user/documents"</span></span><br><span class="line">BACKUP_DIR=<span class="string">"/mnt/backups/documents"</span></span><br><span class="line"><span class="comment"># 创建一个基于当前日期和时间的时间戳</span></span><br><span class="line">TIMESTAMP=$(<span class="built_in">date</span> +<span class="string">"%Y%m%d_%H%M%S"</span>)</span><br><span class="line"><span class="comment"># 最终的备份路径</span></span><br><span class="line">FINAL_BACKUP_PATH=<span class="string">"<span class="variable">${BACKUP_DIR}</span>/backup_<span class="variable">${TIMESTAMP}</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --- 2. 执行命令 ---</span></span><br><span class="line"><span class="comment"># 在屏幕上打印信息，告知用户操作开始</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"开始备份 <span class="variable">${SOURCE_DIR}</span> 到 <span class="variable">${FINAL_BACKUP_PATH}</span> ..."</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个带时间戳的新目录用于存放本次备份</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="string">"<span class="variable">${FINAL_BACKUP_PATH}</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 rsync 命令（一个强大的文件复制工具）来执行备份</span></span><br><span class="line"><span class="comment"># -a: 归档模式，保留所有文件属性</span></span><br><span class="line"><span class="comment"># -v: 详细模式，显示过程</span></span><br><span class="line"><span class="comment"># -h: 人性化显示大小</span></span><br><span class="line">rsync -avh <span class="string">"<span class="variable">${SOURCE_DIR}</span>/"</span> <span class="string">"<span class="variable">${FINAL_BACKUP_PATH}</span>/"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --- 3. 结束 ---</span></span><br><span class="line"><span class="comment"># 再次打印信息，告知用户操作完成</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"备份完成！"</span></span><br></pre></td></tr></table></figure></div>
-
-
-
-
-
-
 
 		</div>
 
@@ -896,7 +896,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">About Shell</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Shell"><span class="nav-text">什么是 Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Shell-%E8%84%9A%E6%9C%AC-sh-%E6%96%87%E4%BB%B6"><span class="nav-text">什么是 Shell 脚本&#x2F;.sh 文件</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-shell"><span class="nav-text">什么是 Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-shell-%E8%84%9A%E6%9C%AC.sh-%E6%96%87%E4%BB%B6"><span class="nav-text">什么是 Shell 脚本&#x2F;.sh 文件</span></a></li></ol>
 
 	</div>
 </div>
@@ -925,11 +925,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

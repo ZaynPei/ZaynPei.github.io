@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,62 +833,108 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>如果一个复杂系统的用户对于该系统的运作方式一无所知，然而却对其提供的服务表示满意，这就充分说明系统设计得好。如果从这样的角度来看， C++的<strong>模板型别推导</strong>取得了极大的成功。</p>
-<p>模板的型别推导，是现代C++最广泛应用的特性之一 ———— auto的基础。也就是说，如果你对C++98 推导模板型别的运作方式感觉满意，那么你也会自然而然地愉快接受C++11 中推导 auto 型别的运作方式。而坏消息则是，当模板型别推导规则应用于auto语境时，它们不像应用于模板时那么符合直觉。出于这个缘故，了解作为auto 基础的模板型别推导的方方面面就变得相当重要了。 </p>
+			<p>如果一个复杂系统的用户对于该系统的运作方式一无所知，然而却对其提供的服务表示满意，这就充分说明系统设计得好。如果从这样的角度来看，
+C++的<strong>模板型别推导</strong>取得了极大的成功。</p>
+<p>模板的型别推导，是现代C++最广泛应用的特性之一 ————
+auto的基础。也就是说，如果你对C++98
+推导模板型别的运作方式感觉满意，那么你也会自然而然地愉快接受C++11 中推导
+auto
+型别的运作方式。而坏消息则是，当模板型别推导规则应用于auto语境时，它们不像应用于模板时那么符合直觉。出于这个缘故，了解作为auto
+基础的模板型别推导的方方面面就变得相当重要了。</p>
 <p>不过在学习类型推导之前, 我们有必要复习一下const的基础用法</p>
-<h2 id="const-的基本用法"><a href="#const-的基本用法" class="headerlink" title="const 的基本用法"></a>const 的基本用法</h2><p>最简单的形式是定义一个常量。一旦初始化，它的值就不能再被改变。这个概念很简单，但当 const 和指针、引用以及模板结合时，情况就变得复杂了。</p>
+<h2 id="const-的基本用法">const 的基本用法</h2>
+<p>最简单的形式是定义一个常量。一旦初始化，它的值就不能再被改变。这个概念很简单，但当
+const 和指针、引用以及模板结合时，情况就变得复杂了。</p>
 <div class="code-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_SIZE = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// MAX_SIZE = 200; // 编译错误！不能修改 const 变量</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="const与指针"><a href="#const与指针" class="headerlink" title="const与指针"></a>const与指针</h3><p>const 与指针的结合有两种关键形式，理解它们的区别是核心。我们可以通过 const 的位置来判断它的作用对象(距离最近的或者左侧的那个)。</p>
-<ol>
+<h3 id="const与指针">const与指针</h3>
+<p>const 与指针的结合有两种关键形式，理解它们的区别是核心。我们可以通过
+const 的位置来判断它的作用对象(距离最近的或者左侧的那个)。</p>
+<ol type="1">
 <li>首先是指向常量的指针，也称为“底层 const” (low-level const)。</li>
 </ol>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span>* ptr;   <span class="comment">// 距离最近的是int, 所以const修饰的是int</span></span><br><span class="line"><span class="comment">// 或者 (效果完全相同)</span></span><br><span class="line"><span class="type">int</span> <span class="type">const</span>* ptr;   <span class="comment">// 左侧的是int, 所以const修饰的是int</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* ptr = &amp;a;</span><br><span class="line"></span><br><span class="line"><span class="comment">// *ptr = 15; // 编译错误！不能通过 ptr 修改 a 的值</span></span><br><span class="line">ptr = &amp;b;    <span class="comment">// 正确。ptr 可以指向另一个地址</span></span><br></pre></td></tr></table></figure></div>
-<p>含义：你不能通过这个指针 ptr 来修改它所指向的数据。但是，你可以让这个指针 ptr 指向别处。</p>
-<ol start="2">
-<li>常量指针 (Constant Pointer), 也称为“顶层 const” (top-level const)。</li>
+<p>含义：你不能通过这个指针 ptr
+来修改它所指向的数据。但是，你可以让这个指针 ptr 指向别处。</p>
+<ol start="2" type="1">
+<li>常量指针 (Constant Pointer), 也称为“顶层 const” (top-level const)。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>* <span class="type">const</span> ptr = &amp;a; <span class="comment">// 必须在声明时初始化; 左侧是int*, 所以const修饰的是int*</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span>* <span class="type">const</span> ptr = &amp;a;</span><br><span class="line"></span><br><span class="line">*ptr = <span class="number">15</span>; <span class="comment">// 正确！可以通过 ptr 修改 a 的值，现在 a 变成 15</span></span><br><span class="line"><span class="comment">// ptr = &amp;b; // 编译错误！不能修改 ptr 指向的地址</span></span><br></pre></td></tr></table></figure></div></li>
 </ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>* <span class="type">const</span> ptr = &amp;a; <span class="comment">// 必须在声明时初始化; 左侧是int*, 所以const修饰的是int*</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span>* <span class="type">const</span> ptr = &amp;a;</span><br><span class="line"></span><br><span class="line">*ptr = <span class="number">15</span>; <span class="comment">// 正确！可以通过 ptr 修改 a 的值，现在 a 变成 15</span></span><br><span class="line"><span class="comment">// ptr = &amp;b; // 编译错误！不能修改 ptr 指向的地址</span></span><br></pre></td></tr></table></figure></div>
-
-<p>含义：指针 ptr 本身的值（即它存储的地址）是不能被修改的。它必须永远指向初始化时的那个地址。但是，你可以通过它来修改它所指向的数据（前提是数据本身不是 const）。</p>
-<p>此外, 指向常量的常量指针 (Constant Pointer to Constant Data)是上面两种情况的结合。指针 ptr 本身的指向和它指向的数据都不能被修改。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span>* <span class="type">const</span> ptr = &amp;a;</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="const-与引用"><a href="#const-与引用" class="headerlink" title="const 与引用"></a>const 与引用</h3><p>const 与引用的关系比较简单，因为引用本身就像一个别名，它不能被“重新绑定”到另一个对象，所以只有类似“指向常量的指针”也就是底层调用这一种情况。</p>
+<p>含义：指针 ptr
+本身的值（即它存储的地址）是不能被修改的。它必须永远指向初始化时的那个地址。但是，你可以通过它来修改它所指向的数据（前提是数据本身不是
+const）。</p>
+<p>此外, 指向常量的常量指针 (Constant Pointer to Constant
+Data)是上面两种情况的结合。指针 ptr
+本身的指向和它指向的数据都不能被修改。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span>* <span class="type">const</span> ptr = &amp;a;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="const-与引用">const 与引用</h3>
+<p>const
+与引用的关系比较简单，因为引用本身就像一个别名，它不能被“重新绑定”到另一个对象，所以只有类似“指向常量的指针”也就是底层调用这一种情况。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span>&amp; ref = a;  <span class="comment">// 距离最近的是int, 所以const修饰的是int</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ref = 20; // 编译错误！不能通过 const 引用修改数据</span></span><br><span class="line">a = <span class="number">30</span>;    <span class="comment">// 正确。原始变量可以修改，ref 的值也会跟着变为 30</span></span><br></pre></td></tr></table></figure></div>
-
-<p>const int&amp; 是一个非常重要的编程惯用法。当按引用传递函数参数时，如果函数不需要修改这个参数，强烈建议<strong>形参使用 const 引用</strong>。这有两个好处：首先是安全, 防止函数内部意外修改了外部数据。其次还高效：避免了按值传递时创建对象的拷贝开销。同时也具有灵活性, 可以接受临时对象（右值）。</p>
-<h2 id="模板型别推导"><a href="#模板型别推导" class="headerlink" title="模板型别推导"></a>模板型别推导</h2><p>所谓 C++ 模板参数推导的核心目标是：编译器必须为模板参数（如 T）找到一个（唯一的）类型，使得当这个 T 被替换回函数签名后，形成的<strong>形参（Parameter）类型</strong>能够合法地<strong>接收（绑定）<strong>我们</strong>传入的实参（Argument）</strong>。</p>
-<p>模板函数在推导类型 T 时，参数的 const 属性是否被保留，取决于函数参数 param 的声明方式。下列讨论针对的一般形式如下</p>
+<p>const int&amp;
+是一个非常重要的编程惯用法。当按引用传递函数参数时，如果函数不需要修改这个参数，强烈建议<strong>形参使用
+const 引用</strong>。这有两个好处：首先是安全,
+防止函数内部意外修改了外部数据。其次还高效：避免了按值传递时创建对象的拷贝开销。同时也具有灵活性,
+可以接受临时对象（右值）。</p>
+<h2 id="模板型别推导">模板型别推导</h2>
+<p>所谓 C++ 模板参数推导的核心目标是：编译器必须为模板参数（如
+T）找到一个（唯一的）类型，使得当这个 T
+被替换回函数签名后，形成的<strong>形参（Parameter）类型</strong>能够合法地<strong>接收（绑定）</strong>我们<strong>传入的实参（Argument）</strong>。</p>
+<p>模板函数在推导类型 T 时，参数的 const 属性是否被保留，取决于函数参数
+param 的声明方式。下列讨论针对的一般形式如下</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(ParamType param)</span></span>; </span><br><span class="line"><span class="built_in">f</span>(expr);   <span class="comment">// 从 expr 来推导 T 和 ParamType 的型别</span></span><br></pre></td></tr></table></figure></div>
-<h3 id="情况-1：按值传递-T-param"><a href="#情况-1：按值传递-T-param" class="headerlink" title="情况 1：按值传递 (T param)"></a>情况 1：按值传递 (T param)</h3><p>首先, 将<strong>实参的引用部分</strong>忽略.</p>
-<p>接着, 当函数参数是按值传递时，<strong>实参的 const 属性会被忽略</strong>。这是因为按值传递会创建一个新的对象，而新对象的 const 属性与实参无关。</p>
+<h3 id="情况-1按值传递-t-param">情况 1：按值传递 (T param)</h3>
+<p>首先, 将<strong>实参的引用部分</strong>忽略.</p>
+<p>接着, 当函数参数是按值传递时，<strong>实参的 const
+属性会被忽略</strong>。这是因为按值传递会创建一个新的对象，而新对象的
+const 属性与实参无关。</p>
 <blockquote>
-<p>若实参是个volatile 对象，同忽略之(volatile 对象不常用，它们一般仅用于实现设备驱动程序)。</p>
+<p>若实参是个volatile 对象，同忽略之(volatile
+对象不常用，它们一般仅用于实现设备驱动程序)。</p>
 </blockquote>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span> </span>{</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> cx = x;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span>&amp; rx = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(x);  <span class="comment">// T 被推导为 int, param 的类型是 int</span></span><br><span class="line"><span class="built_in">f</span>(cx); <span class="comment">// T 被推导为 int, param 的类型是 int (cx 的 const 被忽略)</span></span><br><span class="line"><span class="built_in">f</span>(rx); <span class="comment">// T 被推导为 int, param 的类型是 int (rx 的 const 和引用都被忽略)</span></span><br></pre></td></tr></table></figure></div>
-<p>考虑这种情况： expr是个指涉到 const 对象的 const 指针，且 expr按值传给 param:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span></span>;  <span class="comment">// param 仍按值传递</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* <span class="type">const</span> ptr = <span class="string">"Fun with pointers"</span>;  <span class="comment">// ptr 指涉到 const 对象的 const 指针</span></span><br><span class="line"><span class="built_in">f</span>(ptr);  <span class="comment">// 传递型别为 canst char* canst 的实参</span></span><br></pre></td></tr></table></figure></div>
-<p>这里，位于星号右侧的 const 将 ptr 声明为 const: ptr 不可以指涉到其他内存位置，也不可将 ptr 置为 null。而位于星号左侧的 const 则将 ptr 指涉到的对象（那个字符串）为const, 即该字符串不可修改。<br>可 ptr 被传递给 f 时，这个指针本身将会按比特复制给param。换言之，ptr这个指针自己会被按值传递。依照按值传递形参的型别推导规则，ptr 的const性会被忽略，param 的型别会被推导为 canst char*，即一个可修改的、指涉到一个 const 字符串的指针。<br>即对于上述示例, 在型别推导的过程中，ptr指涉到的对象的常量性会得到保留，但其自身的常量性则会在以复制方式创建新指针param的过程中被忽略。</p>
-<h3 id="情况-2：按指针或引用传递-T-或-T"><a href="#情况-2：按指针或引用传递-T-或-T" class="headerlink" title="情况 2：按指针或引用传递 (T& 或 T*)"></a>情况 2：按指针或引用传递 (T&amp; 或 T*)</h3><p>当函数参数是指针或引用时，引用实参的 const 属性或者<strong>指针所指数据的const属性</strong>会被保留并成为类型 T 的一部分</p>
+<p>考虑这种情况： expr是个指涉到 const 对象的 const 指针，且
+expr按值传给 param: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T param)</span></span>;  <span class="comment">// param 仍按值传递</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* <span class="type">const</span> ptr = <span class="string">"Fun with pointers"</span>;  <span class="comment">// ptr 指涉到 const 对象的 const 指针</span></span><br><span class="line"><span class="built_in">f</span>(ptr);  <span class="comment">// 传递型别为 canst char* canst 的实参</span></span><br></pre></td></tr></table></figure></div> 这里，位于星号右侧的 const 将 ptr
+声明为 const: ptr 不可以指涉到其他内存位置，也不可将 ptr 置为
+null。而位于星号左侧的 const 则将 ptr 指涉到的对象（那个字符串）为const,
+即该字符串不可修改。 可 ptr 被传递给 f
+时，这个指针本身将会按比特复制给param。换言之，ptr这个指针自己会被按值传递。依照按值传递形参的型别推导规则，ptr
+的const性会被忽略，param 的型别会被推导为 canst
+char*，即一个可修改的、指涉到一个 const 字符串的指针。 即对于上述示例,
+在型别推导的过程中，ptr指涉到的对象的常量性会得到保留，但其自身的常量性则会在以复制方式创建新指针param的过程中被忽略。</p>
+<h3 id="情况-2按指针或引用传递-t-或-t">情况 2：按指针或引用传递 (T&amp;
+或 T*)</h3>
+<p>当函数参数是指针或引用时，引用实参的 const
+属性或者<strong>指针所指数据的const属性</strong>会被保留并成为类型 T
+的一部分</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f_ref</span><span class="params">(T&amp; param)</span> </span>{</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f_ptr</span><span class="params">(T* param)</span> </span>{</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> cx = x;</span><br><span class="line"><span class="built_in">f_ref</span>(x);  <span class="comment">// T 被推导为 int, param 的类型是 int&amp;</span></span><br><span class="line"><span class="built_in">f_ref</span>(cx); <span class="comment">// T 被推导为 const int, param 的类型是 const int&amp;</span></span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* px = &amp;x;</span><br><span class="line"><span class="type">int</span>* <span class="type">const</span> ppx = &amp;x;</span><br><span class="line"><span class="built_in">f_ptr</span>(&amp;x); <span class="comment">// T 被推导为 int, param 的类型是 int*</span></span><br><span class="line"><span class="built_in">f_ptr</span>(px); <span class="comment">// T 被推导为 const int, param 的类型是 const int*</span></span><br><span class="line"><span class="built_in">f_ptr</span>(ppx); <span class="comment">// T 被推导为 int, param 的类型是 int*; 因为传递指针本质也是按指针拷贝(拷贝指针a的值也就是变量的地址到指针b), 而这里的指针具有常量性, 因此在按值拷贝的过程中会失去; 上一个示例的const修饰的不是指针所以在指针的按值拷贝过程中不会失去</span></span><br></pre></td></tr></table></figure></div>
-<p>在这个过程中，编译器就像在解一个方程. 再例如: </p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模板函数定义</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个返回 std::vector 的工厂函数</span></span><br><span class="line"><span class="function">std::vector&lt;Widget&gt; <span class="title">createVec</span><span class="params">()</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用工厂函数返回值初始化 vw</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> vw = <span class="built_in">createVec</span>(); </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!vw.<span class="built_in">empty</span>()) { </span><br><span class="line">    <span class="comment">// 调用模板函数</span></span><br><span class="line">    <span class="built_in">f</span>(&amp;vw[<span class="number">0</span>]); </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<ul>
-<li>函数模板（签名）: template<typename t> void f(const T&amp; param);</typename></li>
-<li>形参类型 (P): const T&amp;</li>
-<li>实参类型 (A): const Widget*</li>
-</ul>
-<p>下面我们求解 T：根据规则, T 获取实参的底层const属性, 同时因为传入指针而形参不存在指针, 编译器自然假设 T = const Widget*。</p>
-<p>接着将 T 替换回形参 P ( const T&amp; )后得到形参类型：param 的类型变为 const (const Widget*) &amp;, 这也通常被读作 const Widget* const &amp;。(这是一个“对 [指向 const Widget 的 const 指针] 的 const 引用”)</p>
-<p>尝试绑定：编译器再次尝试将实参 (A) 绑定到这个新生成的形参 (P) 上：此时实参 (A): const Widget*; 形参 (P): const (const Widget*) &amp; (即 const Widget* const &amp;)</p>
-<p>因为实参类型 const Widget* 与形参期望引用的核心类型的主体 const Widget* 完全匹配。没有发生任何丢弃常量性的危险操作; 同时我们的实参（&amp;vw[0] 的结果）是一个临时产生的指针，它是一个右值 (rvalue)。C++ 规定，右值不能绑定到非 const 的左值引用 (non-const lvalue reference)，但它们可以完美地绑定到 const 的左值引用 (const lvalue reference)。我们的形参 const (const Widget*) &amp; 正是一个 const 左值引用，因此它可以合法地绑定来自实参的右值。</p>
-<h3 id="情况-3：按万能引用传递-T-param"><a href="#情况-3：按万能引用传递-T-param" class="headerlink" title="情况 3：按万能引用传递 (T&& param)"></a>情况 3：按万能引用传递 (T&amp;&amp; param)</h3><p>这种情况更为特殊，但规则与情况2类似：const 属性会被保留。</p>
+<p>在这个过程中，编译器就像在解一个方程. 再例如: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模板函数定义</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> T&amp; param)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个返回 std::vector 的工厂函数</span></span><br><span class="line"><span class="function">std::vector&lt;Widget&gt; <span class="title">createVec</span><span class="params">()</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用工厂函数返回值初始化 vw</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> vw = <span class="built_in">createVec</span>(); </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!vw.<span class="built_in">empty</span>()) { </span><br><span class="line">    <span class="comment">// 调用模板函数</span></span><br><span class="line">    <span class="built_in">f</span>(&amp;vw[<span class="number">0</span>]); </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> -
+函数模板（签名）: template<typename t> void f(const T&amp; param); -
+形参类型 (P): const T&amp; - 实参类型 (A): const Widget*</typename></p>
+<p>下面我们求解 T：根据规则, T 获取实参的底层const属性,
+同时因为传入指针而形参不存在指针, 编译器自然假设 T = const Widget*。</p>
+<p>接着将 T 替换回形参 P ( const T&amp; )后得到形参类型：param
+的类型变为 const (const Widget<em>) &amp;, 这也通常被读作 const
+Widget</em> const &amp;。(这是一个“对 [指向 const Widget 的 const 指针]
+的 const 引用”)</p>
+<p>尝试绑定：编译器再次尝试将实参 (A) 绑定到这个新生成的形参 (P)
+上：此时实参 (A): const Widget<em>; 形参 (P): const (const Widget</em>)
+&amp; (即 const Widget* const &amp;)</p>
+<p>因为实参类型 const Widget* 与形参期望引用的核心类型的主体 const
+Widget* 完全匹配。没有发生任何丢弃常量性的危险操作;
+同时我们的实参（&amp;vw[0] 的结果）是一个临时产生的指针，它是一个右值
+(rvalue)。C++ 规定，右值不能绑定到非 const 的左值引用 (non-const lvalue
+reference)，但它们可以完美地绑定到 const 的左值引用 (const lvalue
+reference)。我们的形参 const (const Widget*) &amp; 正是一个 const
+左值引用，因此它可以合法地绑定来自实参的右值。</p>
+<h3 id="情况-3按万能引用传递-t-param">情况 3：按万能引用传递
+(T&amp;&amp; param)</h3>
+<p>这种情况更为特殊，但规则与情况2类似：const 属性会被保留。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f_forward</span><span class="params">(T&amp;&amp; param)</span> </span>{</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> cx = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f_forward</span>(x);  <span class="comment">// T 被推导为 int&amp;</span></span><br><span class="line"><span class="built_in">f_forward</span>(cx); <span class="comment">// T 被推导为 const int&amp;</span></span><br></pre></td></tr></table></figure></div>
-
 <p>详细情况线上略</p>
-<h3 id="数组实参和字符指针"><a href="#数组实参和字符指针" class="headerlink" title="数组实参和字符指针"></a>数组实参和字符指针</h3><p>以上已经基本讨论完模板型别推导的主流情况，但还有一个边缘情况值得了解。这种情况是：数组型别有别千指针型别，尽管有时它们看起来可以互换。形成这种假象的主要原因是，在很多语境下，数组会退化成指涉到其首元素的指针。</p>
-<h3 id="函数实参和函数指针"><a href="#函数实参和函数指针" class="headerlink" title="函数实参和函数指针"></a>函数实参和函数指针</h3><p>总之, 在模板型别推导过程中，数组或函数型别的实参会退化成对应的指针，除非它们被用来初始化引用</p>
+<h3 id="数组实参和字符指针">数组实参和字符指针</h3>
+<p>以上已经基本讨论完模板型别推导的主流情况，但还有一个边缘情况值得了解。这种情况是：数组型别有别千指针型别，尽管有时它们看起来可以互换。形成这种假象的主要原因是，在很多语境下，数组会退化成指涉到其首元素的指针。</p>
+<h3 id="函数实参和函数指针">函数实参和函数指针</h3>
+<p>总之,
+在模板型别推导过程中，数组或函数型别的实参会退化成对应的指针，除非它们被用来初始化引用</p>
 
 		</div>
 
@@ -927,9 +973,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+				<a class="next" rel="next" href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C-map-set/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">字符串</span>
+						<span class="post-nav-title-item truncate max-w-48">哈希 Hash</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -951,7 +997,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款1 ：理解模板型别推导</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#const-%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-text">const 的基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#const%E4%B8%8E%E6%8C%87%E9%92%88"><span class="nav-text">const与指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const-%E4%B8%8E%E5%BC%95%E7%94%A8"><span class="nav-text">const 与引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC"><span class="nav-text">模板型别推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%85%E5%86%B5-1%EF%BC%9A%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92-T-param"><span class="nav-text">情况 1：按值传递 (T param)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%85%E5%86%B5-2%EF%BC%9A%E6%8C%89%E6%8C%87%E9%92%88%E6%88%96%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92-T-%E6%88%96-T"><span class="nav-text">情况 2：按指针或引用传递 (T&amp; 或 T*)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%85%E5%86%B5-3%EF%BC%9A%E6%8C%89%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92-T-param"><span class="nav-text">情况 3：按万能引用传递 (T&amp;&amp; param)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%AE%9E%E5%8F%82%E5%92%8C%E5%AD%97%E7%AC%A6%E6%8C%87%E9%92%88"><span class="nav-text">数组实参和字符指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%AE%9E%E5%8F%82%E5%92%8C%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88"><span class="nav-text">函数实参和函数指针</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#const-%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-text">const 的基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#const%E4%B8%8E%E6%8C%87%E9%92%88"><span class="nav-text">const与指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const-%E4%B8%8E%E5%BC%95%E7%94%A8"><span class="nav-text">const 与引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC"><span class="nav-text">模板型别推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%85%E5%86%B5-1%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92-t-param"><span class="nav-text">情况 1：按值传递 (T param)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%85%E5%86%B5-2%E6%8C%89%E6%8C%87%E9%92%88%E6%88%96%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92-t-%E6%88%96-t"><span class="nav-text">情况 2：按指针或引用传递 (T&amp;
+或 T*)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%85%E5%86%B5-3%E6%8C%89%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92-t-param"><span class="nav-text">情况 3：按万能引用传递
+(T&amp;&amp; param)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%AE%9E%E5%8F%82%E5%92%8C%E5%AD%97%E7%AC%A6%E6%8C%87%E9%92%88"><span class="nav-text">数组实参和字符指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%AE%9E%E5%8F%82%E5%92%8C%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88"><span class="nav-text">函数实参和函数指针</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -980,11 +1028,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

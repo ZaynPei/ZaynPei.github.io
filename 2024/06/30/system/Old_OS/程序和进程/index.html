@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -828,198 +828,172 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="fork-创建新进程的“克隆”技术"><a href="#fork-创建新进程的“克隆”技术" class="headerlink" title="fork(): 创建新进程的“克隆”技术"></a>fork(): 创建新进程的“克隆”技术</h3><p>fork() 是一个在类-UNIX 操作系统（如 Linux, macOS）中使用的系统调用，其唯一的功能就是创建一个新的进程。</p>
-<p>这个新创建的进程被称为“子进程”（Child Process），而调用 fork() 的那个进程则被称为“父进程”（Parent Process）。</p>
-<p>整个过程类似细胞分裂, 当调用 fork() 时，操作系统会拿父进程作为“模板”，几乎原封不动地“克隆”出一个一模一样的副本，这个副本就是子进程。</p>
-<h4 id="fork-的工作机制"><a href="#fork-的工作机制" class="headerlink" title="fork() 的工作机制"></a>fork() 的工作机制</h4><p>当 fork() 被调用时，子进程会获得父进程在调用那一刻的几乎所有资源的副本。</p>
+			<h3 id="fork-创建新进程的克隆技术">fork(): 创建新进程的“克隆”技术</h3>
+<p>fork() 是一个在类-UNIX 操作系统（如 Linux,
+macOS）中使用的系统调用，其唯一的功能就是创建一个新的进程。</p>
+<p>这个新创建的进程被称为“子进程”（Child Process），而调用 fork()
+的那个进程则被称为“父进程”（Parent Process）。</p>
+<p>整个过程类似细胞分裂, 当调用 fork()
+时，操作系统会拿父进程作为“模板”，几乎原封不动地“克隆”出一个一模一样的副本，这个副本就是子进程。</p>
+<h4 id="fork-的工作机制">fork() 的工作机制</h4>
+<p>当 fork()
+被调用时，子进程会获得父进程在调用那一刻的几乎所有资源的副本。</p>
 <ul>
-<li><p>内存空间：子进程会得到父进程整个虚拟地址空间的精确副本，包括代码段、数据段、堆和栈。这意味着父进程中的所有<strong>变量和数据</strong>，在 fork() 的瞬间，子进程也有一份一模一样的。</p>
-</li>
-<li><p>程序计数器（Program Counter）：子进程的程序计数器被设置为与父进程相同的值。它意味着子进程和父进程一样将<strong>从 fork() 调用返回之后的那条指令开始执行</strong>，而不是从程序的开头。</p>
-</li>
-<li><p>文件描述符：父进程打开的所有文件描述符都会被复制到子进程中。如果父进程打开了一个文件，那么子进程也同样“持有”这个打开的文件。它们共享同一个文件表项，这意味着它们对文件的读写指针是同步的。</p>
-</li>
-<li><p>其他资源：还包括用户和组ID、环境变量、工作目录、I/O 缓冲区等。</p>
-</li>
+<li><p>内存空间：子进程会得到父进程整个虚拟地址空间的精确副本，包括代码段、数据段、堆和栈。这意味着父进程中的所有<strong>变量和数据</strong>，在
+fork() 的瞬间，子进程也有一份一模一样的。</p></li>
+<li><p>程序计数器（Program
+Counter）：子进程的程序计数器被设置为与父进程相同的值。它意味着子进程和父进程一样将<strong>从
+fork()
+调用返回之后的那条指令开始执行</strong>，而不是从程序的开头。</p></li>
+<li><p>文件描述符：父进程打开的所有文件描述符都会被复制到子进程中。如果父进程打开了一个文件，那么子进程也同样“持有”这个打开的文件。它们共享同一个文件表项，这意味着它们对文件的读写指针是同步的。</p></li>
+<li><p>其他资源：还包括用户和组ID、环境变量、工作目录、I/O
+缓冲区等。</p></li>
 </ul>
 <p>尽管是克隆，但父子进程并非100%相同，它们有各自独立的属性：</p>
 <ul>
-<li><p>进程ID (PID)：每个进程在系统中都有一个唯一的ID。子进程会获得一个新的、不同于父进程的PID。</p>
-</li>
-<li><p>父进程ID (PPID)：子进程的PPID被设置为其父进程的PID。</p>
-</li>
-<li><p>资源利用信息：如CPU使用时间等统计信息，子进程会从零开始计算。</p>
-</li>
-<li><p>fork() 的返回值：这是区分父子进程的最关键机制</p>
-</li>
+<li><p>进程ID
+(PID)：每个进程在系统中都有一个唯一的ID。子进程会获得一个新的、不同于父进程的PID。</p></li>
+<li><p>父进程ID (PPID)：子进程的PPID被设置为其父进程的PID。</p></li>
+<li><p>资源利用信息：如CPU使用时间等统计信息，子进程会从零开始计算。</p></li>
+<li><p>fork() 的返回值：这是区分父子进程的最关键机制</p></li>
 </ul>
-<h4 id="fork-返回值-一次调用，两次返回"><a href="#fork-返回值-一次调用，两次返回" class="headerlink" title="fork() 返回值: 一次调用，两次返回"></a>fork() 返回值: 一次调用，两次返回</h4><p>fork() 最独特的地方在于它被调用一次，却在两个进程（父进程和子进程）中各返回一次。并且，这两次的返回值是不同的，这使得我们的程序能够根据返回值来区分当前代码是在父进程中运行还是在子进程中运行。</p>
+<h4 id="fork-返回值-一次调用两次返回">fork() 返回值:
+一次调用，两次返回</h4>
+<p>fork()
+最独特的地方在于它被调用一次，却在两个进程（父进程和子进程）中各返回一次。并且，这两次的返回值是不同的，这使得我们的程序能够根据返回值来区分当前代码是在父进程中运行还是在子进程中运行。</p>
 <ul>
 <li><p>在父进程中：fork() 返回新创建的子进程的PID（一个正整数）。</p>
 <ul>
 <li>原因：父进程需要知道它创建的子进程的ID，以便后续可以管理它（例如，等待它结束）。</li>
-</ul>
-</li>
+</ul></li>
 <li><p>在子进程中：fork() 返回 0。</p>
 <ul>
-<li>原因：子进程可以通过 <code>getppid()</code> 函数轻易地获取其父进程的ID，所以 fork() 返回0就足以让它知道自己是一个子进程。</li>
-</ul>
-</li>
+<li>原因：子进程可以通过 <code>getppid()</code>
+函数轻易地获取其父进程的ID，所以 fork()
+返回0就足以让它知道自己是一个子进程。</li>
+</ul></li>
 <li><p>如果出错：fork() 会在父进程中返回 -1，并且不会创建子进程。</p>
 <ul>
 <li>原因：通常是因为系统资源不足（如内存耗尽或进程数量达到上限）。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p>下面是一个示例</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span> <span class="comment">// 包含 fork(), getpid(), getppid() 的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span> <span class="comment">// 包含 pid_t 类型的头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">pid_t</span> pid; <span class="comment">// pid_t 是专门用来存储进程ID的数据类型</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"程序开始：我是父进程，我的PID是 %d\n"</span>, <span class="built_in">getpid</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关键步骤：调用 fork() 创建新进程</span></span><br><span class="line">    pid = fork();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// fork() 之后，这里的代码会被父子两个进程同时执行</span></span><br><span class="line">    <span class="comment">// 我们需要通过 pid 的值来区分它们</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 步骤1：检查 fork 是否失败</span></span><br><span class="line">        <span class="comment">// 解释：如果返回值小于0，说明进程创建失败，需要进行错误处理。</span></span><br><span class="line">        <span class="built_in">fprintf</span>(stderr, <span class="string">"Fork 失败\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 步骤2：判断是否为子进程</span></span><br><span class="line">        <span class="comment">// 解释：如果返回值为0，那么当前代码在子进程中运行。</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"--- 我是子进程 ---\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"我的PID是 %d, 我的父进程PID是 %d\n"</span>, <span class="built_in">getpid</span>(), <span class="built_in">getppid</span>());</span><br><span class="line">        <span class="comment">// 子进程可以执行独立的任务，例如在这里休眠几秒钟</span></span><br><span class="line">        <span class="built_in">sleep</span>(<span class="number">2</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"--- 子进程执行完毕 ---\n"</span>);</span><br><span class="line"></span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// 步骤3：判断是否为父进程</span></span><br><span class="line">        <span class="comment">// 解释：如果返回值大于0，那么当前代码在父进程中运行，</span></span><br><span class="line">        <span class="comment">// 且 pid 变量的值就是刚刚创建的子进程的ID。</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"+++ 我是父进程 +++\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"我创建的子进程PID是 %d\n"</span>, pid);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"+++ 父进程继续执行任务... +++\n"</span>);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这行代码父子进程都会执行，但执行时间点不同</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"fork() 调用之后，我是PID为 %d 的进程\n"</span>, <span class="built_in">getpid</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>编译并运行后输出如下:</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">程序开始：我是父进程，我的PID是 54321</span><br><span class="line">+++ 我是父进程 +++</span><br><span class="line">我创建的子进程PID是 54322</span><br><span class="line">+++ 父进程继续执行任务... +++</span><br><span class="line">fork() 调用之后，我是PID为 54321 的进程</span><br><span class="line">--- 我是子进程 ---</span><br><span class="line">我的PID是 54322, 我的父进程PID是 54321</span><br><span class="line">fork() 调用之后，我是PID为 54322 的进程</span><br><span class="line">--- 子进程执行完毕 ---</span><br></pre></td></tr></table></figure></div>
-<blockquote>
-<p>(注意：由于操作系统调度的不确定性，父子进程的输出顺序可能会交错)</p>
-</blockquote>
-<h4 id="fork-经典示例"><a href="#fork-经典示例" class="headerlink" title="fork() 经典示例"></a>fork() 经典示例</h4><p>下面是一个非常经典的 fork() 习题，它巧妙地结合了进程创建和I/O缓冲区的知识。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.hh&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) {</span><br><span class="line">        fork();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Hello\n"</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>这个程序的运行结果取决于它的输出是如何被处理的，这直接影响到 printf 的缓冲策略。</p>
+<p>下面是一个示例 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span> <span class="comment">// 包含 fork(), getpid(), getppid() 的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span> <span class="comment">// 包含 pid_t 类型的头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">pid_t</span> pid; <span class="comment">// pid_t 是专门用来存储进程ID的数据类型</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"程序开始：我是父进程，我的PID是 %d\n"</span>, <span class="built_in">getpid</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关键步骤：调用 fork() 创建新进程</span></span><br><span class="line">    pid = fork();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// fork() 之后，这里的代码会被父子两个进程同时执行</span></span><br><span class="line">    <span class="comment">// 我们需要通过 pid 的值来区分它们</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 步骤1：检查 fork 是否失败</span></span><br><span class="line">        <span class="comment">// 解释：如果返回值小于0，说明进程创建失败，需要进行错误处理。</span></span><br><span class="line">        <span class="built_in">fprintf</span>(stderr, <span class="string">"Fork 失败\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 步骤2：判断是否为子进程</span></span><br><span class="line">        <span class="comment">// 解释：如果返回值为0，那么当前代码在子进程中运行。</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"--- 我是子进程 ---\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"我的PID是 %d, 我的父进程PID是 %d\n"</span>, <span class="built_in">getpid</span>(), <span class="built_in">getppid</span>());</span><br><span class="line">        <span class="comment">// 子进程可以执行独立的任务，例如在这里休眠几秒钟</span></span><br><span class="line">        <span class="built_in">sleep</span>(<span class="number">2</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"--- 子进程执行完毕 ---\n"</span>);</span><br><span class="line"></span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// 步骤3：判断是否为父进程</span></span><br><span class="line">        <span class="comment">// 解释：如果返回值大于0，那么当前代码在父进程中运行，</span></span><br><span class="line">        <span class="comment">// 且 pid 变量的值就是刚刚创建的子进程的ID。</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"+++ 我是父进程 +++\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"我创建的子进程PID是 %d\n"</span>, pid);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"+++ 父进程继续执行任务... +++\n"</span>);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这行代码父子进程都会执行，但执行时间点不同</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"fork() 调用之后，我是PID为 %d 的进程\n"</span>, <span class="built_in">getpid</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 编译并运行后输出如下: <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">程序开始：我是父进程，我的PID是 54321</span><br><span class="line">+++ 我是父进程 +++</span><br><span class="line">我创建的子进程PID是 54322</span><br><span class="line">+++ 父进程继续执行任务... +++</span><br><span class="line">fork() 调用之后，我是PID为 54321 的进程</span><br><span class="line">--- 我是子进程 ---</span><br><span class="line">我的PID是 54322, 我的父进程PID是 54321</span><br><span class="line">fork() 调用之后，我是PID为 54322 的进程</span><br><span class="line">--- 子进程执行完毕 ---</span><br></pre></td></tr></table></figure></div> &gt;
+(注意：由于操作系统调度的不确定性，父子进程的输出顺序可能会交错)</p>
+<h4 id="fork-经典示例">fork() 经典示例</h4>
+<p>下面是一个非常经典的 fork()
+习题，它巧妙地结合了进程创建和I/O缓冲区的知识。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.hh&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) {</span><br><span class="line">        fork();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Hello\n"</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+这个程序的运行结果取决于它的输出是如何被处理的，这直接影响到 printf
+的缓冲策略。</p>
 <details class="green" data-header-exclude>
     <summary><i class="fa-solid fa-chevron-right"></i>当直接在终端执行 (./a.out) 时 </summary>
     <div class="content markdown-body">
-      <ol>
-<li><p>循环开始前: 只有一个进程 (P0)。</p>
-</li>
+      <ol type="1">
+<li><p>循环开始前: 只有一个进程 (P0)。</p></li>
 <li><p>i = 0:</p>
 <ul>
-<li><p>P0 调用 fork()，创建了子进程 P1。现在有 2 个进程 (P0, P1)。</p>
-</li>
-<li><p>P0 执行 printf(“Hello\n”)，打印一次。</p>
-</li>
-<li><p>P1 执行 printf(“Hello\n”)，打印一次。</p>
-</li>
-<li><p>此轮循环结束时，共打印了 2 次 “Hello”。</p>
-</li>
-</ul>
-</li>
+<li><p>P0 调用 fork()，创建了子进程 P1。现在有 2 个进程 (P0,
+P1)。</p></li>
+<li><p>P0 执行 printf(“Hello”)，打印一次。</p></li>
+<li><p>P1 执行 printf(“Hello”)，打印一次。</p></li>
+<li><p>此轮循环结束时，共打印了 2 次 “Hello”。</p></li>
+</ul></li>
 <li><p>i = 1:</p>
 <ul>
-<li><p>此时，P0 和 P1 两个进程都进入了第二次循环。</p>
-</li>
-<li><p>P0 调用 fork()，创建了子进程 P2。</p>
-</li>
-<li><p>P1 调用 fork()，创建了子进程 P3。</p>
-</li>
-<li><p>现在总共有 4 个进程 (P0, P1, P2, P3)。</p>
-</li>
-<li><p>这 4 个进程各自执行 printf(“Hello\n”)，每个打印一次。</p>
-</li>
-<li><p>此轮循环结束时，又打印了 4 次 “Hello”。</p>
-</li>
-</ul>
-</li>
-<li><p>总计: 2 + 4 = 6 次 “Hello”。</p>
-</li>
+<li><p>此时，P0 和 P1 两个进程都进入了第二次循环。</p></li>
+<li><p>P0 调用 fork()，创建了子进程 P2。</p></li>
+<li><p>P1 调用 fork()，创建了子进程 P3。</p></li>
+<li><p>现在总共有 4 个进程 (P0, P1, P2, P3)。</p></li>
+<li><p>这 4 个进程各自执行 printf(“Hello”)，每个打印一次。</p></li>
+<li><p>此轮循环结束时，又打印了 4 次 “Hello”。</p></li>
+</ul></li>
+<li><p>总计: 2 + 4 = 6 次 “Hello”。</p></li>
 </ol>
 
     </div>
   </details>
-
 <details class="green" data-header-exclude>
     <summary><i class="fa-solid fa-chevron-right"></i>如果通过管道执行 (./a.out | cat)时 </summary>
     <div class="content markdown-body">
-      <ol>
-<li><p>循环开始前: 1 个进程 (P0), 且P0 的输出缓冲区是空的。</p>
-</li>
+      <ol type="1">
+<li><p>循环开始前: 1 个进程 (P0), 且P0 的输出缓冲区是空的。</p></li>
 <li><p>i = 0:</p>
 <ul>
-<li><p>P0 调用 fork()，创建子进程 P1。</p>
-</li>
-<li><p>缓冲区状态: P0 和 P1 的缓冲区都是空的。</p>
-</li>
-<li><p>P0 执行 printf，”Hello\n” 被放入 P0 的缓冲区。</p>
-</li>
-<li><p>P1 执行 printf，”Hello\n” 被放入 P1 的缓冲区。</p>
-</li>
-<li><p>此时没有任何内容被打印到屏幕上，它们都在各自进程的内存缓冲区里。</p>
-</li>
-</ul>
-</li>
+<li><p>P0 调用 fork()，创建子进程 P1。</p></li>
+<li><p>缓冲区状态: P0 和 P1 的缓冲区都是空的。</p></li>
+<li><p>P0 执行 printf，“Hello” 被放入 P0 的缓冲区。</p></li>
+<li><p>P1 执行 printf，“Hello” 被放入 P1 的缓冲区。</p></li>
+<li><p>此时没有任何内容被打印到屏幕上，它们都在各自进程的内存缓冲区里。</p></li>
+</ul></li>
 <li><p>i = 1:</p>
 <ul>
 <li><p>P0 继续执行: 它调用 fork()，创建子进程 P2。</p>
 <ul>
-<li>关键: P2 被创建时，它完整地复制了 P0 的内存，因此 P2 的缓冲区初始内容就是 “Hello\n”。</li>
-</ul>
-</li>
-<li><p>P1 继续执行: 它调用 fork()，创建子进程 P3。同样，P3 被创建时，复制了 P1 的内存，P3 的缓冲区初始内容也是 “Hello\n”。</p>
-</li>
+<li>关键: P2 被创建时，它完整地复制了 P0 的内存，因此 P2
+的缓冲区初始内容就是 “Hello”。</li>
+</ul></li>
+<li><p>P1 继续执行: 它调用 fork()，创建子进程 P3。同样，P3
+被创建时，复制了 P1 的内存，P3 的缓冲区初始内容也是 “Hello”。</p></li>
 <li><p>现在我们有 4 个进程：P0, P1, P2, P3。缓冲区初始状态为:</p>
 <ul>
-<li><p>P0: “Hello\n”</p>
-</li>
-<li><p>P1: “Hello\n”</p>
-</li>
-<li><p>P2: “Hello\n” (继承自 P0)</p>
-</li>
-<li><p>P3: “Hello\n” (继承自 P1)</p>
-</li>
-</ul>
-</li>
-<li><p>接下来，这 4 个进程各自执行 printf(“Hello\n”)。执行后，缓冲区最终状态:</p>
+<li><p>P0: “Hello”</p></li>
+<li><p>P1: “Hello”</p></li>
+<li><p>P2: “Hello” (继承自 P0)</p></li>
+<li><p>P3: “Hello” (继承自 P1)</p></li>
+</ul></li>
+<li><p>接下来，这 4 个进程各自执行
+printf(“Hello”)。执行后，缓冲区最终状态:</p>
 <ul>
-<li><p>P0 缓冲区: “Hello\nHello\n”</p>
-</li>
-<li><p>P1 缓冲区: “Hello\nHello\n”</p>
-</li>
-<li><p>P2 缓冲区: “Hello\nHello\n”</p>
-</li>
-<li><p>P3 缓冲区: “Hello\nHello\n”</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><p>P0 缓冲区: “Hello”</p></li>
+<li><p>P1 缓冲区: “Hello”</p></li>
+<li><p>P2 缓冲区: “Hello”</p></li>
+<li><p>P3 缓冲区: “Hello”</p></li>
+</ul></li>
+</ul></li>
 <li><p>程序结束:</p>
 <ul>
-<li><p>所有 4 个进程执行完毕，它们在退出前会冲刷各自的 stdout 缓冲区。</p>
-</li>
-<li><p>每个进程都将打印出其缓冲区中的两个 “Hello\n”。</p>
-</li>
-<li><p>总计: 4 个进程 × 每个进程打印 2 次 = 8 次 “Hello”。</p>
-</li>
-</ul>
-</li>
+<li><p>所有 4 个进程执行完毕，它们在退出前会冲刷各自的 stdout
+缓冲区。</p></li>
+<li><p>每个进程都将打印出其缓冲区中的两个 “Hello”。</p></li>
+<li><p>总计: 4 个进程 × 每个进程打印 2 次 = 8 次 “Hello”。</p></li>
+</ul></li>
 </ol>
 
     </div>
   </details>
-
-<p>要理解结果的差异，必须先理解 printf 函数的标准输出流 (stdout) 缓冲机制。</p>
+<p>要理解结果的差异，必须先理解 printf 函数的标准输出流 (stdout)
+缓冲机制。</p>
 <ul>
-<li><p>行缓冲 (Line-Buffered): 当输出设备是交互式终端时（即我们直接在命令行运行 ./a.out），stdout 默认为行缓冲。</p>
+<li><p>行缓冲 (Line-Buffered):
+当输出设备是交互式终端时（即我们直接在命令行运行 ./a.out），stdout
+默认为行缓冲。</p>
 <ul>
-<li><p>printf 的内容会先暂存到一块内存缓冲区里。当遇到<strong>换行符 \n</strong>，或者<strong>缓冲区满了</strong>，或者程序结束时，缓冲区的内容才会被真正“冲刷”（flush）到屏幕上。</p>
-</li>
-<li><p>对于本题：printf(“Hello\n”) 中的 \n 会立即触发冲刷，所以每次调用 printf 都会立刻看到输出。</p>
-</li>
-</ul>
-</li>
-<li><p>全缓冲 (Fully-Buffered): 当输出被重定向到文件或管道时（如 ./a.out | cat），stdout 会变为全缓冲。</p>
+<li><p>printf 的内容会先暂存到一块内存缓冲区里。当遇到**换行符
+*，或者<strong>缓冲区满了</strong>，或者程序结束时，缓冲区的内容才会被真正“冲刷”（flush）到屏幕上。</p></li>
+<li><p>对于本题：printf(“Hello”) 中的 会立即触发冲刷，所以每次调用
+printf 都会立刻看到输出。</p></li>
+</ul></li>
+<li><p>全缓冲 (Fully-Buffered): 当输出被重定向到文件或管道时（如 ./a.out
+| cat），stdout 会变为全缓冲。</p>
 <ul>
-<li><p>在这种模式下，只有<strong>当缓冲区被写满</strong>，或者<strong>程序正常结束</strong>时，内容才会被冲刷。\n 不再能触发立即冲刷。</p>
-</li>
-<li><p>对于本题：printf 的内容会一直留在内存缓冲区中，直到进程结束时才被一次性打印出来。这是导致两种结果不同的根本原因。</p>
-</li>
+<li><p>在这种模式下，只有<strong>当缓冲区被写满</strong>，或者<strong>程序正常结束</strong>时，内容才会被冲刷。不再能触发立即冲刷。</p></li>
+<li><p>对于本题：printf
+的内容会一直留在内存缓冲区中，直到进程结束时才被一次性打印出来。这是导致两种结果不同的根本原因。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p>这个问题深刻地揭示了 fork() 的一个核心特性：它创建的是父进程在调用那一刻的“快照”。这个快照不仅包括代码和数据，还包括像 I/O 缓冲区这样的用户态资源。</p>
-<h4 id="fork-的主要用途"><a href="#fork-的主要用途" class="headerlink" title="fork() 的主要用途"></a>fork() 的主要用途</h4><h3 id="execve-一个复位状态机"><a href="#execve-一个复位状态机" class="headerlink" title="execve() : 一个复位状态机"></a>execve() : 一个复位状态机</h3><p>在操作系统中，我们经常将 fork() 和 execve() 放在一起讨论。</p>
+<p>这个问题深刻地揭示了 fork()
+的一个核心特性：它创建的是父进程在调用那一刻的“快照”。这个快照不仅包括代码和数据，还包括像
+I/O 缓冲区这样的用户态资源。</p>
+<h4 id="fork-的主要用途">fork() 的主要用途</h4>
+<h3 id="execve-一个复位状态机">execve() : 一个复位状态机</h3>
+<p>在操作系统中，我们经常将 fork() 和 execve() 放在一起讨论。</p>
 <ul>
-<li><p>fork() 是新生：它像细胞分裂一样，从一个父进程完整地克隆出一个新的子进程。这个子进程拥有全新的进程ID（PID），但继承了父进程的全部内存状态。</p>
-</li>
-<li><p>execve() 是重生：它不会创建新进程。相反，它会将调用它的那个进程彻底“变身”，用一个全新的程序来完全替换当前进程的内存空间。进程的ID（PID）保持不变，但它内部运行的程序已经焕然一新。</p>
-</li>
+<li><p>fork()
+是新生：它像细胞分裂一样，从一个父进程完整地克隆出一个新的子进程。这个子进程拥有全新的进程ID（PID），但继承了父进程的全部内存状态。</p></li>
+<li><p>execve()
+是重生：它不会创建新进程。相反，它会将调用它的那个进程彻底“变身”，用一个全新的程序来完全替换当前进程的内存空间。进程的ID（PID）保持不变，但它内部运行的程序已经焕然一新。</p></li>
 </ul>
-<p>或者从状态机的视角来看, execve 是一个复位状态机 (Reset State Machine)。它按下了一个“重置按钮”，将当前进程的“状态”——主要是内存中的内容——重置为目标可执行文件所描述的初始状态。</p>
+<p>或者从状态机的视角来看, execve 是一个复位状态机 (Reset State
+Machine)。它按下了一个“重置按钮”，将当前进程的“状态”——主要是内存中的内容——重置为目标可执行文件所描述的初始状态。</p>
 
 		</div>
 
@@ -1078,7 +1052,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">程序和进程</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#fork-%E5%88%9B%E5%BB%BA%E6%96%B0%E8%BF%9B%E7%A8%8B%E7%9A%84%E2%80%9C%E5%85%8B%E9%9A%86%E2%80%9D%E6%8A%80%E6%9C%AF"><span class="nav-text">fork(): 创建新进程的“克隆”技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">fork() 的工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E8%BF%94%E5%9B%9E%E5%80%BC-%E4%B8%80%E6%AC%A1%E8%B0%83%E7%94%A8%EF%BC%8C%E4%B8%A4%E6%AC%A1%E8%BF%94%E5%9B%9E"><span class="nav-text">fork() 返回值: 一次调用，两次返回</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E7%BB%8F%E5%85%B8%E7%A4%BA%E4%BE%8B"><span class="nav-text">fork() 经典示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E7%9A%84%E4%B8%BB%E8%A6%81%E7%94%A8%E9%80%94"><span class="nav-text">fork() 的主要用途</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#execve-%E4%B8%80%E4%B8%AA%E5%A4%8D%E4%BD%8D%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-text">execve() : 一个复位状态机</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#fork-%E5%88%9B%E5%BB%BA%E6%96%B0%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%85%8B%E9%9A%86%E6%8A%80%E6%9C%AF"><span class="nav-text">fork(): 创建新进程的“克隆”技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">fork() 的工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E8%BF%94%E5%9B%9E%E5%80%BC-%E4%B8%80%E6%AC%A1%E8%B0%83%E7%94%A8%E4%B8%A4%E6%AC%A1%E8%BF%94%E5%9B%9E"><span class="nav-text">fork() 返回值:
+一次调用，两次返回</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E7%BB%8F%E5%85%B8%E7%A4%BA%E4%BE%8B"><span class="nav-text">fork() 经典示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E7%9A%84%E4%B8%BB%E8%A6%81%E7%94%A8%E9%80%94"><span class="nav-text">fork() 的主要用途</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#execve-%E4%B8%80%E4%B8%AA%E5%A4%8D%E4%BD%8D%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-text">execve() : 一个复位状态机</span></a></li></ol>
 
 	</div>
 </div>
@@ -1107,11 +1082,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

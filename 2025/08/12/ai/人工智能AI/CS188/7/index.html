@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,57 +833,71 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>之前的智能体（如搜索智能体）虽然能解决问题，但它们的“知识”是隐式的, 内嵌在状态表示、行动函数和启发式函数中。而从这一讲开始，我们将探索如何让智能体拥有显式的、声明式的知识，并利用这些知识进行推理</p>
-<h2 id="基于知识的智能体-Knowledge-Based-Agent"><a href="#基于知识的智能体-Knowledge-Based-Agent" class="headerlink" title="基于知识的智能体 (Knowledge-Based Agent)"></a>基于知识的智能体 (Knowledge-Based Agent)</h2><p>它的核心组件是一个知识库 (Knowledge Base - KB)，这是一个由形式化语言写成的语句 (sentences) 的集合。</p>
-<p>整个智能体的工作模式为: </p>
+			<p>之前的智能体（如搜索智能体）虽然能解决问题，但它们的“知识”是隐式的,
+内嵌在状态表示、行动函数和启发式函数中。而从这一讲开始，我们将探索如何让智能体拥有显式的、声明式的知识，并利用这些知识进行推理
+## 基于知识的智能体 (Knowledge-Based Agent)</p>
+<p>它的核心组件是一个知识库 (Knowledge Base -
+KB)，这是一个由形式化语言写成的语句 (sentences) 的集合。</p>
+<p>整个智能体的工作模式为:</p>
 <ul>
-<li><p>告知 (TELL)：将新的知识（来自感知、学习或直接告知）以语句的形式添加到知识库中。</p>
-</li>
-<li><p>询问 (ASK)：通过一个通用的推理引擎 (Inference Engine) 向知识库提问，推导出新的结论来指导行动。</p>
-</li>
+<li><p>告知
+(TELL)：将新的知识（来自感知、学习或直接告知）以语句的形式添加到知识库中。</p></li>
+<li><p>询问 (ASK)：通过一个通用的推理引擎 (Inference Engine)
+向知识库提问，推导出新的结论来指导行动。</p></li>
 </ul>
-<p>这是一种声明式 (Declarative) 的方法。我们只需要描述“世界是怎样的”，而不需要编写具体的“如何做”的代码。一个通用的推理算法可以解决所有可回答的问题，这极大地提高了智能体的灵活性和可扩展性。</p>
-<h2 id="逻辑的基本概念"><a href="#逻辑的基本概念" class="headerlink" title="逻辑的基本概念"></a>逻辑的基本概念</h2><p>为了让智能体能够“知道”事情，我们需要一种精确的语言。逻辑就是这样一种语言，它由两个基本部分组成：</p>
+<p>这是一种声明式 (Declarative)
+的方法。我们只需要描述“世界是怎样的”，而不需要编写具体的“如何做”的代码。一个通用的推理算法可以解决所有可回答的问题，这极大地提高了智能体的灵活性和可扩展性。</p>
+<h2 id="逻辑的基本概念">逻辑的基本概念</h2>
+<p>为了让智能体能够“知道”事情，我们需要一种精确的语言。逻辑就是这样一种语言，它由两个基本部分组成：</p>
 <ul>
-<li><p>语法 (Syntax): 语法是一套规则，它规定了什么样的符号组合是合法的语句。</p>
+<li><p>语法 (Syntax):
+语法是一套规则，它规定了什么样的符号组合是合法的语句。</p>
 <ul>
-<li>就像英语语法规定了 “x &gt; y” 是合法的，而 “x &gt; y =” 不是。语法只关心句子的形式，不关心其含义。</li>
-</ul>
-</li>
-<li><p>语义 (Semantics): 语义定义了语句的含义。它通过将语句与**“可能的世界” (Possible Worlds)** 或**“模型” (Models)** 联系起来，来确定一个语句的真假。</p>
+<li>就像英语语法规定了 “x &gt; y” 是合法的，而 “x &gt; y =”
+不是。语法只关心句子的形式，不关心其含义。</li>
+</ul></li>
+<li><p>语义 (Semantics):
+语义定义了语句的含义。它通过将语句与<strong>“可能的世界” (Possible
+Worlds)</strong> 或<strong>“模型” (Models)</strong>
+联系起来，来确定一个语句的真假。</p>
 <ul>
-<li><p>可能的世界/模型：一个模型代表了世界的一种具体状态。在命题逻辑中，一个模型就是对所有命题符号的一个真值指派（例如，{P=真, Q=假}）。</p>
-</li>
-<li><p>真值 (Truth)：语义的核心是定义一个语句在哪个模型中为真，在哪个模型中为假。</p>
-</li>
+<li><p>可能的世界/模型：一个模型代表了世界的一种具体状态。在命题逻辑中，一个模型就是对所有命题符号的一个真值指派（例如，{P=真,
+Q=假}）。</p></li>
+<li><p>真值
+(Truth)：语义的核心是定义一个语句在哪个模型中为真，在哪个模型中为假。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="命题逻辑-Propositional-Logic"><a href="#命题逻辑-Propositional-Logic" class="headerlink" title="命题逻辑 (Propositional Logic)"></a>命题逻辑 (Propositional Logic)</h2><p>这是我们学习的第一个形式化逻辑语言。</p>
-<p>语法：由命题符号 (X₁, X₂…) 和五个逻辑连接词 (¬, ∧, ∨, =&gt;, ⇔) 构成。</p>
+<h2 id="命题逻辑-propositional-logic">命题逻辑 (Propositional
+Logic)</h2>
+<p>这是我们学习的第一个形式化逻辑语言。</p>
+<p>语法：由命题符号 (X₁, X₂…) 和五个逻辑连接词 (¬, ∧, ∨, =&gt;, ⇔)
+构成。</p>
 <blockquote>
-<p>需要额外注意的是 =&gt;(蕴含, implication)：“如果A，那么B”。这是最容易混淆的一个。它只有在一种情况下为假：当 A 为真而 B 为假时。</p>
+<p>需要额外注意的是 =&gt;(蕴含,
+implication)：“如果A，那么B”。这是最容易混淆的一个。它只有在一种情况下为假：当
+A 为真而 B 为假时。</p>
 </blockquote>
 <p>语义：通过真值表来定义。一个模型就是对所有命题符号的一个真/假赋值。</p>
-<h2 id="推理-Inference"><a href="#推理-Inference" class="headerlink" title="推理 (Inference)"></a>推理 (Inference)</h2><p>推理是一个计算过程，它通过应用推理规则从已有的语句中推导出新的语句。其有两种主要方法：</p>
+<h2 id="推理-inference">推理 (Inference)</h2>
+<p>推理是一个计算过程，它通过应用推理规则从已有的语句中推导出新的语句。其有两种主要方法：</p>
 <ul>
-<li><p>模型检验 (Model Checking)：通过枚举所有可能的模型来检查蕴含关系是否成立。对于命题逻辑是可行的，因为模型数量有限。</p>
-</li>
-<li><p>定理证明 (Theorem Proving)：应用推理规则（如三段论）来构建一个从前提到结论的证明 (proof) 链条。</p>
-</li>
+<li><p>模型检验 (Model
+Checking)：通过枚举所有可能的模型来检查蕴含关系是否成立。对于命题逻辑是可行的，因为模型数量有限。</p></li>
+<li><p>定理证明 (Theorem
+Proving)：应用推理规则（如三段论）来构建一个从前提到结论的证明 (proof)
+链条。</p></li>
 </ul>
-<p>而蕴含 (Entailment)是逻辑推理的核心目标。它的意思是：在所有使得 α 为真的模型中，β 也必然为真。</p>
+<p>而蕴含 (Entailment)是逻辑推理的核心目标。它的意思是：在所有使得 α
+为真的模型中，β 也必然为真。</p>
 <ul>
-<li><p>定义：α |= β (读作 “alpha entails beta”)</p>
-</li>
+<li><p>定义：α |= β (读作 “alpha entails beta”)</p></li>
 <li><p>与蕴含 (=&gt;) 的区别 ：</p>
 <ul>
-<li><p>α =&gt; β 是一个逻辑语句，它本身可以在某个模型中为真或为假。</p>
-</li>
-<li><p>α |= β 是一个关于两个语句之间关系的断言，它要么成立，要么不成立。</p>
-</li>
-</ul>
-</li>
+<li><p>α =&gt; β
+是一个逻辑语句，它本身可以在某个模型中为真或为假。</p></li>
+<li><p>α |= β
+是一个关于两个语句之间关系的断言，它要么成立，要么不成立。</p></li>
+</ul></li>
 </ul>
 
 		</div>
@@ -947,7 +961,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">Logic -- Propositional Logic and Planning</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%9F%A5%E8%AF%86%E7%9A%84%E6%99%BA%E8%83%BD%E4%BD%93-Knowledge-Based-Agent"><span class="nav-text">基于知识的智能体 (Knowledge-Based Agent)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">逻辑的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E9%A2%98%E9%80%BB%E8%BE%91-Propositional-Logic"><span class="nav-text">命题逻辑 (Propositional Logic)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E7%90%86-Inference"><span class="nav-text">推理 (Inference)</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">逻辑的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E9%A2%98%E9%80%BB%E8%BE%91-propositional-logic"><span class="nav-text">命题逻辑 (Propositional
+Logic)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E7%90%86-inference"><span class="nav-text">推理 (Inference)</span></a></li></ol>
 
 	</div>
 </div>
@@ -976,11 +991,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -813,7 +813,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>711 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>712 Words</span>
         </span>
     
     
@@ -833,23 +833,34 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>在 C++ 中，typedef 和 C++11 引入的“别名声明”（Alias Declaration）都用于创建类型同义词。例如，以下两行代码在功能上是完全等效的：</p>
+			<p>在 C++ 中，typedef 和 C++11 引入的“别名声明”（Alias
+Declaration）都用于创建类型同义词。例如，以下两行代码在功能上是完全等效的：
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++98 的做法</span></span><br><span class="line"><span class="keyword">typedef</span> std::unique_ptr&lt;std::unordered_map&lt;std::string, std::string&gt;&gt; UPtrMapSS; [cite: <span class="number">723</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++11 的做法：别名声明</span></span><br><span class="line"><span class="keyword">using</span> UPtrMapSS = std::unique_ptr&lt;std::unordered_map&lt;std::string, std::string&gt;&gt;; [cite: <span class="number">726</span>]</span><br></pre></td></tr></table></figure></div>
-<p>尽管两者功能相同，但条款9强烈建议优先选用别名声明（using），主要原因在于它对模板的完美支持以及在模板元编程中的易用性。</p>
-<h3 id="易读性-次要"><a href="#易读性-次要" class="headerlink" title="易读性(次要)"></a>易读性(次要)</h3><p>对于复杂的类型，特别是函数指针，using 的语法通常更直观、更易于阅读。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Typedef：类型名称（FP）被“包围”在中间，阅读顺序不自然</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*FP)</span><span class="params">(<span class="type">int</span>, <span class="type">const</span> std::string&amp;)</span></span>; [cite: <span class="number">728</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 别名声明：语法更像赋值，左侧是新名称，右侧是原类型，逻辑清晰</span></span><br><span class="line"><span class="keyword">using</span> FP = <span class="built_in">void</span> (*)(<span class="type">int</span>, <span class="type">const</span> std::string&amp;); [cite: <span class="number">729</span>]</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="核心优势：对模板的支持"><a href="#核心优势：对模板的支持" class="headerlink" title="核心优势：对模板的支持"></a>核心优势：对模板的支持</h3><p>别名声明最重要且最具压倒性的优势在于它可以被模板化，而 typedef 不能 。通过 <strong>using</strong> 创建的<strong>模板化类型同义词</strong>被称为别名模板 (Alias Template)。</p>
-<p>如果我们想创建一个自定义分配器的 std::list 的同义词，使用别名模板非常简单：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">using</span> MyAllocList = std::list&lt;T, MyAlloc&lt;T&gt;&gt;;</span><br><span class="line">MyAllocList&lt;Widget&gt; lw; <span class="comment">//</span></span><br></pre></td></tr></table></figure></div>
-<p>而由于 typedef 不能被模板化，为了在 C++98 中实现相同的效果，我们必须使用一个繁琐的变通方法：将 typedef 嵌套在一个模板化的 struct 内部 ：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyAllocList</span> {</span><br><span class="line">    <span class="keyword">typedef</span> std::list&lt;T, MyAlloc&lt;T&gt;&gt; type; </span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>这种方法不仅更复杂，而且客户端代码在使用时也必须通过 ::type 来获取真正的类型，并且常常需要与 typename 关键字配合。</p>
-<blockquote>
-<p>当一个类型依赖于模板参数（如 MyAllocList<t>::type 依赖于 T）时，这个类型被称为依赖类型 (dependent type) 。C++ 规则要求，对于依赖类型，必须在其前面显式添加 typename 关键字，以告知编译器这个依赖名称是一个类型，而不是一个数据成员或别的什么 。</t></p>
-</blockquote>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 typedef 版本的代码</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 必须使用 "typename" 和 "::type"</span></span><br><span class="line">    <span class="keyword">typename</span> MyAllocList&lt;T&gt;::type list; [cite: <span class="number">740</span>, <span class="number">742</span>, <span class="number">743</span>]</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用别名模板版本的代码</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 代码更简洁，无需 typename 和 ::type</span></span><br><span class="line">    MyAllocList&lt;T&gt; list; [cite: <span class="number">747</span>]</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>别名模板完美地解决了这个问题。当编译器看到 MyAllocList<t> 时，它知道 MyAllocList 是一个别名模板，因此 MyAllocList<t> 必然是一个类型。它不再是一个“依赖类型”（在C++的定义中），因此不再需要 typename 关键字，也不需要 ::type 后缀 </t></t></p>
+尽管两者功能相同，但条款9强烈建议优先选用别名声明（using），主要原因在于它对模板的完美支持以及在模板元编程中的易用性。</p>
+<h3 id="易读性次要">易读性(次要)</h3>
+<p>对于复杂的类型，特别是函数指针，using 的语法通常更直观、更易于阅读。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Typedef：类型名称（FP）被“包围”在中间，阅读顺序不自然</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*FP)</span><span class="params">(<span class="type">int</span>, <span class="type">const</span> std::string&amp;)</span></span>; [cite: <span class="number">728</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 别名声明：语法更像赋值，左侧是新名称，右侧是原类型，逻辑清晰</span></span><br><span class="line"><span class="keyword">using</span> FP = <span class="built_in">void</span> (*)(<span class="type">int</span>, <span class="type">const</span> std::string&amp;); [cite: <span class="number">729</span>]</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="核心优势对模板的支持">核心优势：对模板的支持</h3>
+<p>别名声明最重要且最具压倒性的优势在于它可以被模板化，而 typedef 不能
+。通过 <strong>using</strong>
+创建的<strong>模板化类型同义词</strong>被称为别名模板 (Alias
+Template)。</p>
+<p>如果我们想创建一个自定义分配器的 std::list
+的同义词，使用别名模板非常简单： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">using</span> MyAllocList = std::list&lt;T, MyAlloc&lt;T&gt;&gt;;</span><br><span class="line">MyAllocList&lt;Widget&gt; lw; <span class="comment">//</span></span><br></pre></td></tr></table></figure></div> 而由于 typedef
+不能被模板化，为了在 C++98
+中实现相同的效果，我们必须使用一个繁琐的变通方法：将 typedef
+嵌套在一个模板化的 struct 内部 ： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyAllocList</span> {</span><br><span class="line">    <span class="keyword">typedef</span> std::list&lt;T, MyAlloc&lt;T&gt;&gt; type; </span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+这种方法不仅更复杂，而且客户端代码在使用时也必须通过 ::type
+来获取真正的类型，并且常常需要与 typename 关键字配合。 &gt;
+当一个类型依赖于模板参数（如 MyAllocList<t>::type 依赖于
+T）时，这个类型被称为依赖类型 (dependent type) 。C++
+规则要求，对于依赖类型，必须在其前面显式添加 typename
+关键字，以告知编译器这个依赖名称是一个类型，而不是一个数据成员或别的什么
+。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 typedef 版本的代码</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 必须使用 "typename" 和 "::type"</span></span><br><span class="line">    <span class="keyword">typename</span> MyAllocList&lt;T&gt;::type list; [cite: <span class="number">740</span>, <span class="number">742</span>, <span class="number">743</span>]</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用别名模板版本的代码</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 代码更简洁，无需 typename 和 ::type</span></span><br><span class="line">    MyAllocList&lt;T&gt; list; [cite: <span class="number">747</span>]</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 别名模板完美地解决了这个问题。当编译器看到
+MyAllocList<t> 时，它知道 MyAllocList 是一个别名模板，因此
+MyAllocList<t>
+必然是一个类型。它不再是一个“依赖类型”（在C++的定义中），因此不再需要
+typename 关键字，也不需要 ::type 后缀</t></t></t></p>
 
 		</div>
 
@@ -888,9 +899,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/14/algorithms/Computing%20Theory/%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
+				<a class="next" rel="next" href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE8%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20nullptr,%20%E8%80%8C%E9%9D%9E%20NULL/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">预备知识</span>
+						<span class="post-nav-title-item truncate max-w-48">条款8：优先选用 nullptr, 而非 NULL 或者0</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -912,7 +923,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款9：优先选用别名声明，而非 typedef</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%93%E8%AF%BB%E6%80%A7-%E6%AC%A1%E8%A6%81"><span class="nav-text">易读性(次要)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF%EF%BC%9A%E5%AF%B9%E6%A8%A1%E6%9D%BF%E7%9A%84%E6%94%AF%E6%8C%81"><span class="nav-text">核心优势：对模板的支持</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%93%E8%AF%BB%E6%80%A7%E6%AC%A1%E8%A6%81"><span class="nav-text">易读性(次要)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF%E5%AF%B9%E6%A8%A1%E6%9D%BF%E7%9A%84%E6%94%AF%E6%8C%81"><span class="nav-text">核心优势：对模板的支持</span></a></li></ol>
 
 	</div>
 </div>
@@ -941,11 +952,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

@@ -133,14 +133,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Volatile 和编译器优化">
+<meta property="og:title" content="三-五-零法则">
 <meta property="og:url" content="https://zaynpei.github.io/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/%E4%B8%89-%E4%BA%94-%E9%9B%B6%E6%B3%95%E5%88%99/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-10-01T09:49:06.000Z">
-<meta property="article:modified_time" content="2025-10-07T02:34:09.809Z">
+<meta property="article:modified_time" content="2025-10-18T15:27:37.053Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
@@ -155,7 +155,7 @@
     
     <title>
         
-            Volatile 和编译器优化 | ZaynPei&#39;s Base
+            三-五-零法则 | ZaynPei&#39;s Base
         
     </title>
 
@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -740,7 +740,7 @@ mjx-container[display="true"] + br {
 		<div class="article-title relative w-full">
 			
 			<div class="w-full flex items-center pt-6 justify-start">
-				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Volatile 和编译器优化</h1>
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">三-五-零法则</h1>
 			</div>
 			
 		</div>
@@ -768,8 +768,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-07 10:34:09</span>
-            <span class="mobile">2025-10-07 10:34:09</span>
+            <span class="desktop">2025-10-18 23:27:37</span>
+            <span class="mobile">2025-10-18 23:27:37</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -801,47 +801,71 @@ mjx-container[display="true"] + br {
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
 			<p>这个法则是关于如何正确管理类中的资源（尤其是动态分配的内存），避免内存泄漏和悬挂指针等问题的指导方针。它们是C++语言演化过程中逐步形成的三个阶段性法则。</p>
-<h2 id="法则一：三法则-The-Rule-of-Three-C-98-03时代"><a href="#法则一：三法则-The-Rule-of-Three-C-98-03时代" class="headerlink" title="法则一：三法则 (The Rule of Three) - C++98/03时代"></a>法则一：三法则 (The Rule of Three) - C++98/03时代</h2><p>核心思想：如果一个类需要程序员显式地定义<strong>析构</strong>函数、<strong>拷贝构造</strong>函数或<strong>拷贝赋值</strong>运算符 中的<strong>任意一个</strong>，那么它极有可能也需要定义<strong>所有这三个</strong>。</p>
+<h2 id="法则一三法则-the-rule-of-three---c9803时代">法则一：三法则 (The
+Rule of Three) - C++98/03时代</h2>
+<p>核心思想：如果一个类需要程序员显式地定义<strong>析构</strong>函数、<strong>拷贝构造</strong>函数或<strong>拷贝赋值</strong>运算符
+中的<strong>任意一个</strong>，那么它极有可能也需要定义<strong>所有这三个</strong>。</p>
 <ul>
-<li><p>析构函数 (~MyClass())：释放类所拥有的资源。</p>
-</li>
-<li><p>拷贝构造函数 (MyClass(const MyClass&amp; other))：用一个已存在的对象来创建一个新对象。</p>
-</li>
-<li><p>拷贝赋值运算符 (MyClass&amp; operator=(const MyClass&amp; other))：将一个已存在对象的值赋给另一个已存在的对象。</p>
-</li>
+<li><p>析构函数 (~MyClass())：释放类所拥有的资源。</p></li>
+<li><p>拷贝构造函数 (MyClass(const MyClass&amp;
+other))：用一个已存在的对象来创建一个新对象。</p></li>
+<li><p>拷贝赋值运算符 (MyClass&amp; operator=(const MyClass&amp;
+other))：将一个已存在对象的值赋给另一个已存在的对象。</p></li>
 </ul>
 <p>这个法则的根源在于手动资源管理。通常，你需要<strong>自定义这三个函数的唯一原因</strong>，就是你的类通过<strong>裸指针管理着动态分配的内存</strong>或其他资源（如文件句柄、网络连接等）。</p>
-<p>如果你需要 析构函数 -&gt; 说明你需要在对象销毁时释放资源（例如 delete ptr;）。</p>
-<p>既然你需要释放资源，那么编译器自动生成的 拷贝构造函数（它只会进行浅拷贝，即直接复制指针地址）就是错误的。因为它会导致两个对象指向同一块内存，造成重复释放。所以，你必须自己写一个深拷贝的版本。</p>
-<p>同理，编译器自动生成的 拷贝赋值运算符也是浅拷贝，同样是错误的。它不仅会造成重复释放，还会导致内存泄漏（赋值前没有释放自己原有的内存）。所以，你也必须自己实现它。</p>
+<p>如果你需要 析构函数 -&gt; 说明你需要在对象销毁时释放资源（例如 delete
+ptr;）。</p>
+<p>既然你需要释放资源，那么编译器自动生成的
+拷贝构造函数（它只会进行浅拷贝，即直接复制指针地址）就是错误的。因为它会导致两个对象指向同一块内存，造成重复释放。所以，你必须自己写一个深拷贝的版本。</p>
+<p>同理，编译器自动生成的
+拷贝赋值运算符也是浅拷贝，同样是错误的。它不仅会造成重复释放，还会导致内存泄漏（赋值前没有释放自己原有的内存）。所以，你也必须自己实现它。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">String</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 构造函数</span></span><br><span class="line">    <span class="built_in">String</span>(<span class="type">const</span> <span class="type">char</span>* s = <span class="string">""</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"构造函数\n"</span>;</span><br><span class="line">        m_data = <span class="keyword">new</span> <span class="type">char</span>[<span class="built_in">strlen</span>(s) + <span class="number">1</span>];</span><br><span class="line">        <span class="built_in">strcpy</span>(m_data, s);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 析构函数 (触发三法则)</span></span><br><span class="line">    ~<span class="built_in">String</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"析构函数\n"</span>;</span><br><span class="line">        <span class="keyword">delete</span>[] m_data;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 拷贝构造函数 (必须提供，否则会重复释放)</span></span><br><span class="line">    <span class="built_in">String</span>(<span class="type">const</span> String&amp; other) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"拷贝构造函数\n"</span>;</span><br><span class="line">        m_data = <span class="keyword">new</span> <span class="type">char</span>[<span class="built_in">strlen</span>(other.m_data) + <span class="number">1</span>];</span><br><span class="line">        <span class="built_in">strcpy</span>(m_data, other.m_data);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 拷贝赋值运算符 (必须提供，否则会内存泄漏+重复释放)</span></span><br><span class="line">    String&amp; <span class="keyword">operator</span>=(<span class="type">const</span> String&amp; other) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"拷贝赋值运算符\n"</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == &amp;other) { <span class="comment">// 1. 检查自赋值</span></span><br><span class="line">            <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">delete</span>[] m_data; <span class="comment">// 2. 释放旧资源</span></span><br><span class="line">        m_data = <span class="keyword">new</span> <span class="type">char</span>[<span class="built_in">strlen</span>(other.m_data) + <span class="number">1</span>]; <span class="comment">// 3. 分配新资源</span></span><br><span class="line">        <span class="built_in">strcpy</span>(m_data, other.m_data); <span class="comment">// 4. 复制数据</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">char</span>* m_data;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="法则二：五法则-The-Rule-of-Five-C-11及以后"><a href="#法则二：五法则-The-Rule-of-Five-C-11及以后" class="headerlink" title="法则二：五法则 (The Rule of Five) - C++11及以后"></a>法则二：五法则 (The Rule of Five) - C++11及以后</h3><p>由于C++11引入了<strong>移动语义</strong> (Move Semantics)，<strong>三法则</strong>扩展为了<strong>五法则</strong>。如果一个类定义了五个特殊成员函数中的任何一个，它应该把它们全部定义（或 =delete 掉）。</p>
+<h3 id="法则二五法则-the-rule-of-five---c11及以后">法则二：五法则 (The
+Rule of Five) - C++11及以后</h3>
+<p>由于C++11引入了<strong>移动语义</strong> (Move
+Semantics)，<strong>三法则</strong>扩展为了<strong>五法则</strong>。如果一个类定义了五个特殊成员函数中的任何一个，它应该把它们全部定义（或
+=delete 掉）。</p>
 <p>新增的两个特殊成员函数：</p>
 <ul>
-<li><p><strong>移动构造</strong>函数 (MyClass(<strong>MyClass&amp;&amp;</strong> other) <strong>noexcept</strong>)：用一个将要被销毁的临时对象（右值）来创建新对象，通过“窃取”其资源来避免昂贵的拷贝。</p>
-</li>
-<li><p><strong>移动赋值</strong>运算符 (MyClass&amp; operator=(<strong>MyClass&amp;&amp;</strong> other) <strong>noexcept</strong>)：从一个临时对象（右值）“窃取”资源。</p>
-</li>
+<li><p><strong>移动构造</strong>函数
+(MyClass(<strong>MyClass&amp;&amp;</strong> other)
+<strong>noexcept</strong>)：用一个将要被销毁的临时对象（右值）来创建新对象，通过“窃取”其资源来避免昂贵的拷贝。</p></li>
+<li><p><strong>移动赋值</strong>运算符 (MyClass&amp;
+operator=(<strong>MyClass&amp;&amp;</strong> other)
+<strong>noexcept</strong>)：从一个临时对象（右值）“窃取”资源。</p></li>
 </ul>
-<p>移动语义是C++11的重大性能提升。如果你的类管理着资源，你不仅要告诉编译器如何拷贝它，还应该告诉编译器如何移动它。因为移动操作（只是交换指针和设置nullptr）远比深拷贝（分配内存 + 复制数据）要快得多。</p>
+<p>移动语义是C++11的重大性能提升。如果你的类管理着资源，你不仅要告诉编译器如何拷贝它，还应该告诉编译器如何移动它。因为移动操作（只是交换指针和设置nullptr）远比深拷贝（分配内存
++ 复制数据）要快得多。</p>
 <p>如果你手动定义了拷贝操作（拷贝构造/拷贝赋值）或析构函数，编译器通常不会再自动为你生成移动操作。这会导致在需要移动的场合（例如从函数返回临时对象）被迫降级去执行昂贵的拷贝操作，从而丧失性能。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ... 在上面的 String 类中增加 ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 移动构造函数 (高效的资源“窃取”)</span></span><br><span class="line"><span class="built_in">String</span>(String&amp;&amp; other) <span class="keyword">noexcept</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"移动构造函数\n"</span>;</span><br><span class="line">    m_data = other.m_data;   <span class="comment">// 1. 直接拿走资源</span></span><br><span class="line">    other.m_data = <span class="literal">nullptr</span>; <span class="comment">// 2. 将源对象置为空，防止它析构时释放资源</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5. 移动赋值运算符, 设置 noexcept 表示这个函数不会抛异常</span></span><br><span class="line">String&amp; <span class="keyword">operator</span>=(String&amp;&amp; other) <span class="keyword">noexcept</span> {</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"移动赋值运算符\n"</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> == &amp;other) { <span class="comment">// 1. 检查自赋值</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">delete</span>[] m_data;         <span class="comment">// 2. 释放自己的旧资源</span></span><br><span class="line">    m_data = other.m_data;   <span class="comment">// 3. 拿走对方的资源</span></span><br><span class="line">    other.m_data = <span class="literal">nullptr</span>; <span class="comment">// 4. 将源对象置为空</span></span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="法则三：零法则-The-Rule-of-Zero-现代C-最佳实践"><a href="#法则三：零法则-The-Rule-of-Zero-现代C-最佳实践" class="headerlink" title="法则三：零法则 (The Rule of Zero) - 现代C++最佳实践"></a>法则三：零法则 (The Rule of Zero) - 现代C++最佳实践</h3><p>应该优先<strong>设计一个类</strong>，它<strong>不需要程序员编写任何自定义</strong>的析构函数、拷贝/移动构造函数或赋值运算符。</p>
+<h3 id="法则三零法则-the-rule-of-zero---现代c最佳实践">法则三：零法则
+(The Rule of Zero) - 现代C++最佳实践</h3>
+<p>应该优先<strong>设计一个类</strong>，它<strong>不需要程序员编写任何自定义</strong>的析构函数、拷贝/移动构造函数或赋值运算符。</p>
 <p>因为手动编写这五个函数非常繁琐且极易出错（例如忘记检查自赋值、忘记处理异常安全等）。现代C++提倡<strong>将资源管理交给专门的类去做</strong>。</p>
-<p>具体实现方法, 可以通过使用C++标准库提供的<strong>RAII</strong> (Resource Acquisition Is Initialization) <strong>容器</strong>和<strong>智能指针</strong>来管理资源。</p>
+<p>具体实现方法, 可以通过使用C++标准库提供的<strong>RAII</strong>
+(Resource Acquisition Is Initialization)
+<strong>容器</strong>和<strong>智能指针</strong>来管理资源。</p>
 <ul>
 <li>用 std::string 代替 char* 来管理字符串。</li>
 <li>用 std::vector 代替裸数组。</li>
-<li>用 std::unique_ptr 或 std::shared_ptr 代替裸指针来管理动态分配的对象。</li>
+<li>用 std::unique_ptr 或 std::shared_ptr
+代替裸指针来管理动态分配的对象。</li>
 </ul>
 <p>这些标准库组件<strong>本身已经完美地实现了五法则</strong>。你的<strong>类只需要包含它们作为成员</strong>，编译器<strong>自动生成的特殊成员函数就会正确地调用这些成员的对应函数</strong>。</p>
 <p>例如, 之前的 String 类可以简化为：</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">String</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">String</span>(<span class="type">const</span> std::string&amp; s = <span class="string">""</span>) : <span class="built_in">m_data</span>(s) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"构造函数\n"</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ... 其他成员函数 ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不需要写析构函数</span></span><br><span class="line">    <span class="comment">// 不需要写拷贝构造函数</span></span><br><span class="line">    <span class="comment">// 不需要写拷贝赋值运算符</span></span><br><span class="line">    <span class="comment">// 不需要写移动构造函数</span></span><br><span class="line">    <span class="comment">// 不需要写移动赋值运算符</span></span><br><span class="line">    <span class="comment">// 编译器会为我们自动生成所有这些，并且它们都是正确的！</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string m_data; <span class="comment">// 使用 std::string 来管理资源</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
 <p>通过遵循零法则，你的类会变得更简单、更安全、更易维护，同时也能享受到现代C++的强大功能。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>| 法则	| 何时应用	| 核心内容	| 目标 |<br>三法则	(遗留代码/C++98) 类中直接用裸指针管理资源。	如果定义了 析构、拷贝构造、拷贝赋值 之一，就要定义全部三个，以实现深拷贝。	避免浅拷贝导致的内存错误。<br>五法则	(C++11及以后) 类中直接用裸指针管理资源，且需要高性能。	在三法则基础上，增加 移动构造 和 移动赋值，以利用移动语义提升性能。	在安全的基础上，提供更高的性能。<br>零法则	(现代C++最佳实践) 设计新类时。	不要用裸指针管理资源。使用 std::string, std::vector, std::unique_ptr 等RAII工具，从而让编译器自动生成所有正确的特殊函数。	让代码更简洁、更安全、更易维护，避免重复造轮子。</p>
+<h3 id="总结">总结</h3>
+<div class="line-block">法则 | 何时应用 | 核心内容 | 目标 |</div>
+<p>三法则 (遗留代码/C++98) 类中直接用裸指针管理资源。 如果定义了
+析构、拷贝构造、拷贝赋值 之一，就要定义全部三个，以实现深拷贝。
+避免浅拷贝导致的内存错误。 五法则 (C++11及以后)
+类中直接用裸指针管理资源，且需要高性能。 在三法则基础上，增加 移动构造
+和 移动赋值，以利用移动语义提升性能。 在安全的基础上，提供更高的性能。
+零法则 (现代C++最佳实践) 设计新类时。 不要用裸指针管理资源。使用
+std::string, std::vector, std::unique_ptr
+等RAII工具，从而让编译器自动生成所有正确的特殊函数。
+让代码更简洁、更安全、更易维护，避免重复造轮子。</p>
 
 		</div>
 
@@ -868,9 +892,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/30/system/OS/Process/Process/">
+				<a class="next" rel="next" href="/2025/10/01/lang/CPP/%E5%9F%BA%E7%A1%80/%E6%A6%82%E5%BF%B5/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">Process</span>
+						<span class="post-nav-title-item truncate max-w-48">概念</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -891,8 +915,11 @@ mjx-container[display="true"] + br {
 		<div class="post-toc-wrap">
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
-		<div class="page-title">Volatile 和编译器优化</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%95%E5%88%99%E4%B8%80%EF%BC%9A%E4%B8%89%E6%B3%95%E5%88%99-The-Rule-of-Three-C-98-03%E6%97%B6%E4%BB%A3"><span class="nav-text">法则一：三法则 (The Rule of Three) - C++98&#x2F;03时代</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%95%E5%88%99%E4%BA%8C%EF%BC%9A%E4%BA%94%E6%B3%95%E5%88%99-The-Rule-of-Five-C-11%E5%8F%8A%E4%BB%A5%E5%90%8E"><span class="nav-text">法则二：五法则 (The Rule of Five) - C++11及以后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%95%E5%88%99%E4%B8%89%EF%BC%9A%E9%9B%B6%E6%B3%95%E5%88%99-The-Rule-of-Zero-%E7%8E%B0%E4%BB%A3C-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-text">法则三：零法则 (The Rule of Zero) - 现代C++最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
+		<div class="page-title">三-五-零法则</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%95%E5%88%99%E4%B8%80%E4%B8%89%E6%B3%95%E5%88%99-the-rule-of-three---c9803%E6%97%B6%E4%BB%A3"><span class="nav-text">法则一：三法则 (The
+Rule of Three) - C++98&#x2F;03时代</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%95%E5%88%99%E4%BA%8C%E4%BA%94%E6%B3%95%E5%88%99-the-rule-of-five---c11%E5%8F%8A%E4%BB%A5%E5%90%8E"><span class="nav-text">法则二：五法则 (The
+Rule of Five) - C++11及以后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%95%E5%88%99%E4%B8%89%E9%9B%B6%E6%B3%95%E5%88%99-the-rule-of-zero---%E7%8E%B0%E4%BB%A3c%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-text">法则三：零法则
+(The Rule of Zero) - 现代C++最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -921,11 +948,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

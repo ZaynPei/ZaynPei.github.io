@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -805,142 +805,176 @@ mjx-container[display="true"] + br {
 <li>执行速度：减少程序运行所需的总时钟周期。</li>
 <li>代码体积：减小程序编译后生成的可执行文件的大小。</li>
 </ul>
-<p>GCC 提供了一系列丰富的优化选项，让开发者可以根据具体需求在编译时间、调试便利性、运行速度和代码大小之间做出权衡。</p>
-<p>具体操作是通过 <strong>-O 系列标志</strong>（Flag）来控制。你可以直接在<strong>编译命令中加入</strong>这些标志。<br>例如：<code>gcc -O2 -o main main.c</code></p>
-<h3 id="GCC-的主要优化级别"><a href="#GCC-的主要优化级别" class="headerlink" title="GCC 的主要优化级别"></a>GCC 的主要优化级别</h3><p>GCC 将大量的具体优化选项组合成了几个预设的优化级别。级别越高，启用的优化项越多，编译所需的时间也越长。</p>
+<p>GCC
+提供了一系列丰富的优化选项，让开发者可以根据具体需求在编译时间、调试便利性、运行速度和代码大小之间做出权衡。</p>
+<p>具体操作是通过 <strong>-O
+系列标志</strong>（Flag）来控制。你可以直接在<strong>编译命令中加入</strong>这些标志。
+例如：<code>gcc -O2 -o main main.c</code></p>
+<h3 id="gcc-的主要优化级别">GCC 的主要优化级别</h3>
+<p>GCC
+将大量的具体优化选项组合成了几个预设的优化级别。级别越高，启用的优化项越多，编译所需的时间也越长。</p>
 <ul>
-<li><p><strong>-O0</strong>: 不进行任何优化。这是默认的优化级别（如果你不指定任何 -O 选项）。</p>
+<li><p><strong>-O0</strong>:
+不进行任何优化。这是默认的优化级别（如果你不指定任何 -O 选项）。</p>
 <ul>
-<li><p>目的：确保编译<strong>速度最快</strong>，并产生<strong>最直接</strong>、<strong>未经修改</strong>的<strong>机器码</strong>，与源代码的对应关系最强。</p>
-</li>
-<li><p>适用场景：主要用于开发和调试阶段。因为没有优化，变量的值不会被意外优化掉，代码执行顺序也和源码完全一致，使得 GDB 等调试工具可以准确地跟踪程序的每一步。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>-O1</strong>: <strong>基础级别的优化</strong>。编译器会尝试在不花费太多编译时间的情况下，执行一些基本的优化。</p>
+<li><p>目的：确保编译<strong>速度最快</strong>，并产生<strong>最直接</strong>、<strong>未经修改</strong>的<strong>机器码</strong>，与源代码的对应关系最强。</p></li>
+<li><p>适用场景：主要用于开发和调试阶段。因为没有优化，变量的值不会被意外优化掉，代码执行顺序也和源码完全一致，使得
+GDB 等调试工具可以准确地跟踪程序的每一步。</p></li>
+</ul></li>
+<li><p><strong>-O1</strong>:
+<strong>基础级别的优化</strong>。编译器会尝试在不花费太多编译时间的情况下，执行一些基本的优化。</p>
 <ul>
-<li><p>目的：在不过分增加编译时间的前提下，提升程序性能。</p>
-</li>
-<li><p>包含的优化：例如<strong>死代码消除</strong>（Dead Code Elimination）、<strong>常量传播</strong>（Constant Propagation）等。</p>
-</li>
+<li><p>目的：在不过分增加编译时间的前提下，提升程序性能。</p></li>
+<li><p>包含的优化：例如<strong>死代码消除</strong>（Dead Code
+Elimination）、<strong>常量传播</strong>（Constant
+Propagation）等。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><strong>-O2</strong>: 推荐的通用优化级别。它开启了几乎所有<strong>不涉及“空间换时间”或“时间换空间”权衡的优化</strong>选项。</p>
+<p><strong>-O2</strong>:
+推荐的通用优化级别。它开启了几乎所有<strong>不涉及“空间换时间”或“时间换空间”权衡的优化</strong>选项。</p>
 <pre><code>- 目的：在编译时间和生成代码的性能之间取得最佳平衡。
 
-- 适用场景：软件的正式发布版本（Release Build）。这是最常用、最稳定的优化级别。
-</code></pre>
+- 适用场景：软件的正式发布版本（Release Build）。这是最常用、最稳定的优化级别。</code></pre>
 <ul>
-<li><p><strong>-O3</strong>: 最高级别的优化。在 -O2 的基础上，开启了更多、更激进的优化，例如<strong>函数内联</strong>（Inlining）和<strong>循环展开</strong>（Loop Unrolling）等。</p>
+<li><p><strong>-O3</strong>: 最高级别的优化。在 -O2
+的基础上，开启了更多、更激进的优化，例如<strong>函数内联</strong>（Inlining）和<strong>循环展开</strong>（Loop
+Unrolling）等。</p>
 <ul>
-<li><p>目的：追求极致的运行速度。</p>
-</li>
-<li><p>潜在问题：编译时间显著增加; 代码体积可能变大，因为一些优化（如循环展开）会用<strong>更多的代码</strong>来换取更快的速度。在极少数情况下，激进的优化可能会导致代码<strong>缓存</strong>（Instruction Cache）<strong>命中率下降</strong>，反而使程序性能降低。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>-Os</strong>：优化代码大小（Size）。它会开启 -O2 中所有不会增加代码体积的优化项，并执行一些专门为减小代码体积设计的优化。</p>
+<li><p>目的：追求极致的运行速度。</p></li>
+<li><p>潜在问题：编译时间显著增加;
+代码体积可能变大，因为一些优化（如循环展开）会用<strong>更多的代码</strong>来换取更快的速度。在极少数情况下，激进的优化可能会导致代码<strong>缓存</strong>（Instruction
+Cache）<strong>命中率下降</strong>，反而使程序性能降低。</p></li>
+</ul></li>
+<li><p><strong>-Os</strong>：优化代码大小（Size）。它会开启 -O2
+中所有不会增加代码体积的优化项，并执行一些专门为减小代码体积设计的优化。</p>
 <ul>
-<li><p>目的：生成尽可能小的可执行文件。</p>
-</li>
-<li><p>适用场景：嵌入式系统、移动设备或其他存储空间受限的环境。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>-Ofast</strong>: 极限但可能不安全的优化。它包含了 -O3 的所有优化，并额外开启了一些<strong>可能会违反严格语言标准</strong>的优化。</p>
+<li><p>目的：生成尽可能小的可执行文件。</p></li>
+<li><p>适用场景：嵌入式系统、移动设备或其他存储空间受限的环境。</p></li>
+</ul></li>
+<li><p><strong>-Ofast</strong>: 极限但可能不安全的优化。它包含了 -O3
+的所有优化，并额外开启了一些<strong>可能会违反严格语言标准</strong>的优化。</p>
 <ul>
-<li><p>目的：压榨出<strong>最高的性能</strong>，不惜牺牲部分标准的符合性。</p>
-</li>
-<li><p>重要警告：这个级别最显著的特点是会启用 -ffast-math 选项，这会影响浮点数的计算精度，可能不符合 IEEE 754 标准。除非你完全理解其后果，否则不应在对浮点数精度有要求的科学计算或金融应用中使用。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>-Og</strong>: 为调试而优化的级别（Optimize for Debugging）。</p>
+<li><p>目的：压榨出<strong>最高的性能</strong>，不惜牺牲部分标准的符合性。</p></li>
+<li><p>重要警告：这个级别最显著的特点是会启用 -ffast-math
+选项，这会影响浮点数的计算精度，可能不符合 IEEE 754
+标准。除非你完全理解其后果，否则不应在对浮点数精度有要求的科学计算或金融应用中使用。</p></li>
+</ul></li>
+<li><p><strong>-Og</strong>: 为调试而优化的级别（Optimize for
+Debugging）。</p>
 <ul>
-<li><p>目的：在不严重干扰调试体验的前提下，提供一个合理的性能。它会启用一些不会影响变量跟踪和断点设置的优化。</p>
-</li>
-<li><p>适用场景：当你希望在调试时也能获得较好的程序性能，但又不想像 -O0 那样完全放弃优化时，这是一个很好的选择。</p>
-</li>
+<li><p>目的：在不严重干扰调试体验的前提下，提供一个合理的性能。它会启用一些不会影响变量跟踪和断点设置的优化。</p></li>
+<li><p>适用场景：当你希望在调试时也能获得较好的程序性能，但又不想像 -O0
+那样完全放弃优化时，这是一个很好的选择。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="具体的优化技术示例"><a href="#具体的优化技术示例" class="headerlink" title="具体的优化技术示例"></a>具体的优化技术示例</h3><p>下面是一些在上述优化级别中常见的具体优化技术，以帮助理解编译器在幕后做了什么。</p>
-<p><strong>常量折叠与常量传播</strong> (Constant Folding &amp; Propagation): 在<strong>编译期</strong>间直接<strong>计算</strong>出<strong>结果为常量</strong>的表达式，并用结果替换该表达式。</p>
-<p>这里编译器发现 3.14 * 10 * 10 是一个常量表达式，于是在编译时直接计算出结果 314.0。</p>
+<h3 id="具体的优化技术示例">具体的优化技术示例</h3>
+<p>下面是一些在上述优化级别中常见的具体优化技术，以帮助理解编译器在幕后做了什么。</p>
+<p><strong>常量折叠与常量传播</strong> (Constant Folding &amp;
+Propagation):
+在<strong>编译期</strong>间直接<strong>计算</strong>出<strong>结果为常量</strong>的表达式，并用结果替换该表达式。</p>
+<p>这里编译器发现 3.14 * 10 * 10
+是一个常量表达式，于是在编译时直接计算出结果 314.0。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> radius = <span class="number">10</span>;</span><br><span class="line"><span class="type">double</span> area = <span class="number">3.14</span> * radius * radius;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化后，编译器会将 area 直接替换为 314.0</span></span><br><span class="line"><span class="type">double</span> area = <span class="number">314.0</span>;</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>死代码消除</strong> (Dead Code Elimination): <strong>移除</strong>那些<strong>永远不会被执行到</strong>的代码。</p>
-<p>这里编译器发现 debug 是一个编译时常量 0，因此 if 条件永远为假，其中的代码永远不会执行。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> debug = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (debug) {</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"This is a debug message.\n"</span>);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// 优化后，编译器会移除整个 if 语句块</span></span><br></pre></td></tr></table></figure></div>
-
-<p><strong>函数内联</strong> (Function Inlining): 将一个<strong>函数的调用</strong>替换为该<strong>函数体的实际代码</strong>，以消除函数调用的开销（如堆栈操作、参数传递等）。这通常在 -O2 和 -O3 中启用。</p>
+<p><strong>死代码消除</strong> (Dead Code Elimination):
+<strong>移除</strong>那些<strong>永远不会被执行到</strong>的代码。</p>
+<p>这里编译器发现 debug 是一个编译时常量 0，因此 if
+条件永远为假，其中的代码永远不会执行。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> debug = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (debug) {</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"This is a debug message.\n"</span>);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// 优化后，编译器会移除整个 if 语句块</span></span><br></pre></td></tr></table></figure></div></p>
+<p><strong>函数内联</strong> (Function Inlining):
+将一个<strong>函数的调用</strong>替换为该<strong>函数体的实际代码</strong>，以消除函数调用的开销（如堆栈操作、参数传递等）。这通常在
+-O2 和 -O3 中启用。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">square</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> x * x;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span> y = <span class="built_in">square</span>(<span class="number">5</span>);</span><br><span class="line">    <span class="keyword">return</span> y;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优化后，编译器会将函数调用替换为函数体</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span> y = <span class="number">5</span> * <span class="number">5</span>; <span class="comment">// 直接展开函数体</span></span><br><span class="line">    <span class="keyword">return</span> y;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
 <blockquote>
 <p>尾递归优化也属于函数内联的一种特殊形式，编译器会将尾递归调用转换为循环，从而避免函数调用的开销和栈溢出风险。</p>
 </blockquote>
-<p><strong>循环展开</strong> (Loop Unrolling): 减少循环的迭代次数，但在每次迭代中执行更多的工作。这可以<strong>减少循环判断</strong>和<strong>分支</strong>的开销，并为其他优化（如<strong>指令级并行</strong>）创造机会。这通常在 -O3 中启用。</p>
+<p><strong>循环展开</strong> (Loop Unrolling):
+减少循环的迭代次数，但在每次迭代中执行更多的工作。这可以<strong>减少循环判断</strong>和<strong>分支</strong>的开销，并为其他优化（如<strong>指令级并行</strong>）创造机会。这通常在
+-O3 中启用。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">16</span>; ++i) {</span><br><span class="line">    <span class="built_in">process</span>(data[i]);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// 优化后，编译器可能会将循环展开为</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">16</span>; i += <span class="number">4</span>) {</span><br><span class="line">    <span class="built_in">process</span>(data[i]);</span><br><span class="line">    <span class="built_in">process</span>(data[i + <span class="number">1</span>]);</span><br><span class="line">    <span class="built_in">process</span>(data[i + <span class="number">2</span>]);</span><br><span class="line">    <span class="built_in">process</span>(data[i + <span class="number">3</span>]);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="代价和权衡"><a href="#代价和权衡" class="headerlink" title="代价和权衡"></a>代价和权衡</h3><p>虽然优化能带来巨大好处，但也存在一些需要注意的代价和风险：</p>
+<h3 id="代价和权衡">代价和权衡</h3>
+<p>虽然优化能带来巨大好处，但也存在一些需要注意的代价和风险：</p>
 <ul>
-<li><p><strong>编译时间增加</strong>：优化级别越高，编译器需要做的分析和转换就越多，导致编译时间变长。</p>
-</li>
-<li><p>调试难度加大：优化会<strong>重排代码</strong>、<strong>消除变量</strong>、<strong>内联函数</strong>，这使得源码和最终执行的机器码之间的对应关系变得复杂。在 -O2 或 -O3 下调试时，你可能会发现单步执行时代码跳转不符合预期和无法打印某个变量的值等，因为它可能被优化到寄存器中，或者完全被消除了。</p>
-</li>
-<li><p>可能暴露未定义行为 (Undefined Behavior)：C/C++ 标准中一些行为是未定义的（如访问数组越界、有符号整数溢出）。在 -O0 下，这些行为可能恰好能“正常”工作，但在优化后，编译器可能会基于“这种行为永远不会发生”的假设进行优化，从而导致程序崩溃或产生非预期结果。</p>
-</li>
-<li><p>代码体积问题：<strong>-O3</strong> 等高级别优化<strong>为了速度可能会显著增加代码体积</strong>，这在某些场景下是不可接受的。</p>
-</li>
+<li><p><strong>编译时间增加</strong>：优化级别越高，编译器需要做的分析和转换就越多，导致编译时间变长。</p></li>
+<li><p>调试难度加大：优化会<strong>重排代码</strong>、<strong>消除变量</strong>、<strong>内联函数</strong>，这使得源码和最终执行的机器码之间的对应关系变得复杂。在
+-O2 或 -O3
+下调试时，你可能会发现单步执行时代码跳转不符合预期和无法打印某个变量的值等，因为它可能被优化到寄存器中，或者完全被消除了。</p></li>
+<li><p>可能暴露未定义行为 (Undefined Behavior)：C/C++
+标准中一些行为是未定义的（如访问数组越界、有符号整数溢出）。在 -O0
+下，这些行为可能恰好能“正常”工作，但在优化后，编译器可能会基于“这种行为永远不会发生”的假设进行优化，从而导致程序崩溃或产生非预期结果。</p></li>
+<li><p>代码体积问题：<strong>-O3</strong>
+等高级别优化<strong>为了速度可能会显著增加代码体积</strong>，这在某些场景下是不可接受的。</p></li>
 </ul>
-<h3 id="volatile-关键字"><a href="#volatile-关键字" class="headerlink" title="volatile 关键字"></a>volatile 关键字</h3><p>volatile 是 C/C++ 语言中的一个类型限定符（type qualifier），与 const 类似。它的核心作用是告知编译器，<strong>被它修饰的变量的值随时都可能被程序本身之外的因素改变</strong>。</p>
-<p>这个“外部因素”可以是硬件（例如，一个内存映射的状态寄存器）, 操作系统, 另一个线程或者一个信号处理函数。</p>
-<p>因此，volatile 的主要目的是<strong>抑制编译器的优化</strong>，确保对该变量的<strong>每一次访问</strong>都是直接从<strong>内存</strong>中读取或写入，而<strong>不是使用寄存器中的缓存值</strong>。</p>
+<h3 id="volatile-关键字">volatile 关键字</h3>
+<p>volatile 是 C/C++ 语言中的一个类型限定符（type qualifier），与 const
+类似。它的核心作用是告知编译器，<strong>被它修饰的变量的值随时都可能被程序本身之外的因素改变</strong>。</p>
+<p>这个“外部因素”可以是硬件（例如，一个内存映射的状态寄存器）, 操作系统,
+另一个线程或者一个信号处理函数。</p>
+<p>因此，volatile
+的主要目的是<strong>抑制编译器的优化</strong>，确保对该变量的<strong>每一次访问</strong>都是直接从<strong>内存</strong>中读取或写入，而<strong>不是使用寄存器中的缓存值</strong>。</p>
 <p>下面是一个简单的例子，展示了 volatile 的典型用法：</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设 0x12345678 是一个硬件状态寄存器的地址</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> *status_reg = (<span class="type">unsigned</span> <span class="type">int</span> *)<span class="number">0x12345678</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等待设备就绪</span></span><br><span class="line"><span class="keyword">while</span> (*status_reg != <span class="number">0</span>) {</span><br><span class="line">    <span class="comment">// 忙等待 (busy-wait)</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设备已就绪，继续执行...</span></span><br></pre></td></tr></table></figure></div>
 <p>编译器的优化思路 (-O2 或更高)：</p>
 <ul>
 <li>分析循环：编译器看到 while 循环的条件是 *status_reg != 0。</li>
-<li>发现问题：在循环体内，没有任何代码会修改 *status_reg 指向的内存地址的值。</li>
+<li>发现问题：在循环体内，没有任何代码会修改 *status_reg
+指向的内存地址的值。</li>
 <li>做出假设：因此，编译器假设 *status_reg 的值永远不会改变。</li>
-<li>进行优化：它会在循环开始前，<em>*只读取一次 *status_reg 的值**并存入一个</em><em>寄存器</em>*（例如 eax）。然后，while 循环就变成了 while (eax != 0)。</li>
+<li>进行优化：它会在循环开始前，**只读取一次 *status_reg
+的值<strong>并存入一个</strong>寄存器**（例如 eax）。然后，while
+循环就变成了 while (eax != 0)。</li>
 </ul>
-<p>如果第一次读取的值不为 0，这将变成一个无限循环 (while(true))，即使硬件在稍后将状态寄存器的值更新为 0，程序也永远无法感知到这个变化，因为它一直在检查寄存器里的旧值。</p>
+<p>如果第一次读取的值不为 0，这将变成一个无限循环
+(while(true))，即使硬件在稍后将状态寄存器的值更新为
+0，程序也永远无法感知到这个变化，因为它一直在检查寄存器里的旧值。</p>
 <p>最后优化后的效果：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><figcaption><span>RISCV</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    LDR R0, [0x12345678]  ; 只读取一次状态寄存器</span><br><span class="line">.L1:</span><br><span class="line">    CMP R0, #0            ; 比较寄存器中的值</span><br><span class="line">    BNE .L1               ; 如果不为 0，继续循环</span><br></pre></td></tr></table></figure></div>
-
 <p>现在，我们把 volatile 加上。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 volatile 告诉编译器，这个地址的值随时可能改变</span></span><br><span class="line"><span class="keyword">volatile</span> <span class="type">unsigned</span> <span class="type">int</span> *status_reg = (<span class="keyword">volatile</span> <span class="type">unsigned</span> <span class="type">int</span> *)<span class="number">0x12345678</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等待设备就绪</span></span><br><span class="line"><span class="keyword">while</span> (*status_reg != <span class="number">0</span>) {</span><br><span class="line">    <span class="comment">// 忙等待</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设备已就绪，继续执行...</span></span><br></pre></td></tr></table></figure></div>
-<p>现在, 编译器看到 status_reg 指向一个 volatile 变量后会抑制优化：volatile 关键字像一个指令，告诉编译器：“不要对这个变量做任何假设！它的值随时可能从外部改变。”</p>
-<p>因此，编译器会在每一次循环中都生成从内存地址 0x12345678 重新读取值的指令。它不会将这个值缓存到寄存器中。</p>
+<p>现在, 编译器看到 status_reg 指向一个 volatile
+变量后会抑制优化：volatile
+关键字像一个指令，告诉编译器：“不要对这个变量做任何假设！它的值随时可能从外部改变。”</p>
+<p>因此，编译器会在每一次循环中都生成从内存地址 0x12345678
+重新读取值的指令。它不会将这个值缓存到寄存器中。</p>
 <p>最终生成的汇编代码可能类似于：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><figcaption><span>RISCV</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.L1:</span><br><span class="line">    LDR R0, [0x12345678]  ; 每次循环都重新读取状态寄存器</span><br><span class="line">    CMP R0, #0            ; 比较寄存器中的值</span><br><span class="line">    BNE .L1               ; 如果不为 0，继续循环</span><br></pre></td></tr></table></figure></div>
-<p>这样，当硬件更新了状态寄存器的值后，下一次循环的 mov 指令就能读取到新的值，程序就能正确地跳出循环。</p>
-<p>值得注意的是, 一个变量可以同时被 const 和 volatile 修饰，这看似矛盾，但实际上有明确的含义。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">volatile</span> <span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> *device_timer = (<span class="keyword">volatile</span> <span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> *)<span class="number">0x87654321</span>;</span><br></pre></td></tr></table></figure></div>
-
-<p>这里的 const 表示程序<strong>不能通过这个指针修改</strong> device_timer 指向的内存内容（即程序不能写入这个寄存器），而 volatile 则表示<strong>该寄存器的值可能随时被外部硬件改变</strong>，所以每次访问都必须从内存中重新读取。</p>
+<p>这样，当硬件更新了状态寄存器的值后，下一次循环的 mov
+指令就能读取到新的值，程序就能正确地跳出循环。</p>
+<p>值得注意的是, 一个变量可以同时被 const 和 volatile
+修饰，这看似矛盾，但实际上有明确的含义。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">volatile</span> <span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> *device_timer = (<span class="keyword">volatile</span> <span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> *)<span class="number">0x87654321</span>;</span><br></pre></td></tr></table></figure></div></p>
+<p>这里的 const 表示程序<strong>不能通过这个指针修改</strong>
+device_timer 指向的内存内容（即程序不能写入这个寄存器），而 volatile
+则表示<strong>该寄存器的值可能随时被外部硬件改变</strong>，所以每次访问都必须从内存中重新读取。</p>
 <p>这个组合的完美用例是一个只读的硬件寄存器，比如一个硬件计时器或状态寄存器。我们的程序只能读取它的值，但这个值本身会由硬件自动更新。</p>
-<h4 id="const不能保证不被修改-volatile真能保证不被优化"><a href="#const不能保证不被修改-volatile真能保证不被优化" class="headerlink" title="const不能保证不被修改, volatile真能保证不被优化"></a>const不能保证不被修改, volatile真能保证不被优化</h4><p>const 关键字在 C/C++ 中表示“只读”，即通过该指针或引用<strong>不能修改</strong>它所指向的数据。然而，const 并不意味着数据本身是不可变的。数据可能会被其他途径修改，例如：</p>
-<ul>
-<li>通过非 const 指针或引用。</li>
-<li>通过硬件寄存器（如内存映射 I/O）。</li>
-<li>通过多线程中的其他线程。</li>
-<li>通过类型转换（cast）绕过 const 限定符。</li>
-</ul>
+<h4 id="const不能保证不被修改-volatile真能保证不被优化">const不能保证不被修改,
+volatile真能保证不被优化</h4>
+<p>const 关键字在 C/C++
+中表示“只读”，即通过该指针或引用<strong>不能修改</strong>它所指向的数据。然而，const
+并不意味着数据本身是不可变的。数据可能会被其他途径修改，例如： - 通过非
+const 指针或引用。 - 通过硬件寄存器（如内存映射 I/O）。 -
+通过多线程中的其他线程。 - 通过类型转换（cast）绕过 const 限定符。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; <span class="comment">// Output may still be 10</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; <span class="comment">// Output: 20</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>在这个例子中，我们通过类型转换（cast）绕过了 const 限定符，直接修改了 a 的值。虽然这种做法在技术上是可行的，但它违反了 const 的语义</p>
-<p>然而值得注意的是 a 的值在输出时仍然是 10，因为声明<code>const int a = 10;</code>这种做法太直接了, 即使在-o0的情况下, 编译器也会将 a 的值直接内联到代码中, 导致修改 a 的值实际上并没有影响到程序的行为。</p>
+<p>在这个例子中，我们通过类型转换（cast）绕过了 const 限定符，直接修改了
+a 的值。虽然这种做法在技术上是可行的，但它违反了 const 的语义</p>
+<p>然而值得注意的是 a 的值在输出时仍然是
+10，因为声明<code>const int a = 10;</code>这种做法太直接了,
+即使在-o0的情况下, 编译器也会将 a 的值直接内联到代码中, 导致修改 a
+的值实际上并没有影响到程序的行为。</p>
 <p>不过, 通过指针可以看到, 原先 a 的内存地址上的值确实被改成了 20。</p>
-<p>第二种情况是, 假如变量a被定义在了全局中:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; </span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>此时, 再执行会发现在运行时直接<strong>报错退出</strong>, 这是因为 a 是const的全局变量, 被放在了 .rodata 的只读数据段 (Read-Only Data Segment) 中, 试图修改它会导致<strong>访问冲突</strong> (Access Violation) 或 <strong>段错误</strong> (Segmentation Fault)。</p>
-<p>现在, 如果我们把第一种情况的 const 换成 volatile const：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; <span class="comment">// Output will be 20</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; <span class="comment">// Output: 20</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>在这个例子中，a 被声明为 volatile const，这告诉编译器 a 的值可能会被外部因素改变（例如硬件或其他线程）。因此，编译器不会对 a 进行优化，每次访问 a 时都会从内存中重新读取它的值。</p>
-<p>因此当我们通过指针修改了 a 的值后，下一次访问 a 时，编译器会重新从内存中读取它的值，这次读取到的值是 20。</p>
-<p>总结来说, const只是一种<strong>编译时的约束</strong>, 它并不能真正保证数据不被修改(像情况2那样真正的约束在于底层硬件中<strong>MMU</strong>的保护机制)。而 volatile 则是一种运行时的约束, 它确保每次访问变量时都直接从内存中读取最新的值, 从而防止编译器对其进行优化。</p>
+<p>第二种情况是, 假如变量a被定义在了全局中: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; </span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 此时,
+再执行会发现在运行时直接<strong>报错退出</strong>, 这是因为 a
+是const的全局变量, 被放在了 .rodata 的只读数据段 (Read-Only Data
+Segment) 中, 试图修改它会导致<strong>访问冲突</strong> (Access
+Violation) 或 <strong>段错误</strong> (Segmentation Fault)。</p>
+<p>现在, 如果我们把第一种情况的 const 换成 volatile const：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span>* p = (<span class="type">int</span>*)&amp;a; <span class="comment">// Cast away constness (not recommended in</span></span><br><span class="line">                        <span class="comment">// production code)</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">// Undefined behavior, but often works in practice</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"a = "</span> &lt;&lt; a &lt;&lt; endl; <span class="comment">// Output will be 20</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"*p = "</span> &lt;&lt; *p &lt;&lt; endl; <span class="comment">// Output: 20</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 在这个例子中，a 被声明为 volatile const，这告诉编译器 a
+的值可能会被外部因素改变（例如硬件或其他线程）。因此，编译器不会对 a
+进行优化，每次访问 a 时都会从内存中重新读取它的值。</p>
+<p>因此当我们通过指针修改了 a 的值后，下一次访问 a
+时，编译器会重新从内存中读取它的值，这次读取到的值是 20。</p>
+<p>总结来说, const只是一种<strong>编译时的约束</strong>,
+它并不能真正保证数据不被修改(像情况2那样真正的约束在于底层硬件中<strong>MMU</strong>的保护机制)。而
+volatile 则是一种运行时的约束,
+它确保每次访问变量时都直接从内存中读取最新的值,
+从而防止编译器对其进行优化。</p>
 
 		</div>
 
@@ -969,7 +1003,7 @@ mjx-container[display="true"] + br {
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
 				<a class="next" rel="next" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/%E4%B8%89-%E4%BA%94-%E9%9B%B6%E6%B3%95%E5%88%99/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">Volatile 和编译器优化</span>
+						<span class="post-nav-title-item truncate max-w-48">三-五-零法则</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -991,7 +1025,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">Volatile 和编译器优化</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GCC-%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E5%8C%96%E7%BA%A7%E5%88%AB"><span class="nav-text">GCC 的主要优化级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E7%9A%84%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF%E7%A4%BA%E4%BE%8B"><span class="nav-text">具体的优化技术示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E4%BB%B7%E5%92%8C%E6%9D%83%E8%A1%A1"><span class="nav-text">代价和权衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">volatile 关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#const%E4%B8%8D%E8%83%BD%E4%BF%9D%E8%AF%81%E4%B8%8D%E8%A2%AB%E4%BF%AE%E6%94%B9-volatile%E7%9C%9F%E8%83%BD%E4%BF%9D%E8%AF%81%E4%B8%8D%E8%A2%AB%E4%BC%98%E5%8C%96"><span class="nav-text">const不能保证不被修改, volatile真能保证不被优化</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#gcc-%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E5%8C%96%E7%BA%A7%E5%88%AB"><span class="nav-text">GCC 的主要优化级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E7%9A%84%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF%E7%A4%BA%E4%BE%8B"><span class="nav-text">具体的优化技术示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E4%BB%B7%E5%92%8C%E6%9D%83%E8%A1%A1"><span class="nav-text">代价和权衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">volatile 关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#const%E4%B8%8D%E8%83%BD%E4%BF%9D%E8%AF%81%E4%B8%8D%E8%A2%AB%E4%BF%AE%E6%94%B9-volatile%E7%9C%9F%E8%83%BD%E4%BF%9D%E8%AF%81%E4%B8%8D%E8%A2%AB%E4%BC%98%E5%8C%96"><span class="nav-text">const不能保证不被修改,
+volatile真能保证不被优化</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1020,11 +1055,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

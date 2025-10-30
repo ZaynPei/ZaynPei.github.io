@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-29T08:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-29T09:08:56.809Z">
+<meta property="article:modified_time" content="2025-10-29T12:04:29.150Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="cpp">
@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -770,8 +770,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-29 17:08:56</span>
-            <span class="mobile">2025-09-29 17:08:56</span>
+            <span class="desktop">2025-10-29 20:04:29</span>
+            <span class="mobile">2025-10-29 20:04:29</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -813,12 +813,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>327 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.4k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>1 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>9 Mins</span>
         </span>
     
     
@@ -833,20 +833,63 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>C++ STL (Standard Template Library) 提供了非常强大、通用且高效的排序算法。这些算法都在 <algorithm> 头文件中。它们的核心优势在于：</algorithm></p>
-<ul>
-<li><strong>通用</strong>性：通过<strong>迭代器</strong> (Iterators) 对任何标准容器（如 std::vector, std::deque, std::list 等）甚至普通 C++ 数组进行操作。</li>
-<li><strong>高效</strong>性：底层实现经过高度优化，通常采用多种排序算法结合的策略（如内省排序）。</li>
-<li>灵活性：支持使用<strong>自定义的比较函数</strong>，可以对任意复杂的数据结构进行排序。</li>
-</ul>
-<h3 id="std-sort：最常用的排序算法"><a href="#std-sort：最常用的排序算法" class="headerlink" title="std::sort：最常用的排序算法"></a>std::sort：最常用的排序算法</h3><p>这是最常使用的排序算法</p>
-<ul>
-<li>特点：速度极快，但<strong>不保证稳定性</strong>。</li>
-<li>底层实现：通常是<strong>内省排序</strong> (Introsort)，一种混合排序算法。它<strong>首先使用快速排序</strong>，当<strong>递归深度过深</strong>时转为<strong>堆排序</strong>以防止最坏情况，最后对<strong>小分区使用插入排序进行优化</strong>。</li>
-<li>时间复杂度：平均为 <strong>O(NlogN)</strong>。</li>
-</ul>
-<p>它的函数签名如下:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> RandomIt &gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sort</span><span class="params">( RandomIt first, RandomIt last )</span></span>;  <span class="comment">// RandomIt 必须是随机访问迭代器, 参数是迭代器的范围 [first, last)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt; <span class="keyword">class</span> RandomIt, <span class="keyword">class</span> Compare &gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sort</span><span class="params">( RandomIt first, RandomIt last, Compare comp )</span></span>;  <span class="comment">// 使用自定义比较函数 comp, 可以是函数指针或函数对象</span></span><br></pre></td></tr></table></figure></div>
+			<p>排序算法是计算机科学中用于将一组数据按照特定顺序进行排列的算法。本节不讨论
+C++ STL中的排序算法，而是介绍一些基本的排序算法及其实现。</p>
+<p>对于当前的排序算法, 主要分为两大类: 1. <strong>比较排序算法</strong>
+(Comparison-based Sorting Algorithms):
+这些算法通过<strong>比较元素之间的大小关系</strong>来决定它们的顺序。常见的比较排序算法包括<strong>快速排序</strong>
+(Quick Sort)、<strong>归并排序</strong> (Merge
+Sort)、<strong>堆排序</strong> (Heap Sort) 、<strong>冒泡排序</strong>
+(Bubble Sort) 和<strong>插入排序</strong> (Insertion Sort) 等。 2.
+<strong>非比较排序算法</strong> (Non-comparison-based Sorting
+Algorithms):
+这些算法不直接比较元素的大小，而是利用元素的特定属性进行排序。常见的非比较排序算法包括<strong>计数排序</strong>
+(Counting Sort)、<strong>基数排序</strong> (Radix Sort)
+和<strong>桶排序</strong> (Bucket Sort) 等。</p>
+<h3 id="插入排序-insertion-sort">插入排序 (Insertion Sort)</h3>
+<p>插入排序是一种简单直观的排序算法，适用于小规模数据集。它的基本思想是将数组分为<strong>已排序</strong>和<strong>未排序</strong>两部分，然后逐步将<strong>未排序部分的元素插入到已排序部分的正确位置</strong>。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">InsertSorting</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span></span>{</span><br><span class="line">  <span class="keyword">if</span>(nums.<span class="built_in">size</span>()&lt;=<span class="number">1</span>) <span class="keyword">return</span>;  <span class="comment">// 如果向量为空或只有一个元素，则它已经是有序的</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 从第二个元素（索引为 1）开始遍历</span></span><br><span class="line">  <span class="comment">// 我们假设第一个元素（索引为 0）构成了初始的已排序子序列</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;nums.<span class="built_in">size</span>();i++){</span><br><span class="line">    <span class="comment">// 1. 选定当前需要插入的元素并保存起来</span></span><br><span class="line">    <span class="comment">//    `key` 是我们要在 `nums[0...i-1]` 这个已排序序列中找到合适位置的元素</span></span><br><span class="line">    <span class="type">int</span> key = nums[i];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 在已排序序列中从后向前查找, `j` 指向已排序序列的最后一个元素</span></span><br><span class="line">    <span class="type">int</span> j = i<span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 移动元素</span></span><br><span class="line">    <span class="comment">//    循环条件：</span></span><br><span class="line">    <span class="comment">//    a. `j &gt;= 0`：确保我们没有越过数组的起始边界</span></span><br><span class="line">    <span class="comment">//    b. `nums[j] &gt; key`：如果当前已排序序列中的元素 `nums[j]` 大于 `key`</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">//    操作：</span></span><br><span class="line">    <span class="comment">//    将 `nums[j]` 向右移动一位到 `nums[j+1]`</span></span><br><span class="line">    <span class="comment">//    然后 `j` 向前移动一位，继续与 `key` 比较</span></span><br><span class="line">    <span class="keyword">while</span>(j&gt;=<span class="number">0</span> &amp;&amp; nums[j]&gt;key){</span><br><span class="line">      nums[j<span class="number">+1</span>] = nums[j];   <span class="comment">// 元素向右移动</span></span><br><span class="line">      j--;            <span class="comment">// 索引向前移动</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 插入元素</span></span><br><span class="line">    <span class="comment">//    当循环停止时，`j` 的位置有两种可能：</span></span><br><span class="line">    <span class="comment">//    a. `j = -1`：意味着 `key` 比所有已排序的元素都小，应放在最前面（索引 0）。</span></span><br><span class="line">    <span class="comment">//    b. `nums[j] &lt;= key`：意味着 `key` 应该插入到 `nums[j]` 的后面。</span></span><br><span class="line">    <span class="comment">//    </span></span><br><span class="line">    <span class="comment">//    在这两种情况下，`j + 1` 都是 `key` 应该在的正确位置。</span></span><br><span class="line">    nums[j + <span class="number">1</span>] = key;</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>它的特点包括: - 时间复杂度：<strong>平均</strong>和最坏情况下为
+<strong>O(n^2)</strong>，最好情况下为 O(n)。 -
+空间复杂度：O(1)，属于<strong>原地排序</strong>算法。 -
+稳定性：插入排序是<strong>稳定</strong>的排序算法。 -
+适用场景：适用于<strong>小规模数据集</strong>或<strong>部分有序</strong>的数据集。</p>
+<h3 id="冒泡排序-bubble-sort">冒泡排序 (Bubble Sort)</h3>
+<p>冒泡排序是一种简单的排序算法，其基本思想是通过<strong>重复遍历要排序的数列</strong>，<strong>比较相邻元素</strong>并<strong>交换</strong>它们的位置，使得较大的元素逐渐“冒泡”到数列的末端。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">BubbleSorting</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span></span>{</span><br><span class="line">  <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">  <span class="keyword">if</span>(n&lt;=<span class="number">1</span>) <span class="keyword">return</span>; <span class="comment">// 如果向量为空或只有一个元素，则它已经是有序的</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 1. 外层循环：控制总共需要进行的“趟数”</span></span><br><span class="line">  <span class="comment">//    对于 n 个元素，最多需要 n-1 趟。</span></span><br><span class="line">  <span class="comment">//    i 表示已经有多少个元素被“冒泡”到了它们在数组末尾的最终位置。</span></span><br><span class="line">  <span class="comment">//    i 不到 n-1 是因为最后一个元素在前面的趟数中已经被排序好了。</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; ++i) {</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 2. 优化标志：</span></span><br><span class="line">      <span class="comment">//    设置一个标志 `swapped`，用于检查在这一趟中是否发生了交换。</span></span><br><span class="line">      <span class="comment">//    如果在一整趟内层循环中都没有发生交换，说明数组已经有序，</span></span><br><span class="line">      <span class="comment">//    可以提前终止排序。</span></span><br><span class="line">      <span class="type">bool</span> swapped = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 3. 内层循环：执行一趟冒泡</span></span><br><span class="line">      <span class="comment">//    j 遍历当前未排序的部分。</span></span><br><span class="line">      <span class="comment">//    比较的范围是 nums[0] 到 nums[n - 1 - i]。</span></span><br><span class="line">      <span class="comment">//    "- i" 是因为数组末尾的 i 个元素在之前的趟数中已经被确定是最大的，无需再比较。</span></span><br><span class="line">      <span class="comment">//    "- 1" 是因为我们要比较 j 和 j+1。</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - <span class="number">1</span> - i; ++j) {</span><br><span class="line">          </span><br><span class="line">          <span class="comment">// 4. 比较和交换</span></span><br><span class="line">          <span class="comment">//    如果前一个元素 (nums[j]) 大于后一个元素 (nums[j+1])</span></span><br><span class="line">          <span class="keyword">if</span> (nums[j] &gt; nums[j + <span class="number">1</span>]) {</span><br><span class="line">              </span><br><span class="line">              <span class="comment">// 执行交换，将较大的元素向右“冒泡”</span></span><br><span class="line">              std::<span class="built_in">swap</span>(nums[j], nums[j + <span class="number">1</span>]);</span><br><span class="line">              </span><br><span class="line">              <span class="comment">// 标记在这一趟中发生了交换</span></span><br><span class="line">              swapped = <span class="literal">true</span>;</span><br><span class="line">          }</span><br><span class="line">      }</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 5. 检查优化标志</span></span><br><span class="line">      <span class="comment">//    如果这一趟 (整个内层 j 循环) 没有任何交换发生</span></span><br><span class="line">      <span class="keyword">if</span> (!swapped) {</span><br><span class="line">          <span class="comment">// 说明数组已经完全有序，跳出外层循环</span></span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">      }</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>它的特点包括: - 时间复杂度：<strong>平均</strong>和最坏情况下为
+<strong>O(n^2)</strong>，最好情况下为 O(n)。 -
+空间复杂度：O(1)，属于<strong>原地排序</strong>算法。 -
+稳定性：冒泡排序是<strong>稳定</strong>的排序算法。 -
+适用场景：适用于<strong>小规模数据集</strong>，但通常不如插入排序高效。</p>
+<h3 id="快速排序-quick-sort">快速排序 (Quick Sort)</h3>
+<p>快速排序是一种<strong>高效</strong>的排序算法，采用<strong>分治法</strong>的思想。基本步骤如下：
+1. 选择基准 (Pivot)：从数组中挑选一个元素，称为“基准”或“枢轴”(pivot)。
+2. 分区
+(Partition)：重新排列数组，将所有小于基准的元素移动到基准的左边，所有大于基准的元素移动到基准的右边。在此操作之后，<strong>基准元素就位于其最终的排序位置</strong>。
+3. 递归
+(Recurse)：<strong>递归</strong>地对<strong>基准左边的子数组</strong>和<strong>基准右边的子数组</strong>应用上述步骤。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速排序的递归辅助函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quickSortRecursive</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> low, <span class="type">int</span> high)</span> </span>{</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 递归的基线条件 (Base Case):</span></span><br><span class="line">    <span class="comment">// 如果子数组有 0 或 1 个元素 (low &gt;= high)，则它已经有序。</span></span><br><span class="line">    <span class="keyword">if</span> (low &lt; high) {  <span class="comment">// 开始 partitioning </span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 1. 选取基准 (Pivot)</span></span><br><span class="line">        <span class="comment">//    我们选择这个子数组的最后一个元素 (nums[high]) 作为 pivot。</span></span><br><span class="line">        <span class="type">int</span> pivotValue = nums[high];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 初始化 "小于" 区域的边界</span></span><br><span class="line">        <span class="comment">//    `i` 用来追踪 "小于" pivot 区域的最后一个元素的索引。</span></span><br><span class="line">        <span class="comment">//    初始时，这个区域是空的，所以 i 设置为 low - 1。</span></span><br><span class="line">        <span class="type">int</span> i = low - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 遍历子数组 (从 low 到 high-1)</span></span><br><span class="line">        <span class="comment">//    `j` 是当前正在检查的元素。</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = low; j &lt; high; ++j) {</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 4. 比较当前元素与 pivot</span></span><br><span class="line">            <span class="comment">//    如果当前元素 nums[j] 小于 pivotValue</span></span><br><span class="line">            <span class="keyword">if</span> (nums[j] &lt; pivotValue) {</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 5. 扩展 "小于" 区域</span></span><br><span class="line">                <span class="comment">//    将 `i` 向右移动一位，并与 `nums[j]` 交换。</span></span><br><span class="line">                <span class="comment">//    这确保了 [low...i] 范围内的所有元素都小于 pivot。</span></span><br><span class="line">                i++;</span><br><span class="line">                std::<span class="built_in">swap</span>(nums[i], nums[j]);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6. 将 pivot 放到正确的位置</span></span><br><span class="line">        <span class="comment">//    循环结束后，[low...i] 都是小于 pivot 的。</span></span><br><span class="line">        <span class="comment">//    [i+1...high-1] 都是大于等于 pivot 的。</span></span><br><span class="line">        <span class="comment">//    因此，pivot (它在 nums[high]) 应该在的位置是 i + 1。</span></span><br><span class="line">        std::<span class="built_in">swap</span>(nums[i + <span class="number">1</span>], nums[high]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 7. 获取 pivot 的最终索引</span></span><br><span class="line">        <span class="comment">//    这个索引 'pi' 将用于分割下一次递归。</span></span><br><span class="line">        <span class="type">int</span> pi = i + <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 8. 递归排序左半部分</span></span><br><span class="line">        <span class="comment">//    对 pivot 左边的子数组 (从 low 到 pi - 1) 进行快速排序。</span></span><br><span class="line">        <span class="built_in">quickSortRecursive</span>(nums, low, pi - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 9. 递归排序右半部分</span></span><br><span class="line">        <span class="comment">//    对 pivot 右边的子数组 (从 pi + 1 到 high) 进行快速排序。</span></span><br><span class="line">        <span class="built_in">quickSortRecursive</span>(nums, pi + <span class="number">1</span>, high);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">QuickSort</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>{</span><br><span class="line">    <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 调用递归辅助函数，对整个数组 (索引 0 到 n-1) 进行排序</span></span><br><span class="line">    <span class="built_in">quickSortRecursive</span>(nums, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>它的特点包括: - 时间复杂度：<strong>平均</strong>情况下为 <strong>O(n
+log n)</strong>，最坏情况下为 O(n^2)（当数组已经有序或接近有序时）。 -
+空间复杂度：O(log n)，主要用于递归调用栈空间。 -
+不稳定性：快速排序通常是不稳定的排序算法。 -
+适用场景：适用于<strong>大规模数据集</strong>，是实际应用中非常常用的排序算法。</p>
+<blockquote>
+<p>优化:
+为了避免最坏情况，可以采用<strong>随机选择基准</strong>或<strong>三数取中法</strong>来选择基准元素。</p>
+</blockquote>
+<h4 id="快速选择">快速选择</h4>
+<p>快速选择 (Quickselect) 是一种用于在无序数组中查找<strong>第 k
+大/小元素</strong>的高效算法。它基于快速排序的<strong>分区思想</strong>，但只<strong>递归处理包含第
+k 小元素的那一部分数组</strong>，从而提高效率。</p>
+<p>例如, 给定整数数组 nums 和整数 k，请返回数组中第 k 个最大的元素。(LC
+215)</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">partition</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> left, <span class="type">int</span> right)</span></span>{</span><br><span class="line">        <span class="type">int</span> pivot_val = nums[right];</span><br><span class="line">        <span class="type">int</span> i = left;</span><br><span class="line">        <span class="type">int</span> pivot_cnt = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=left;j&lt;right;j++){</span><br><span class="line">            <span class="keyword">if</span>(nums[j]&lt;pivot_val){</span><br><span class="line">                <span class="built_in">swap</span>(nums[i], nums[j]);</span><br><span class="line">                i++;</span><br><span class="line">            }<span class="keyword">else</span> <span class="keyword">if</span>(nums[j] == pivot_val){</span><br><span class="line">                <span class="keyword">if</span> (pivot_cnt % <span class="number">2</span> == <span class="number">1</span>) {   <span class="comment">// 将大量的和基准元相同的元素均匀分布</span></span><br><span class="line">                    <span class="built_in">swap</span>(nums[i], nums[j]);</span><br><span class="line">                    i++;</span><br><span class="line">                }</span><br><span class="line">                pivot_cnt++; </span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="built_in">swap</span>(nums[right], nums[i]);  <span class="comment">// 从而最终pivot位于相对中间位置</span></span><br><span class="line">        <span class="keyword">return</span> i;</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findKthLargest</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> target_index = n-k;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = n<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;=right){</span><br><span class="line">            <span class="type">int</span> pivot_index = <span class="built_in">partition</span>(nums, left, right);</span><br><span class="line">            <span class="keyword">if</span>(pivot_index==target_index){</span><br><span class="line">                <span class="keyword">return</span> nums[pivot_index];</span><br><span class="line">            }<span class="keyword">else</span> <span class="keyword">if</span>(pivot_index&lt;target_index){</span><br><span class="line">                left = pivot_index<span class="number">+1</span>;</span><br><span class="line">            }<span class="keyword">else</span>{</span><br><span class="line">                right = pivot_index<span class="number">-1</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>这里的partition函数与快速排序中的类似，但为了处理大量重复元素的情况，做了一些调整，使得与基准相同的元素均匀分布，避免退化。
+而findKthLargest函数则只关注包含第 k
+大元素的那一半子数组，其平均时间复杂度为 O(n)。</p>
+
 		</div>
 
 		
@@ -871,7 +914,7 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/30/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/">
+				<a class="prev" rel="prev" href="/2025/09/30/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
@@ -884,9 +927,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%88%97%E8%A1%A8/">
+				<a class="next" rel="next" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">列表与元组</span>
+						<span class="post-nav-title-item truncate max-w-48">可迭代对象和迭代器</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -908,7 +951,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">排序算法</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-sort%EF%BC%9A%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="nav-text">std::sort：最常用的排序算法</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F-insertion-sort"><span class="nav-text">插入排序 (Insertion Sort)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F-bubble-sort"><span class="nav-text">冒泡排序 (Bubble Sort)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F-quick-sort"><span class="nav-text">快速排序 (Quick Sort)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9"><span class="nav-text">快速选择</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -937,11 +980,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

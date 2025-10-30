@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/09/15/algorithms/computing theory/正则语言和有限自动机/正则语言与有限自动机/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则语言与有限自动机">
+<meta property="og:url" content="https://zaynpei.github.io/2025/09/15/algorithms/Computing%20Theory/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E5%92%8C%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E4%B8%8E%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-09-15T14:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-29T15:47:05.673Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="algorithms">
+<meta property="article:tag" content="Computing Theory">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            正则语言与有限自动机 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">正则语言与有限自动机</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-09-15 22:00</span>
+        <span class="mobile">2025-09-15 22:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-29 23:47:05</span>
+            <span class="mobile">2025-10-29 23:47:05</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/algorithms/">algorithms</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Computing-Theory/">Computing Theory</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>9.9k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>38 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="计算模型有限自动机-finite-automata">计算模型：有限自动机 (Finite
+Automata)</h2>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br></pre></td><td class="code"><pre><span class="line">有限自动机（Finite Automata，简称 **FA** 或 FSM）是一种基础的计算模型。它拥有**有限数量的状态**，并且**没有额外的可读写存储**。自动机从初始状态出发，逐步读取输入字符串的每个符号，根据**当前状态**和**输入符号**通过**状态转移函数**切换到**下一个状态**。输入处理完毕后，若停在某个**接受状态**，则该字符串被自动机接受。</span><br><span class="line"></span><br><span class="line">它的主要任务是**判断**一个**给定的输入字符串** $w$ 是否属于**它所定义的语言** $L(M)$, 即 $w \in L(M)$。 这里的$L(M)$ 也就是该自动机对应的**正则语言**。</span><br><span class="line"></span><br><span class="line">有限自动机分为两类：**确定性有限自动机** (DFA) 和**非确定性有限自动机** (NFA)。</span><br><span class="line"></span><br><span class="line">### 确定性有限自动机 (DFA)</span><br><span class="line"></span><br><span class="line">确定性有限自动机（DFA）在每一步计算中，当前状态和输入符号**唯一决定**下一个状态。</span><br><span class="line"></span><br><span class="line">**形式化定义：**  </span><br><span class="line">DFA 可表示为五元组 $M = (K, \Sigma, \delta, s, F)$，其中：</span><br><span class="line"></span><br><span class="line">- $K$：有限状态集合, $K = \{q_0, q_1, \ldots, q_{n-1}\}$</span><br><span class="line">- $\Sigma$：输入字母表, 一个有限符号集合, 如 $\Sigma = \{a, b\}$ </span><br><span class="line">- $\delta$：状态转移函数，$\delta: K \times \Sigma \to K$ , 定义了在状态 $q \in K$ 下读取输入符号 $a \in \Sigma$ 时，自动机转移到的下一个状态 $\delta(q, a)$</span><br><span class="line">- $s \in K$：初始状态, $M$ 开始计算时所在的状态  </span><br><span class="line">- $F \subseteq K$：接受状态集合, 如果计算结束时自动机停在 $F$ 中的某个状态，则输入字符串被接受。</span><br><span class="line">  </span><br><span class="line">![alt text](image.png)</span><br><span class="line"></span><br><span class="line">需要注意的是, 假如已知 $M$ 接受 $L$ , 它的补集 $\overline{L}$ 也可以被一个DFA接受, 只需将 $M$ 的接受状态和非接受状态互换即可。</span><br><span class="line">![alt text](image-1.png)</span><br><span class="line">#### 运算过程</span><br><span class="line"></span><br><span class="line">我们已经定义了机器的结构，现在来看它的运算过程。</span><br><span class="line"></span><br><span class="line">- **配置 (Configuration)：** DFA 的配置由**当前状态**和**尚未读取的输入字符串**组成，记为序对 $(q, w)$。</span><br><span class="line">- **一步产生关系 ($\vdash_M$)：** 若机器在状态 $q$，输入字符串为 $aw'$，且 $\delta(q, a) = q'$，则 $(q, aw') \vdash_M (q', w')$，表示机器从配置 $(q, aw')$ 一步转移到 $(q', w')$。</span><br><span class="line">- **多步产生关系 ($\vdash_M^*$)：** 表示零步或多步的产生关系，是 $\vdash_M$ 的**自反传递闭包**。例如，$(n, WSSW) \vdash_M^* (n, \epsilon)$ 表示从初始状态 $n$ 处理完整输入 $WSSW$ 后停在状态 $n$。</span><br><span class="line">- **字符串的接受：** 字符串 $w$ 被 $M$ 接受，当且仅当，从初始配置 $(s, w)$ 出发，经过若干步计算到达某个配置 $(q, \epsilon)$，且 $q$ 属于接受状态集合 $F$。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 非确定性有限自动机 (NFA)</span><br><span class="line"></span><br><span class="line">非确定性有限自动机（NFA）允许在**某个状态**和**输入符号**下有**多个可能的下一个状态**，也可能**没有可选状态**（计算终止）。NFA 还支持 $\varepsilon$-转移，即可以在**不消耗输入符号的情况下进行状态转换**。即 NFA 的三大特点：多重选择, 没有选择, 空串转移。</span><br><span class="line"></span><br><span class="line">**接受条件：**  </span><br><span class="line">一个字符串 $w$ 被 NFA 接受，当且仅当存在**至少一条合法的计算路径**，在消耗完 $w$ 后，自动机停在某个接受状态。</span><br><span class="line"></span><br><span class="line">![alt text](image-2.png)</span><br><span class="line"></span><br><span class="line">如上的正则表达式要识别 $L=(ab \cup aba)^*$ , 可以选择DFA来实现, 但是显然状态数更多, 可读性更差. 而使用NFA可以更简洁地表示该语言.</span><br><span class="line"></span><br><span class="line">&gt; 在DFA中, 像 $q_4$ 这样的状态，虽然在识别正确的语言中没有使用到, 但是仍然具有非常重要的功能，它通常被称为死状态（Dead State）或陷阱状态（Trap State）。</span><br><span class="line">&gt; 当自动机进入死状态后，无论接收到什么输入符号，都会一直停留在该状态，无法再转移到其他状态。死状态的存在保证了 DFA 的确定性和完整性，并处理无效的输入序列。</span><br><span class="line"></span><br><span class="line">对于NFA, 其形式化定义与DFA类似, 但**状态转移函数**有所不同: DFA的状态转移函数 $\delta$ 是一个确定性的映射，而 NFA 的状态转移函数 $\delta$ 则是一个**非确定性的映射**(或者说是一种**关系**)，允许多个可能的下一个状态。</span><br><span class="line"></span><br><span class="line">NFA 可表示为五元组 $M = (K, \Sigma, \delta, s, F)$，其中：</span><br><span class="line">- $K$：有限状态集合, $K = \{q_0, q_1, \ldots, q_{n-1}\}$</span><br><span class="line">- $\Sigma$：输入字母表, 一个有限符号集合, 如 $\Sigma = \{a, b\}$ </span><br><span class="line">- $\delta$：状态转移函数，$\delta: K \times (\Sigma \ \cup \{\varepsilon\}) \to P(K)$ , 定义了在状态 $q \in K$ 下读取输入符号 $a \in \Sigma$ 或 $\varepsilon$ 时，自动机可以转移到的**下一个状态集合** $\delta(q, a) \subseteq K$</span><br><span class="line">- $s \in K$：初始状态, $M$ 开始计算时所在的状态  </span><br><span class="line">- $F \subseteq K$：接受状态集合, 如果计算结束时自动机停在 $F$ 中的某个状态，则输入字符串被接受。</span><br><span class="line"></span><br><span class="line">至于其运算过程, 与DFA类似, 只是需要考虑多条路径的情况.</span><br><span class="line"></span><br><span class="line">![alt text](image-3.png)</span><br><span class="line"></span><br><span class="line">### DFA 与 NFA 的等价性</span><br><span class="line"></span><br><span class="line">DFA 和 NFA 在**描述语言的能力**上是完全等价的。也就是说，任何可以被 NFA 接受的语言，也可以被某个等价的 DFA 接受，反之亦然。</span><br><span class="line"></span><br><span class="line">且任意DFA都可以转换为等价的NFA, 反之亦然. 但NFA转换为DFA时, 可能会导致状态数指数级增长.</span><br><span class="line"></span><br><span class="line">首先, 任意DFA都可以看作是特殊的NFA, 因为DFA的每个状态和输入符号下只有一个确定的下一个状态, 这正是NFA的一种特例. 而证明NFA可以转换为DFA, 我们需要使用下面的子集构造法</span><br><span class="line"></span><br><span class="line">**证明核心：子集构造法 (Subset Construction)**</span><br><span class="line"></span><br><span class="line">首先, DFA和NFA有两个重要的区别:</span><br><span class="line">1. NFA允许多个可能的下一个状态，而DFA在每一步只有一个确定的下一个状态。也就是两者的形式化定义中, 状态转移函数 $\delta$ 的不同:</span><br><span class="line">   - 对于DFA: $\delta: K \times \Sigma \to K$</span><br><span class="line">   - 对于NFA: $\delta: K \times (\Sigma \cup \{\varepsilon\}) \to P(K)$</span><br><span class="line">2. NFA允许$\varepsilon$-转移，而DFA不允许。即:</span><br><span class="line">    - 对于DFA: 没有$\varepsilon$-转移</span><br><span class="line">    - 对于NFA: 允许$\varepsilon$-转移, 即 $\delta(q, \varepsilon)$ 可以非空</span><br><span class="line"></span><br><span class="line">下面我们的转换的核心就是处理这两个区别.</span><br><span class="line"></span><br><span class="line">我们不再追踪 NFA “可能”处于的单一状态，而是追踪它在任何时刻“可能处于的所有状态的集合”。具体来说，**子集构造法**的核心思想是：构造一台新的 DFA，使其每个状态都对应于原 NFA 的一个**状态集合**。</span><br><span class="line"></span><br><span class="line">&gt; 为了解决 NFA 中的 $\varepsilon$-转移（即无需消耗输入即可转移），我们引入$\varepsilon$-闭包（epsilon-closure），记作 $E(q)$。$E(q)$ 表示：从**状态 $q$ 出发**，**仅通过 $\varepsilon$-转移**（不读取任何输入），能够到达的**所有状态的集合**（包括 $q$ 本身）。</span><br><span class="line"></span><br><span class="line">#### 子集构造法步骤</span><br><span class="line"></span><br><span class="line">假设有一台 NFA $M$，我们要构造一台等价的 DFA $M'$，其定义如下：</span><br><span class="line"></span><br><span class="line">- **状态集 $K'$**：$M'$ 的每个状态是 $M$ 的状态集的一个子集（即 $K'$ 是 $K$ 的幂集）。</span><br><span class="line">  - $K' = P(K) = 2^K$</span><br><span class="line">  - 从这里可以看出, 如果NFA有 $n$ 个状态, 则对应的DFA最多有 $2^n$ 个状态, 也就是复杂度的指数级增长. 不过很多状态是不可达的, 因此实际状态数通常远**小于 $2^n$**.</span><br><span class="line">- **初始状态 $s'$**：$M'$ 的初始状态是 $M$ 的初始状态 $s$ 的 $\varepsilon$-闭包，即 $E(s)$。</span><br><span class="line">  - $s' = E(s)$</span><br><span class="line">- **字母表 $\Sigma$**：与 NFA 相同。</span><br><span class="line">- **转移函数 $\delta'$**：对于 $M'$ 的任意状态 $Q \subseteq K$ 和输入符号 $a$，其转移定义为：$\delta'(Q, a) = \bigcup_{q \in Q} E(\delta(q, a))$</span><br><span class="line">  1. 对 **$Q$ 中每个状态 $q$**，计算 $q$ 读入 $a$ 后能到达的所有状态的集合 $S$。</span><br><span class="line">  2. 对 $S$ 中每个状态，取其 **$\varepsilon$-闭包**。</span><br><span class="line">  3. 取所有这些 $\varepsilon$-闭包的**并集**，作为 $M'$ 在 $Q$ 读入 $a$ 后的下一个状态。</span><br><span class="line">  - 一般来说, DFA 的状态集 $K'$ 是通过一种按需计算的方式构建的。从起始状态开始, 根据输入符号逐步计算和添加新的状态子集, 接着利用得到的状态子集继续计算, 直到不再有新的状态子集被发现为止。</span><br><span class="line">- **接受状态 $F'$**：$M'$ 的接受状态集合是**所有**包含 $M$ 至少一个接受状态的状态子集。</span><br><span class="line">  - $F' = \{Q \subseteq K \mid Q \cap F \neq \emptyset\}$</span><br><span class="line"></span><br><span class="line">这种方法保证了 DFA 能“模拟”NFA 的所有可能路径，从而接受与原 NFA 相同的语言。</span><br><span class="line"></span><br><span class="line">#### 示例</span><br><span class="line"></span><br><span class="line">![alt text](image-4.png)</span><br><span class="line">![alt text](image-5.png)</span><br><span class="line"></span><br><span class="line">**第一步：NFA $M$ 定义整理与 $\varepsilon$-闭包预计算**</span><br><span class="line"></span><br><span class="line">- 状态集 $K$：$\{q_0, q_1, q_2, q_3, q_4\}$</span><br><span class="line">- 字母表 $\Sigma$：$\{a, b\}$</span><br><span class="line">- 起始状态 $s$：$q_0$</span><br><span class="line">- 接受状态 $F$：$\{q_4\}$</span><br><span class="line">- 转移关系 $\Delta$：</span><br><span class="line"></span><br><span class="line">  - 非 $\varepsilon$ 转移：</span><br><span class="line">    - $\delta(q_0, b) = \{q_2\}$</span><br><span class="line">    - $\delta(q_2, b) = \{q_4\}$</span><br><span class="line">    - $\delta(q_1, a) = \{q_0, q_4\}$</span><br><span class="line">    - $\delta(q_3, a) = \{q_4\}$</span><br><span class="line">  - $\varepsilon$ 转移：</span><br><span class="line">    - $\delta(q_0, \varepsilon) = \{q_1, q_2, q_3\}$</span><br><span class="line">    - $\delta(q_1, \varepsilon) = \{q_2, q_3\}$</span><br><span class="line">    - $\delta(q_4, \varepsilon) = \{q_3\}$</span><br><span class="line"></span><br><span class="line">- $\varepsilon$-闭包计算：</span><br><span class="line">  - $E(q_2) = \{q_2\}$</span><br><span class="line">  - $E(q_3) = \{q_3\}$</span><br><span class="line">  - $E(q_4) = \{q_3, q_4\}$</span><br><span class="line">  - $E(q_1) = \{q_1, q_2, q_3\}$</span><br><span class="line">  - $E(q_0) = \{q_0, q_1, q_2, q_3\}$</span><br><span class="line"></span><br><span class="line">**第二步：构造 DFA $M'$ 的状态和转移**</span><br><span class="line"></span><br><span class="line">我们从 DFA 的初始状态开始，采用按需计算的方式，逐步构建 DFA 的状态集和转移函数。</span><br><span class="line"></span><br><span class="line">DFA **初始状态** $s'$ = $A = E(q_0) = \{q_0, q_1, q_2, q_3\}$（非接受状态）</span><br><span class="line"></span><br><span class="line">接着从状态 $A$ 开始，计算它对每个输入符号的转移。</span><br><span class="line"></span><br><span class="line">- **处理状态 $A = \{q_0, q_1, q_2, q_3\}$**</span><br><span class="line">  - $\delta'(A, a)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\delta(q_1, a) \cup \delta(q_3, a) = \{q_0, q_4\} \cup \{q_4\} = \{q_0, q_4\}$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$E(q_0) \cup E(q_4) = \{q_0, q_1, q_2, q_3\} \cup \{q_3, q_4\} = \mathbf{\{q_0, q_1, q_2, q_3, q_4\}}$</span><br><span class="line">    - 得到新状态 $B = \{q_0, q_1, q_2, q_3, q_4\}$。$B$ 包含 $q_4$，因此是接受状态。</span><br><span class="line">  - $\delta'(A, b)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\delta(q_0, b) \cup \delta(q_2, b) = \{q_2\} \cup \{q_4\} = \{q_2, q_4\}$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$E(q_2) \cup E(q_4) = \{q_2\} \cup \{q_3, q_4\} = \mathbf{\{q_2, q_3, q_4\}}$</span><br><span class="line">    - 得到新状态 $C = \{q_2, q_3, q_4\}$。$C$ 包含 $q_4$，因此是接受状态。</span><br><span class="line"></span><br><span class="line">- **处理状态 $B = \{q_0, q_1, q_2, q_3, q_4\}$**</span><br><span class="line">  - $\delta'(B, a)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\delta(q_1, a) \cup \delta(q_3, a) = \{q_0, q_4\} \cup \{q_4\} = \{q_0, q_4\}$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$E(q_0) \cup E(q_4) = \{q_0, q_1, q_2, q_3, q_4\} = \mathbf{B}$</span><br><span class="line">    - 转移到自身。</span><br><span class="line">  - $\delta'(B, b)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\delta(q_0, b) \cup \delta(q_2, b) = \{q_2\} \cup \{q_4\} = \{q_2, q_4\}$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$E(q_2) \cup E(q_4) = \{q_2\} \cup \{q_3, q_4\} = \mathbf{C}$</span><br><span class="line">    - 转移到状态 $C$。</span><br><span class="line"></span><br><span class="line">- **处理状态 $C = \{q_2, q_3, q_4\}$**</span><br><span class="line">  - $\delta'(C, a)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\delta(q_3, a) = \{q_4\}$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$E(q_4) = \mathbf{\{q_3, q_4\}}$</span><br><span class="line">    - 得到新状态 $D = \{q_3, q_4\}$。$D$ 包含 $q_4$，因此是接受状态。</span><br><span class="line">  - $\delta'(C, b)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\delta(q_2, b) = \{q_4\}$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$E(q_4) = \mathbf{\{q_3, q_4\}}$</span><br><span class="line">    - 转移到状态 $D$。</span><br><span class="line"></span><br><span class="line">- **处理状态 $D = \{q_3, q_4\}$**</span><br><span class="line">  - $\delta'(D, a)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\delta(q_3, a) = \{q_4\}$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$E(q_4) = \mathbf{\{q_3, q_4\}} = \mathbf{D}$</span><br><span class="line">    - 转移到自身。</span><br><span class="line">  - $\delta'(D, b)$ 的计算：</span><br><span class="line">    - NFA 目标状态：$\emptyset$</span><br><span class="line">    - 取 $\varepsilon$-闭包并集：$\mathbf{\emptyset}$</span><br><span class="line">    - 得到新状态 $E = \emptyset$（死状态）。$E$ 不包含 $q_4$，因此不是接受状态。</span><br><span class="line"></span><br><span class="line">- **处理状态 $E = \emptyset$（死状态）**</span><br><span class="line">  - $\delta'(E, a) = \emptyset = \mathbf{E}$</span><br><span class="line">  - $\delta'(E, b) = \emptyset = \mathbf{E}$</span><br><span class="line"></span><br><span class="line">所有可达状态都已计算完毕。</span><br><span class="line"></span><br><span class="line">第三步：最终的 DFA $M'$状态集 </span><br><span class="line"></span><br><span class="line">- **状态集 $K'$**：  </span><br><span class="line">  $\{A, B, C, D, E\}$  </span><br><span class="line">  - $A = \{q_0, q_1, q_2, q_3\}$  </span><br><span class="line">  - $B = \{q_0, q_1, q_2, q_3, q_4\}$  </span><br><span class="line">  - $C = \{q_2, q_3, q_4\}$  </span><br><span class="line">  - $D = \{q_3, q_4\}$  </span><br><span class="line">  - $E = \emptyset$</span><br><span class="line"></span><br><span class="line">- **初始状态 $s'$**：$A$</span><br><span class="line"></span><br><span class="line">- **接受状态 $F'$**：$\{B, C, D\}$, 因为含有 $q_4$。</span><br><span class="line"></span><br><span class="line">- **转移函数 $\delta'$（表格形式）：**</span><br><span class="line"></span><br><span class="line">  | 状态 | $a$ | $b$ | 接受 |</span><br><span class="line">  |------|-----|-----|------|</span><br><span class="line">  | $A$  | $B$ | $C$ | 否   |</span><br><span class="line">  | $B$  | $B$ | $C$ | 是   |</span><br><span class="line">  | $C$  | $D$ | $D$ | 是   |</span><br><span class="line">  | $D$  | $D$ | $E$ | 是   |</span><br><span class="line">  | $E$  | $E$ | $E$ | 否   |</span><br><span class="line"></span><br><span class="line">这样，原 NFA 被转换为等价的 DFA，所有状态和转移均已明确。</span><br><span class="line"></span><br><span class="line">## 语言表示：正则表达式 (Regular Expressions)</span><br><span class="line"></span><br><span class="line">正则表达式是一种用于描述语言的代数工具。其核心思想是：从**最基本的语言**（如空语言 $\emptyset$ 和单符号语言 $\{a\}$）出发，通过**三种基本运算**构造更复杂的语言。</span><br><span class="line"></span><br><span class="line">一个正则表达式 $\alpha$ 及其表示的语言 $L(\alpha)$ 递归定义如下：</span><br><span class="line"></span><br><span class="line">- 基础情况：</span><br><span class="line">  - $\emptyset$ 是正则表达式，表示空语言 $L(\emptyset) = \emptyset$</span><br><span class="line">  - 对于字母表 $\Sigma$ 中的每个符号 $a$，$a$ 是正则表达式，表示语言 $L(a) = \{a\}$</span><br><span class="line">- 归纳步骤：若 $\alpha$ 和 $\beta$ 都是正则表达式，则</span><br><span class="line">  - 连接 (Concatenation)：$(\alpha\beta)$ 是正则表达式，表示语言 $L((\alpha\beta)) = L(\alpha)L(\beta)$</span><br><span class="line">  - 并 (Union)：$(\alpha \cup \beta)$ 是正则表达式，表示语言 $L((\alpha \cup \beta)) = L(\alpha) \cup L(\beta)$</span><br><span class="line">  - Kleene 星号 (Kleene Star)：$\alpha^*$ 是正则表达式，表示语言 $L(\alpha^*) = L(\alpha)^*$，即 $L(\alpha)$ 中 0 个或多个字符串的所有连接</span><br><span class="line"></span><br><span class="line">**正则语言**的定义：所有**能够用正则表达式描述的语言**称为正则语言。</span><br><span class="line"></span><br><span class="line">下面是一个定理: **一个语言是正则的，当且仅当它能被一台有穷自动机接受**。 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">这是一个“当且仅当”的命题，所以我们需要从两个方向来证明。</span><br><span class="line">- 方向一：如果一个语言是正则的，那么它一定能被一台有穷自动机接受。</span><br><span class="line">- 方向二：如果一个语言能被一台有穷自动机接受，那么它一定是正则的。</span><br><span class="line"></span><br><span class="line">### 从正则表达式到有穷自动机</span><br><span class="line"></span><br><span class="line">我们的任务是：给定任意一个正则表达式，我们都能构造出一台接受它所描述语言的有穷自动机（通常是NFA，因为更方便）。</span><br><span class="line"></span><br><span class="line">我们的策略是递归构造。回顾正则表达式的定义：  </span><br><span class="line">- **基础情况**：最简单的正则表达式是 $\emptyset$（空语言）和单个符号 $a$。我们可以为每种情况分别构造一个非常简单的 NFA。</span><br><span class="line">  - 对于 $\emptyset$，构造一个没有接受状态的自动机。</span><br><span class="line">  - 对于 $a$，构造一个只有两个状态的自动机，从初始状态读入 $a$ 转移到接受状态。</span><br><span class="line">- **递归步骤**：更复杂的正则表达式通过并 (Union)、连接 (Concatenation) 和 Kleene 星号 (Kleene Star) 运算组合而成。  </span><br><span class="line">  - 如果 $L_1$ 和 $L_2$ 都能被自动机接受，则可以构造自动机分别接受 $L_1 \cup L_2$、$L_1 L_2$ 和 $L_1^*$。  </span><br><span class="line">  - 关键在于证明：有限自动机接受的语言在这三种运算下是**封闭的**。  </span><br><span class="line">    - **并运算**：通过新建初始状态，使用 **$\varepsilon$-转移**分别连接到两个自动机的初始状态。</span><br><span class="line">    - **连接运算**：将第一个自动机的所有**接受状态**通过 **$\varepsilon$-转移**连接到第二个自动机的**初始状态**，并将第二个自动机的接受状态作为整体的接受状态。</span><br><span class="line">    - **Kleene 星号**：新建初始状态和接受状态，允许从接受状态通过 $\varepsilon$-转移回到初始状态，同时允许直接接受空串。</span><br><span class="line">- 通过递归应用上述构造方法，可以为**任意正则表达式**构造出一个**等价的 NFA**，从而证明正则表达式描述的语言都能被有限自动机接受。</span><br><span class="line"></span><br><span class="line">### 从有穷自动机到正则表达式</span><br><span class="line"></span><br><span class="line">现在我们来证明更难的另一个方向：**给定任意一台有限自动机（FA），如何构造出一个等价的正则表达式？**</span><br><span class="line"></span><br><span class="line">#### **状态消除法**（State Elimination Method）</span><br><span class="line"></span><br><span class="line">我们采用一种叫做**状态消除法**（State Elimination Method）的动态规划思想。其核心步骤如下：</span><br><span class="line"></span><br><span class="line">1. 预处理：转换为广义有限自动机 (GFA)</span><br><span class="line"></span><br><span class="line">- 首先，将原始自动机改造为**广义有限自动机（GFA）**。GFA 与 NFA 类似，但**转移边上的标记可以是任意正则表达式**，而不仅仅是单个符号。改造标准如下：</span><br><span class="line"></span><br><span class="line">  - 只有一个唯一的接受状态。</span><br><span class="line">  - 没有转移进入初始状态，也没有转移从接受状态出去。</span><br><span class="line"></span><br><span class="line">- 通常通过增加新的初始状态和新的接受状态，并用 $\varepsilon$-转移连接它们实现。</span><br><span class="line"></span><br><span class="line">2. 状态消除过程</span><br><span class="line"></span><br><span class="line">- 逐步消除 GFA 的中间状态。每消除一个状态 $q$，需要修复所有经过它的路径：</span><br><span class="line"></span><br><span class="line">  - 假设有一条从 $q_i$ 到 $q_j$ 的路径，标记为 $\delta$。</span><br><span class="line">  - 还有一条从 $q_i$ 经过 $q$ 到 $q_j$ 的路径，$q_i \to q$ 标记为 $\alpha$，$q \to q_j$ 标记为 $\beta$，且 $q$ 上可能有自环，标记为 $\gamma$。</span><br><span class="line">  - 消除 $q$ 后，新增一条直接路径，其正则表达式为 $\alpha \gamma^* \beta$。</span><br><span class="line">  - 从 $q_i$ 到 $q_j$ 的新转移标记为原标记和新路径的并集，即 $\delta \cup \alpha \gamma^* \beta$。</span><br><span class="line"></span><br><span class="line">- 重复此过程，直到只剩下初始状态和接受状态。</span><br><span class="line"></span><br><span class="line">3. 最终结果: 此时，从初始状态到接受状态的**唯一转移边上的**正则表达式，就是与原始自动机等价的正则表达式。</span><br><span class="line"></span><br><span class="line">![alt text](image-6.png)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- **初始 GFA**：将原 FA 转换为广义有限自动机（GFA），添加新的起始状态 $q_4$ 和唯一接受状态 $q_5$，并用 $\varepsilon$-转移连接。</span><br><span class="line">- **消除 $q_1$**：移除 $q_1$，将所有经过 $q_1$ 的路径合并。例如，从 $q_4$ 经过 $q_1$ 到 $q_3$ 的路径合并为一条标记为 $a^*b$ 的新边；从 $q_2$ 经过 $q_1$ 到 $q_3$ 的路径合并为 $ba^*b$。</span><br><span class="line">- **消除 $q_2$**：移除 $q_2$，将 $q_3$ 经过 $q_2$ 回到 $q_3$ 的路径与 $q_3$ 的自环合并，得到新的自环 $a \cup ba^*ba^*b$。</span><br><span class="line">- **消除 $q_3$**：移除 $q_3$，将 $q_4$ 到 $q_3$ 的路径、$q_3$ 的自环、以及 $q_3$ 到 $q_5$ 的路径合并，得到从 $q_4$ 到 $q_5$ 的唯一路径。</span><br><span class="line">- **最终正则表达式**：所有中间状态消除后，GFA 只剩下起始和接受状态，两者之间的唯一转移边标记的正则表达式即为原 FA 的等价正则表达式：$\boxed{a^*b(a \cup ba^*ba^*b)^*}$。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 数学归纳描述</span><br><span class="line"></span><br><span class="line">定义 $R(i, j, k)$ 表示：从状态 $q_i$ 到 $q_j$，且所有中间状态编号不超过 $k$ 的所有路径所对应的字符串集合。</span><br><span class="line"></span><br><span class="line">- 基础情况（Base Case, $k=0$）：$R(i, j, 0)$ 表示从 $q_i$ 到 $q_j$ 的路径，且**不经过任何中间状态**（编号 $&gt;0$）。这只可能是一步直接转移，因此 $R(i, j, 0)$ 就是所有能直接从 $q_i$ 到 $q_j$ 的符号的集合。如果 $i = j$，还包括空串 $\varepsilon$。这个集合是有限的，可以用正则表达式（如 $a \cup b \cup c$）描述。</span><br><span class="line"></span><br><span class="line">- 归纳步骤（Inductive Step）：假设对于所有 $i, j$，$R(i, j, k-1)$ 都可以用正则表达式描述。递推公式如下：</span><br><span class="line"></span><br><span class="line">  $$</span><br><span class="line">  R(i, j, k) = R(i, j, k-1) \cup R(i, k, k-1) \left(R(k, k, k-1)\right)^* R(k, j, k-1)</span><br><span class="line">  $$</span><br><span class="line"></span><br><span class="line">  - 公式解释：从 $q_i$ 到 $q_j$，中间状态编号不超过 $k$ 的所有路径分为两类：</span><br><span class="line"></span><br><span class="line">    1. **不经过 $q_k$ 的路径**：这些路径的中间状态编号都不超过 $k-1$，即 $R(i, j, k-1)$。</span><br><span class="line">    2. **经过 $q_k$ 的路径**：可以分解为三部分：</span><br><span class="line">      - 从 $q_i$ 到 $q_k$（中间状态不超过 $k-1$）：$R(i, k, k-1)$</span><br><span class="line">      - 在 $q_k$ 循环任意次（中间状态不超过 $k-1$）：$\left(R(k, k, k-1)\right)^*$</span><br><span class="line">      - 从 $q_k$ 到 $q_j$（中间状态不超过 $k-1$）：$R(k, j, k-1)$</span><br><span class="line"></span><br><span class="line">    由于正则表达式的三种运算（并、连接、星号）都是封闭的，且归纳假设 $R(\cdot, \cdot, k-1)$ 都是正则的，因此 $R(i, j, k)$ 也必然是正则的。</span><br><span class="line"></span><br><span class="line">因此, 正则语言的核心理论结果是，DFA、NFA 和正则表达式在**描述语言的能力**上是完全等价的。</span><br><span class="line"></span><br><span class="line">- **NFA 与 DFA 等价**：对于每一台非确定型有限自动机（NFA），都存在一台等价的（接受相同语言的）确定型有限自动机（DFA）。证明方法为“子集构造法”，即将 NFA 的状态集合映射为 DFA 的单个状态。</span><br><span class="line">  - 这意味着，NFA带来的所有便利性，都只是“表面上”的。在**计算能力的本质上**，它并没有超越DFA。</span><br><span class="line">- **自动机与正则表达式等价**：一个语言是正则的（即可以用正则表达式表示）当且仅当它被一台有限自动机接受。证明思路包括：</span><br><span class="line">  - 从任意正则表达式构造等价的 NFA：为基础情况构造简单自动机，利用自动机在并、连接和 Kleene 星号运算下的封闭性递归组合。</span><br><span class="line">  - 从任意有限自动机构造等价的正则表达式：使用状态消除法，逐步移除中间状态并更新转移边的正则表达式，直到只剩下初始和接受状态。</span><br><span class="line"></span><br><span class="line">## 正则语言与非正则语言 (Languages that are and are not regular)。</span><br><span class="line"></span><br><span class="line">到目前为止，我们已经学习了三种强大的工具来描述和证明一个语言是正则的：</span><br><span class="line"></span><br><span class="line">- 为它构造一台有限自动机 (FA) 。</span><br><span class="line">- 为它写出一个正则表达式 。</span><br><span class="line">- 利用正则语言的闭包性质 (Closure Properties)，比如并、交、补、连接和克林星号等，从已知的正则语言构造出它 。</span><br><span class="line"></span><br><span class="line">**示例1**: 假设字母表 $\Sigma$ 是 $\{0, 1, ..., 9\}$。语言 $L$ 是所有能被 2 和 3 整除的非负整数的十进制表示（并且没有多余的前导零）。请证明 $L$ 是一个正则语言。</span><br><span class="line"></span><br><span class="line">第一步：分解问题。我们要证明的语言 $L$ 是“能被 2 整除”的语言 $L_2$ 和“能被 3 整除”的语言 $L_3$ 的交集，即 $L = L_2 \cap L_3$。根据正则语言的闭包性质，只要 $L_2$ 和 $L_3$ 都是正则的，它们的交集 $L$ 也一定是正则的。</span><br><span class="line"></span><br><span class="line">第二步：证明 $L_2$ 是正则的。一个数能被 2 整除，等价于它的十进制表示最后一位是 $0, 2, 4, 6, 8$。所有合法的非负整数的十进制表示组成的语言 $L_1$ 可以用正则表达式 $0 \cup [1-9][0-9]^*$ 表示（假设 $\Sigma = \{0,1,\ldots,9\}$）。$L_2$ 就是 $L_1$ 中以偶数结尾的字符串，即 $L_2 = L_1 \cap [0-9]^*[0,2,4,6,8]$。由于 $L_1$ 和 $[0-9]^*[0,2,4,6,8]$ 都是正则语言，交集 $L_2$ 也是正则的。</span><br><span class="line"></span><br><span class="line">&gt; $[1-9][0-9]^*$ 这一部分表示所有非零的非负整数。  </span><br><span class="line">&gt; - **子部分 B1**：$[1-9]$ 是 $\{1, 2, \dots, 9\}$ 的简写，它由基本正则语言 $\{1\}, \{2\}, \dots, \{9\}$ 通过有限次并集 $\cup$ 得到。由于正则语言对并集运算封闭，$L_{B1} = \{1, 2, \dots, 9\}$ 是正则语言。  </span><br><span class="line">&gt; - **子部分 B2**：$[0-9]^*$ 是 $\{0, 1, \dots, 9\}^*$ 的简写，同样是正则语言（通过有限次并集和 Kleene 星号运算）。因此 $L_{B2} = \{0, 1, \dots, 9\}^*$ 也是正则语言。  </span><br><span class="line">&gt; - **连接 B1 和 B2**：部分 B 是由 $L_{B1}$（非零数字）和 $L_{B2}$（任意数字串）通过连接运算（$L_{B1}L_{B2}$）得到的。由于正则语言对连接运算封闭，$L_B = [1-9][0-9]^*$ 也是正则语言。</span><br><span class="line"></span><br><span class="line">第三步：证明 $L_3$ 是正则的。一个数能被 3 整除，当且仅当它的各位数字之和能被 3 整除。我们可以设计一个 3 个状态的 DFA，状态分别表示“数字和模 3 余 0、1、2”。初始状态（也是接受状态）表示余 0。每读入一个数字 $d$，就从当前状态 $q$ 转移到 $((q + d) \bmod 3)$。这台 DFA 能接受所有各位数字和能被 3 整除的字符串，因此 $L_3$ 是正则语言。</span><br><span class="line"></span><br><span class="line">第四步：结论。由于 $L_2$ 和 $L_3$ 都是正则语言，且正则语言对交集运算封闭，所以 $L = L_2 \cap L_3$ 也是正则语言。证毕。</span><br><span class="line"></span><br><span class="line">我们再来看一个更抽象的例子来巩固闭包性质的应用。</span><br><span class="line"></span><br><span class="line">**问题**：假设 $L'$ 是一个已知的正则语言，证明语言 $L = \{xy \mid x \in L',\ y \notin L'\}$ 也是正则的。</span><br><span class="line"></span><br><span class="line">**证明**：</span><br><span class="line"></span><br><span class="line">首先分析 $L$ 的结构。$L$ 中的字符串由两部分组成：第一部分 $x$ 属于 $L'$，第二部分 $y$ 不属于 $L'$。也就是说，$y$ 来自 $L'$ 的补集 $\overline{L'}$。</span><br><span class="line"></span><br><span class="line">因此，$L$ 可以表示为 $L = L' \circ \overline{L'}$，即 $L'$ 与 $\overline{L'}$ 的连接。</span><br><span class="line"></span><br><span class="line">根据正则语言的闭包性质：</span><br><span class="line"></span><br><span class="line">- 正则语言对补集运算封闭，所以 $\overline{L'}$ 也是正则语言。</span><br><span class="line">- 正则语言对连接运算封闭，所以 $L' \circ \overline{L'}$ 也是正则语言。</span><br><span class="line"></span><br><span class="line">综上，$L$ 是正则语言。</span><br><span class="line"></span><br><span class="line">下面是一些正则语言的例子：</span><br><span class="line"></span><br><span class="line">- $L = \{a^n \mid n \ge 0\}$ 是正则的，因为它的正则表达式就是 $a^*$。</span><br><span class="line">- $L = \{a^n \mid n \text{ is even}\}$ 也是正则的，对应的正则表达式为 $(aa)^*$。</span><br><span class="line">- 如果 $L_0$ 是正则的，那么它的反转语言 $\{w^R \mid w \in L_0\}$ 也是正则的（正则语言对反转运算封闭）。</span><br><span class="line"></span><br><span class="line">一个非正则语言的例子：</span><br><span class="line"></span><br><span class="line">- $L = \{w \in \{a, b\}^* \mid w \text{ 中 } a \text{ 和 } b \text{ 的数量相等}\}$ 不是正则的。</span><br><span class="line"></span><br><span class="line">  - 为什么？可以用闭包性质和反证法证明：</span><br><span class="line"></span><br><span class="line">  - 假设 $L$ 是正则的。我们知道 $a^*b^*$ 是正则语言（正则表达式为 $a^*b^*$）。由于正则语言对交集封闭，$L \cap a^*b^*$ 也应是正则的。但 $L \cap a^*b^*$ 实际上就是 $\{a^n b^n \mid n \ge 0\}$，即所有先若干个 $a$ 再若干个 $b$，且 $a$ 和 $b$ 数量相等的字符串。我们将会证明 $\{a^n b^n \mid n \ge 0\}$ 不是正则语言，这样就产生了矛盾。因此，$L$ 不是正则的。</span><br><span class="line"></span><br><span class="line">实际上, 非正则语言数量远大于正则语言. 下面我们从集合了的角度给予分析:</span><br><span class="line"></span><br><span class="line">- **问题1：一个非空字母表能组成多少个字符串？**  </span><br><span class="line">  答案是**可数无穷多**（countably infinite）。因为所有字符串都是有限长度的，可以按长度和字典序一一列举出来。</span><br><span class="line"></span><br><span class="line">- **问题2：一个语言是可数的吗？**  </span><br><span class="line">  是的。任何**语言都是字符串集合的子集**，所以它本身至多是可数无穷的。</span><br><span class="line"></span><br><span class="line">- **问题3：一个非空字母表上，总共有多少种可能的语言？**  </span><br><span class="line">  答案是**不可数无穷多**。因为所有语言的集合，是可数无穷字符串集合的幂集，而**可数集的幂集是不可数**的（其基数与实数集相同）。</span><br><span class="line"></span><br><span class="line">- **问题4：有多少种正则语言？**  </span><br><span class="line">  答案是**可数无穷多**。原因在于，每一个正则语言都可以用一个有限长度的字符串来描述（如正则表达式或有限自动机的描述），而所有有限字符串的集合是可数的。</span><br><span class="line"></span><br><span class="line">**结论**：  </span><br><span class="line">我们有不可数无穷多种语言，但只有可数无穷多种正则语言。这意味着，绝大多数的语言都是非正则的！</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">为什么有些语言不是正则的呢？本质原因在于有限自动机（FA）的“有限性”：它只有有限个状态，因此**只能记住有限的信息**。</span><br><span class="line"></span><br><span class="line">以 $\{a^n b^n\}$ 为例，判断一个字符串是否属于这个语言，需要机器在读完所有的 $a$ 后，**准确记住 $a$ 的数量**，以便后续与 $b$ 的数量进行匹配。如果 $n$ 可以任意大，这就要求机器拥有**无限的记忆能力或无限个状态**，而有限自动机无法做到这一点。</span><br><span class="line"></span><br><span class="line">类似地，像平衡括号这样的语言，也需要无限的计数能力来确保左右括号严格匹配，这超出了有限自动机的能力范围。因此，凡是需要“**无限记忆**”或“**精确计数**”的语言，都不是正则语言。</span><br><span class="line"></span><br><span class="line">下面列出了一些经典的、将在本章被证明为非正则的语言：</span><br><span class="line"></span><br><span class="line">- $L_1 = \{a^n b^n \mid n \ge 0\}$  </span><br><span class="line">- $L_2 = \{a^n \mid n \text{ is prime}\}$  </span><br><span class="line">- $L_3 = \{ww^R \mid w \in \{a,b\}^*\}$（回文串）</span><br><span class="line">- $L_4 = \{ww \mid w \in \{a,b\}^*\}$（重复串）</span><br><span class="line"></span><br><span class="line">这些语言的共同点在于：它们都要求**对字符串的不同部分进行精确的数量或结构匹配**，而这种匹配超出了有限自动机（FA）**有限内存的能力范围**，因此不是正则语言。</span><br><span class="line"></span><br><span class="line">### 泵定理 (Pumping Theorem)</span><br><span class="line"></span><br><span class="line">直观的理解很好，但我们需要一个严格的数学工具来证明一个语言不是正则的。这个工具就是大名鼎鼎的**泵定理** (Pumping Theorem)。</span><br><span class="line"></span><br><span class="line">一台有穷自动机 $M$ 被定义为一个五元组 $M = (K, \Sigma, \delta, s, F)$。其中，状态集合 $K$ 是一个有穷集合 (a finite set of states)。假设这台 DFA $M$ 拥有的状态总数是 $n$（即 $|K| = n$）。</span><br><span class="line"></span><br><span class="line">现在, 我们考虑一个非常长的字符串 $w$，它的长度 $|w|$ 大于或等于状态的总数 $n$。</span><br><span class="line"></span><br><span class="line">当 DFA $M$ 从初始状态开始，读取这个长字符串 $w$ 的前 $n$ 个符号时，它会经历 $n$ 步转移，访问 $n+1$ 个状态。</span><br><span class="line"></span><br><span class="line">- 鸽巢（Pigeonholes）：DFA 拥有的状态总数 $n$。</span><br><span class="line">- 鸽子（Pigeons）：DFA 在读取前 $n$ 个符号时，按时间顺序依次访问的 $n+1$ 个状态。</span><br><span class="line">  - 初始状态 $q_0$ (第 0 步)</span><br><span class="line">  - 第 1 个状态 $q_1$ (第 1 步)</span><br><span class="line">  - ...</span><br><span class="line">  - 第 $n$ 个状态 $q_n$ (第 $n$ 步)</span><br><span class="line"></span><br><span class="line">根据鸽巢原理：如果有 $n+1$ 只鸽子要飞入 $n$ 个鸽巢，那么至少有一个鸽巢里必须有两只或两只以上的鸽子。这意味着：在这 $n+1$ 个被访问的状态序列中，必定有两个状态是同一个状态。</span><br><span class="line"></span><br><span class="line">结论：环路的产生假设自动机在第 $i$ 步和第 $j$ 步（其中 $0 \le i &lt; j \le n$）访问了同一个状态 $q$ ：$$q_i = q_j = q$$</span><br><span class="line"></span><br><span class="line">机器在第 $i$ 步和第 $j$ 步之间读取的那段子字符串，就是导致机器从 $q$ 重新回到 $q$ 的那段路径。这段路径在状态图上表现为一个环路（loop）。</span><br><span class="line"></span><br><span class="line">如果 $|w| \ge n$，环路必须发生在字符串前 $n$ 个符号所对应的路径中。这就是泵定理证明的第一步，通过严格的鸽巢原理，证明了对于**足够长的字符串**，**有限自动机**中必然存在一个或多个**环路**。</span><br><span class="line"></span><br><span class="line">现在我们就可以把字符串拆分了：</span><br><span class="line">- $x$ 是从开头到 $q_i$ 的部分 ($a_1 \dots a_{i-1}$)。</span><br><span class="line">- $y$ 是从 $q_i$ 绕一圈回到 $q_i$ 的部分 ($a_i \dots a_j$)。</span><br><span class="line">- $z$ 是剩下的部分 ($a_{j+1} \dots a_m$)。</span><br><span class="line"></span><br><span class="line">泵定理的正式陈述：如果 L 是一个正则语言，那么必然存在一个整数 n≥1（我们称之为“**泵长度**”），使得任何在 L 中且长度不小于 n 的字符串 w，都可以被**拆分成三段** w=xyz，并且满足以下三个条件：</span><br><span class="line">  - $y \ne \epsilon$ (中间的“泵”部分非空)。</span><br><span class="line">  - $|xy| \le n$ (循环必定发生在字符串的前 $n$ 个字符以内)。</span><br><span class="line">  - 对于所有的 $i \ge 0$，字符串 **$xy^iz$** 仍然属于 $L$ (这就是“泵”的含义：可以泵任意次)。</span><br><span class="line"></span><br><span class="line">#### 如何使用泵定理</span><br><span class="line"></span><br><span class="line">泵定理是一个破坏性工具。它只能用来**证明一个语言不是正则的**，而不能用来证明一个语言是正则的。证明方法：**反证法** (Proof by contradiction)。</span><br><span class="line"></span><br><span class="line">使用泵定理的过程，就像是在玩一个游戏。</span><br><span class="line">- 对手：一个“AI”，它坚信语言 $L$ 是正则的。</span><br><span class="line">- 你：一个“反方辩手”，你的目标是证明AI是错的。</span><br><span class="line"></span><br><span class="line">- 游戏规则：</span><br><span class="line">  - AI先出招，它给出一个泵长度 $n$。（你不知道 $n$ 是多少，但你知道它存在）。</span><br><span class="line">  - 轮到你了，你必须挑选一个非常聪明的字符串 $w \in L$，且 $|w| \ge n$。</span><br><span class="line">  - AI再出招，它把你的 $w$ 分解成 $xyz$，但它必须遵守规则（$|xy| \le n, y \ne \epsilon$）。它会尽可能地以对它有利的方式来分解。</span><br><span class="line">  - 你的最后一击：你必须指出，**无论AI怎么分解**，你总能找到一个 $i$（通常是0或2），使得**泵出的新字符串 $xy^iz$ 不在语言 $L$ 中**。如果你能做到这一点，你就制造了矛盾，证明了AI的观点是错误的，因此 $L$ 不是正则的。</span><br><span class="line"></span><br><span class="line">##### 示例: $L=\{a^ib^i \mid i \ge 0\}$ 不是正则的</span><br><span class="line"></span><br><span class="line">我们要证明这个语言——所有由一串 $a$ 跟着一串数量完全相等的 $b$ 组成的字符串——不是正则的。严格按照泵定理的反证步骤：</span><br><span class="line"></span><br><span class="line">1. **假设**：假设 $L$ 是正则语言。</span><br><span class="line">2. **泵长度**：根据泵定理，存在一个泵长度 $n$。</span><br><span class="line">3. **选择字符串**：取一个长度大于 $n$ 的字符串 $w = a^n b^n$，显然 $w \in L$ 且 $|w| = 2n \ge n$。</span><br><span class="line">4. **拆分规则**：AI 必须将 $w$ 拆分为 $xyz$，满足 $|xy| \le n$ 且 $y \ne \epsilon$。</span><br><span class="line">     - 因为 $|xy| \le n$，所以无论怎么拆分, $x$ 和 $y$ 都只包含 $a$，$y = a^i$，其中 $i &gt; 0$。</span><br><span class="line">5. **泵操作**：选择 $i = 0$，得到新字符串 $xz = a^{n-i} b^n$。</span><br><span class="line">6. **矛盾**：如果 $L$ 是正则语言, 那么根据泵定理，得到的新字符串 $xz$ 也是正则语言, 但$xz$ 中 $a$ 的数量为 $n-i &lt; n$，$b$ 的数量为 $n$，两者不相等，因此 $xz \notin L$。</span><br><span class="line">7. **结论**：存在 $i$ 使得 $xy^i z \notin L$，与泵定理矛盾。因此，$L$ 不是正则语言。</span><br><span class="line"></span><br><span class="line">##### 证明 $L=\{a^n \mid n \text{ is prime}\}$ 不是正则的</span><br><span class="line"></span><br><span class="line">我们采用泵定理进行反证：</span><br><span class="line"></span><br><span class="line">1. **假设**：假设 $L$ 是正则语言。</span><br><span class="line">2. **泵长度**：根据泵定理，存在一个泵长度 $n$。</span><br><span class="line">3. **选择字符串**：选择一个大于 $n$ 的素数 $k$，令 $w = a^k$，显然 $w \in L$ 且 $|w| = k \ge n$。</span><br><span class="line">4. **拆分规则**：AI 必须将 $w$ 拆分为 $xyz$，满足 $|xy| \le n$ 且 $y \ne \varepsilon$。由于 $w$ 全由 $a$ 组成，设 $x = a^p$, $y = a^q$, $z = a^r$，其中 $p+q \le n$, $q &gt; 0$, $p+q+r = k$。</span><br><span class="line">5. **泵操作**：根据泵定理，任意 $i \ge 0$，$xy^iz = a^{p + iq + r}$ 应属于 $L$，即 $p + iq + r$ 必须为素数。</span><br><span class="line">6. **构造反例**：令 $i = k + 1$，则新字符串长度为 $p + (k + 1)q + r = (p + q + r) + kq = k + kq = k(q + 1)$。</span><br><span class="line">  - $k$ 是素数且 $q \ge 1$，所以 $q + 1 \ge 2$，因此 $k(q + 1)$ 是合数（大于 $k$ 且可分）。</span><br><span class="line">7. **矛盾**：$a^{k(q+1)}$ 不属于 $L$，因为其长度不是素数。与泵定理要求矛盾。</span><br><span class="line"></span><br><span class="line">**结论**：存在 $i$ 使得 $xy^iz \notin L$，因此 $L$ 不是正则语言。</span><br><span class="line"></span><br><span class="line">### 问题：证明 $L=\{uu^Rv \mid u,v \in \{a,b\}^+\}$ 不是正则的。</span><br><span class="line"></span><br><span class="line">这个语言 $L = \{uu^Rv \mid u, v \in \{a, b\}^+\}$ 表示一个非空回文串 $uu^R$ 后面跟着另一个非空串 $v$。直接对 $L$ 使用泵定理较难，因为 $v$ 的存在让结构复杂。我们可以先与一个精心设计的**正则语言**求**交**，得到一个**更简单但同样非正则的语言** $L'$，从而让问题转化为证明 $L'$ 不是正则的。</span><br><span class="line"></span><br><span class="line">**第一步：与正则语言求交集**</span><br><span class="line"></span><br><span class="line">选择正则语言 $(ab)^+(ba)^+$，与 $L$ 求交得到 $L' = L \cap (ab)^+(ba)^+ = \{(ab)^n(ba)^m \mid m &gt; n \ge 1\}$。其中 $u = (ab)^n$，$u^R = (ba)^n$，$v = (ba)^{m-n}$，要求 $m &gt; n$ 保证 $v$ 非空。</span><br><span class="line"></span><br><span class="line">**第二步：对 $L'$ 使用泵定理**</span><br><span class="line"></span><br><span class="line">假设 $L'$ 是正则语言。根据泵定理，存在泵长度 $p$。选择字符串 $w = (ab)^p(ba)^{p+1} \in L'$，满足 $|w| \ge p$。</span><br><span class="line"></span><br><span class="line">将 $w$ 拆分为 $w = xyz$，其中 $|xy| \le p$，$y \ne \varepsilon$。由于 $|xy| \le p$，$x$ 和 $y$ 都在最前面的 $(ab)^p$ 部分。$y$ 可能是完整的 $(ab)^k$，或是部分片段（如 $a$、$ab$、$b$ 等）。</span><br><span class="line"></span><br><span class="line">无论如何拆分 $y$，都可以选择 $i = 0$ 或 $i = 3$，使得泵出后的字符串 $xy^iz$ 不满足 $m &gt; n$，即 $(ab)^{p+q}(ba)^{p+1}$，其中 $q$ 是泵的次数。这样得到的字符串不属于 $L'$，与泵定理矛盾。</span><br><span class="line"></span><br><span class="line">**结论**</span><br><span class="line"></span><br><span class="line">$L'$ 不是正则语言。由于正则语言的交集仍为正则，而 $L'$ 非正则，因此原语言 $L$ 也不是正则语言。</span><br><span class="line"></span><br><span class="line">## 关键研究问题</span><br><span class="line"></span><br><span class="line">1. **状态最小化目标**：给定一台 DFA，找到一台接受完全相同语言、且状态数最少的等价 DFA。Myhill-Nerode 定理为最小化提供了理论基础。它定义了一种关于字符串的等价关系 $\approx_L$（如果 $x \approx_L y$，意味着对于任何后缀 $z$，字符串 $xz$ 和 $yz$ 要么都属于 $L$，要么都不属于 $L$）。该定理证明了一个语言是正则的，当且仅当 $\approx_L$ 关系具有有穷个等价类，并且这些等价类的数量，恰好就是接受 $L$ 的最小 DFA 的状态数。最小化算法：首先移除所有从初始状态不可达的状态，然后迭代地识别并合并“等价”的状态。算法开始时，将所有状态分为两个集合：终结状态 $F$ 和非终结状态 $K-F$。在随后的每一步迭代中，检查当前同一集合中的任意两个状态 $p$ 和 $q$。如果存在任何一个输入符号 $a$，使得 $\delta(p, a)$ 和 $\delta(q, a)$ 落在上一轮迭代所划分出的不同集合中，那么 $p$ 和 $q$ 就必须被分离。重复这个细化过程，直到某轮迭代后不再有任何集合被分离为止。此时剩下的集合中的状态都是真正等价的，可以合并为最小自动机的一个状态。</span><br><span class="line"></span><br><span class="line">2. **泵定理 (Pumping Lemma) 用途**：这不是用来证明语言是正则的，而是用来证明一个语言不是正则的。定理断言，任何正则语言 $L$ 都存在一个常数 $n$（称为“泵长度”，该值取决于接受它的 DFA 的状态数）。对于 $L$ 中任何长度至少为 $n$ 的字符串 $w$，$w$ 都可以被拆分为三部分 $w=xyz$，且满足以下所有条件：$y \ne \varepsilon$（中间部分非空），$|xy| \le n$（拆分发生在字符串的靠前部分），对于所有的 $i \ge 0$（包括 $i=0$ 时删除 $y$），字符串 $xy^iz$ 必须仍然在 $L$ 中。工作原理：如果一个 DFA 有 $n$ 个状态，它在读取一个长度为 $n$ 或更长的字符串时，根据鸽巢原理，必定至少重复访问了某一个状态。这个状态重复访问路径所对应的字符串就是 $y$。既然这是一条回路，那么这条回路可以被遍历任意多次（或 0 次），机器最终仍会到达相同的接受状态。</span><br><span class="line"></span><br><span class="line">3. **证明语言不是正则的方法**：使用泵定理进行反证法证明。步骤如下：</span><br><span class="line">   - 假设目标语言 $L$ 是正则的。</span><br><span class="line">   - 根据泵定理，必然存在某个泵长度 $n$。</span><br><span class="line">   - 选择一个特定的字符串 $w \in L$，要求 $|w| \ge n$。</span><br><span class="line">   - 对手可以将 $w$ 拆分为 $w=xyz$，其中 $y \ne \varepsilon$ 且 $|xy| \le n$。</span><br><span class="line">   - 证明无论如何拆分 $w$，总能选择一个 $i$ 值（通常是 $i=0$ 或 $i=2$），使得生成的字符串 $xy^iz$ 不在 $L$ 中。</span><br><span class="line">   - 这导致了矛盾，因此最初的假设（$L$ 是正则的）是错误的。</span><br><span class="line"></span><br><span class="line">   经典示例：证明 $L = \{a^nb^n : n \ge 0\}$ 不是正则的。选择 $w = a^nb^n$，由于 $|xy| \le n$，$y$ 必须完全由 $a$ 组成（形如 $a^j$ 且 $j&gt;0$）。如果选择 $i=0$，得到的字符串 $xz = a^{n-j}b^n$，a 和 b 的数量不再相等，故 $xz \notin L$，产生矛盾。</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/algorithms/">#algorithms</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Computing-Theory/">#Computing Theory</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/09/16/web/Computer%20Network/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/1.%20%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">计算机网络体系结构</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/09/15/lang/CPP/Effective%20modern%20C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E6%9D%A1%E6%AC%BE18%20-%20%E4%BD%BF%E7%94%A8%20std%20%20unique_ptr%20%E7%AE%A1%E7%90%86%E5%85%B7%E5%A4%87%E4%B8%93%E5%B1%9E%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E8%B5%84%E6%BA%90/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">条款 18 - 使用 std::unique_ptr 管理具备专属所有权的资源</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">正则语言与有限自动机</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA-finite-automata"><span class="nav-text">计算模型：有限自动机 (Finite
+Automata)</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

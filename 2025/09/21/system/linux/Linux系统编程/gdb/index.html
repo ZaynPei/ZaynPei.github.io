@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -842,35 +842,33 @@ mjx-container[display="true"] + br {
 <p>基础指令：</p>
 <p>-g：使用该参数编译可以执行文件，得到调试表。</p>
 <p>gdb ./a.out: 开始调试</p>
-<p>list/l： l 1  列出源码, 因为分页显示, 后续直接l即可</p>
-<p>b：	b 20	在20行位置设置断点。</p>
-<p>run/r:	运行程序</p>
+<p>list/l： l 1 列出源码, 因为分页显示, 后续直接l即可</p>
+<p>b： b 20 在20行位置设置断点。</p>
+<p>run/r: 运行程序</p>
 <p>n/next: 下一条指令（会越过函数）</p>
 <p>s/step: 单步执行下一条指令（会进入函数）</p>
-<p>p/print：p i  查看变量的值。</p>
+<p>p/print：p i 查看变量的值。</p>
 <p>continue：继续执行断点后续指令, 跳转到下一个断点。</p>
-<p>finish：结束当前函数调用。 </p>
+<p>finish：结束当前函数调用。</p>
 <p>quit：退出gdb当前调试。</p>
 <p>其他指令：</p>
-<p>run：若报错段错误, 则不需要设置断点进入gdb后直接使用run查找段错误出现位置。</p>
-<p>set args： 如果main有命令行参数, 设置main函数命令行参数 （在 start、run 之前）</p>
-<ul>
-<li>也可以通过 run 字串1 字串2 …: 设置main函数命令行参数</li>
-</ul>
+<p>run：若报错段错误,
+则不需要设置断点进入gdb后直接使用run查找段错误出现位置。</p>
+<p>set args： 如果main有命令行参数, 设置main函数命令行参数 （在
+start、run 之前） - 也可以通过 run 字串1 字串2 …:
+设置main函数命令行参数</p>
 <p>info b: 查看断点信息表</p>
-<p>b 20 if i = 5：	设置条件断点。</p>
+<p>b 20 if i = 5： 设置条件断点。</p>
 <p>ptype：查看变量类型。</p>
 <p>bt：列出当前程序正存活着的栈帧。</p>
 <p>frame： 根据栈帧编号，切换栈帧。</p>
 <p>display：设置跟踪变量</p>
 <p>undisplay：取消设置跟踪变量。使用跟踪变量的编号。</p>
-<p>layout: 用于切换 TUI（Text User Interface）模式下的窗口布局的工具，让你可以更直观地查看源代码、汇编代码和寄存器信息</p>
-<ul>
-<li>layout src：显示源代码窗口。</li>
-<li>layout asm：显示汇编代码窗口。</li>
-<li>layout regs：显示寄存器窗口，通常与源代码或汇编一起显示。</li>
-<li>layout split：同时显示源代码和汇编代码。</li>
-</ul>
+<p>layout: 用于切换 TUI（Text User
+Interface）模式下的窗口布局的工具，让你可以更直观地查看源代码、汇编代码和寄存器信息
+- layout src：显示源代码窗口。 - layout asm：显示汇编代码窗口。 - layout
+regs：显示寄存器窗口，通常与源代码或汇编一起显示。 - layout
+split：同时显示源代码和汇编代码。</p>
 
 		</div>
 
@@ -892,12 +890,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">
+				<a class="prev" rel="prev" href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款36 ：如果异步是必要的，则指定 std::launch::async</span>
+						<span class="post-nav-title-item truncate max-w-48">条款35 ：优先选用基于任务而非基于线程的程序设计</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -958,11 +956,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

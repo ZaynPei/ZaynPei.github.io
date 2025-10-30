@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-23T04:00:00.000Z">
-<meta property="article:modified_time" content="2025-09-23T04:46:59.712Z">
+<meta property="article:modified_time" content="2025-10-17T15:33:56.062Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta name="twitter:card" content="summary">
@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -769,8 +769,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-23 12:46:59</span>
-            <span class="mobile">2025-09-23 12:46:59</span>
+            <span class="desktop">2025-10-17 23:33:56</span>
+            <span class="mobile">2025-10-17 23:33:56</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -828,7 +828,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.2k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.1k Words</span>
         </span>
     
     
@@ -848,64 +848,75 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>线程池 (Thread Pool) 是一种并发设计模式，它预先创建并维护一组可复用的工作线程，而不是在需要时才创建新线程。这些线程“池化”在一起，等待执行分配给它们的任务。</p>
+			<p>线程池 (Thread Pool)
+是一种并发设计模式，它预先创建并维护一组可复用的工作线程，而不是在需要时才创建新线程。这些线程“池化”在一起，等待执行分配给它们的任务。</p>
 <p>它的核心思想是将“<strong>任务的提交</strong>”与“<strong>任务的执行</strong>”解耦。应用程序的各个部分可以将任务提交给线程池，而无需关心任务具体由哪个线程执行、何时执行。</p>
-<p>一个典型的线程池包含以下几个关键部分：</p>
+<p>一个典型的线程池包含以下几个关键部分： - <strong>任务队列</strong>
+(std::queue<tasktype>)：一个用于存放待执行任务的缓冲区 -
+它必须是<strong>线程安全</strong>的。这通常通过一个<strong>互斥锁</strong>
+(std::mutex) 和一个<strong>条件变量</strong> (std::condition_variable)
+来实现, 这正是我们之前讨论的生产者-消费者模型的完美应用. -
+任务提交者是生产者，将任务放入队列。 -
+工作线程是消费者，从队列中取出任务执行。 - 任务类型
+(TaskType)：为了让线程池能执行任意类型的任务，通常使用
+std::function&lt;void()&gt;
+来包装任务。这使得线程池可以接受普通函数、Lambda
+表达式、成员函数等任何可调用对象。 - <strong>工作线程</strong>
+(std::vector<std::thread>)：一组预先创建的、可以循环执行任务的线程。 -
+<strong>线程池管理器</strong>
+(ThreadPool)：一个类，用于封装整个线程池的逻辑,
+负责创建、管理和销毁线程池本身，并向任务队列中添加新任务。</std::thread></tasktype></p>
+<h3 id="为什么要使用线程池">为什么要使用线程池</h3>
+<p>为了理解线程池的价值，我们首先要看看不使用线程池的原始做法有什么问题。原始做法是：“需要时创建，用完后销毁”。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">some_task</span><span class="params">()</span> </span>{ <span class="comment">/* ... */</span> }</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每当有一个新任务，就创建一个新线程</span></span><br><span class="line"><span class="function">std::thread <span class="title">t</span><span class="params">(some_task)</span></span>;</span><br><span class="line">t.<span class="built_in">join</span>(); <span class="comment">// 或者 t.detach();</span></span><br></pre></td></tr></table></figure></div> 这种做法存在两个致命的缺陷：</p>
 <ul>
-<li><strong>任务队列</strong> (std::queue<tasktype>)：一个用于存放待执行任务的缓冲区<ul>
-<li>它必须是<strong>线程安全</strong>的。这通常通过一个<strong>互斥锁</strong> (std::mutex) 和一个<strong>条件变量</strong> (std::condition_variable) 来实现, 这正是我们之前讨论的生产者-消费者模型的完美应用.</li>
-<li>任务提交者是生产者，将任务放入队列。</li>
-<li>工作线程是消费者，从队列中取出任务执行。</li>
-<li>任务类型 (TaskType)：为了让线程池能执行任意类型的任务，通常使用 std::function&lt;void()&gt; 来包装任务。这使得线程池可以接受普通函数、Lambda 表达式、成员函数等任何可调用对象。</li>
-</ul>
-</tasktype></li>
-<li><strong>工作线程</strong> (std::vector<a class="link" href="std::thread">std::thread<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>)：一组预先创建的、可以循环执行任务的线程。</li>
-<li><strong>线程池管理器</strong> (ThreadPool)：一个类，用于封装整个线程池的逻辑, 负责创建、管理和销毁线程池本身，并向任务队列中添加新任务。</li>
-</ul>
-<h3 id="为什么要使用线程池"><a href="#为什么要使用线程池" class="headerlink" title="为什么要使用线程池"></a>为什么要使用线程池</h3><p>为了理解线程池的价值，我们首先要看看不使用线程池的原始做法有什么问题。原始做法是：“需要时创建，用完后销毁”。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">some_task</span><span class="params">()</span> </span>{ <span class="comment">/* ... */</span> }</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每当有一个新任务，就创建一个新线程</span></span><br><span class="line"><span class="function">std::thread <span class="title">t</span><span class="params">(some_task)</span></span>;</span><br><span class="line">t.<span class="built_in">join</span>(); <span class="comment">// 或者 t.detach();</span></span><br></pre></td></tr></table></figure></div>
-<p>这种做法存在两个致命的缺陷：</p>
+<li>高昂的资源开销：
 <ul>
-<li>高昂的资源开销：<ul>
-<li>创建开销：线程的创建和销毁是重量级操作，需要调用操作系统内核 API，分配和回收线程栈等内存资源，这个过程相对耗时。</li>
-<li>上下文切换开销：如果任务数量巨大，短时间内创建大量线程，会导致 CPU 在这些线程之间频繁进行上下文切换，这会消耗大量 CPU 时间，反而降低了程序的整体性能。</li>
-</ul>
-</li>
+<li>创建开销：线程的创建和销毁是重量级操作，需要调用操作系统内核
+API，分配和回收线程栈等内存资源，这个过程相对耗时。</li>
+<li>上下文切换开销：如果任务数量巨大，短时间内创建大量线程，会导致 CPU
+在这些线程之间频繁进行上下文切换，这会消耗大量 CPU
+时间，反而降低了程序的整体性能。</li>
+</ul></li>
 <li>资源耗尽风险：操作系统能够创建的线程数量是有限的。如果不加限制地为每个任务都创建一个线程，当并发请求量激增时，很容易耗尽系统内存和线程资源，最终导致程序崩溃或系统瘫痪。</li>
 </ul>
 <p>线程池正是为了解决以上两个问题而生的。</p>
-<h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><ol>
+<h3 id="工作流程">工作流程</h3>
+<ol type="1">
 <li><p>初始化：</p>
 <ul>
 <li>创建一个线程池对象，并指定线程数量（例如，CPU 核心数）。</li>
 <li>线程池立即创建指定数量的工作线程。</li>
 <li>每个工作线程都启动并进入一个无限循环，尝试从任务队列中获取任务。</li>
-</ul>
-</li>
-<li><p>等待任务：由于任务队列初始为空，所有工作线程都会在条件变量上 wait()，进入阻塞状态，等待新任务的到来。它们不消耗 CPU 时间。</p>
-</li>
-<li><p>提交任务：外部代码（例如 main 函数）调用线程池的 enqueue() 方法，传入一个任务。</p>
+</ul></li>
+<li><p>等待任务：由于任务队列初始为空，所有工作线程都会在条件变量上
+wait()，进入阻塞状态，等待新任务的到来。它们不消耗 CPU 时间。</p></li>
+<li><p>提交任务：外部代码（例如 main 函数）调用线程池的 enqueue()
+方法，传入一个任务。</p>
 <ul>
-<li>enqueue() 方法会获取任务队列的锁，将任务 push 进队列，然后释放锁。</li>
-<li>之后，它调用条件变量的 notify_one()，唤醒一个正在等待的工作线程。</li>
-</ul>
-</li>
+<li>enqueue() 方法会获取任务队列的锁，将任务 push
+进队列，然后释放锁。</li>
+<li>之后，它调用条件变量的
+notify_one()，唤醒一个正在等待的工作线程。</li>
+</ul></li>
 <li><p>执行任务：</p>
 <ul>
-<li>被唤醒的线程从 wait() 返回，重新获取锁，从队列中 pop 一个任务，然后释放锁。</li>
+<li>被唤醒的线程从 wait() 返回，重新获取锁，从队列中 pop
+一个任务，然后释放锁。</li>
 <li>线程开始执行取出的任务。任务执行完毕后，线程不会退出，而是返回到无限循环的开始，再次尝试从任务队列获取下一个任务，如果队列为空，则再次进入等待状态。</li>
-</ul>
-</li>
+</ul></li>
 <li><p>销毁：</p>
 <ul>
 <li>当程序希望关闭线程池时，会调用 shutdown() 方法(或者析构函数)。</li>
-<li>管理器设置一个停止标志位，并调用 notify_all() 唤醒所有工作线程。</li>
+<li>管理器设置一个停止标志位，并调用 notify_all()
+唤醒所有工作线程。</li>
 <li>工作线程被唤醒后，检查到停止标志，于是退出无限循环。</li>
 <li>管理器 join() 所有工作线程，等待它们全部安全退出。</li>
-</ul>
-</li>
+</ul></li>
 </ol>
-<h3 id="线程池示例"><a href="#线程池示例" class="headerlink" title="线程池示例"></a>线程池示例</h3><div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;functional&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ThreadPool</span>{</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ThreadPool</span>(<span class="type">int</span> NumThreads): <span class="built_in">stop</span>(<span class="literal">false</span>){  <span class="comment">// 初始化并启动线程池。</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;NumThreads;i++){</span><br><span class="line">            <span class="comment">// 这里构造的是多个线程, 因此是并发构造的</span></span><br><span class="line">            threads.<span class="built_in">emplace_back</span>([<span class="keyword">this</span>]{  <span class="comment">// emplace_back 直接传入参数后自动构造线程对象(就地构造)</span></span><br><span class="line">                <span class="keyword">while</span>(<span class="number">1</span>){  <span class="comment">// while的作用是持续监听任务队列, 让每个工作线程在完成一个任务后，不会立即退出，而是返回到循环的起点，继续尝试从任务队列中获取下一个任务。</span></span><br><span class="line">                    std::unique_lock&lt;std::mutex&gt; <span class="built_in">lock</span>(mtx); <span class="comment">// 有可能要操作任务队列, 所以要加锁</span></span><br><span class="line">                    condition.<span class="built_in">wait</span>(lock, [<span class="keyword">this</span>]{</span><br><span class="line">                        <span class="keyword">return</span> !tasks.<span class="built_in">empty</span>() || stop; <span class="comment">// 线程会在此处等待，直到 Lambda 谓词返回 true。在等待期间，lock 会被自动释放，允许其他线程（如 enqueue 函数）获取锁并向队列中添加任务。</span></span><br><span class="line">                    });</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 线程被唤醒后向下执行</span></span><br><span class="line">                    <span class="keyword">if</span>(stop&amp;&amp;tasks.<span class="built_in">empty</span>()) <span class="keyword">return</span>;</span><br><span class="line">                    std::function&lt;<span class="built_in">void</span>()&gt; <span class="built_in">task</span>(std::<span class="built_in">move</span>(tasks.<span class="built_in">front</span>()));  <span class="comment">// 从任务队列中取出一个任务</span></span><br><span class="line">                    tasks.<span class="built_in">pop</span>();</span><br><span class="line">                    lock.<span class="built_in">unlock</span>(); <span class="comment">// 执行任务之前手动解锁。因为任务 task() 的执行可能非常耗时，如果在执行期间一直持有着锁，其他工作线程将无法从队列中获取新任务，会大大降低线程池的并发效率。</span></span><br><span class="line">                    <span class="built_in">task</span>(); <span class="comment">// 执行任务</span></span><br><span class="line">                }</span><br><span class="line">            });</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    ~<span class="built_in">ThreadPool</span>(){  <span class="comment">// 安全地关闭线程池，确保所有任务执行完毕，所有线程都已退出。</span></span><br><span class="line">        {</span><br><span class="line">            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">            stop = <span class="literal">true</span>;</span><br><span class="line">        }</span><br><span class="line">        condition.<span class="built_in">notify_all</span>(); <span class="comment">// 唤醒所有正在等待的线程。因为有些线程可能因为队列为空而处于睡眠状态，设置 stop 标志后，必须将它们全部唤醒，以便它们能够检查到 stop == true 并进入退出流程。</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span>&amp; t: threads) t.<span class="built_in">join</span>();  <span class="comment">//遍历所有线程句柄，并对每个线程调用 join()。主线程（执行析构函数的线程）会在此处阻塞，一个一个串行等待, 直到所有工作线程都执行完毕并完全退出。</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">F</span>, <span class="keyword">class</span>... Args&gt;  <span class="comment">// 模板函数使之可以接受任意类型的任务函数和参数</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">enqueue</span><span class="params">(F&amp;&amp; f, Args&amp;&amp; ... args)</span></span>{  <span class="comment">// 向线程池提交一个新任务。</span></span><br><span class="line">        <span class="comment">// 队列只接受std::function&lt;void()&gt;, 因此使用bind()将所有不同形式的函数调用全部“适配”成了 std::function&lt;void()&gt; 这种统一的、可以被存储在队列中的格式. 当你调用这个新对象时，它会在内部自动用之前绑定的参数去调用原始的函数。</span></span><br><span class="line">        std::function&lt;<span class="type">void</span>()&gt; task = std::<span class="built_in">bind</span>(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...);</span><br><span class="line">        {</span><br><span class="line">            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; <span class="comment">// 加锁, 确保在添加任务到队列时不会被其他线程同时修改</span></span><br><span class="line">            tasks.<span class="built_in">emplace</span>(std::<span class="built_in">move</span>(task)); <span class="comment">// 将新创建的 task 移动到任务队列 tasks 的末尾。</span></span><br><span class="line">        }</span><br><span class="line">        condition.<span class="built_in">notify_one</span>();  <span class="comment">// 通知一个正在 condition.wait() 上等待的工作线程。告诉它“有新任务来了，快醒来工作”。</span></span><br><span class="line">    }</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::vector&lt;std::thread&gt; threads;  <span class="comment">// 线程容器。存放所有预先创建的工作线程对象。</span></span><br><span class="line">    std::queue&lt;std::function&lt;<span class="type">void</span>()&gt;&gt; tasks; <span class="comment">// 任务队列。这是一个线程安全的队列，用于存放待执行的任务。外部代码（生产者）将任务放入此队列，工作线程（消费者）从此队列取出任务。</span></span><br><span class="line">    std::mutex mtx;  <span class="comment">// 互斥锁。用于保护对任务队列 tasks 的并发访问，确保线程安全。</span></span><br><span class="line">    std::condition_variable condition;  <span class="comment">// 条件变量。用于实现线程间的同步。当任务队列为空时，工作线程在此变量上等待；当新任务被添加时，通过此变量通知等待的线程。</span></span><br><span class="line">    <span class="type">bool</span> stop;  <span class="comment">// 停止标志。一个布尔标志，用于通知所有线程池准备关闭，以便它们能够安全退出。</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>{</span><br><span class="line">    <span class="function">ThreadPool <span class="title">pool</span><span class="params">(<span class="number">4</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++){</span><br><span class="line">        pool.<span class="built_in">enqueue</span>([i]{</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"task :"</span> &lt;&lt; i &lt;&lt; <span class="string">"is runing"</span> &lt;&lt; std::endl;</span><br><span class="line">            std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"task :"</span> &lt;&lt; i &lt;&lt; <span class="string">"is done"</span> &lt;&lt; std::endl;</span><br><span class="line">        });</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<h3 id="线程池示例">线程池示例</h3>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;functional&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ThreadPool</span>{</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ThreadPool</span>(<span class="type">int</span> NumThreads): <span class="built_in">stop</span>(<span class="literal">false</span>){  <span class="comment">// 初始化并启动线程池。</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;NumThreads;i++){</span><br><span class="line">            <span class="comment">// 这里构造的是多个线程, 因此是并发构造的</span></span><br><span class="line">            threads.<span class="built_in">emplace_back</span>([<span class="keyword">this</span>]{  <span class="comment">// emplace_back 直接传入参数后自动构造线程对象(就地构造)</span></span><br><span class="line">                <span class="keyword">while</span>(<span class="number">1</span>){  <span class="comment">// while的作用是持续监听任务队列, 让每个工作线程在完成一个任务后，不会立即退出，而是返回到循环的起点，继续尝试从任务队列中获取下一个任务。</span></span><br><span class="line">                    std::unique_lock&lt;std::mutex&gt; <span class="built_in">lock</span>(mtx); <span class="comment">// 有可能要操作任务队列, 所以要加锁</span></span><br><span class="line">                    condition.<span class="built_in">wait</span>(lock, [<span class="keyword">this</span>]{</span><br><span class="line">                        <span class="keyword">return</span> !tasks.<span class="built_in">empty</span>() || stop; <span class="comment">// 线程会在此处等待，直到 Lambda 谓词返回 true。在等待期间，lock 会被自动释放，允许其他线程（如 enqueue 函数）获取锁并向队列中添加任务。</span></span><br><span class="line">                    });</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 线程被唤醒后向下执行</span></span><br><span class="line">                    <span class="keyword">if</span>(stop&amp;&amp;tasks.<span class="built_in">empty</span>()) <span class="keyword">return</span>;</span><br><span class="line">                    std::function&lt;<span class="built_in">void</span>()&gt; <span class="built_in">task</span>(std::<span class="built_in">move</span>(tasks.<span class="built_in">front</span>()));  <span class="comment">// 从任务队列中取出一个任务</span></span><br><span class="line">                    tasks.<span class="built_in">pop</span>();</span><br><span class="line">                    lock.<span class="built_in">unlock</span>(); <span class="comment">// 执行任务之前手动解锁。因为任务 task() 的执行可能非常耗时，如果在执行期间一直持有着锁，其他工作线程将无法从队列中获取新任务，会大大降低线程池的并发效率。</span></span><br><span class="line">                    <span class="built_in">task</span>(); <span class="comment">// 执行任务</span></span><br><span class="line">                }</span><br><span class="line">            });</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    ~<span class="built_in">ThreadPool</span>(){  <span class="comment">// 安全地关闭线程池，确保所有任务执行完毕，所有线程都已退出。</span></span><br><span class="line">        {</span><br><span class="line">            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">            stop = <span class="literal">true</span>;</span><br><span class="line">        }</span><br><span class="line">        condition.<span class="built_in">notify_all</span>(); <span class="comment">// 唤醒所有正在等待的线程。因为有些线程可能因为队列为空而处于睡眠状态，设置 stop 标志后，必须将它们全部唤醒，以便它们能够检查到 stop == true 并进入退出流程。</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span>&amp; t: threads) t.<span class="built_in">join</span>();  <span class="comment">//遍历所有线程句柄，并对每个线程调用 join()。主线程（执行析构函数的线程）会在此处阻塞，一个一个串行等待, 直到所有工作线程都执行完毕并完全退出。</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">F</span>, <span class="keyword">class</span>... Args&gt;  <span class="comment">// 模板函数使之可以接受任意类型的任务函数和参数</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">enqueue</span><span class="params">(F&amp;&amp; f, Args&amp;&amp; ... args)</span></span>{  <span class="comment">// 向线程池提交一个新任务。</span></span><br><span class="line">        <span class="comment">// 队列只接受std::function&lt;void()&gt;, 因此使用bind()将所有不同形式的函数调用全部“适配”成了 std::function&lt;void()&gt; 这种统一的、可以被存储在队列中的格式. 当你调用这个新对象时，它会在内部自动用之前绑定的参数去调用原始的函数。</span></span><br><span class="line">        std::function&lt;<span class="type">void</span>()&gt; task = std::<span class="built_in">bind</span>(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...);</span><br><span class="line">        {</span><br><span class="line">            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; <span class="comment">// 加锁, 确保在添加任务到队列时不会被其他线程同时修改</span></span><br><span class="line">            tasks.<span class="built_in">emplace</span>(std::<span class="built_in">move</span>(task)); <span class="comment">// 将新创建的 task 移动到任务队列 tasks 的末尾。</span></span><br><span class="line">        }</span><br><span class="line">        condition.<span class="built_in">notify_one</span>();  <span class="comment">// 通知一个正在 condition.wait() 上等待的工作线程。告诉它“有新任务来了，快醒来工作”。</span></span><br><span class="line">    }</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::vector&lt;std::thread&gt; threads;  <span class="comment">// 线程容器。存放所有预先创建的工作线程对象。</span></span><br><span class="line">    std::queue&lt;std::function&lt;<span class="type">void</span>()&gt;&gt; tasks; <span class="comment">// 任务队列。这是一个线程安全的队列，用于存放待执行的任务。外部代码（生产者）将任务放入此队列，工作线程（消费者）从此队列取出任务。</span></span><br><span class="line">    std::mutex mtx;  <span class="comment">// 互斥锁。用于保护对任务队列 tasks 的并发访问，确保线程安全。</span></span><br><span class="line">    std::condition_variable condition;  <span class="comment">// 条件变量。用于实现线程间的同步。当任务队列为空时，工作线程在此变量上等待；当新任务被添加时，通过此变量通知等待的线程。</span></span><br><span class="line">    <span class="type">bool</span> stop;  <span class="comment">// 停止标志。一个布尔标志，用于通知所有线程池准备关闭，以便它们能够安全退出。</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>{</span><br><span class="line">    <span class="function">ThreadPool <span class="title">pool</span><span class="params">(<span class="number">4</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++){</span><br><span class="line">        pool.<span class="built_in">enqueue</span>([i]{</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"task :"</span> &lt;&lt; i &lt;&lt; <span class="string">"is runing"</span> &lt;&lt; std::endl;</span><br><span class="line">            std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"task :"</span> &lt;&lt; i &lt;&lt; <span class="string">"is done"</span> &lt;&lt; std::endl;</span><br><span class="line">        });</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
 		</div>
 
 		
@@ -992,11 +1003,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

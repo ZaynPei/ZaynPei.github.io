@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -828,29 +828,42 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="Linux-用户账户基础"><a href="#Linux-用户账户基础" class="headerlink" title="Linux 用户账户基础"></a>Linux 用户账户基础</h2><p>在 Linux 和类 Unix 系统中，大致有三类用户角色: 超级用户 (root), 普通用户 (Regular User)和系统用户 (System User).</p>
+			<h2 id="linux-用户账户基础">Linux 用户账户基础</h2>
+<p>在 Linux 和类 Unix 系统中，大致有三类用户角色: 超级用户 (root),
+普通用户 (Regular User)和系统用户 (System User).</p>
 <ul>
-<li>超级用户 (root) : UID 为 0, 拥有系统的最高、无限制的权限。可以执行任何操作，包括修改系统文件、管理所有用户和进程。</li>
-<li>普通用户 (Regular User)：UID通常从 1000 开始, 权限受限, 默认只能在自己的家目录 (/home/username) 内自由读写文件，对系统级的文件和目录只有读取权限或完全没有权限。<ul>
+<li>超级用户 (root) : UID 为 0,
+拥有系统的最高、无限制的权限。可以执行任何操作，包括修改系统文件、管理所有用户和进程。</li>
+<li>普通用户 (Regular User)：UID通常从 1000 开始, 权限受限,
+默认只能在自己的家目录 (/home/username)
+内自由读写文件，对系统级的文件和目录只有读取权限或完全没有权限。
+<ul>
 <li>我们执行日常任务，如开发、浏览网页、文档处理通常处在这一层级</li>
+</ul></li>
+<li>系统用户 (System User)：UID 通常在 1 到 999 之间,
+这些用户不是为人类交互设计的。它们被各种系统服务（如 www-data 用于
+Apache/Nginx，postfix
+用于邮件服务）所使用，以便以受限的权限运行，从而提高系统安全性。</li>
 </ul>
-</li>
-<li>系统用户 (System User)：UID 通常在 1 到 999 之间, 这些用户不是为人类交互设计的。它们被各种系统服务（如 www-data 用于 Apache/Nginx，postfix 用于邮件服务）所使用，以便以受限的权限运行，从而提高系统安全性。</li>
-</ul>
-<h2 id="登录-Login-：创建全新的会话"><a href="#登录-Login-：创建全新的会话" class="headerlink" title="登录 (Login)：创建全新的会话"></a>登录 (Login)：创建全新的会话</h2><p>“登录”是指用户向系统证明自己身份（认证），并由系统为其创建一个全新的、隔离的工作会话（Session）的过程。其可以分为本地登录和远程登录两类. </p>
+<h2 id="登录-login创建全新的会话">登录 (Login)：创建全新的会话</h2>
+<p>“登录”是指用户向系统证明自己身份（认证），并由系统为其创建一个全新的、隔离的工作会话（Session）的过程。其可以分为本地登录和远程登录两类.</p>
 <p>本地登录 (Local Login): 指直接在连接到计算机的物理设备上登录。</p>
-<p>远程登录 (Remote Login): 指通过<strong>网络</strong>从一台计算机连接到另一台计算机。常见的远程登录方式有SSH登录</p>
+<p>远程登录 (Remote Login):
+指通过<strong>网络</strong>从一台计算机连接到另一台计算机。常见的远程登录方式有SSH登录</p>
 <ul>
-<li><p>SSH (Secure Shell)：是进行<strong>远程服务器管理</strong>的最主要、最安全的方式。</p>
+<li><p>SSH (Secure
+Shell)：是进行<strong>远程服务器管理</strong>的最主要、最安全的方式。</p>
 <ul>
-<li><p>使用 SSH 客户端命令 ssh username@hostname_or_ip。服务器会要求你通过密码或 SSH 密钥进行认证。</p>
-</li>
-<li><p>与本地登录一样，SSH 成功认证后会在远程服务器上为你启动一个全新的 登录 Shell。</p>
-</li>
+<li><p>使用 SSH 客户端命令 ssh
+username@hostname_or_ip。服务器会要求你通过密码或 SSH
+密钥进行认证。</p></li>
+<li><p>与本地登录一样，SSH 成功认证后会在远程服务器上为你启动一个全新的
+登录 Shell。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="用户切换-Switching-：在现有会话中改变身份"><a href="#用户切换-Switching-：在现有会话中改变身份" class="headerlink" title="用户切换 (Switching)：在现有会话中改变身份"></a>用户切换 (Switching)：在现有会话中改变身份</h2><blockquote>
+<h2 id="用户切换-switching在现有会话中改变身份">用户切换
+(Switching)：在现有会话中改变身份</h2>
+<blockquote>
 <p>(那我为什么不创建一个新的shell登录呢)</p>
 </blockquote>
 <p>“切换”是指在一个已经登录的会话中，临时获取另一个用户的身份和权限，而无需退出当前会话。</p>
@@ -912,7 +925,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">用户</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-%E7%94%A8%E6%88%B7%E8%B4%A6%E6%88%B7%E5%9F%BA%E7%A1%80"><span class="nav-text">Linux 用户账户基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95-Login-%EF%BC%9A%E5%88%9B%E5%BB%BA%E5%85%A8%E6%96%B0%E7%9A%84%E4%BC%9A%E8%AF%9D"><span class="nav-text">登录 (Login)：创建全新的会话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%88%87%E6%8D%A2-Switching-%EF%BC%9A%E5%9C%A8%E7%8E%B0%E6%9C%89%E4%BC%9A%E8%AF%9D%E4%B8%AD%E6%94%B9%E5%8F%98%E8%BA%AB%E4%BB%BD"><span class="nav-text">用户切换 (Switching)：在现有会话中改变身份</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-%E7%94%A8%E6%88%B7%E8%B4%A6%E6%88%B7%E5%9F%BA%E7%A1%80"><span class="nav-text">Linux 用户账户基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95-login%E5%88%9B%E5%BB%BA%E5%85%A8%E6%96%B0%E7%9A%84%E4%BC%9A%E8%AF%9D"><span class="nav-text">登录 (Login)：创建全新的会话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%88%87%E6%8D%A2-switching%E5%9C%A8%E7%8E%B0%E6%9C%89%E4%BC%9A%E8%AF%9D%E4%B8%AD%E6%94%B9%E5%8F%98%E8%BA%AB%E4%BB%BD"><span class="nav-text">用户切换
+(Switching)：在现有会话中改变身份</span></a></li></ol>
 
 	</div>
 </div>
@@ -941,11 +955,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

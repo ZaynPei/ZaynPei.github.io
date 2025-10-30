@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -828,229 +828,278 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h2><p>在 Linux/Unix 操作系统中，文件描述符是进行所有输入/输出（I/O）操作的基础。它是一个<strong>非负整数</strong>，作为程序与内核之间进行文件操作的“凭证”。理解文件描述符的关键在于掌握其背后的三层内核数据结构：<strong>进程文件描述符表</strong>、<strong>系统级打开文件表</strong>和 <strong>i-node</strong> 表。</p>
-<p>回到定义, 文件描述符 (File Descriptor, fd) 本质上是一个索引，指向一个进程内核区域中的特定数据结构。它的形式是一个非负整数（0, 1, 2, 3, …）。当进程成功打开一个文件或创建一个管道/套接字时，内核会返回一个文件描述符。此后，程序所有对该文件的读、写、关闭等操作，都通过这个整数来标识，而无需再使用文件名。</p>
+			<h2 id="文件描述符">文件描述符</h2>
+<p>在 Linux/Unix
+操作系统中，文件描述符是进行所有输入/输出（I/O）操作的基础。它是一个<strong>非负整数</strong>，作为程序与内核之间进行文件操作的“凭证”。理解文件描述符的关键在于掌握其背后的三层内核数据结构：<strong>进程文件描述符表</strong>、<strong>系统级打开文件表</strong>和
+<strong>i-node</strong> 表。</p>
+<p>回到定义, 文件描述符 (File Descriptor, fd)
+本质上是一个索引，指向一个进程内核区域中的特定数据结构。它的形式是一个非负整数（0,
+1, 2, 3,
+…）。当进程成功打开一个文件或创建一个管道/套接字时，内核会返回一个文件描述符。此后，程序所有对该文件的读、写、关闭等操作，都通过这个整数来标识，而无需再使用文件名。</p>
 <blockquote>
-<p>回忆“一切皆文件”：在 Unix 哲学中，设备（如键盘、显示器）、网络连接（套接字）等都被抽象为文件，因此也都可以通过文件描述符来访问。</p>
+<p>回忆“一切皆文件”：在 Unix
+哲学中，设备（如键盘、显示器）、网络连接（套接字）等都被抽象为文件，因此也都可以通过文件描述符来访问。</p>
 </blockquote>
-<p>需要注意的是, 当一个进程启动时，默认会拥有三个标准的文件描述符：</p>
-<ul>
-<li>0	: 标准输入 (stdin) - 键盘</li>
-<li>1	: 标准输出 (stdout) - 屏幕</li>
-<li>2	: 标准错误 (stderr) - 屏幕</li>
-</ul>
-<p>因此，程序中第一次成功 open() 一个新文件，通常返回的文件描述符是 3。</p>
-<h3 id="三层核心结构"><a href="#三层核心结构" class="headerlink" title="三层核心结构"></a>三层核心结构</h3><p>要彻底理解文件描述符的行为，必须了解其背后的三层内核结构。这三层结构清晰地分离了“哪个进程”、“哪次打开”和“哪个文件”的概念。</p>
-<ol>
+<p>需要注意的是, 当一个进程启动时，默认会拥有三个标准的文件描述符： - 0
+: 标准输入 (stdin) - 键盘 - 1 : 标准输出 (stdout) - 屏幕 - 2 : 标准错误
+(stderr) - 屏幕</p>
+<p>因此，程序中第一次成功 open() 一个新文件，通常返回的文件描述符是
+3。</p>
+<h3 id="三层核心结构">三层核心结构</h3>
+<p>要彻底理解文件描述符的行为，必须了解其背后的三层内核结构。这三层结构清晰地分离了“哪个进程”、“哪次打开”和“哪个文件”的概念。</p>
+<ol type="1">
 <li>第一层：进程文件描述符表 (Per-Process File Descriptor Table)</li>
 </ol>
 <ul>
-<li><p>归属：每个<strong>进程</strong>独立拥有一张。</p>
-</li>
-<li><p>功能：它是一个简单的数组，索引就是文件描述符的整数值。数组的每个元素是一个指针，指向第二层中的一个“<strong>文件表项</strong>”。这张表将一个简单的整数（文件描述符）与一个具体的“文件打开实例”（文件表项）关联起来。它只告诉进程：“你的文件描述符 3 对应的是那个文件打开实例”。</p>
-</li>
+<li><p>归属：每个<strong>进程</strong>独立拥有一张。</p></li>
+<li><p>功能：它是一个简单的数组，索引就是文件描述符的整数值。数组的每个元素是一个指针，指向第二层中的一个“<strong>文件表项</strong>”。这张表将一个简单的整数（文件描述符）与一个具体的“文件打开实例”（文件表项）关联起来。它只告诉进程：“你的文件描述符
+3 对应的是那个文件打开实例”。</p></li>
 </ul>
-<ol start="2">
+<ol start="2" type="1">
 <li>第二层：系统级打开文件表 (System-wide Open File Table)</li>
 </ol>
 <ul>
-<li><p>归属：整个操作系统<strong>内核</strong>共享一张。</p>
-</li>
-<li><p>功能：表中的每一个条目被称为 文件表项 (File Table Entry)，它代表了<strong>一次独立的文件打开操作</strong>。这是整个机制的核心，包含了：</p>
+<li><p>归属：整个操作系统<strong>内核</strong>共享一张。</p></li>
+<li><p>功能：表中的每一个条目被称为 文件表项 (File Table
+Entry)，它代表了<strong>一次独立的文件打开操作</strong>。这是整个机制的核心，包含了：</p>
 <ul>
-<li>文件状态标志：文件是如何被打开的（如 O_RDONLY 只读, O_APPEND 追加模式等）。</li>
-<li>当前文件偏移量 (offset)：这是最重要的属性。它记录了下一次读/写操作在文件中的位置，即读写指针。</li>
+<li>文件状态标志：文件是如何被打开的（如 O_RDONLY 只读, O_APPEND
+追加模式等）。</li>
+<li>当前文件偏移量
+(offset)：这是最重要的属性。它记录了下一次读/写操作在文件中的位置，即读写指针。</li>
 <li>引用计数：记录了有多少个来自第一层的指针指向此表项。</li>
 <li>指向 i-node 的指针：指向第三层，关联到文件的具体物理信息。</li>
+</ul></li>
+<li><p>这张表抽象了“打开的文件”这个概念。offset 存放在这里，意味着
+offset
+是跟“某次文件打开”这个行为绑定的，而不是跟进程或者文件本身绑定。</p></li>
 </ul>
-</li>
-<li><p>这张表抽象了“打开的文件”这个概念。offset 存放在这里，意味着 offset 是跟“某次文件打开”这个行为绑定的，而不是跟进程或者文件本身绑定。</p>
-</li>
-</ul>
-<ol start="3">
+<ol start="3" type="1">
 <li>第三层：i-node 表 (i-node Table)</li>
 </ol>
 <ul>
-<li><p>归属：系统内核级，代表物理存储上的文件。</p>
-</li>
-<li><p>功能：每个文件或目录在文件系统中都有一个唯一的 i-node。它存储了文件的元数据 (metadata)，如文件大小、所有者、权限、创建时间以及数据在磁盘上的实际位置。i-node 是文件的静态描述。无论一个文件被打开多少次，它在磁盘上都只有一个 i-node。</p>
-</li>
+<li><p>归属：系统内核级，代表物理存储上的文件。</p></li>
+<li><p>功能：每个文件或目录在文件系统中都有一个唯一的
+i-node。它存储了文件的元数据
+(metadata)，如文件大小、所有者、权限、创建时间以及数据在磁盘上的实际位置。i-node
+是文件的静态描述。无论一个文件被打开多少次，它在磁盘上都只有一个
+i-node。</p></li>
 </ul>
-<p><img lazyload src="/images/loading.svg" data-src="/2025/06/28/misc/GNU-LINUX/%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%B9%E8%B1%A1/20250820192718.png"></p>
-<h3 id="fork-和-dup-对于offset的影响"><a href="#fork-和-dup-对于offset的影响" class="headerlink" title="fork() 和 dup() 对于offset的影响"></a>fork() 和 dup() 对于offset的影响</h3><p>fork() 的情况: </p>
-<ol>
+<p><img lazyload src="/images/loading.svg" data-src="20250820192718.png"></p>
+<h3 id="fork-和-dup-对于offset的影响">fork() 和 dup()
+对于offset的影响</h3>
+<p>fork() 的情况:</p>
+<ol type="1">
 <li>父进程打开一个文件，我们假设它得到 fd = 3。此时，三层结构是：</li>
 </ol>
 <ul>
-<li><p>父进程的 fd 表：fd[3] -&gt; 指向一个文件表项 A</p>
-</li>
-<li><p>系统文件表：文件表项 A (offset = 0, 引用计数 = 1) -&gt; 指向 i-node X</p>
-</li>
-<li><p>i-node 表：i-node X (代表实际文件)</p>
-</li>
+<li><p>父进程的 fd 表：fd[3] -&gt; 指向一个文件表项 A</p></li>
+<li><p>系统文件表：文件表项 A (offset = 0, 引用计数 = 1) -&gt; 指向
+i-node X</p></li>
+<li><p>i-node 表：i-node X (代表实际文件)</p></li>
 </ul>
-<ol start="2">
+<ol start="2" type="1">
 <li>父进程调用 fork() 创建子进程。</li>
 </ol>
 <ul>
 <li><p>子进程<strong>复制了父进程的文件描述符表</strong>。这意味着：</p>
 <ul>
 <li>子进程的 fd 表：fd[3] -&gt; 也指向同一个文件表项 A</li>
+</ul></li>
+<li><p>此时，文件表项 A 的状态变为：文件表项 A (offset = 0, 引用计数 =
+2) -&gt; 指向 i-node X</p></li>
 </ul>
-</li>
-<li><p>此时，文件表项 A 的状态变为：文件表项 A (offset = 0, 引用计数 = 2) -&gt; 指向 i-node X</p>
-</li>
-</ul>
-<p>结论：因为父子进程的 fd=3 都指向了同一个文件表项 A，所以它们共享该表项中的所有信息，其中最重要的就是共享同一个 offset。任何一方读取文件导致 offset 变化，另一方都会受到影响。</p>
-<p>dup() 的情况: </p>
-<ol>
+<p>结论：因为父子进程的 fd=3 都指向了同一个文件表项
+A，所以它们共享该表项中的所有信息，其中最重要的就是共享同一个
+offset。任何一方读取文件导致 offset 变化，另一方都会受到影响。</p>
+<p>dup() 的情况:</p>
+<ol type="1">
 <li>进程打开一个文件，得到 fd = 3。</li>
 </ol>
 <ul>
-<li><p>进程 fd 表：fd[3] -&gt; 指向文件表项 A</p>
-</li>
-<li><p>系统文件表：文件表项 A (offset = 0, 引用计数 = 1)</p>
-</li>
+<li><p>进程 fd 表：fd[3] -&gt; 指向文件表项 A</p></li>
+<li><p>系统文件表：文件表项 A (offset = 0, 引用计数 = 1)</p></li>
 </ul>
-<ol start="2">
+<ol start="2" type="1">
 <li>进程调用 dup(3)，假设返回了新的文件描述符 fd = 4。</li>
 </ol>
-<p>dup() 的作用是在进程的 fd 表中创建一个新条目，让它<strong>指向与原 fd 相同的那个文件表项</strong>。</p>
-<p>进程 fd 表：fd[3] -&gt; 指向文件表项 A； fd[4] -&gt; 也指向文件表项 A</p>
-<p>结论：同样地，因为 fd=3 和 fd=4 指向了同一个文件表项 A，所以它们也共享同一个 offset。</p>
-<h3 id="mount-挂载"><a href="#mount-挂载" class="headerlink" title="mount (挂载)"></a>mount (挂载)</h3><p>mount 是一个将独立的“文件系统”集成到主文件系统树中的过程。简单来说，就是将一个存储设备（如硬盘分区、U盘）的内容，附加到主文件系统的一个目录下，让我们可以像访问普通目录一样访问该设备里的文件。</p>
-<p>例如, 执行 mount /dev/sdb1 /mnt/data 之后, 便可以通过访问/mnt/data来直接访问挂载的存储文件系统的物理或虚拟设备，如 /dev/sda1 (第一个硬盘的第一个分区)。</p>
-<p>umount (卸载): 与 mount 相对，umount 命令（注意没有 ‘n’）则是将这个挂载文件系统从主文件系统树中移除。在拔掉 U 盘等设备前，执行卸载是非常重要的安全操作。</p>
-<h2 id="pipe-管道"><a href="#pipe-管道" class="headerlink" title="pipe (管道)"></a>pipe (管道)</h2><p>管道是 Unix 系统中历史最悠久也最强大的进程间通信 (Inter-Process Communication, IPC) 机制之一。它的作用是在两个进程之间建立一个单向的数据流。</p>
+<p>dup() 的作用是在进程的 fd 表中创建一个新条目，让它<strong>指向与原 fd
+相同的那个文件表项</strong>。</p>
+<p>进程 fd 表：fd[3] -&gt; 指向文件表项 A； fd[4] -&gt; 也指向文件表项
+A</p>
+<p>结论：同样地，因为 fd=3 和 fd=4 指向了同一个文件表项
+A，所以它们也共享同一个 offset。</p>
+<h3 id="mount-挂载">mount (挂载)</h3>
+<p>mount
+是一个将独立的“文件系统”集成到主文件系统树中的过程。简单来说，就是将一个存储设备（如硬盘分区、U盘）的内容，附加到主文件系统的一个目录下，让我们可以像访问普通目录一样访问该设备里的文件。</p>
+<p>例如, 执行 mount /dev/sdb1 /mnt/data 之后,
+便可以通过访问/mnt/data来直接访问挂载的存储文件系统的物理或虚拟设备，如
+/dev/sda1 (第一个硬盘的第一个分区)。</p>
+<p>umount (卸载): 与 mount 相对，umount 命令（注意没有
+‘n’）则是将这个挂载文件系统从主文件系统树中移除。在拔掉 U
+盘等设备前，执行卸载是非常重要的安全操作。</p>
+<h2 id="pipe-管道">pipe (管道)</h2>
+<p>管道是 Unix 系统中历史最悠久也最强大的进程间通信 (Inter-Process
+Communication, IPC)
+机制之一。它的作用是在两个进程之间建立一个单向的数据流。</p>
 <p>可以将管道想象成一条单向的传送带：</p>
 <ul>
-<li><p>一个进程（Write方）在传送带的一端放上物品（数据）。</p>
-</li>
-<li><p>另一个进程（Read方）在传送带的另一端取走物品。</p>
-</li>
-<li><p>传送带本身有容量限制，如果放满了，Write方就必须等待。</p>
-</li>
-<li><p>如果传送带空了，Read方就必须等待。</p>
-</li>
-<li><p>物品遵循“先进先出”(First-In, First-Out, FIFO) 的原则。</p>
-</li>
+<li><p>一个进程（Write方）在传送带的一端放上物品（数据）。</p></li>
+<li><p>另一个进程（Read方）在传送带的另一端取走物品。</p></li>
+<li><p>传送带本身有容量限制，如果放满了，Write方就必须等待。</p></li>
+<li><p>如果传送带空了，Read方就必须等待。</p></li>
+<li><p>物品遵循“先进先出”(First-In, First-Out, FIFO) 的原则。</p></li>
 </ul>
-<h3 id="管道的内部工作机制"><a href="#管道的内部工作机制" class="headerlink" title="管道的内部工作机制"></a>管道的内部工作机制</h3><p>首先, 管道不是普通的磁盘文件，它存在于内核内存中的缓冲区 (Buffer), 而且需要通过<strong>文件描述符访问</strong>. </p>
+<h3 id="管道的内部工作机制">管道的内部工作机制</h3>
+<p>首先, 管道不是普通的磁盘文件，它存在于内核内存中的缓冲区 (Buffer),
+而且需要通过<strong>文件描述符访问</strong>.</p>
 <p>当一个进程调用 pipe() 系统调用时：</p>
 <div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> fd[<span class="number">2</span>];</span><br><span class="line">pipe(fd);</span><br></pre></td></tr></table></figure></div>
-
 <p>内核会执行以下操作：</p>
 <ul>
-<li><p>在内核中创建一个管道对象，这个对象包含一个内存缓冲区和相关的管理信息。</p>
-</li>
-<li><p>在系统级打开文件表(第二级)中创建一个文件表项，这个表项指向新创建的管道对象。</p>
-</li>
+<li><p>在内核中创建一个管道对象，这个对象包含一个内存缓冲区和相关的管理信息。</p></li>
+<li><p>在系统级打开文件表(第二级)中创建一个文件表项，这个表项指向新创建的管道对象。</p></li>
 <li><p>在调用进程的文件描述符表(第一级)中，分配两个连续的文件描述符，并让它们都指向同一个文件表项。</p>
 <ul>
-<li><p>fd[0] 被设置为只读端。</p>
-</li>
-<li><p>fd[1] 被设置为只写端。</p>
-</li>
+<li><p>fd[0] 被设置为只读端。</p></li>
+<li><p>fd[1] 被设置为只写端。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="管道的经典使用模式"><a href="#管道的经典使用模式" class="headerlink" title="管道的经典使用模式"></a>管道的经典使用模式</h3><p>管道本身在一个进程中没有意义（自己写自己读），它的威力体现在与 fork() 结合，用于父子进程间的通信。经典四步法如下：</p>
-<ol>
-<li><p>父进程创建管道：父进程调用 pipe(fd)，获得一个读描述符 fd[0] 和一个写描述符 fd[1]。</p>
-</li>
-<li><p>父进程创建子进程：父进程调用 fork()。现在，子进程继承了父进程的文件描述符表，因此子进程也拥有了这对指向同一个管道的 fd[0] 和 fd[1]。</p>
-</li>
-<li><p>关闭不用的描述符：这是至关重要的一步，为了建立单向数据流。假设我们想让父进程写，子进程读：</p>
-</li>
+<h3 id="管道的经典使用模式">管道的经典使用模式</h3>
+<p>管道本身在一个进程中没有意义（自己写自己读），它的威力体现在与 fork()
+结合，用于父子进程间的通信。经典四步法如下：</p>
+<ol type="1">
+<li><p>父进程创建管道：父进程调用 pipe(fd)，获得一个读描述符 fd[0]
+和一个写描述符 fd[1]。</p></li>
+<li><p>父进程创建子进程：父进程调用
+fork()。现在，子进程继承了父进程的文件描述符表，因此子进程也拥有了这对指向同一个管道的
+fd[0] 和 fd[1]。</p></li>
+<li><p>关闭不用的描述符：这是至关重要的一步，为了建立单向数据流。假设我们想让父进程写，子进程读：</p></li>
 </ol>
 <ul>
-<li><p>父进程：它只负责写，所以应该在父进程中使用下列指令关闭它的读端：close(fd[0]);</p>
-</li>
-<li><p>子进程：它只负责读，所以应该在子进程中使用下列指令关闭它的写端：close(fd[1]);</p>
-</li>
+<li><p>父进程：它只负责写，所以应该在父进程中使用下列指令关闭它的读端：close(fd[0]);</p></li>
+<li><p>子进程：它只负责读，所以应该在子进程中使用下列指令关闭它的写端：close(fd[1]);</p></li>
 </ul>
-<p>关闭不需要的一端不仅使得功能清晰, 而且也明确了结束信号 (EOF)：读操作在管道为空时会阻塞。只有当所有指向管道写端的描述符都关闭后，读端再次读取时才会收到 EOF (End-Of-File，返回值 0)，从而知道数据已经全部发送完毕。如果子进程不关闭写端 fd[1]，那么它在读完所有数据后会永远阻塞，因为它自己还持有一个“可能写入”的端口。</p>
-<ol start="4">
+<p>关闭不需要的一端不仅使得功能清晰, 而且也明确了结束信号
+(EOF)：读操作在管道为空时会阻塞。只有当所有指向管道写端的描述符都关闭后，读端再次读取时才会收到
+EOF (End-Of-File，返回值
+0)，从而知道数据已经全部发送完毕。如果子进程不关闭写端
+fd[1]，那么它在读完所有数据后会永远阻塞，因为它自己还持有一个“可能写入”的端口。</p>
+<ol start="4" type="1">
 <li>通信：</li>
 </ol>
 <ul>
-<li><p>父进程通过 write(fd[1], …) 写入数据。</p>
-</li>
-<li><p>子进程通过 read(fd[0], …) 读取数据。</p>
-</li>
+<li><p>父进程通过 write(fd[1], …) 写入数据。</p></li>
+<li><p>子进程通过 read(fd[0], …) 读取数据。</p></li>
 </ul>
-<p>这个模型正是 Shell 中 | 操作符的实现原理。例如 ls -l | grep .txt，ls 进程的标准输出被重定向到管道的写端，grep 进程的标准输入被重定向到管道的读端。</p>
-<h3 id="管道的类型"><a href="#管道的类型" class="headerlink" title="管道的类型"></a>管道的类型</h3><p>匿名管道 (Anonymous Pipe)：由 pipe() 系统调用创建。</p>
+<p>这个模型正是 Shell 中 | 操作符的实现原理。例如 ls -l | grep .txt，ls
+进程的标准输出被重定向到管道的写端，grep
+进程的标准输入被重定向到管道的读端。</p>
+<h3 id="管道的类型">管道的类型</h3>
+<p>匿名管道 (Anonymous Pipe)：由 pipe() 系统调用创建。</p>
 <ul>
-<li><p>特点：没有文件名，只能用于有亲缘关系（通常是父子）的进程间通信。它们随着进程的结束而消失。</p>
-</li>
-<li><p>应用：Shell 中的 |。</p>
-</li>
+<li><p>特点：没有文件名，只能用于有亲缘关系（通常是父子）的进程间通信。它们随着进程的结束而消失。</p></li>
+<li><p>应用：Shell 中的 |。</p></li>
 </ul>
 <p>命名管道 (Named Pipe / FIFO)：由 mkfifo() 函数创建。</p>
 <ul>
-<li><p>特点：在文件系统中拥有一个可见的、特殊的文件名。这使得任何两个不相关的进程都可以通过打开这个特殊文件来进行通信。</p>
-</li>
-<li><p>应用：用于一些需要在不同服务程序之间稳定交换数据的场景。</p>
-</li>
+<li><p>特点：在文件系统中拥有一个可见的、特殊的文件名。这使得任何两个不相关的进程都可以通过打开这个特殊文件来进行通信。</p></li>
+<li><p>应用：用于一些需要在不同服务程序之间稳定交换数据的场景。</p></li>
 </ul>
-<h2 id="终端和Shell"><a href="#终端和Shell" class="headerlink" title="终端和Shell"></a>终端和Shell</h2><h3 id="终端和伪终端"><a href="#终端和伪终端" class="headerlink" title="终端和伪终端"></a>终端和伪终端</h3><p>在计算机早期（上世纪 60-70 年代），计算机主机非常昂贵且巨大，通常锁在专门的机房里。人们不是一人一台电脑，而是通过一种<strong>硬件设备</strong>来连接和使用主机。这种设备就是终端 (Terminal)。</p>
-<p>它的本质就是一个纯粹的<strong>输入/输出设备</strong>, 通常就是一个键盘和一个屏幕（早期甚至是类似打字机的纸张打印输出设备）。它本身几乎没有计算能力。它的唯一工作就是把你从键盘敲入的字符，通过一根串行电缆<strong>发送</strong>给计算机主机; 同时<strong>接收</strong>从主机返回的字符，然后把它们显示在屏幕上。</p>
-<p>你可以把它想象成一个纯粹的“传话筒”和“显示板”。它不理解你输入的 ls 是什么意思，它只负责把这两个字母传过去，再把主机返回的文件名列表显示出来。这种硬件设备也被称为 TTY (Teletypewriter, 电传打字机) 的衍生品。</p>
-<p>随着技术发展，个人计算机普及了，我们不再需要一个独立的物理终端硬件。我们现在用的是功能强大的个人电脑，有图形用户界面 (GUI)。因此当需要与计算机系统交互时, 我们通常会使用一个终端模拟器 (Terminal Emulator)或者说伪终端(Pseudo-Terminal, PTY), 也就是双击打开的黑色命令行窗口。它的工作就是用软件来模拟过去那种硬件的行为。</p>
+<h2 id="终端和shell">终端和Shell</h2>
+<h3 id="终端和伪终端">终端和伪终端</h3>
+<p>在计算机早期（上世纪 60-70
+年代），计算机主机非常昂贵且巨大，通常锁在专门的机房里。人们不是一人一台电脑，而是通过一种<strong>硬件设备</strong>来连接和使用主机。这种设备就是终端
+(Terminal)。</p>
+<p>它的本质就是一个纯粹的<strong>输入/输出设备</strong>,
+通常就是一个键盘和一个屏幕（早期甚至是类似打字机的纸张打印输出设备）。它本身几乎没有计算能力。它的唯一工作就是把你从键盘敲入的字符，通过一根串行电缆<strong>发送</strong>给计算机主机;
+同时<strong>接收</strong>从主机返回的字符，然后把它们显示在屏幕上。</p>
+<p>你可以把它想象成一个纯粹的“传话筒”和“显示板”。它不理解你输入的 ls
+是什么意思，它只负责把这两个字母传过去，再把主机返回的文件名列表显示出来。这种硬件设备也被称为
+TTY (Teletypewriter, 电传打字机) 的衍生品。</p>
+<p>随着技术发展，个人计算机普及了，我们不再需要一个独立的物理终端硬件。我们现在用的是功能强大的个人电脑，有图形用户界面
+(GUI)。因此当需要与计算机系统交互时, 我们通常会使用一个终端模拟器
+(Terminal Emulator)或者说伪终端(Pseudo-Terminal, PTY),
+也就是双击打开的黑色命令行窗口。它的工作就是用软件来模拟过去那种硬件的行为。</p>
 <p>所以，“伪”就伪在：</p>
 <ul>
-<li><p>它不是硬件，而是软件。</p>
-</li>
-<li><p>它在软件层面模拟了一个物理终端的行为和接口。</p>
-</li>
+<li><p>它不是硬件，而是软件。</p></li>
+<li><p>它在软件层面模拟了一个物理终端的行为和接口。</p></li>
 </ul>
-<p>从 Shell的角度看，它感觉自己连接的从设备 (/dev/pts/N) 和过去连接一个物理终端设备 (/dev/ttyS0) 没什么两样。正是这种成功的“伪装”，让所有为传统终端设计的命令行程序（几乎是所有）都能在新时代的图形化窗口中无缝运行。</p>
-<h3 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h3><p>而Shell, 字面意思是“外壳”。这个名字非常形象，因为它就是包裹在内核这个核心之外的一层，为用户提供了一个与内核交互的界面。</p>
-<p>更详细一点, Shell 是一个运行在用户空间的、作为<strong>命令解释器</strong>的应用程序。它是<strong>用户通过命令行与操作系统内核进行交互的主要接口</strong>。它接收你的文本命令，将其翻译成内核可以理解的请求（系统调用），然后将内核返回的结果显示给你。它既是强大的交互工具，也是一个功能完备的脚本编程环境。</p>
+<p>从 Shell的角度看，它感觉自己连接的从设备 (/dev/pts/N)
+和过去连接一个物理终端设备 (/dev/ttyS0)
+没什么两样。正是这种成功的“伪装”，让所有为传统终端设计的命令行程序（几乎是所有）都能在新时代的图形化窗口中无缝运行。</p>
+<h3 id="shell">Shell</h3>
+<p>而Shell,
+字面意思是“外壳”。这个名字非常形象，因为它就是包裹在内核这个核心之外的一层，为用户提供了一个与内核交互的界面。</p>
+<p>更详细一点, Shell
+是一个运行在用户空间的、作为<strong>命令解释器</strong>的应用程序。它是<strong>用户通过命令行与操作系统内核进行交互的主要接口</strong>。它接收你的文本命令，将其翻译成内核可以理解的请求（系统调用），然后将内核返回的结果显示给你。它既是强大的交互工具，也是一个功能完备的脚本编程环境。</p>
 <blockquote>
-<p>类比python(.py), 是一门解释性语言, 通过python.exe这个解释器来解释执行;<br>同样, shell(.sh)也是一门解释性语言, 通过shell解释器(例如bash, fish等)来解释执行, 将文本命令翻译为系统调用</p>
+<p>类比python(.py), 是一门解释性语言,
+通过python.exe这个解释器来解释执行; 同样, shell(.sh)也是一门解释性语言,
+通过shell解释器(例如bash, fish等)来解释执行,
+将文本命令翻译为系统调用</p>
 </blockquote>
-<h3 id="作为编程语言的定位与特点"><a href="#作为编程语言的定位与特点" class="headerlink" title="作为编程语言的定位与特点"></a>作为编程语言的定位与特点</h3><p>虽然 Shell 是一种编程语言，但它的设计哲学和应用领域与 C++、Java 或 Python 等通用编程语言（General-Purpose Language）有很大不同。</p>
-<ol>
-<li><p><strong>领域特定</strong>语言（Domain-Specific Language）: Shell 的主要设计目标是<strong>自动化系统管理任务</strong>和<strong>与操作系统交互</strong>。它的“领域”就是操作系统的命令行环境。</p>
-</li>
-<li><p><strong>胶水</strong>语言（Glue Language）: Shell 最强大的能力是作为“胶水”，将操作系统中成百上千个小而专的命令行工具（如 ls, grep, awk, sed, curl）粘合起来，通过**管道（|）<strong>和</strong>重定向（&gt;）**组合成强大的工作流。它的编程模型不是从零开始构建所有逻辑，而是编排和调度其他程序。</p>
-</li>
-<li><p><strong>解释型</strong>语言（Interpreted Language）: Shell 脚本由解释器（如 bash, zsh）逐行读取并执行，<strong>无需预先编译</strong>。这使得开发和测试周期非常快，非常适合快速编写<strong>自动化脚本</strong>。</p>
-</li>
+<h3 id="作为编程语言的定位与特点">作为编程语言的定位与特点</h3>
+<p>虽然 Shell 是一种编程语言，但它的设计哲学和应用领域与 C++、Java 或
+Python 等通用编程语言（General-Purpose Language）有很大不同。</p>
+<ol type="1">
+<li><p><strong>领域特定</strong>语言（Domain-Specific Language）: Shell
+的主要设计目标是<strong>自动化系统管理任务</strong>和<strong>与操作系统交互</strong>。它的“领域”就是操作系统的命令行环境。</p></li>
+<li><p><strong>胶水</strong>语言（Glue Language）: Shell
+最强大的能力是作为“胶水”，将操作系统中成百上千个小而专的命令行工具（如
+ls, grep, awk, sed,
+curl）粘合起来，通过<strong>管道（|）</strong>和<strong>重定向（&gt;）</strong>组合成强大的工作流。它的编程模型不是从零开始构建所有逻辑，而是编排和调度其他程序。</p></li>
+<li><p><strong>解释型</strong>语言（Interpreted Language）: Shell
+脚本由解释器（如 bash,
+zsh）逐行读取并执行，<strong>无需预先编译</strong>。这使得开发和测试周期非常快，非常适合快速编写<strong>自动化脚本</strong>。</p></li>
 </ol>
-<p>不过, 其显著缺点则是数据结构有限和不擅长计算. 原生POSIX标准仅支持字符串和一维数组，处理复杂的数据结构（如哈希表、树、对象）非常笨拙。且对于数学运算，尤其是浮点数运算，支持非常薄弱，通常需要借助 bc 或 awk 等外部工具。</p>
-<h3 id="区别cmd-pwsh与bash"><a href="#区别cmd-pwsh与bash" class="headerlink" title="区别cmd, pwsh与bash"></a>区别cmd, pwsh与bash</h3><p>正如前面所说, Shell 是一个核心概念，它指代命令行解释器（Command Line Interpreter），即为用户提供与操作系统交互接口的程序。基于这一理念，业界诞生了多种具体的 Shell 实现。CMD (Command Prompt)是 Windows 的早期命令解释器, 只是一个简单的、基于文本行的命令接口, 现在已经被更现代化的命令行框架PowerShell替代。bash 则是 GNU 项目的一部分，当下被广泛应用于Unix系统。</p>
-<p>Bash (Bourne Again Shell)</p>
+<p>不过, 其显著缺点则是数据结构有限和不擅长计算.
+原生POSIX标准仅支持字符串和一维数组，处理复杂的数据结构（如哈希表、树、对象）非常笨拙。且对于数学运算，尤其是浮点数运算，支持非常薄弱，通常需要借助
+bc 或 awk 等外部工具。</p>
+<h3 id="区别cmd-pwsh与bash">区别cmd, pwsh与bash</h3>
+<p>正如前面所说, Shell 是一个核心概念，它指代命令行解释器（Command Line
+Interpreter），即为用户提供与操作系统交互接口的程序。基于这一理念，业界诞生了多种具体的
+Shell 实现。CMD (Command Prompt)是 Windows 的早期命令解释器,
+只是一个简单的、基于文本行的命令接口,
+现在已经被更现代化的命令行框架PowerShell替代。bash 则是 GNU
+项目的一部分，当下被广泛应用于Unix系统。</p>
+<p>Bash (Bourne Again Shell) - 定位：类 Unix 系统（Linux,
+macOS）的事实标准 Shell, 是 Unix-like 世界的通用语言。</p>
 <ul>
-<li><p>定位：类 Unix 系统（Linux, macOS）的事实标准 Shell, 是 Unix-like 世界的通用语言。</p>
-</li>
-<li><p>哲学：一切皆文件，一切皆文本流。Bash 的核心优势在于处理纯文本。它通过管道（|）将一个个小而专的命令行工具（grep, awk, sed 等）组合起来，形成强大的文本处理工作流。它是典型的“胶水语言”，用于粘合不同的程序。</p>
-</li>
+<li>哲学：一切皆文件，一切皆文本流。Bash
+的核心优势在于处理纯文本。它通过管道（|）将一个个小而专的命令行工具（grep,
+awk, sed
+等）组合起来，形成强大的文本处理工作流。它是典型的“胶水语言”，用于粘合不同的程序。</li>
 </ul>
-<p>PowerShell</p>
+<p>PowerShell - 定位：Windows
+的现代化、面向对象的自动化框架。(目前已实现Windows, Linux 和 macOS
+的跨平台)</p>
 <ul>
-<li><p>定位：Windows 的现代化、面向对象的自动化框架。(目前已实现Windows, Linux 和 macOS 的跨平台)</p>
-</li>
-<li><p>哲学：一切皆对象（Object）。这是 PowerShell 与前两者最根本的区别。PowerShell 不在命令之间传递无格式的文本流，而是传递结构化的 .NET 对象。这使得它在进行复杂的系统管理和数据操作时，无需进行繁琐的文本解析，可以直接访问对象的属性和方法，更为精准和强大。</p>
-</li>
-<li><p>其简单的语法习惯等兼容Unix/Linux Shell</p>
-</li>
+<li><p>哲学：一切皆对象（Object）。这是 PowerShell
+与前两者最根本的区别。PowerShell
+不在命令之间传递无格式的文本流，而是传递结构化的 .NET
+对象。这使得它在进行复杂的系统管理和数据操作时，无需进行繁琐的文本解析，可以直接访问对象的属性和方法，更为精准和强大。</p></li>
+<li><p>其简单的语法习惯等兼容Unix/Linux Shell</p></li>
 </ul>
-<h2 id="可执行文件"><a href="#可执行文件" class="headerlink" title="可执行文件"></a>可执行文件</h2><p>可执行文件（Executable File）是计算机中的一种特殊文件，它包含了一系列<strong>可以直接被操作系统加载并由CPU执行的机器指令</strong>。简单来说，它是程序的最终形态，可以独立运行，不需要其他辅助工具（如编译器或解释器）的帮助。</p>
+<h2 id="可执行文件">可执行文件</h2>
+<p>可执行文件（Executable
+File）是计算机中的一种特殊文件，它包含了一系列<strong>可以直接被操作系统加载并由CPU执行的机器指令</strong>。简单来说，它是程序的最终形态，可以独立运行，不需要其他辅助工具（如编译器或解释器）的帮助。</p>
 <blockquote>
 <p>可执行文件是一个描述状态机初始状态的数据结构 (字节序列)</p>
 </blockquote>
-<p>例如，在 Windows 系统上，你双击打开一个 .exe 文件，在 Linux 系统上，你在终端输入 ls 或 ./a.out，你所操作的这些文件都是可执行文件。</p>
-<h3 id="生成过程"><a href="#生成过程" class="headerlink" title="生成过程"></a>生成过程</h3><p>一个可执行文件是从人类可读的源代码到机器可读的二进制指令的复杂转换过程的终点。这个过程通常包括以下几个关键步骤：</p>
-<ol>
-<li><p>编写源代码：程序员用 C、C++、Java 等高级语言编写程序代码。</p>
-</li>
-<li><p>编译（Compilation）：编译器将源代码文件（如 .c 文件）翻译成目标文件（Object File），通常是二进制格式。这个阶段会进行语法检查，并将高级代码转换为汇编代码，再转换为机器指令，但此时的指令地址还不是最终地址，且无法独立运行。</p>
-</li>
-<li><p>链接（Linking）：链接器将一个或多个目标文件，以及程序所需的库文件（如标准库），组合成一个完整的可执行文件。</p>
-</li>
+<p>例如，在 Windows 系统上，你双击打开一个 .exe 文件，在 Linux
+系统上，你在终端输入 ls 或
+./a.out，你所操作的这些文件都是可执行文件。</p>
+<h3 id="生成过程">生成过程</h3>
+<p>一个可执行文件是从人类可读的源代码到机器可读的二进制指令的复杂转换过程的终点。这个过程通常包括以下几个关键步骤：</p>
+<ol type="1">
+<li><p>编写源代码：程序员用 C、C++、Java
+等高级语言编写程序代码。</p></li>
+<li><p>编译（Compilation）：编译器将源代码文件（如 .c
+文件）翻译成目标文件（Object
+File），通常是二进制格式。这个阶段会进行语法检查，并将高级代码转换为汇编代码，再转换为机器指令，但此时的指令地址还不是最终地址，且无法独立运行。</p></li>
+<li><p>链接（Linking）：链接器将一个或多个目标文件，以及程序所需的库文件（如标准库），组合成一个完整的可执行文件。</p></li>
 </ol>
 
 		</div>
@@ -1073,12 +1122,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/06/28/lang/python/yield/">
+				<a class="prev" rel="prev" href="/2025/06/28/tools/docker/docker/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">yield</span>
+						<span class="post-nav-title-item truncate max-w-48">Docker介绍及应用</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -1110,7 +1159,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">操作系统对象</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-text">文件描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%B1%82%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84"><span class="nav-text">三层核心结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fork-%E5%92%8C-dup-%E5%AF%B9%E4%BA%8Eoffset%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-text">fork() 和 dup() 对于offset的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mount-%E6%8C%82%E8%BD%BD"><span class="nav-text">mount (挂载)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pipe-%E7%AE%A1%E9%81%93"><span class="nav-text">pipe (管道)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%86%85%E9%83%A8%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">管道的内部工作机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E7%BB%8F%E5%85%B8%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%BC%8F"><span class="nav-text">管道的经典使用模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">管道的类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E5%92%8CShell"><span class="nav-text">终端和Shell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E5%92%8C%E4%BC%AA%E7%BB%88%E7%AB%AF"><span class="nav-text">终端和伪终端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell"><span class="nav-text">Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AE%9A%E4%BD%8D%E4%B8%8E%E7%89%B9%E7%82%B9"><span class="nav-text">作为编程语言的定位与特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%ABcmd-pwsh%E4%B8%8Ebash"><span class="nav-text">区别cmd, pwsh与bash</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-text">可执行文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B"><span class="nav-text">生成过程</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-text">文件描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%B1%82%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84"><span class="nav-text">三层核心结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fork-%E5%92%8C-dup-%E5%AF%B9%E4%BA%8Eoffset%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-text">fork() 和 dup()
+对于offset的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mount-%E6%8C%82%E8%BD%BD"><span class="nav-text">mount (挂载)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pipe-%E7%AE%A1%E9%81%93"><span class="nav-text">pipe (管道)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%86%85%E9%83%A8%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">管道的内部工作机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E7%BB%8F%E5%85%B8%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%BC%8F"><span class="nav-text">管道的经典使用模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">管道的类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E5%92%8Cshell"><span class="nav-text">终端和Shell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E5%92%8C%E4%BC%AA%E7%BB%88%E7%AB%AF"><span class="nav-text">终端和伪终端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shell"><span class="nav-text">Shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E4%B8%BA%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AE%9A%E4%BD%8D%E4%B8%8E%E7%89%B9%E7%82%B9"><span class="nav-text">作为编程语言的定位与特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%ABcmd-pwsh%E4%B8%8Ebash"><span class="nav-text">区别cmd, pwsh与bash</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-text">可执行文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B"><span class="nav-text">生成过程</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1139,11 +1189,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

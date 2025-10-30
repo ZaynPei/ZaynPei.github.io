@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -828,8 +828,17 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="Linux-目录结构"><a href="#Linux-目录结构" class="headerlink" title="Linux 目录结构"></a>Linux 目录结构</h2><p>与 Windows 使用多个盘符（C:、D:）不同，Linux 采用单一的树状目录结构。整个文件系统从一个根目录 / 开始，所有其他文件和目录都挂载在这个根目录下。这个结构遵循文件系统层次化标准 (FHS)。</p>
+			<h2 id="linux-目录结构">Linux 目录结构</h2>
+<p>与 Windows 使用多个盘符（C:、D:）不同，Linux
+采用单一的树状目录结构。整个文件系统从一个根目录 /
+开始，所有其他文件和目录都挂载在这个根目录下。这个结构遵循文件系统层次化标准
+(FHS)。</p>
 <table>
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 76%">
+</colgroup>
 <thead>
 <tr>
 <th>目录</th>
@@ -837,7 +846,8 @@ mjx-container[display="true"] + br {
 <th>功能说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>/</td>
 <td>Root</td>
 <td>根目录，整个文件系统的起点，所有目录的父目录。</td>
@@ -850,7 +860,8 @@ mjx-container[display="true"] + br {
 <tr>
 <td>/sbin</td>
 <td>System Binaries</td>
-<td>存放只有系统管理员（root用户）才能使用的系统管理命令，如 reboot, fdisk。</td>
+<td>存放只有系统管理员（root用户）才能使用的系统管理命令，如 reboot,
+fdisk。</td>
 </tr>
 <tr>
 <td>/etc</td>
@@ -860,7 +871,8 @@ mjx-container[display="true"] + br {
 <tr>
 <td>/home</td>
 <td>Home</td>
-<td>用户主目录。每个普通用户在这里都有一个自己的文件夹，如 /home/ziyipei。</td>
+<td>用户主目录。每个普通用户在这里都有一个自己的文件夹，如
+/home/ziyipei。</td>
 </tr>
 <tr>
 <td>/root</td>
@@ -870,12 +882,14 @@ mjx-container[display="true"] + br {
 <tr>
 <td>/dev</td>
 <td>Devices</td>
-<td>存放设备文件。在 Linux 中，所有硬件设备（如硬盘、键盘）都以文件的形式存在于此。</td>
+<td>存放设备文件。在 Linux
+中，所有硬件设备（如硬盘、键盘）都以文件的形式存在于此。</td>
 </tr>
 <tr>
 <td>/var</td>
 <td>Variable</td>
-<td>存放经常变化的文件，如日志文件 (/var/log)、缓存文件 (/var/cache)。</td>
+<td>存放经常变化的文件，如日志文件 (/var/log)、缓存文件
+(/var/cache)。</td>
 </tr>
 <tr>
 <td>/tmp</td>
@@ -890,7 +904,8 @@ mjx-container[display="true"] + br {
 <tr>
 <td>/boot</td>
 <td>Boot</td>
-<td>存放启动 Linux 系统所需的文件，包括 Linux 内核本身和引导加载程序 (GRUB)。</td>
+<td>存放启动 Linux 系统所需的文件，包括 Linux 内核本身和引导加载程序
+(GRUB)。</td>
 </tr>
 <tr>
 <td>/lib</td>
@@ -900,16 +915,25 @@ mjx-container[display="true"] + br {
 <tr>
 <td>/opt</td>
 <td>Optional</td>
-<td>用于存放可选的第三方软件包，比如手动安装的商业软件（如 Google Chrome）。</td>
+<td>用于存放可选的第三方软件包，比如手动安装的商业软件（如 Google
+Chrome）。</td>
 </tr>
 <tr>
 <td>/mnt, /media</td>
 <td>Mount</td>
 <td>用于临时挂载外部设备，如 U 盘、移动硬盘、光驱等。</td>
 </tr>
-</tbody></table>
-<h2 id="常见命令汇总"><a href="#常见命令汇总" class="headerlink" title="常见命令汇总"></a>常见命令汇总</h2><p>Linux 的强大之处在于其命令行界面 (CLI)。命令的基本格式为：command [options] [arguments]。</p>
+</tbody>
+</table>
+<h2 id="常见命令汇总">常见命令汇总</h2>
+<p>Linux 的强大之处在于其命令行界面 (CLI)。命令的基本格式为：command
+[options] [arguments]。</p>
 <table>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 36%">
+<col style="width: 45%">
+</colgroup>
 <thead>
 <tr>
 <th>命令</th>
@@ -917,7 +941,8 @@ mjx-container[display="true"] + br {
 <th>示例</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>ls</td>
 <td>列出目录内容</td>
 <td>ls -l（长格式显示），ls -a（显示隐藏文件）</td>
@@ -987,15 +1012,22 @@ mjx-container[display="true"] + br {
 <td>查看历史命令及执行指定历史命令</td>
 <td>history，!序号（执行历史指令的指定序号的一条）</td>
 </tr>
-</tbody></table>
-<h2 id="常用终端快捷键"><a href="#常用终端快捷键" class="headerlink" title="常用终端快捷键"></a>常用终端快捷键</h2><table>
+</tbody>
+</table>
+<h2 id="常用终端快捷键">常用终端快捷键</h2>
+<table>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 78%">
+</colgroup>
 <thead>
 <tr>
 <th>快捷键</th>
 <th>功能说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Tab</td>
 <td>自动补全命令、文件名或目录名（最重要、最常用）。</td>
 </tr>
@@ -1039,110 +1071,142 @@ mjx-container[display="true"] + br {
 <td>Ctrl + K</td>
 <td>清除从光标位置到行尾的所有字符。</td>
 </tr>
-</tbody></table>
-<h2 id="Linux内核"><a href="#Linux内核" class="headerlink" title="Linux内核"></a>Linux内核</h2><p>Linux 内核是操作系统的核心，它是一个宏内核（Monolithic Kernel）架构的实现。其根本职责是作为硬件资源的唯一仲裁者和软件服务的提供者，为上层用户空间应用程序提供一个统一、抽象和安全的执行环境。</p>
+</tbody>
+</table>
+<h2 id="linux内核">Linux内核</h2>
+<p>Linux 内核是操作系统的核心，它是一个宏内核（Monolithic
+Kernel）架构的实现。其根本职责是作为硬件资源的唯一仲裁者和软件服务的提供者，为上层用户空间应用程序提供一个统一、抽象和安全的执行环境。</p>
 <p>内核的所有功能可以被逻辑地划分为如下几个相互协作的核心子系统。</p>
-<h3 id="进程管理-Process-Management"><a href="#进程管理-Process-Management" class="headerlink" title="进程管理 (Process Management)"></a>进程管理 (Process Management)</h3><p>进程管理子系统的核心目标是高效且公平地在多个并发任务之间共享 CPU 资源。</p>
+<h3 id="进程管理-process-management">进程管理 (Process Management)</h3>
+<p>进程管理子系统的核心目标是高效且公平地在多个并发任务之间共享 CPU
+资源。</p>
 <ul>
 <li><p>核心抽象与数据结构</p>
 <ul>
-<li><p>进程 (Process)：不仅仅是一个“运行中的程序”，而是一个执行上下文的完整体现。在内核中，每个进程由一个 task_struct 结构体描述，它包含了进程状态、调度信息、内存映射、打开的文件描述符、凭证等所有必要信息。</p>
-</li>
-<li><p>线程 (Thread)：是 CPU 调度的基本单位。Linux 内核实际上没有严格区分进程和线程，它们都由 task_struct 表示。通过 clone() 系统调用创建线程时，可以使其与父进程共享地址空间、文件描述符等资源，因此线程也被称为“轻量级进程”。</p>
-</li>
-</ul>
-</li>
-<li><p>进程调度器 (Process Scheduler)<br>调度器是决定下一个在 CPU 上运行哪个任务的逻辑核心。主要的策略有下面三种:</p>
+<li><p>进程
+(Process)：不仅仅是一个“运行中的程序”，而是一个执行上下文的完整体现。在内核中，每个进程由一个
+task_struct
+结构体描述，它包含了进程状态、调度信息、内存映射、打开的文件描述符、凭证等所有必要信息。</p></li>
+<li><p>线程 (Thread)：是 CPU 调度的基本单位。Linux
+内核实际上没有严格区分进程和线程，它们都由 task_struct 表示。通过
+clone()
+系统调用创建线程时，可以使其与父进程共享地址空间、文件描述符等资源，因此线程也被称为“轻量级进程”。</p></li>
+</ul></li>
+<li><p>进程调度器 (Process Scheduler) 调度器是决定下一个在 CPU
+上运行哪个任务的逻辑核心。主要的策略有下面三种:</p>
 <ul>
-<li><p>SCHED_OTHER (或 SCHED_NORMAL): 这是为普通分时进程设计的默认策略。在现代 Linux 内核中，它由完全公平调度器 (Completely Fair Scheduler, CFS) 实现。</p>
+<li><p>SCHED_OTHER (或 SCHED_NORMAL):
+这是为普通分时进程设计的默认策略。在现代 Linux
+内核中，它由完全公平调度器 (Completely Fair Scheduler, CFS) 实现。</p>
 <ul>
-<li>CFS 核心思想：它摒弃了传统的时间片（timeslice）概念，致力于为每个任务提供“理想的、无限精确的多任务 CPU”。它使用一个红黑树 (Red-Black Tree) 来组织所有可运行的任务，每次总是选择虚拟运行时间（vruntime）最小的任务来执行，从而达到近乎完美的公平性。</li>
+<li>CFS
+核心思想：它摒弃了传统的时间片（timeslice）概念，致力于为每个任务提供“理想的、无限精确的多任务
+CPU”。它使用一个红黑树 (Red-Black Tree)
+来组织所有可运行的任务，每次总是选择虚拟运行时间（vruntime）最小的任务来执行，从而达到近乎完美的公平性。</li>
+</ul></li>
+<li><p>SCHED_FIFO (First-In,
+First-Out)：这是一种实时（Real-time）调度策略。它没有时间片。一旦一个
+FIFO 任务获得 CPU，它会一直运行，直到它主动阻塞（如等待 I/O）、主动调用
+sched_yield() 放弃 CPU，或者被一个更高优先级的实时任务抢占。</p></li>
+<li><p>SCHED_RR (Round-Robin)：这是另一种实时调度策略。它与 FIFO
+类似，但增加了时间片的概念。当一个 RR
+任务的时间片用完后，如果同优先级队列中还有其他任务，它将被移动到队列末尾，让其他任务有机会运行。</p></li>
+</ul></li>
 </ul>
-</li>
-<li><p>SCHED_FIFO (First-In, First-Out)：这是一种实时（Real-time）调度策略。它没有时间片。一旦一个 FIFO 任务获得 CPU，它会一直运行，直到它主动阻塞（如等待 I/O）、主动调用 sched_yield() 放弃 CPU，或者被一个更高优先级的实时任务抢占。</p>
-</li>
-<li><p>SCHED_RR (Round-Robin)：这是另一种实时调度策略。它与 FIFO 类似，但增加了时间片的概念。当一个 RR 任务的时间片用完后，如果同优先级队列中还有其他任务，它将被移动到队列末尾，让其他任务有机会运行。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="内存管理-Memory-Management"><a href="#内存管理-Memory-Management" class="headerlink" title="内存管理 (Memory Management)"></a>内存管理 (Memory Management)</h3><p>内存管理子系统的目标是高效、安全地管理系统的物理内存（RAM），并为每个进程提供独立的虚拟地址空间。其核心机制与组件如下：</p>
+<h3 id="内存管理-memory-management">内存管理 (Memory Management)</h3>
+<p>内存管理子系统的目标是高效、安全地管理系统的物理内存（RAM），并为每个进程提供独立的虚拟地址空间。其核心机制与组件如下：</p>
 <ul>
-<li><p>虚拟内存 (Virtual Memory)：这是现代操作系统的基石。内核为每个进程提供一个巨大、私有且连续的虚拟地址空间（例如，在 64 位系统上是 256TB）。这带来了几个好处：</p>
+<li><p>虚拟内存 (Virtual
+Memory)：这是现代操作系统的基石。内核为每个进程提供一个巨大、私有且连续的虚拟地址空间（例如，在
+64 位系统上是 256TB）。这带来了几个好处：</p>
 <ul>
-<li><p>进程隔离：一个进程的内存访问不会干扰到其他进程或内核。</p>
-</li>
-<li><p>简化编程：程序员无需关心物理内存的碎片化和具体位置。</p>
-</li>
-<li><p>高效利用物理内存：通过按需分页 (Demand Paging)，只有在进程实际访问某块内存时，内核才会将其从磁盘加载到物理内存中。</p>
-</li>
-</ul>
-</li>
-<li><p>内存管理单元 (MMU)：这是一个硬件组件，负责将进程访问的虚拟地址实时地翻译成物理地址。内核的主要工作就是设置和管理 MMU 使用的页表 (Page Tables)。</p>
-</li>
+<li><p>进程隔离：一个进程的内存访问不会干扰到其他进程或内核。</p></li>
+<li><p>简化编程：程序员无需关心物理内存的碎片化和具体位置。</p></li>
+<li><p>高效利用物理内存：通过按需分页 (Demand
+Paging)，只有在进程实际访问某块内存时，内核才会将其从磁盘加载到物理内存中。</p></li>
+</ul></li>
+<li><p>内存管理单元
+(MMU)：这是一个硬件组件，负责将进程访问的虚拟地址实时地翻译成物理地址。内核的主要工作就是设置和管理
+MMU 使用的页表 (Page Tables)。</p></li>
 <li><p>物理内存分配器：</p>
 <ul>
-<li><p>伙伴系统 (Buddy System)：这是内核管理物理页帧（Page Frame）的核心算法。它将所有空闲的物理内存页组织成 2 的幂次方大小的块（1, 2, 4, 8, … 页），能够高效地分配和回收连续的物理内存块，但容易产生内部碎片。</p>
-</li>
-<li><p>Slab 分配器 (Slab Allocator)：它构建在伙伴系统之上，用于解决小对象的内存分配问题。Slab 维护着常用内核对象（如 inode, dentry, task_struct）的缓存池，避免了反复初始化和销毁对象的开销，并大大减少了内存碎片。</p>
-</li>
+<li><p>伙伴系统 (Buddy System)：这是内核管理物理页帧（Page
+Frame）的核心算法。它将所有空闲的物理内存页组织成 2 的幂次方大小的块（1,
+2, 4, 8, …
+页），能够高效地分配和回收连续的物理内存块，但容易产生内部碎片。</p></li>
+<li><p>Slab 分配器 (Slab
+Allocator)：它构建在伙伴系统之上，用于解决小对象的内存分配问题。Slab
+维护着常用内核对象（如 inode, dentry,
+task_struct）的缓存池，避免了反复初始化和销毁对象的开销，并大大减少了内存碎片。</p></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="虚拟文件系统-Virtual-File-System-VFS"><a href="#虚拟文件系统-Virtual-File-System-VFS" class="headerlink" title="虚拟文件系统 (Virtual File System, VFS)"></a>虚拟文件系统 (Virtual File System, VFS)</h3><p>VFS 是一个至关重要的抽象层，其目标是为用户空间程序提供一个统一、标准的文件操作接口，屏蔽底层具体文件系统的实现差异。</p>
+<h3 id="虚拟文件系统-virtual-file-system-vfs">虚拟文件系统 (Virtual File
+System, VFS)</h3>
+<p>VFS
+是一个至关重要的抽象层，其目标是为用户空间程序提供一个统一、标准的文件操作接口，屏蔽底层具体文件系统的实现差异。</p>
 <p>VFS 定义了一个通用文件模型，主要由四个核心对象组成：</p>
 <ul>
-<li><p>超级块 (Superblock)：代表一个已挂载的文件系统实例，存储该文件系统的元信息（如文件系统类型、块大小等）。</p>
-</li>
-<li><p>索引节点 (Inode)：代表一个具体的文件或目录。它包含了文件的所有元数据，如权限、所有者、大小、时间戳以及指向数据块的指针，但不包含文件名。</p>
-</li>
-<li><p>目录项 (Dentry)：代表一个目录条目，它将一个文件名与一个 Inode 关联起来，形成文件路径。Dentry 缓存（dcache）极大地加速了路径查找过程。</p>
-</li>
-<li><p>文件对象 (File Object)：代表一个由进程打开的文件。它存储了文件指针（读写位置）、访问模式等与特定进程相关的信息。</p>
-</li>
+<li><p>超级块
+(Superblock)：代表一个已挂载的文件系统实例，存储该文件系统的元信息（如文件系统类型、块大小等）。</p></li>
+<li><p>索引节点
+(Inode)：代表一个具体的文件或目录。它包含了文件的所有元数据，如权限、所有者、大小、时间戳以及指向数据块的指针，但不包含文件名。</p></li>
+<li><p>目录项 (Dentry)：代表一个目录条目，它将一个文件名与一个 Inode
+关联起来，形成文件路径。Dentry
+缓存（dcache）极大地加速了路径查找过程。</p></li>
+<li><p>文件对象 (File
+Object)：代表一个由进程打开的文件。它存储了文件指针（读写位置）、访问模式等与特定进程相关的信息。</p></li>
 </ul>
-<p>工作机制：当一个应用程序执行 open(“/path/to/file”) 系统调用时，VFS 会利用 dentry 缓存解析路径，找到每一级目录和最终文件的 inode，然后创建一个文件对象并返回一个文件描述符给应用程序。所有后续的 read(), write() 等操作都会通过这个文件对象，由 VFS 路由到具体文件系统（如 ext4, XFS, NFS）提供的实现函数上。</p>
-<h3 id="网络协议栈-Networking-Stack"><a href="#网络协议栈-Networking-Stack" class="headerlink" title="网络协议栈 (Networking Stack)"></a>网络协议栈 (Networking Stack)</h3><p>网络协议栈的目标是实现标准化的网络协议，使得 Linux 系统能够与世界各地的其他计算机进行通信。其核心架构与数据结构为：</p>
+<p>工作机制：当一个应用程序执行 open(“/path/to/file”) 系统调用时，VFS
+会利用 dentry 缓存解析路径，找到每一级目录和最终文件的
+inode，然后创建一个文件对象并返回一个文件描述符给应用程序。所有后续的
+read(), write() 等操作都会通过这个文件对象，由 VFS
+路由到具体文件系统（如 ext4, XFS, NFS）提供的实现函数上。</p>
+<h3 id="网络协议栈-networking-stack">网络协议栈 (Networking Stack)</h3>
+<p>网络协议栈的目标是实现标准化的网络协议，使得 Linux
+系统能够与世界各地的其他计算机进行通信。其核心架构与数据结构为：</p>
 <ul>
-<li><p>BSD 套接字接口 (BSD Socket API)：为应用程序提供了一套标准的网络编程接口（如 socket(), bind(), connect() 等），使其可以忽略底层网络实现的复杂性。</p>
-</li>
-<li><p>分层架构：Linux 网络栈在逻辑上严格分层，与 TCP/IP 模型类似，主要包括：</p>
+<li><p>BSD 套接字接口 (BSD Socket
+API)：为应用程序提供了一套标准的网络编程接口（如 socket(), bind(),
+connect() 等），使其可以忽略底层网络实现的复杂性。</p></li>
+<li><p>分层架构：Linux 网络栈在逻辑上严格分层，与 TCP/IP
+模型类似，主要包括：</p>
 <ul>
-<li><p>系统调用接口层：将用户空间的网络操作转换为内核操作。</p>
-</li>
-<li><p>协议无关层：如 Socket 层。</p>
-</li>
-<li><p>传输层：实现 TCP 和 UDP 协议。</p>
-</li>
-<li><p>网络层：实现 IP 协议，负责路由和数据包转发。</p>
-</li>
-<li><p>链路层/设备驱动层：与物理网络硬件（如网卡）交互。</p>
-</li>
+<li><p>系统调用接口层：将用户空间的网络操作转换为内核操作。</p></li>
+<li><p>协议无关层：如 Socket 层。</p></li>
+<li><p>传输层：实现 TCP 和 UDP 协议。</p></li>
+<li><p>网络层：实现 IP 协议，负责路由和数据包转发。</p></li>
+<li><p>链路层/设备驱动层：与物理网络硬件（如网卡）交互。</p></li>
+</ul></li>
+<li><p>套接字缓冲区 (Socket Buffer,
+sk_buff)：这是网络栈中最核心的数据结构。一个 sk_buff
+代表一个在网络栈中流动的数据包。当数据包从上层向下层传递时，各层协议会将自己的头部（Header）添加到
+sk_buff
+中；反之，当数据包从下层向上层传递时，各层会剥离自己的头部并进行处理。</p></li>
 </ul>
-</li>
-<li><p>套接字缓冲区 (Socket Buffer, sk_buff)：这是网络栈中最核心的数据结构。一个 sk_buff 代表一个在网络栈中流动的数据包。当数据包从上层向下层传递时，各层协议会将自己的头部（Header）添加到 sk_buff 中；反之，当数据包从下层向上层传递时，各层会剥离自己的头部并进行处理。</p>
-</li>
-</ul>
-<h3 id="进程间通信-Inter-Process-Communication-IPC"><a href="#进程间通信-Inter-Process-Communication-IPC" class="headerlink" title="进程间通信 (Inter-Process Communication, IPC)"></a>进程间通信 (Inter-Process Communication, IPC)</h3><p>由于进程之间地址空间是隔离的，IPC 子系统提供了多种机制，允许进程之间进行数据交换和同步。</p>
+<h3 id="进程间通信-inter-process-communication-ipc">进程间通信
+(Inter-Process Communication, IPC)</h3>
+<p>由于进程之间地址空间是隔离的，IPC
+子系统提供了多种机制，允许进程之间进行数据交换和同步。</p>
 <ul>
-<li><p>管道 (Pipes) 和命名管道 (FIFO)：提供半双工的字节流通信，是父子进程或有亲缘关系进程间通信的常用方式。</p>
-</li>
-<li><p>信号 (Signals)：一种异步通知机制，用于向进程发送一个事件发生的信号（如 SIGKILL, SIGTERM）。</p>
-</li>
+<li><p>管道 (Pipes) 和命名管道
+(FIFO)：提供半双工的字节流通信，是父子进程或有亲缘关系进程间通信的常用方式。</p></li>
+<li><p>信号
+(Signals)：一种异步通知机制，用于向进程发送一个事件发生的信号（如
+SIGKILL, SIGTERM）。</p></li>
 <li><p>System V IPC：一组传统的 IPC 机制，包括：</p>
 <ul>
-<li><p>消息队列 (Message Queues)：允许进程以消息的形式进行通信，克服了信号传递信息量少的缺点。</p>
-</li>
-<li><p>信号量 (Semaphores)：一个计数器，用于控制多个进程对共享资源的访问，是经典的同步工具。</p>
-</li>
-<li><p>共享内存 (Shared Memory)：允许两个或多个进程共享同一块物理内存。这是最快的 IPC 方式，因为它避免了内核的数据拷贝。</p>
-</li>
-</ul>
-</li>
-<li><p>POSIX IPC：对 System V IPC 的改进和标准化。</p>
-</li>
-<li><p>套接字 (Sockets)：特别是Unix 域套接字 (Unix Domain Sockets)，它在同一台主机上的进程间通信效率很高，并提供了与网络套接字一致的 API。</p>
-</li>
+<li><p>消息队列 (Message
+Queues)：允许进程以消息的形式进行通信，克服了信号传递信息量少的缺点。</p></li>
+<li><p>信号量
+(Semaphores)：一个计数器，用于控制多个进程对共享资源的访问，是经典的同步工具。</p></li>
+<li><p>共享内存 (Shared
+Memory)：允许两个或多个进程共享同一块物理内存。这是最快的 IPC
+方式，因为它避免了内核的数据拷贝。</p></li>
+</ul></li>
+<li><p>POSIX IPC：对 System V IPC 的改进和标准化。</p></li>
+<li><p>套接字 (Sockets)：特别是Unix 域套接字 (Unix Domain
+Sockets)，它在同一台主机上的进程间通信效率很高，并提供了与网络套接字一致的
+API。</p></li>
 </ul>
 
 		</div>
@@ -1202,7 +1266,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">Linux入门</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-text">Linux 目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB"><span class="nav-text">常见命令汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-text">常用终端快捷键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E5%86%85%E6%A0%B8"><span class="nav-text">Linux内核</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-Process-Management"><span class="nav-text">进程管理 (Process Management)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86-Memory-Management"><span class="nav-text">内存管理 (Memory Management)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-Virtual-File-System-VFS"><span class="nav-text">虚拟文件系统 (Virtual File System, VFS)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E6%A0%88-Networking-Stack"><span class="nav-text">网络协议栈 (Networking Stack)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1-Inter-Process-Communication-IPC"><span class="nav-text">进程间通信 (Inter-Process Communication, IPC)</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-text">Linux 目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB"><span class="nav-text">常见命令汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-text">常用终端快捷键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux%E5%86%85%E6%A0%B8"><span class="nav-text">Linux内核</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-process-management"><span class="nav-text">进程管理 (Process Management)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86-memory-management"><span class="nav-text">内存管理 (Memory Management)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-virtual-file-system-vfs"><span class="nav-text">虚拟文件系统 (Virtual File
+System, VFS)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E6%A0%88-networking-stack"><span class="nav-text">网络协议栈 (Networking Stack)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1-inter-process-communication-ipc"><span class="nav-text">进程间通信
+(Inter-Process Communication, IPC)</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1231,11 +1297,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,82 +833,154 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="复习初始化语法"><a href="#复习初始化语法" class="headerlink" title="复习初始化语法"></a>复习初始化语法</h3><p>在 C++11 中, 进行对象初始化的语法大致可以分为三类:</p>
-<ul>
-<li>使用小括号, 如 <code>int x(10);</code></li>
-<li>使用大括号, 如 <code>int x{10};</code></li>
-<li>使用等号, 如 <code>int x = 10;</code><br>当然, 很多情况下也可以使用一个等号和大括号来初始化对象, 如：<code>int z = { o } ; </code>, 下面的讨论我们将忽略这种”等号加大括号“语法，因为 C++ 通常会把它和只有大括号的语法同样处理。</li>
-</ul>
-<p>容易引起歧义的是, 使用等号来书写初始化语句往往会让 C++新手误以为这里面会发生一次赋值，但实际上却是没有的。我们要明白, 初始化和赋值这两种行为背后调用的是不同的函数：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Widget w1;  <span class="comment">// 调用的是默认构造函数</span></span><br><span class="line">Widget W2 = w1;  <span class="comment">// 不是赋值而是初始化, 调用的是拷贝构造函数</span></span><br><span class="line">w1 = W2;   <span class="comment">// 是赋值, 调用的是拷贝赋值运算符</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="统一初始化"><a href="#统一初始化" class="headerlink" title="统一初始化"></a>统一初始化</h3><p>尽管有了那么多初始化语法，但在 C++98 中却仍然没有办法来表达某些想要进行的初始化。比如，之前是没有办法直接指定 STL 容器在创建时持有N个特定集合的<br>值的(比如持有 1 、3 、5)</p>
-<p>为了着手解除众多的初始化语法带来的困惑，也为了解决这些语法不能覆盖所有初始化场景的问题， C++11 引入了<strong>统一初始化</strong>：单一的、至少从概念上可以用于一切场合的初始化语法。它的基础是<strong>大括号形式</strong>的初始化</p>
-<p>使用大括号来指定<strong>容器</strong>的初始内容是非常简单的：</p>
+			<h3 id="复习初始化语法">复习初始化语法</h3>
+<p>在 C++11 中, 进行对象初始化的语法大致可以分为三类: - 使用小括号, 如
+<code>int x(10);</code> - 使用大括号, 如 <code>int x{10};</code> -
+使用等号, 如 <code>int x = 10;</code> 当然,
+很多情况下也可以使用一个等号和大括号来初始化对象,
+如：<code>int z = { o } ;</code>,
+下面的讨论我们将忽略这种”等号加大括号“语法，因为 C++
+通常会把它和只有大括号的语法同样处理。</p>
+<p>容易引起歧义的是, 使用等号来书写初始化语句往往会让
+C++新手误以为这里面会发生一次赋值，但实际上却是没有的。我们要明白,
+初始化和赋值这两种行为背后调用的是不同的函数： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Widget w1;  <span class="comment">// 调用的是默认构造函数</span></span><br><span class="line">Widget W2 = w1;  <span class="comment">// 不是赋值而是初始化, 调用的是拷贝构造函数</span></span><br><span class="line">w1 = W2;   <span class="comment">// 是赋值, 调用的是拷贝赋值运算符</span></span><br></pre></td></tr></table></figure></div></p>
+<h3 id="统一初始化">统一初始化</h3>
+<p>尽管有了那么多初始化语法，但在 C++98
+中却仍然没有办法来表达某些想要进行的初始化。比如，之前是没有办法直接指定
+STL 容器在创建时持有N个特定集合的 值的(比如持有 1 、3 、5)</p>
+<p>为了着手解除众多的初始化语法带来的困惑，也为了解决这些语法不能覆盖所有初始化场景的问题，
+C++11
+引入了<strong>统一初始化</strong>：单一的、至少从概念上可以用于一切场合的初始化语法。它的基础是<strong>大括号形式</strong>的初始化</p>
+<p>使用大括号来指定<strong>容器</strong>的初始内容是非常简单的：
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std: :vector&lt;<span class="type">int</span>&gt; v{ <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span> }; </span><br><span class="line">std: :vector&lt;<span class="type">int</span>&gt; v2 = { <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span> };  <span class="comment">// 与上述等价</span></span><br></pre></td></tr></table></figure></div>
-<p>大括号同样可以用来为<strong>非静态成员指定默认初始化值</strong>，这项能力（在 C++11 中新增）也可以使用 “=” 的初始化语法，却不能使用小括号：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> { </span><br><span class="line"><span class="keyword">private</span>: </span><br><span class="line">    <span class="type">int</span> x{ <span class="number">0</span> }; </span><br><span class="line">    <span class="type">int</span> y = <span class="number">0</span>; </span><br><span class="line">    <span class="comment">// int z(0) 不可行!</span></span><br><span class="line">}; </span><br></pre></td></tr></table></figure></div>
-
-<p>另一方面, <strong>不可复制的对象</strong>（如 std::atomic 型别的对象，参见条款 40）可以采用大括号和小括号来进行初始化，却不能使用 “=” 来初始化. </p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">int</span>&gt; ai{ <span class="number">0</span> };  <span class="comment">// 可行</span></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">ai2</span><span class="params">(<span class="number">0</span>)</span></span>;  <span class="comment">// 可行</span></span><br><span class="line">std::atomic&lt;<span class="type">int</span>&gt; ai3 = <span class="number">0</span>;  <span class="comment">// 错误</span></span><br></pre></td></tr></table></figure></div>
-
-<p>这么一来，就很容易理解为何大括号初始化被冠以“统一” 之名了。在 C++的各种初始化表达式的写法中，只有大括号<strong>适用所有场合</strong>。</p>
-<h4 id="禁止内建型别之间进行隐式窄化型别转换"><a href="#禁止内建型别之间进行隐式窄化型别转换" class="headerlink" title="禁止内建型别之间进行隐式窄化型别转换"></a>禁止内建型别之间进行隐式窄化型别转换</h4><p>大括号初始化有一项新特性，就是它禁止内建型别之间进行隐式窄化型别转换(narrowing conversion) 。如果大括号内的表达式无法保证能够采用进行初始化的对象来表达，则代码不能通过编译：</p>
+大括号同样可以用来为<strong>非静态成员指定默认初始化值</strong>，这项能力（在
+C++11 中新增）也可以使用 “=” 的初始化语法，却不能使用小括号：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> { </span><br><span class="line"><span class="keyword">private</span>: </span><br><span class="line">    <span class="type">int</span> x{ <span class="number">0</span> }; </span><br><span class="line">    <span class="type">int</span> y = <span class="number">0</span>; </span><br><span class="line">    <span class="comment">// int z(0) 不可行!</span></span><br><span class="line">}; </span><br></pre></td></tr></table></figure></div></p>
+<p>另一方面, <strong>不可复制的对象</strong>（如 std::atomic
+型别的对象，参见条款 40）可以采用大括号和小括号来进行初始化，却不能使用
+“=” 来初始化. <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">int</span>&gt; ai{ <span class="number">0</span> };  <span class="comment">// 可行</span></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">ai2</span><span class="params">(<span class="number">0</span>)</span></span>;  <span class="comment">// 可行</span></span><br><span class="line">std::atomic&lt;<span class="type">int</span>&gt; ai3 = <span class="number">0</span>;  <span class="comment">// 错误</span></span><br></pre></td></tr></table></figure></div></p>
+<p>这么一来，就很容易理解为何大括号初始化被冠以“统一” 之名了。在
+C++的各种初始化表达式的写法中，只有大括号<strong>适用所有场合</strong>。</p>
+<h4 id="禁止内建型别之间进行隐式窄化型别转换">禁止内建型别之间进行隐式窄化型别转换</h4>
+<p>大括号初始化有一项新特性，就是它禁止内建型别之间进行隐式窄化型别转换(narrowing
+conversion)
+。如果大括号内的表达式无法保证能够采用进行初始化的对象来表达，则代码不能通过编译：
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> x, y, z; </span><br><span class="line"><span class="type">int</span> sum{ x + y + z }; <span class="comment">// 错误，double 型别之和在大括号内无法窄化转换为 int 表达</span></span><br></pre></td></tr></table></figure></div>
-<p>而采用小括号和“=”的初始化则不会进行窄化型别转换检查，因为如果那样的话就会破坏太多的遗留代码了：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">sum2</span><span class="params">( x + y + z)</span> </span>;  <span class="comment">// 没问题（表达式的值被截断为 int</span></span><br><span class="line"><span class="type">int</span> sum3 = x + y + z;   <span class="comment">// 同上</span></span><br></pre></td></tr></table></figure></div>
-
-<h4 id="最令人苦恼之解析语法-mostvexing-parse-免疫。"><a href="#最令人苦恼之解析语法-mostvexing-parse-免疫。" class="headerlink" title="最令人苦恼之解析语法 (mostvexing parse) 免疫。"></a>最令人苦恼之解析语法 (mostvexing parse) 免疫。</h4><p>大括号初始化的另一项值得一提的特征是，它对于 C++ 的最令人苦恼之解析语法 (mostvexing parse) 免疫。 C++ 规定：<strong>任何能够解析为声明的都要解析为声明</strong>，而这会带来<strong>副作用</strong>。所谓最令人苦恼之解析语法就是说，程序员本来想要以默认方式构造一个对象，结果却不小心声明了一个函数。这个错误的根本原因在于构造函数调用语法。</p>
+而采用小括号和“=“的初始化则不会进行窄化型别转换检查，因为如果那样的话就会破坏太多的遗留代码了：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">sum2</span><span class="params">( x + y + z)</span> </span>;  <span class="comment">// 没问题（表达式的值被截断为 int</span></span><br><span class="line"><span class="type">int</span> sum3 = x + y + z;   <span class="comment">// 同上</span></span><br></pre></td></tr></table></figure></div></p>
+<h4 id="最令人苦恼之解析语法-mostvexing-parse-免疫">最令人苦恼之解析语法
+(mostvexing parse) 免疫。</h4>
+<p>大括号初始化的另一项值得一提的特征是，它对于 C++
+的最令人苦恼之解析语法 (mostvexing parse) 免疫。 C++
+规定：<strong>任何能够解析为声明的都要解析为声明</strong>，而这会带来<strong>副作用</strong>。所谓最令人苦恼之解析语法就是说，程序员本来想要以默认方式构造一个对象，结果却不小心声明了一个函数。这个错误的根本原因在于构造函数调用语法。</p>
 <p>当你想以传参方式调用构造函数时，可以这样写：<code>widget w1(10);</code></p>
-<p>但如果你试图用对等语法来调用一个没有形参的 Widget 构造函数的话，那结果却变成了声明了一个函数而非对象：<code>Widget w2 ();</code> </p>
+<p>但如果你试图用对等语法来调用一个没有形参的 Widget
+构造函数的话，那结果却变成了声明了一个函数而非对象：<code>Widget w2 ();</code></p>
 <p>这个语句实际上声名了一个名为 w2 、返回widget对象的函数！</p>
 <p>由于函数声明不能使用大括号来指定形参列表，所以使用大括号来完成对象的默认构造没有上面这个问题：<code>widget w3{}; // 调用没有形参的构造函数</code></p>
-<h3 id="大括号的缺陷"><a href="#大括号的缺陷" class="headerlink" title="大括号的缺陷"></a>大括号的缺陷</h3><p>关于大括号初始化，也说了不少了。这种语法可以应用的语境最为宽泛，可以<strong>阻止隐式窄化型别转换</strong>，还对最令人苦恼之<strong>解析语法免疫</strong>。那么，为什么本章的章名不干脆换成“优先选用大括号初始化语法”之类呢？</p>
-<p>大括号初始化的缺陷在于伴随它有时会出现的<strong>意外行为</strong>, 这种行为源于大括号初始化物、std::initializer_list 以及构造函数重载决议之间的纠结关系。这几者之间的相互作用可以使得代码看起来是要做某一件事，但实际上是在做另一件事。</p>
-<h4 id="先认识-std-initializer-list"><a href="#先认识-std-initializer-list" class="headerlink" title="先认识 std::initializer_list"></a>先认识 std::initializer_list</h4><p>std::initializer_list（初始化列表）是一个轻量级的<strong>类模板</strong>，它的主要目的是让我们可以方便地使用花括号 {} 来初始化对象或向函数传递一组值。它是 C++11 中统一初始化 (Uniform Initialization) 语法的重要基石。</p>
-<p>下面我们介绍它的几个特性: </p>
-<ul>
-<li>轻量级代理 (Lightweight Proxy): std::initializer_list 本身不拥有它所表示的元素。它更像一个“代理”或“视图”，内部通常只包含两个成员：一个指向元素序列头部的指针，以及一个表示元素数量的计数器。这些元素本身被编译器存放在一个临时的、只读的数组中。因为 std::initializer_list 只是“指向”这个临时数组，所以它的创建和拷贝开销非常小。</li>
-<li>同质性 (Homogeneous): 一个 std::initializer_list<t> 对象中的所有元素都必须是 T 类型，或者可以隐式转换为 T 类型。例如，std::initializer_list<int> 只能持有整数。</int></t></li>
-<li>只读性 (Read-only): 你不能修改通过 std::initializer_list 访问的元素。它提供的迭代器是 const 迭代器，返回的是对 const T 的引用。这保证了初始化数据源的安全性。</li>
-</ul>
-<h4 id="大括号初始化-auto-类型变量"><a href="#大括号初始化-auto-类型变量" class="headerlink" title="大括号初始化 auto 类型变量"></a>大括号初始化 auto 类型变量</h4><p>当使用 auto 声明变量时，大括号初始化会导致一个可能出人意料的结果。具体细节可以参考<a href="./%E6%9D%A1%E6%AC%BE2%EF%BC%9A%E7%90%86%E8%A7%A3auto%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC.md#auto-%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC%E7%9A%84%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5">条款2：理解auto型别推导</a>。简单来说，如果用大括号初始化表达式来初始化一个 auto 型别的变量，那么推导出来的型别就会是 std::initializer_list。但如果使用相同的表达式来初始化一个非 auto 型别的变量，或者用小括号或”=”的方式来初始化 auto 型别的变量，auto 就会推导出你想要的型别</p>
-<h4 id="规则：编译器强烈优先选择-std-initializer-list-构造函数"><a href="#规则：编译器强烈优先选择-std-initializer-list-构造函数" class="headerlink" title="规则：编译器强烈优先选择 std::initializer_list 构造函数"></a>规则：编译器强烈优先选择 std::initializer_list 构造函数</h4><p>首先, 在构造函数被调用时, 如果形参中没有任何一个具备 std:: initializer_list 型别,那么小括号和大括号的意义就没有区别：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> { </span><br><span class="line"><span class="keyword">public</span>: </span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b); <span class="comment">// 构造函数的形参中没有任何一个具备 std::initializer_list 型别</span></span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d); <span class="comment">// std::initializer_list 型别</span></span><br><span class="line">}; </span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w1</span><span class="params">(<span class="number">10</span>, <span class="literal">true</span>)</span></span>;  <span class="comment">// 调用的是第一个构造函数</span></span><br><span class="line">Widget w2{<span class="number">10</span>, <span class="literal">true</span>};  <span class="comment">// 调用的还是第一个构造函数</span></span><br><span class="line"><span class="function">Widget <span class="title">w3</span><span class="params">(<span class="number">10</span>, <span class="number">0.0</span>)</span></span>;  <span class="comment">// 调用的是第二个构造函数</span></span><br><span class="line">Widget w4{<span class="number">10</span>, <span class="number">0.0</span>};  <span class="comment">// 调用的还是第二个构造函数</span></span><br></pre></td></tr></table></figure></div>
-<p>然而, 当使用大括号初始化语法进行对象构造时，如果类中存在一个或多个构造函数接受 std::initializer_list 作为参数，编译器会<strong>强烈优先选择</strong>这些重载版本。这种偏好非常强烈，以至于它会覆盖其他看起来更匹配的构造函数，甚至包括复制和移动构造函数 。</p>
-<p>同时, 编译器还会尽一切可能将大括号内的参数转换为 std::initializer_list 中元素的类型，即使这意味着需要进行类型转换。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d) { <span class="comment">/* ... */</span> }  <span class="comment">// #1</span></span><br><span class="line">    <span class="built_in">Widget</span>(std::string str) { <span class="comment">/* ... */</span> } <span class="comment">// #2</span></span><br><span class="line">    <span class="comment">// initializer_list 构造函数，但元素类型会导致窄化</span></span><br><span class="line">    <span class="built_in">Widget</span>(std::initializer_list&lt;<span class="type">bool</span>&gt; il) { <span class="comment">/* ... */</span> } </span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">Widget <span class="title">w0</span><span class="params">(<span class="number">10</span>, <span class="number">5.0</span>)</span></span>;  <span class="comment">// 小括号正常匹配</span></span><br><span class="line">    Widget w1{<span class="string">"Hello"</span>};  <span class="comment">// 调用#2</span></span><br><span class="line">    Widget w2{<span class="number">10</span>, <span class="number">5.0</span>}; <span class="comment">// 错误！</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>上述示例中, 我们可以看到, 如果大括号初始化语法中,编译器会优先调用 std::initializer_list 构造函数。在此基础上又分为两种情况: </p>
-<ul>
-<li>窄化转换导致编译失败（“否决”行为）<ul>
-<li>w2这个场景展示的是，即使存在一个其他方面看起来很匹配的构造函数，但只要 std::initializer_list 版本的构造函数可以通过窄化转换来匹配，编译器就会优先尝试它，并且假如在此过程中因为<strong>窄化转换被禁止而报错</strong>，编译器就不会再考虑其他选项而直接<strong>编译失败</strong>。</li>
-</ul>
-</li>
-<li>非窄化转换导致调用普通构造函数<ul>
-<li>这个场景展示的是，当大括号内的参数**完全无法被转换(而不是窄化转换失败)**为 std::initializer_list 的元素类型时，编译器会放弃initializer_list 构造函数，回到正常的重载决议流程中，并选择其他匹配的构造函数。</li>
-</ul>
-</li>
-</ul>
-<p>总之，<strong>即使存在精确匹配的普通构造函数</strong>，只要 std::initializer_list 版本的构造函数可以通过<strong>非窄化转换</strong>被调用，编译器就会选择它。不过如果转换是窄化的，则调用会失败，即使其他构造函数可以成功匹配 。</p>
-<p>另一个方向是, 即使是平常会执行复制或移动的构造函数也可能被带有 std:: initializer_list 型别形参的构造函数劫持：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> { </span><br><span class="line"><span class="keyword">public</span>: </span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b); </span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, doubled); </span><br><span class="line">    <span class="built_in">Widget</span>(std: :initializer_list&lt;<span class="type">long</span> <span class="type">double</span>&gt; il);</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">float</span><span class="params">()</span> <span class="type">const</span></span>; <span class="comment">// 强制转换成 float 型别</span></span><br><span class="line">}; </span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w1</span><span class="params">(w4)</span></span>;  <span class="comment">// 使用小括号，调用的是拷贝构造函数</span></span><br><span class="line">Widget w2{w4};  <span class="comment">// /／ 使用大括号，优先调用的是带有 std::initializer_list 型别形参的构造函数(即使看起来像拷贝构造). 这里w4的返回值被强制转换为float, 随后float又被强制转换为long doube</span></span><br><span class="line"><span class="function">Widget <span class="title">w3</span><span class="params">(std::move(w4))</span></span>;  <span class="comment">// 同理 </span></span><br><span class="line">Widget w4{std::<span class="built_in">move</span>(w4)};  <span class="comment">// 同理</span></span><br></pre></td></tr></table></figure></div>
-
-<h5 id="特殊情况：空大括号"><a href="#特殊情况：空大括号" class="headerlink" title="特殊情况：空大括号 {}"></a>特殊情况：空大括号 {}</h5><p>需要注意的是, 上述情况有个例外: 当使用一对空大括号 {} 进行初始化时，如果类同时拥有默认构造函数和 std::initializer_list 构造函数，C++ 规定优先调用默认构造函数。空大括号被解释为“没有参数”，而不是“一个空的 std::initializer_list” 。</p>
+<h3 id="大括号的缺陷">大括号的缺陷</h3>
+<p>关于大括号初始化，也说了不少了。这种语法可以应用的语境最为宽泛，可以<strong>阻止隐式窄化型别转换</strong>，还对最令人苦恼之<strong>解析语法免疫</strong>。那么，为什么本章的章名不干脆换成“优先选用大括号初始化语法”之类呢？</p>
+<p>大括号初始化的缺陷在于伴随它有时会出现的<strong>意外行为</strong>,
+这种行为源于大括号初始化物、std::initializer_list
+以及构造函数重载决议之间的纠结关系。这几者之间的相互作用可以使得代码看起来是要做某一件事，但实际上是在做另一件事。</p>
+<h4 id="先认识-stdinitializer_list">先认识 std::initializer_list</h4>
+<p>std::initializer_list（初始化列表）是一个轻量级的<strong>类模板</strong>，它的主要目的是让我们可以方便地使用花括号
+{} 来初始化对象或向函数传递一组值。它是 C++11 中统一初始化 (Uniform
+Initialization) 语法的重要基石。</p>
+<p>下面我们介绍它的几个特性: - 轻量级代理 (Lightweight Proxy):
+std::initializer_list
+本身不拥有它所表示的元素。它更像一个“代理”或“视图”，内部通常只包含两个成员：一个指向元素序列头部的指针，以及一个表示元素数量的计数器。这些元素本身被编译器存放在一个临时的、只读的数组中。因为
+std::initializer_list
+只是“指向”这个临时数组，所以它的创建和拷贝开销非常小。 - 同质性
+(Homogeneous): 一个 std::initializer_list<t> 对象中的所有元素都必须是 T
+类型，或者可以隐式转换为 T 类型。例如，std::initializer_list<int>
+只能持有整数。 - 只读性 (Read-only): 你不能修改通过
+std::initializer_list 访问的元素。它提供的迭代器是 const
+迭代器，返回的是对 const T 的引用。这保证了初始化数据源的安全性。</int></t></p>
+<h4 id="大括号初始化-auto-类型变量">大括号初始化 auto 类型变量</h4>
+<p>当使用 auto
+声明变量时，大括号初始化会导致一个可能出人意料的结果。具体细节可以参考<a href="./条款2：理解auto型别推导.md#auto-型别推导的特殊情况">条款2：理解auto型别推导</a>。简单来说，如果用大括号初始化表达式来初始化一个
+auto 型别的变量，那么推导出来的型别就会是
+std::initializer_list。但如果使用相同的表达式来初始化一个非 auto
+型别的变量，或者用小括号或”=“的方式来初始化 auto 型别的变量，auto
+就会推导出你想要的型别</p>
+<h4 id="规则编译器强烈优先选择-stdinitializer_list-构造函数">规则：编译器强烈优先选择
+std::initializer_list 构造函数</h4>
+<p>首先, 在构造函数被调用时, 如果形参中没有任何一个具备 std::
+initializer_list 型别,那么小括号和大括号的意义就没有区别： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> { </span><br><span class="line"><span class="keyword">public</span>: </span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b); <span class="comment">// 构造函数的形参中没有任何一个具备 std::initializer_list 型别</span></span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d); <span class="comment">// std::initializer_list 型别</span></span><br><span class="line">}; </span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w1</span><span class="params">(<span class="number">10</span>, <span class="literal">true</span>)</span></span>;  <span class="comment">// 调用的是第一个构造函数</span></span><br><span class="line">Widget w2{<span class="number">10</span>, <span class="literal">true</span>};  <span class="comment">// 调用的还是第一个构造函数</span></span><br><span class="line"><span class="function">Widget <span class="title">w3</span><span class="params">(<span class="number">10</span>, <span class="number">0.0</span>)</span></span>;  <span class="comment">// 调用的是第二个构造函数</span></span><br><span class="line">Widget w4{<span class="number">10</span>, <span class="number">0.0</span>};  <span class="comment">// 调用的还是第二个构造函数</span></span><br></pre></td></tr></table></figure></div>
+然而,
+当使用大括号初始化语法进行对象构造时，如果类中存在一个或多个构造函数接受
+std::initializer_list
+作为参数，编译器会<strong>强烈优先选择</strong>这些重载版本。这种偏好非常强烈，以至于它会覆盖其他看起来更匹配的构造函数，甚至包括复制和移动构造函数
+。</p>
+<p>同时, 编译器还会尽一切可能将大括号内的参数转换为
+std::initializer_list 中元素的类型，即使这意味着需要进行类型转换。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">double</span> d) { <span class="comment">/* ... */</span> }  <span class="comment">// #1</span></span><br><span class="line">    <span class="built_in">Widget</span>(std::string str) { <span class="comment">/* ... */</span> } <span class="comment">// #2</span></span><br><span class="line">    <span class="comment">// initializer_list 构造函数，但元素类型会导致窄化</span></span><br><span class="line">    <span class="built_in">Widget</span>(std::initializer_list&lt;<span class="type">bool</span>&gt; il) { <span class="comment">/* ... */</span> } </span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">Widget <span class="title">w0</span><span class="params">(<span class="number">10</span>, <span class="number">5.0</span>)</span></span>;  <span class="comment">// 小括号正常匹配</span></span><br><span class="line">    Widget w1{<span class="string">"Hello"</span>};  <span class="comment">// 调用#2</span></span><br><span class="line">    Widget w2{<span class="number">10</span>, <span class="number">5.0</span>}; <span class="comment">// 错误！</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 上述示例中, 我们可以看到,
+如果大括号初始化语法中,编译器会优先调用 std::initializer_list
+构造函数。在此基础上又分为两种情况: - 窄化转换导致编译失败（“否决”行为）
+- w2这个场景展示的是，即使存在一个其他方面看起来很匹配的构造函数，但只要
+std::initializer_list
+版本的构造函数可以通过窄化转换来匹配，编译器就会优先尝试它，并且假如在此过程中因为<strong>窄化转换被禁止而报错</strong>，编译器就不会再考虑其他选项而直接<strong>编译失败</strong>。
+- 非窄化转换导致调用普通构造函数 -
+这个场景展示的是，当大括号内的参数<strong>完全无法被转换(而不是窄化转换失败)</strong>为
+std::initializer_list 的元素类型时，编译器会放弃initializer_list
+构造函数，回到正常的重载决议流程中，并选择其他匹配的构造函数。</p>
+<p>总之，<strong>即使存在精确匹配的普通构造函数</strong>，只要
+std::initializer_list
+版本的构造函数可以通过<strong>非窄化转换</strong>被调用，编译器就会选择它。不过如果转换是窄化的，则调用会失败，即使其他构造函数可以成功匹配
+。</p>
+<p>另一个方向是, 即使是平常会执行复制或移动的构造函数也可能被带有 std::
+initializer_list 型别形参的构造函数劫持： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> { </span><br><span class="line"><span class="keyword">public</span>: </span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, <span class="type">bool</span> b); </span><br><span class="line">    <span class="built_in">Widget</span>(<span class="type">int</span> i, doubled); </span><br><span class="line">    <span class="built_in">Widget</span>(std: :initializer_list&lt;<span class="type">long</span> <span class="type">double</span>&gt; il);</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">float</span><span class="params">()</span> <span class="type">const</span></span>; <span class="comment">// 强制转换成 float 型别</span></span><br><span class="line">}; </span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w1</span><span class="params">(w4)</span></span>;  <span class="comment">// 使用小括号，调用的是拷贝构造函数</span></span><br><span class="line">Widget w2{w4};  <span class="comment">// /／ 使用大括号，优先调用的是带有 std::initializer_list 型别形参的构造函数(即使看起来像拷贝构造). 这里w4的返回值被强制转换为float, 随后float又被强制转换为long doube</span></span><br><span class="line"><span class="function">Widget <span class="title">w3</span><span class="params">(std::move(w4))</span></span>;  <span class="comment">// 同理 </span></span><br><span class="line">Widget w4{std::<span class="built_in">move</span>(w4)};  <span class="comment">// 同理</span></span><br></pre></td></tr></table></figure></div></p>
+<h5 id="特殊情况空大括号">特殊情况：空大括号</h5>
+<p>需要注意的是, 上述情况有个例外: 当使用一对空大括号 {}
+进行初始化时，如果类同时拥有默认构造函数和 std::initializer_list
+构造函数，C++
+规定优先调用默认构造函数。空大括号被解释为“没有参数”，而不是“一个空的
+std::initializer_list” 。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Widget w2{}; <span class="comment">// 调用默认构造函数 </span></span><br><span class="line"></span><br><span class="line"><span class="function">Widget <span class="title">w4</span><span class="params">({})</span></span>;   <span class="comment">// 调用 std::initializer_list 构造函数 </span></span><br><span class="line">Widget w5{{}};  <span class="comment">// 同上 </span></span><br></pre></td></tr></table></figure></div>
-<p>如果你确实想用一个空的列表来调用 std::initializer_list 构造函数，需要将空大括号作为参数显式传递 。</p>
-<h3 id="经典案例-std-vector-的初始化"><a href="#经典案例-std-vector-的初始化" class="headerlink" title="经典案例: std::vector 的初始化"></a>经典案例: std::vector 的初始化</h3><p>对于我们今天讨论的大括号还是小括号初始化, 直接受到影响的一个类就是 std::vector</p>
-<p>std::vector 有多个可以重载的构造函数, 其中一个构造函数的形参中没有任何一个具备 std:: initializer_list 型别的构造函数，它允许你指定容器的初始尺寸，以及一个初始化时让所有元素拥有的值; 但它还有个带 std: :initializer_list 型别形参的构造函数，允许你逐个指定容器中的元素<br>值。</p>
-<p>因此, 如果你要创建一个元素为数值型别的 std:: vector(比如 std::vector<int>), 并传递了两个实参给构造函数的话，你把这两个实参用小括号还是大括号括起来，结果会大相径庭：</int></p>
+<p>如果你确实想用一个空的列表来调用 std::initializer_list
+构造函数，需要将空大括号作为参数显式传递 。</p>
+<h3 id="经典案例-stdvector-的初始化">经典案例: std::vector 的初始化</h3>
+<p>对于我们今天讨论的大括号还是小括号初始化, 直接受到影响的一个类就是
+std::vector</p>
+<p>std::vector 有多个可以重载的构造函数,
+其中一个构造函数的形参中没有任何一个具备 std:: initializer_list
+型别的构造函数，它允许你指定容器的初始尺寸，以及一个初始化时让所有元素拥有的值;
+但它还有个带 std: :initializer_list
+型别形参的构造函数，允许你逐个指定容器中的元素 值。</p>
+<p>因此, 如果你要创建一个元素为数值型别的 std:: vector(比如
+std::vector<int>),
+并传递了两个实参给构造函数的话，你把这两个实参用小括号还是大括号括起来，结果会大相径庭：</int></p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个包含 10 个元素的 vector，每个元素的值都是 20 </span></span><br><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">v1</span><span class="params">(<span class="number">10</span>, <span class="number">20</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个包含 2 个元素的 vector，元素值分别为 10 和 20 </span></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v2{<span class="number">10</span>, <span class="number">20</span>};</span><br></pre></td></tr></table></figure></div>
-
-<p>在上述示例中, 我们可以看到, v1 使用小括号，调用了指定容器尺寸和初始值的构造函数 。而 v2 使用大括号，由于 std::vector 有一个接受 std::initializer_list<int> 的构造函数，编译器优先选择了这个版本 。</int></p>
-<h3 id="启示"><a href="#启示" class="headerlink" title="启示"></a>启示</h3><p>对于<strong>类的设计者</strong>而言，一个核心结论是，在设计构造函数时必须意识到 std::initializer_list 带来的影响。</p>
-<p>如果在重载的构造函数中，有任何一个接受 std::initializer_list 类型的形参，那么使用大括号初始化的客户端代码将极有可能只会匹配到这个版本的构造函数 。这种行为的优先级非常高，以至于它不仅仅是与其他重载版本竞争，而是可能完全掩盖它们，导致其他构造函数“连露脸的机会都不给” 。</p>
-<p>因此，最佳实践是设计类的构造函数时，应确保客户无论使用小括号还是大括号，都不会意外地改变被调用的重载版本。从这个角度看，std::vector 的接口设计常被视为一个反面教材，应当从中吸取教训 。</p>
-<p>对于<strong>使用类的程序员</strong>来说，在创建对象时应该仔细思考是选用小括号 () 还是大括号 {} 初始化。目前并没有一个统一的定论，因为两种方式各有优劣，开发者通常会根据自己的偏好选择一种作为默认风格。</p>
-<p>偏好使用大括号 {} 的开发者 看重的是其更广泛的适用场景、能够禁止隐式的窄化类型转换，以及对 C++“最令人苦恼的解析语法”免疫的特性 。他们也承认，在某些特定情况下（例如为 std::vector 指定初始尺寸和元素值），使用小括号是必需的 。</p>
-<p>偏好使用小括号 () 的开发者 则倾向于保持与 C++98 语法的传统一致性 。这样做可以避免因 auto 类型推导产生的意外（即推导为 std::initializer_list），并且不会意外地触发接受 std::initializer_list 的构造函数 。他们同样承认，在某些场景下（例如用一组初始值创建容器），必须使用大括号 。</p>
-<p>最终，由于两种风格各有合理的理由，最好的建议是开发者可以根据团队的偏好任选一种，并在此后的代码中保持一致 。</p>
+<p>在上述示例中, 我们可以看到, v1
+使用小括号，调用了指定容器尺寸和初始值的构造函数 。而 v2
+使用大括号，由于 std::vector 有一个接受 std::initializer_list<int>
+的构造函数，编译器优先选择了这个版本 。</int></p>
+<h3 id="启示">启示</h3>
+<p>对于<strong>类的设计者</strong>而言，一个核心结论是，在设计构造函数时必须意识到
+std::initializer_list 带来的影响。</p>
+<p>如果在重载的构造函数中，有任何一个接受 std::initializer_list
+类型的形参，那么使用大括号初始化的客户端代码将极有可能只会匹配到这个版本的构造函数
+。这种行为的优先级非常高，以至于它不仅仅是与其他重载版本竞争，而是可能完全掩盖它们，导致其他构造函数“连露脸的机会都不给”
+。</p>
+<p>因此，最佳实践是设计类的构造函数时，应确保客户无论使用小括号还是大括号，都不会意外地改变被调用的重载版本。从这个角度看，std::vector
+的接口设计常被视为一个反面教材，应当从中吸取教训 。</p>
+<p>对于<strong>使用类的程序员</strong>来说，在创建对象时应该仔细思考是选用小括号
+() 还是大括号 {}
+初始化。目前并没有一个统一的定论，因为两种方式各有优劣，开发者通常会根据自己的偏好选择一种作为默认风格。</p>
+<p>偏好使用大括号 {} 的开发者
+看重的是其更广泛的适用场景、能够禁止隐式的窄化类型转换，以及对
+C++“最令人苦恼的解析语法”免疫的特性
+。他们也承认，在某些特定情况下（例如为 std::vector
+指定初始尺寸和元素值），使用小括号是必需的 。</p>
+<p>偏好使用小括号 () 的开发者 则倾向于保持与 C++98 语法的传统一致性
+。这样做可以避免因 auto 类型推导产生的意外（即推导为
+std::initializer_list），并且不会意外地触发接受 std::initializer_list
+的构造函数
+。他们同样承认，在某些场景下（例如用一组初始值创建容器），必须使用大括号
+。</p>
+<p>最终，由于两种风格各有合理的理由，最好的建议是开发者可以根据团队的偏好任选一种，并在此后的代码中保持一致
+。</p>
 
 		</div>
 
@@ -971,7 +1043,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款7：区别使用( )与{ }创建对象</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0%E5%88%9D%E5%A7%8B%E5%8C%96%E8%AF%AD%E6%B3%95"><span class="nav-text">复习初始化语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">统一初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E5%86%85%E5%BB%BA%E5%9E%8B%E5%88%AB%E4%B9%8B%E9%97%B4%E8%BF%9B%E8%A1%8C%E9%9A%90%E5%BC%8F%E7%AA%84%E5%8C%96%E5%9E%8B%E5%88%AB%E8%BD%AC%E6%8D%A2"><span class="nav-text">禁止内建型别之间进行隐式窄化型别转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E4%BB%A4%E4%BA%BA%E8%8B%A6%E6%81%BC%E4%B9%8B%E8%A7%A3%E6%9E%90%E8%AF%AD%E6%B3%95-mostvexing-parse-%E5%85%8D%E7%96%AB%E3%80%82"><span class="nav-text">最令人苦恼之解析语法 (mostvexing parse) 免疫。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E6%8B%AC%E5%8F%B7%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="nav-text">大括号的缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%88%E8%AE%A4%E8%AF%86-std-initializer-list"><span class="nav-text">先认识 std::initializer_list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E6%8B%AC%E5%8F%B7%E5%88%9D%E5%A7%8B%E5%8C%96-auto-%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F"><span class="nav-text">大括号初始化 auto 类型变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%84%E5%88%99%EF%BC%9A%E7%BC%96%E8%AF%91%E5%99%A8%E5%BC%BA%E7%83%88%E4%BC%98%E5%85%88%E9%80%89%E6%8B%A9-std-initializer-list-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-text">规则：编译器强烈优先选择 std::initializer_list 构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5%EF%BC%9A%E7%A9%BA%E5%A4%A7%E6%8B%AC%E5%8F%B7"><span class="nav-text">特殊情况：空大括号 {}</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E6%A1%88%E4%BE%8B-std-vector-%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">经典案例: std::vector 的初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%A4%BA"><span class="nav-text">启示</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0%E5%88%9D%E5%A7%8B%E5%8C%96%E8%AF%AD%E6%B3%95"><span class="nav-text">复习初始化语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">统一初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E5%86%85%E5%BB%BA%E5%9E%8B%E5%88%AB%E4%B9%8B%E9%97%B4%E8%BF%9B%E8%A1%8C%E9%9A%90%E5%BC%8F%E7%AA%84%E5%8C%96%E5%9E%8B%E5%88%AB%E8%BD%AC%E6%8D%A2"><span class="nav-text">禁止内建型别之间进行隐式窄化型别转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E4%BB%A4%E4%BA%BA%E8%8B%A6%E6%81%BC%E4%B9%8B%E8%A7%A3%E6%9E%90%E8%AF%AD%E6%B3%95-mostvexing-parse-%E5%85%8D%E7%96%AB"><span class="nav-text">最令人苦恼之解析语法
+(mostvexing parse) 免疫。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E6%8B%AC%E5%8F%B7%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="nav-text">大括号的缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%88%E8%AE%A4%E8%AF%86-stdinitializer_list"><span class="nav-text">先认识 std::initializer_list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E6%8B%AC%E5%8F%B7%E5%88%9D%E5%A7%8B%E5%8C%96-auto-%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F"><span class="nav-text">大括号初始化 auto 类型变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E7%BC%96%E8%AF%91%E5%99%A8%E5%BC%BA%E7%83%88%E4%BC%98%E5%85%88%E9%80%89%E6%8B%A9-stdinitializer_list-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-text">规则：编译器强烈优先选择
+std::initializer_list 构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5%E7%A9%BA%E5%A4%A7%E6%8B%AC%E5%8F%B7"><span class="nav-text">特殊情况：空大括号</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E6%A1%88%E4%BE%8B-stdvector-%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">经典案例: std::vector 的初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%A4%BA"><span class="nav-text">启示</span></a></li></ol>
 
 	</div>
 </div>
@@ -1000,11 +1074,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

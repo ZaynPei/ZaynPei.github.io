@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/22/web/computer network/应用层/应用层/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应用层">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/22/web/Computer%20Network/%E5%BA%94%E7%94%A8%E5%B1%82/%E5%BA%94%E7%94%A8%E5%B1%82/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-22T15:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-23T03:26:19.702Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="computer network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            应用层 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">应用层</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-22 23:00</span>
+        <span class="mobile">2025-10-22 23:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-23 11:26:19</span>
+            <span class="mobile">2025-10-23 11:26:19</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/web/">web</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/computer-network/">computer network</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>14.2k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>50 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>应用层是 OSI 参考模型的最高层 (第 7 层)，也是 TCP/IP
+体系结构事实上的顶层。它是离用户最近的一层。</p>
+<p>它的根本目标是通过应用进程之间的交互来实现特定的网络应用。我们平时使用的各种网络功能，如网页浏览、文件下载、电子邮件、在线游戏等，都是在应用层实现的。可以说，设计和建立计算机网络的最终目的，就是为了运行应用层上的各种应用程序，满足用户的需求</p>
+<p>同时, 应用层开发也具有很高的便利性.
+网络应用程序只运行在端系统（用户的计算机、服务器等）上,
+传输层已经为应用进程提供了端到端的逻辑通信服务（TCP 或
+UDP）。开发者无需关心底层网络核心的复杂细节，如路由器的选择、数据包的转发等。</p>
+<h2 id="客户服务器方式和对等方式">客户/服务器方式和对等方式</h2>
+<p>在开发一个新的网络应用时，首先要考虑的问题是：这个应用的程序如何在不同的端系统上组织？它们之间是什么关系？目前主要有两种流行的体系结构。</p>
+<h3 id="客户服务器方式-clientserver-cs">客户/服务器方式 (Client/Server,
+C/S)</h3>
+<p>这是最传统、最成熟的网络应用模型。它将应用程序分为两个部分：客户端和服务器。客户端是向服务器请求服务的应用程序，而服务器是提供服务的应用程序。客户端和服务器之间通过网络进行通信。</p>
+<p>服务器 (Server)：指运行服务器程序的应用进程。</p>
+<ul>
+<li>它是服务的提供方,
+通常<strong>持续运行</strong>，<strong>被动地等待</strong>客户的请求。</li>
+<li>具有<strong>固定的 IP
+地址</strong>和<strong>熟知的传输层端口号</strong>（如 Web 服务器的 80
+端口）。</li>
+</ul>
+<p>客户 (Client)：指运行客户程序的应用进程。</p>
+<ul>
+<li>它是服务的请求方,
+<strong>主动</strong>向服务器<strong>发起请求</strong>。</li>
+<li>客户端计算机的 <strong>IP
+地址通常是动态的</strong>，使用的端口号也是<strong>临时</strong>的。</li>
+</ul>
+<p>模型特点:</p>
+<ul>
+<li><strong>服务集中</strong>型：
+应用服务集中在少数（通常性能强大）的服务器计算机上。</li>
+<li><strong>不对等</strong>关系：
+客户和服务器的角色固定，功能不同。</li>
+</ul>
+<p>优点： - 易于管理和维护（服务集中）。 - 安全性相对容易控制。</p>
+<p>缺点： - <strong>可扩展性问题</strong>：
+当客户数量激增时，单一服务器容易成为性能瓶颈 。 - 成本较高：
+需要购买和维护高性能的服务器硬件及带宽。 - 单点故障：
+如果服务器宕机，整个服务就会中断。</p>
+<p>解决方案 (针对缺点)： 使用<strong>服务器集群</strong> (Server
+Cluster) 或服务器场 (Server Farm)
+来构建一个强大的“虚拟服务器”，以提高处理能力和可靠性 。</p>
+<p>典型应用： 万维网 (WWW)、文件传送 (FTP)、电子邮件
+(Email)、数据库访问等。</p>
+<h3 id="对等方式-peer-to-peer-p2p">对等方式 (Peer-to-Peer, P2P)</h3>
+<p>这是一种相对较新的、与 C/S
+模型截然不同的结构。其核心概念是<strong>对等关系</strong>。</p>
+<p>P2P没有固定的客户和服务器角色,
+网络边缘端系统上的应用进程互称<strong>对等方</strong>(Peer)。每个对等方既是<strong>服务的请求者</strong>，又是<strong>服务的提供者</strong>,
+对等方之间直接通信。</p>
+<p>模型特点： - 服务分散型：
+服务能力分布在大量对等方的计算机上，这些计算机通常是个人拥有并控制的 。
+- 对等关系： 所有参与者的角色和功能相似。</p>
+<p>优点： - <strong>高度可扩展性</strong>：
+每增加一个对等方，不仅增加了服务需求，同时也增加了服务提供能力。系统性能不会因规模增大而降低（甚至可能提高）。
+- <strong>成本低廉</strong>： 通常不需要庞大的服务器设施和带宽投入 。 -
+<strong>鲁棒性 (Robustness)</strong>：
+不存在单点故障，部分对等方离线不影响整个系统的运行。</p>
+<p>缺点： - <strong>管理复杂</strong>：资源分散，难以集中管理和控制。 -
+<strong>安全性问题</strong>：内容来源多样，可能存在安全风险或版权问题。
+-
+<strong>性能不稳定</strong>：对等方的在线时间和带宽不稳定，可能影响服务质量。</p>
+<p>典型应用： <strong>P2P文件共享</strong> (如 BitTorrent)、即时通信
+(部分功能)、P2P 流媒体 (如某些直播)、分布式存储 。</p>
+<p>此外, 目前还演进出了<strong>混合模式</strong>：许多现代应用会混合使用
+C/S 和 P2P 模式 。例如，用户登录和好友列表可能依赖中心服务器
+(C/S)，而文件传输或音视频通话则采用 P2P 直接连接。</p>
+<h2 id="动态主机配置协议-dhcp">动态主机配置协议 (DHCP)</h2>
+<p>任何一台主机想要接入 TCP/IP
+网络（如因特网）并与其他主机正常通信，都必须首先配置好一系列关键的<strong>网络参数</strong>。这些参数就像主机的“网络身份证”和“导航地图”，主要包括
+：</p>
+<ul>
+<li><p><strong>IP 地址 (IP Address)</strong>：
+主机在网络中的唯一标识符，就像门牌号。</p></li>
+<li><p><strong>子网掩码 (Subnet Mask)</strong>： 用于区分 IP
+地址中的网络部分和主机部分，帮助主机判断通信目标是在本地子网还是需要通过路由器转发。</p></li>
+<li><p><strong>默认网关的 IP 地址 (Default Gateway IP
+Address)</strong>：
+当主机需要与本地子网之外的主机通信时，数据包需要发送给这个“网关”（通常是路由器）进行转发。</p></li>
+<li><p><strong>域名服务器 (DNS) 的 IP 地址 (DNS Server IP
+Address)</strong>： 主机需要通过 DNS 服务器将易于记忆的域名（如
+www.google.com）解析成 IP 地址才能进行访问。</p></li>
+</ul>
+<p>在早期或小型网络中，这些参数可以通过操作系统提供的工具（图形界面或命令行）手动配置在每台主机上。主机会将这些配置保存在一个文件中，并在每次启动时读取使用。</p>
+<p>但是随着网络规模的扩大和移动设备的普及，手工配置网络参数暴露出诸多不便和问题
+：</p>
+<ul>
+<li><p>工作量巨大且易出错
+(对于管理员)：想象一下在一个拥有数百甚至数千台主机的企业或校园网络中，网络管理员需要为每一台机器逐一手动输入上述所有参数。这不仅是一项极其繁琐、耗时的工作，而且非常容易出错（例如输错
+IP 地址、掩码或网关），导致主机无法正常联网 。</p></li>
+<li><p>不方便且易出错
+(对于用户)：对于经常需要在不同网络环境（如家中、办公室、咖啡馆）中使用笔记本电脑的用户来说，每次更换地点都需要重新手动修改网络配置，这非常不方便
+。用户可能不清楚每个网络环境的具体参数，或者在配置过程中出错。</p></li>
+</ul>
+<h3 id="动态主机配置协议的作用">动态主机配置协议的作用</h3>
+<p>为了解决手工配置带来的种种问题，<strong>动态主机配置协议</strong>
+(Dynamic Host Configuration Protocol, DHCP) 应运而生。</p>
+<p>DHCP
+允许网络中的主机<strong>自动获取</strong>所需的网络配置参数，而无需人工干预。</p>
+<p>实现方式是, 网络管理员先在网络中部署一台 <strong>DHCP
+服务器</strong>。</p>
+<ul>
+<li>在 <strong>DHCP
+服务器</strong>上<strong>集中配置</strong>好可供分配的网络参数范围（如
+IP 地址池、子网掩码、默认网关地址、DNS 服务器地址等）。</li>
+<li>网络中的客户端主机（如
+PC、笔记本电脑、手机）在开机或接入网络时，会自动运行 <strong>DHCP
+客户端程序</strong>。</li>
+<li>DHCP 客户端会<strong>自动</strong>向网络中的 DHCP
+<strong>服务器</strong>请求<strong>配置参数</strong> 。</li>
+<li>DHCP
+服务器收到请求后，会从<strong>预设的配置</strong>中<strong>分配</strong>一套参数给客户端
+。</li>
+</ul>
+<p>最终, 主机可以实现“即插即联网” (Plug-and-Play
+Networking)，极大地简化了网络管理和用户操作。这种自动化的方式解决了大规模网络和移动设备场景下网络参数配置的复杂性和易错性问题，是现代网络不可或缺的基础服务之一。</p>
+<h3 id="dhcp-的工作流程">DHCP 的工作流程</h3>
+<p>DHCP 采用客户/服务器 (C/S) 模式工作 。用户主机上运行 DHCP
+客户进程，网络中至少有一台服务器运行 DHCP 服务器进程。在理解 DHCP
+的工作流程前，我们需要先理解 <strong>DHCP
+报文</strong>如何在网络中传输：</p>
+<ul>
+<li>应用层协议： DHCP 本身是就一个<strong>应用层协议</strong>。</li>
+<li>传输层： 它使用 <strong>UDP</strong> 作为传输层协议 。
+<ul>
+<li><strong>DHCP 服务器</strong>监听 UDP 的熟知端口号
+<strong>67</strong> 。</li>
+<li><strong>DHCP 客户</strong>使用 UDP 的熟知端口号 <strong>68</strong>
+。</li>
+</ul></li>
+<li>封装过程：
+<ul>
+<li>DHCP 报文（如 DHCP 发现报文）首先被封装成 UDP 用户数据报，包含源端口
+<strong>68</strong> 和目的端口 <strong>67</strong> 。</li>
+<li>UDP 用户数据报再被封装成 IP 数据报 。</li>
+<li>IP
+数据报最后根据网络接口类型（如以太网）封装成相应的数据链路层帧进行传输
+<img lazyload src="/images/loading.svg" data-src="image.png" alt="alt text"></li>
+</ul></li>
+</ul>
+<p>DHCP 的核心交互过程通常被称为
+<strong>DORA</strong>，代表四个主要报文：<strong>Discover</strong>,
+<strong>Offer</strong>, <strong>Request</strong>,
+<strong>Acknowledge</strong>。此外还包括<strong>租约的更新</strong>和<strong>释放</strong>过程。
+<img lazyload src="/images/loading.svg" data-src="image-1.png" alt="alt text"> 场景假设：
+网络中有一台新主机（DHCP 客户）需要获取网络配置，同时有两台 DHCP
+服务器（服务器1 和 服务器2）可以提供服务。</p>
+<p>步骤 1：<strong>发现服务器</strong> (DHCP <strong>DISCOVER</strong>)
+- <strong>客户广播</strong></p>
+<ul>
+<li><p>主机启动 DHCP 客户端后，它不知道网络中有哪些 DHCP
+服务器，也不知道它们的地址。因此，它会<strong>广播</strong>发送一个
+<strong>DHCP 发现报文</strong> (DHCP DISCOVER) 。</p></li>
+<li><p>封装细节：</p>
+<ul>
+<li>UDP：源端口 68，目的端口 67 。</li>
+<li>IP：源 IP 地址为 <strong>0.0.0.0</strong> (因为<strong>客户还没有
+IP</strong>)，目的 IP 地址为广播地址 255.255.255.255 。</li>
+<li>DHCP 报文内部：包含一个事务 ID (Transaction ID) 和<strong>客户的 MAC
+地址</strong> 。</li>
+</ul></li>
+<li><p>结果：网络中<strong>所有主机</strong>都会收到这个广播包，但<strong>只有
+DHCP 服务器会处理它</strong>。</p></li>
+</ul>
+<p>步骤 2：<strong>提供租约</strong> (DHCP <strong>OFFER</strong>) -
+<strong>服务器响应</strong></p>
+<ul>
+<li><p>收到 DISCOVER 报文的 DHCP
+服务器（假设服务器1和服务器2都收到了）会各自准备一个<strong>配置方案</strong>。</p></li>
+<li><p>服务器内部操作：查找数据库，看是否有<strong>为该 MAC
+地址预留</strong>的配置。如果没有，则从 <strong>IP
+地址池</strong>中挑选一个可用的 IP 地址 。</p>
+<ul>
+<li>服务器在提供 IP 地址前，会先使用 <strong>ARP</strong> 检查该 IP
+是否已被网络中<strong>其他主机占用</strong> 。</li>
+</ul></li>
+<li><p>发送报文： 每个服务器都发送一个 <strong>DHCP 提供报文</strong>
+(DHCP OFFER) 。</p></li>
+<li><p>封装细节：</p>
+<ul>
+<li><p>IP：源 IP 地址为服务器自身的 IP，目的 IP
+地址仍然是<strong>广播地址</strong> 255.255.255.255
+(因为<strong>客户此时可能还无法接收单播</strong>) 。</p></li>
+<li><p>DHCP 报文内部：包含<strong>提供的 IP
+地址</strong>、<strong>子网掩码</strong>、<strong>地址租期</strong>
+(Lease Time)、<strong>默认网关 IP</strong>、<strong>DNS 服务器
+IP</strong> 等配置信息，以及与 DISCOVER 报文匹配的<strong>事务
+ID</strong> 。</p></li>
+</ul></li>
+<li><p>客户动作： 客户可能会收到多个 DHCPOFFER
+报文（来自服务器1和服务器2）。它会<strong>根据事务 ID
+确认</strong>是自己请求的响应，然后从中<strong>选择一个</strong>（通常选择最先到达的那个）。</p></li>
+</ul>
+<p>步骤 3：<strong>请求租约</strong> (DHCP <strong>REQUEST</strong>) -
+<strong>客户广播</strong></p>
+<ul>
+<li><p>客户选择好一个 OFFER 后（假设选择了服务器1的
+OFFER），需要向所有服务器确认这个选择，并正式<strong>请求使用该租约</strong>。它会广播发送一个
+DHCP 请求报文 (DHCP REQUEST) 。</p></li>
+<li><p>封装细节：</p>
+<ul>
+<li>IP：源 IP 地址仍为 <strong>0.0.0.0</strong>
+(因为<strong>租约尚未最终确认</strong>)，目的 IP 地址为广播地址
+<strong>255.255.255.255</strong> 。</li>
+<li>DHCP 报文内部：包含事务 ID、客户 MAC 地址、接收到的租约中的 IP
+地址、<strong>提供此租约的 DHCP 服务器的 IP 地址</strong>
+(明确告知选择了谁) 等信息 。</li>
+</ul></li>
+<li><p>结果：所有 DHCP 服务器都会收到这个 REQUEST。</p>
+<ul>
+<li>被选中的服务器（服务器1）知道客户接受了它的 OFFER。</li>
+<li>未被选中的服务器（服务器2）知道客户拒绝了它的
+OFFER，可以收回之前预留的 IP 地址。</li>
+</ul></li>
+</ul>
+<p>步骤 4：<strong>确认租约</strong> (DHCP <strong>ACK</strong>) -
+服务器响应</p>
+<ul>
+<li><p>被选中的 DHCP 服务器（服务器1）发送 DHCP 确认报文 (DHCP
+<strong>ACK</strong>) 来最终确认租约 。</p></li>
+<li><p>封装细节：</p>
+<ul>
+<li>IP：源 IP 为服务器1 的 IP，目的 IP <strong>仍然可能是广播地址
+255.255.255.255</strong> (取决于客户请求时的 BROADCAST 标志位，见后述)
+。</li>
+</ul></li>
+<li><p>客户动作：客户收到 DHCP ACK 后，租约正式生效。</p>
+<ul>
+<li>客户在使用这个 IP 地址之前，还会主动发送 ARP 请求，再次确认该 IP
+地址没有被网络中其他主机占用 。</li>
+<li>如果 ARP <strong>检测到冲突</strong>，客户会向服务器发送
+<strong>DHCP 谢绝报文</strong> (DHCP
+<strong>DECLINE</strong>)，并重新开始 DHCP 过程（发送 DISCOVER） 。</li>
+<li>如果 ARP
+未检测到冲突，客户就配置好所有网络参数，可以正常通信了。</li>
+</ul></li>
+</ul>
+<h4 id="ip-地址租约的更新-续约">IP 地址租约的更新 (续约)</h4>
+<p>DHCP 分配的 IP 地址通常有一个<strong>租用期限</strong> (Lease
+Time)。客户端需要在租约到期前进行续约，否则将失去该 IP
+地址的使用权。</p>
+<p><strong>T1 时间点</strong> (<strong>租用期过半</strong>)：</p>
+<ul>
+<li><p>客户会单播向当初提供租约的 DHCP 服务器（服务器1）发送 DHCP
+<strong>REQUEST</strong> 报文请求<strong>续约</strong>。</p></li>
+<li><p>此时 IP 源地址是客户当前租用的 IP，目的 IP 是服务器1 的 IP
+。</p></li>
+<li><p>服务器响应：</p>
+<ul>
+<li>同意 (DHCP ACK)： 服务器回复 DHCP ACK，客户获得新的租期。</li>
+<li>不同意 (DHCP NACK)： 服务器回复 DHCP
+NACK。客户必须<strong>立即停止使用当前 IP</strong>，并<strong>重新开始
+DORA 过程</strong>（广播 DISCOVER） 。</li>
+<li>无响应：服务器可能宕机或网络不通 。</li>
+</ul></li>
+</ul>
+<p><strong>T2 时间点</strong> (<strong>租用期过了 87.5%</strong>)：</p>
+<ul>
+<li>如果在 T1 时服务器未响应，客户会等到租用期的 87.5% 时广播发送 DHCP
+<strong>REQUEST</strong> 报文，尝试向<strong>任何可达的 DHCP
+服务器</strong>续约。</li>
+</ul>
+<p>如果仍然没有服务器响应，则当租约最终到期后，客户必须立即停止使用该
+IP，并重新开始 DORA 过程。</p>
+<p>不过, 客户也可以随时提前终止租约（例如正常关机时）。</p>
+<ul>
+<li><p>报文： 客户向 DHCP 服务器发送 DHCP 释放报文 (DHCP
+<strong>RELEASE</strong>) 。</p></li>
+<li><p>封装： IP 源地址为 0.0.0.0，目的地址为广播地址 255.255.255.255
+。服务器收到后，可以将该 IP 地址回收并分配给其他客户。</p></li>
+</ul>
+<blockquote>
+<p>关于广播与单播响应的补充 (BROADCAST 标志位) 在 DHCP
+交互的早期阶段（客户还<strong>没有有效 IP 地址</strong>时），客户的
+TCP/IP 协议栈可能无法正确处理发送给它的<strong>单播 IP 数据报</strong>。
+解决方案是：DHCP 客户可以在发送 DISCOVER 和 REQUEST 报文时，设置一个
+“<strong>BROADCAST</strong>” 标志位 。 - 标志位 = 1：
+客户明确告知服务器：“请使用<strong>广播</strong>方式回复我（发送 OFFER
+和 ACK）” 。 - 标志位 = 0：
+客户告知服务器：“我<strong>能接收单播</strong>，请使用单播方式回复我”
+。此时，服务器会根据 DISCOVER/REQUEST 报文中客户提供的 MAC
+地址来发送单播帧 。</p>
+<p>这个机制增强了 DHCP 对不同 TCP/IP 协议栈实现的兼容性 。</p>
+</blockquote>
+<h3 id="dhcp-中继代理">DHCP 中继代理</h3>
+<p>我们知道, DHCP 客户在启动时发送的 DHCP DISCOVER
+报文是一个广播报文（目的 IP 地址为 255.255.255.255）。</p>
+<p>而路由器的一个基本工作原则就是<strong>隔离广播域</strong>，它们不会转发广播报文。</p>
+<p>假设 DHCP 客户（主机1, 主机n）位于一个子网，而 <strong>DHCP
+服务器</strong>位于<strong>另一个不同的子网</strong>，两者之间通过路由器连接。</p>
+<p>这会导致客户发送的广播 DHCP DISCOVER
+报文到达路由器时，会被路由器直接丢弃，永远无法到达位于另一个子网的 DHCP
+服务器。因此，这些客户将无法通过 DHCP 自动获取网络配置参数。</p>
+<p>为了解决广播报文不能跨越路由器的问题，引入了 <strong>DHCP
+中继代理</strong> (DHCP Relay Agent) 的概念 。</p>
+<p>实现方式通常是在<strong>路由器</strong>上启用并<strong>配置 DHCP
+中继代理功能</strong>, 指向真正 <strong>DHCP 服务器的 IP
+地址</strong>。</p>
+<p>其工作过程如下:</p>
+<ol type="1">
+<li><p>接收广播：
+启用了中继代理功能的路由器（位于客户子网）在其接口上收到来自 DHCP
+客户的广播 DHCP DISCOVER 报文。</p></li>
+<li><p>转换为<strong>单播</strong>：
+路由器（中继代理）不会丢弃这个广播报文。相反，它会将该报文重新封装成一个单播
+IP 数据报。</p></li>
+<li><p>这个单播报文的目的 IP 地址被设置为配置好的真正 <strong>DHCP
+服务器的 IP 地址</strong>, 源 IP
+地址通常是路由器接收到广播报文的那个<strong>接口的 IP
+地址</strong>（这样服务器就知道是哪个子网的请求）。</p></li>
+<li><p>单播转发： 路由器将这个单播报文转发给 DHCP 服务器 。</p></li>
+<li><p>服务器响应： DHCP 服务器处理这个请求（如同直接收到 DISCOVER
+一样），然后将 DHCP OFFER
+报文（或其他响应报文）单播发送回给<strong>中继代理</strong>（路由器）。</p></li>
+<li><p>中继转发给客户：
+中继代理收到服务器的响应后，再将其转发给最初发起请求的 DHCP
+客户（通常使用<strong>广播</strong>或根据客户 MAC 地址单播）。</p></li>
+<li><p>后续交互： DHCP 客户与服务器之间的后续报文（如 DHCP REQUEST, DHCP
+ACK）都会通过这个中继代理进行转发。</p></li>
+</ol>
+<p>上述就是DHCP中继代理的工作过程,
+其主要优势在于实现了<strong>集中管理</strong>, 我们不必在每一个子网（或
+VLAN）上都部署一台 DHCP 服务器 。</p>
+<p>从而<strong>减少服务器数量</strong>：通过使用中继代理，可以在一个中心位置部署少量（甚至一台）DHCP
+服务器，来为整个网络（包含多个子网）提供服务。这极大地简化了 DHCP
+服务器的管理和维护工作 。</p>
+<h2 id="域名系统dns">域名系统(DNS)</h2>
+<p>我们在上网时，更习惯使用<strong>域名</strong> (Domain Name)
+来访问网站，例如 www.google.com 或 cnnic.net.cn
+。因为域名通常具有一定的含义，便于人们记忆 。</p>
+<p>然而，因特网上的路由器和主机在网络层进行寻址和通信时，并不直接使用域名，而是使用<strong>IP
+地址</strong> (IP Address)（例如 42.83.144.13） 。IP
+地址是分配给网络接口的数字标识符，便于机器处理和路由。</p>
+<p>这就产生了一个矛盾——人类喜欢的易记域名与机器需要的数字 IP
+地址之间需要一个转换机制。</p>
+<h3 id="dns-的基本概念">DNS 的基本概念</h3>
+<p>域名系统 (Domain Name System, DNS)
+的主要作用就是将<strong>域名</strong>解析（转换）为对应的 <strong>IP
+地址</strong> 。</p>
+<blockquote>
+<p>DNS
+就像是因特网的“电话簿”。你想找某个网站（知道它的域名，像人名），DNS
+就能帮你查到它的 IP
+地址（像电话号码），然后你的计算机才能真正连接到它。</p>
+</blockquote>
+<p>解析过程简化示意：</p>
+<ul>
+<li><p>用户在浏览器输入域名 cnnic.net.cn 。</p></li>
+<li><p>主机会先检查自己的<strong>本地 DNS
+缓存</strong>中是否有该域名的记录 。</p></li>
+<li><p>如果缓存中没有，主机会向配置好的 <strong>DNS
+服务器</strong>发送一个 DNS 查询请求：“cnnic.net.cn 对应的 IP
+地址是什么？” 。</p></li>
+<li><p>DNS 服务器在其<strong>域名数据库</strong>中查找，找到对应的 IP
+地址 42.83.144.13 。</p></li>
+<li><p>DNS 服务器将查询结果（IP 地址）返回给用户主机 。</p></li>
+<li><p>用户主机收到 IP 地址后，就可以使用这个 IP 地址与目标 Web
+服务器建立连接并访问网站了 。</p></li>
+</ul>
+<p>这里有一个问题: DNS 可以是单台服务器吗？这会面临以下的问题：</p>
+<ul>
+<li>单点故障与性能瓶颈： 理论上可以将所有域名和 IP
+地址的映射关系都存在一台巨大的 DNS 服务器上。但这在实践中是不可行的
+。</li>
+<li>可靠性差： 一旦这台服务器出现故障，整个因特网的域名解析服务就会瘫痪
+。</li>
+<li>性能瓶颈：
+全世界的域名查询请求都涌向一台服务器，它肯定会因超负荷而无法正常工作
+。</li>
+<li>距离延迟： 用户可能离这台服务器非常远，查询延迟会很高。</li>
+</ul>
+<p>因此, 一般来说, DNS 是<strong>分布式的系统</strong>, 由全球成千上万台
+DNS 服务器协同工作来完成域名解析任务。</p>
+<p>因特网自 1983
+年起就采用了层次结构的命名树（域名结构）和分布式的域名系统 。</p>
+<ul>
+<li>高可用性： 即使单个 DNS 服务器故障，也不会影响整个系统的运行 。</li>
+<li>高效率： 大多数域名解析可以在本地（或附近的）DNS
+服务器完成，只有少量解析需要跨网络通信 。</li>
+<li>负载均衡： 查询请求被分散到全球各地的不同服务器上。</li>
+</ul>
+<h3 id="因特网的域名结构">因特网的域名结构</h3>
+<p>因特网采用了<strong>层次树状结构</strong> (Hierarchical Tree
+Structure) 来组织域名 。</p>
+<p><strong>结构组成</strong>: - 域名由若干个分量组成，分量之间用点. 隔开
+。 -
+<strong>最右边</strong>的分量级别最高，称为<strong>顶级域名</strong>
+(Top-Level Domain, TLD) 。 - 向左依次是二级域名 (Second-Level Domain,
+SLD)、三级域名，等等 。 -
+<strong>级别最低</strong>的域名（通常表示具体主机或服务）写在<strong>最左边</strong>
+。</p>
+<p><strong>命名规则</strong>：</p>
+<ul>
+<li>每一级域名都由英文字母和数字组成 。</li>
+<li>每一级域名长度不超过 63 个字符 。</li>
+<li><strong>不区分大小写字母</strong> 。</li>
+<li>完整的域名总长度不超过 255 个字符 。</li>
+</ul>
+<p><strong>管理</strong>： -
+各级域名由其<strong>上一级的域名管理机构</strong>管理 。 -
+最高的<strong>顶级域名</strong>由 <strong>ICANN</strong>
+(因特网名称与数字地址分配机构) 进行管理 。</p>
+<p><strong>域名示例：zuits.zju.edu.cn</strong> - .cn：顶级域名，表示中国
+。 - .edu：二级域名（在 .cn 下注册），表示教育机构 。 -
+.zju：三级域名（在 .edu.cn 下注册），表示浙江大学 。 -
+zuits：四级域名（由浙江大学自行管理），表示信息技术中心。</p>
+<p><strong>顶级域名 (TLD) 的分类</strong>：</p>
+<ul>
+<li><strong>国家顶级域名</strong> (<strong>nTLD</strong> / ccTLD)： 采用
+ISO 3166 的国家代码标准。例如：.cn (中国), .us (美国), .uk (英国), .jp
+(日本) 。
+<ul>
+<li>nTLD
+下的<strong>二级域名</strong>由该<strong>国家自行确定</strong>规则（例如，日本用
+.ac 表示教育机构，.co 表示公司，而非 .edu 和 .com） 。</li>
+</ul></li>
+<li><strong>通用顶级域名</strong> (<strong>gTLD</strong>)：
+不具有国家属性。常见的有：.com (公司企业), .net (网络服务机构), .org
+(非营利性组织), .edu (美国教育机构), .gov (美国政府部门), .mil
+(美国军事部门), .int (国际组织) 。
+<ul>
+<li>近年来新增了很多 gTLD，如 .app, .shop, .xyz 等。</li>
+</ul></li>
+<li><strong>反向域</strong> (Infrastructure
+TLD)：只有一个.<strong>arpa</strong>，用于反向域名解析（即从 IP
+地址查询对应的域名） 。</li>
+</ul>
+<p><strong>中国域名体系</strong>： 我国在 .cn
+顶级域名下，将二级域名划分为两类 ：</p>
+<ul>
+<li><strong>类别域名</strong>： .ac (科研), .com (工商金融), .edu
+(教育), .gov (政府), .net (网络服务), .mil (军事), .org (非营利) 。</li>
+<li><strong>行政区域名</strong>： 34 个省、自治区、直辖市的缩写，如 .bj
+(北京), .sh (上海), .js (江苏) 。</li>
+</ul>
+<p><strong>域名空间</strong>：整个因特网的域名结构可以看作一棵<strong>倒置的树</strong>。<strong>树根在最上方</strong>（没有名字），下面是
+TLD，再往下是二级、三级域名…
+<strong>叶节点</strong>通常对应<strong>具体的主机</strong>。</p>
+<p>这种按等级管理的命名方法便于维护域名的唯一性，也易于设计高效的查询机制
+。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-2.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<blockquote>
+<p>重要提示：域名只是一个逻辑概念，它与计算机所在的物理地点没有必然联系。例如，.com
+域名的服务器不一定在美国。</p>
+</blockquote>
+<h3 id="因特网的域名服务器">因特网的域名服务器</h3>
+<p>为了实现<strong>分布式</strong>、<strong>层次化</strong>的域名系统，因特网上部署了不同类型的域名服务器，各司其职。主要有以下四种类型：</p>
+<p><strong>根域名服务器</strong> (Root DNS Server)</p>
+<ul>
+<li><p>层级： 位于 DNS 层次结构的最顶层（树根）。</p></li>
+<li><p>职责： 它不直接负责将域名解析为 IP
+地址。它的核心任务是<strong>管理所有顶级域名</strong>
+(TLD)，即它知道所有<strong>顶级域名服务器</strong>（如负责
+.com、.org、.cn 的服务器）的<strong>域名和 IP 地址</strong>。</p></li>
+<li><p>数量与分布： 全世界名义上只有 13 个不同 IP 地址的根域名服务器（用
+A 到 M
+命名）。但实际上，每个“根服务器”都是由分布在全球各地的许多服务器组成的集群，利用任播
+(Anycast)
+技术，使得用户的查询请求会被路由到地理上最近的一个根服务器实例。这大大提高了查询速度和系统的可靠性。</p></li>
+<li><p>工作方式： 当收到本地域名服务器的查询请求时（例如查询
+www.google.com），根服务器会返回负责 .com 域的 TLD 服务器的 IP 地址列表
+。</p></li>
+</ul>
+<p><strong>顶级域名服务器</strong> (Top-Level Domain, TLD Server)</p>
+<ul>
+<li><p>层级： 位于根域名服务器之下。</p></li>
+<li><p>职责： 负责管理在其下注册的所有二级域名 。例如，.com TLD
+服务器管理着所有 .com 结尾的域名（如 google.com, example.com）。.cn TLD
+服务器管理着所有 .cn 结尾的域名。</p></li>
+<li><p>工作方式： 当收到本地域名服务器的查询请求时（例如查询
+www.google.com），.com TLD 服务器会查找负责 google.com
+这个二级域名的<strong>权限域名服务器</strong>的 IP
+地址，并将其返回给本地域名服务器。</p></li>
+</ul>
+<p><strong>权限域名服务器</strong> (Authoritative DNS Server)</p>
+<ul>
+<li>层级： 位于 TLD 服务器之下（或更低层级）。</li>
+<li>职责： 这是真正存储着 <strong>“域名 <span class="math inline">↔︎</span> IP 地址”</strong>
+权威映射关系的服务器。每个域名（例如
+www.google.com）都必须在至少一个权限域名服务器处注册登记。</li>
+<li>工作方式：
+当收到本地域名服务器关于其管辖区域内某个域名的查询请求时（例如查询
+www.google.com），google.com 的权限服务器会直接<strong>返回该域名对应的
+IP 地址</strong>
+。它还知道其<strong>下级域名服务器</strong>的地址（如果有的话）。</li>
+</ul>
+<p><strong>本地域名服务器</strong> (Local DNS Server) - 特殊性：
+它不属于上述的根 <span class="math inline">→</span> TLD <span class="math inline">→</span> 权限的层次结构 - 角色： 它是主机进行 DNS
+查询的“代理”或“<strong>第一跳</strong>”
+。当主机需要解析域名时，它首先将请求发送给<strong>本地域名服务器</strong>。
+- 来源： 通常由用户的因特网服务提供商
+(ISP)、大学、公司或机构提供。它离用户地理位置较近。 - 配置：
+本地域名服务器的 IP 地址需要手动或通过 DHCP 配置在用户主机的网络设置中。
+- 工作方式：
+收到主机的查询请求后，本地域名服务器会负责<strong>代替主机</strong>，在
+<strong>DNS
+层次结构中进行查询</strong>（通常是迭代查询，见下文），并将最终结果返回给主机。它还具有<strong>缓存</strong>功能。</p>
+<h3 id="因特网的域名解析过程">因特网的域名解析过程</h3>
+<p>主机是如何通过<strong>本地域名服务器</strong>，并利用上述的<strong>服务器层次结构</strong>，最终找到域名对应的
+IP 地址的呢？主要有两种查询方式：</p>
+<p><strong>递归查询</strong> (Recursive Query) - 特点：
+“你帮我查到底”。<strong>查询责任层层委托</strong>。 - 过程： 1.
+主机向本地域名服务器发起递归查询：“请告诉我 y.abc.com 的 IP 地址”。 2.
+本地域名服务器接受委托，向根域名服务器发起递归查询。 3.
+根域名服务器接受委托，向 .com 顶级域名服务器发起递归查询。 4. .com
+顶级域名服务器接受委托，向 abc.com 的权限域名服务器发起递归查询。 5.
+abc.com 权限服务器知道 y.abc.com 的 IP 地址，将结果返回给 .com TLD
+服务器。 6. 结果沿着<strong>委托链</strong>逐级返回：.com TLD <span class="math inline">→</span> 根 <span class="math inline">→</span>
+本地域名服务器。 7. <strong>本地域名服务器</strong>最终将 IP
+地址返回给主机。 - 缺点： 对被查询的服务器（尤其是根和 TLD
+服务器）负担过重。它们需要<strong>代替查询方</strong>去<strong>联系下一级服务器</strong>。
+<img lazyload src="/images/loading.svg" data-src="image-3.png" alt="alt text"></p>
+<p><strong>迭代查询</strong> (Iterative Query) - 特点：
+“我告诉你下一步该问谁”。<strong>查询方自己负责联系下一级服务器</strong>。
+- 过程： 1.
+主机向本地域名服务器发起递归查询（这一步通常还是递归）：“请告诉我
+y.abc.com 的 IP 地址”。 2.
+本地域名服务器开始迭代查询，向根域名服务器发起查询。 3.
+根域名服务器不进行委托，它回复：“我不知道，但你应该去问负责 .com 的 TLD
+服务器，它们的 IP 地址是 XXX”。 4. 本地域名服务器自己向 .com
+顶级域名服务器发起查询。.com TLD 服务器回复：“我不知道，但你应该去问负责
+abc.com 的权限服务器，它们的 IP 地址是 YYY”。 5. 本地域名服务器自己向
+abc.com 的权限域名服务器发起查询。abc.com 权限服务器回复：“y.abc.com 的
+IP 地址是 ZZZ”。 6. 本地域名服务器将最终结果 ZZZ 返回给主机。</p>
+<ul>
+<li>优点： 被查询的服务器（根、TLD）负担轻，只需返回下一级线索即可。
+<img lazyload src="/images/loading.svg" data-src="image-4.png" alt="alt text"></li>
+</ul>
+<p>实践中，通常采用混合模式： - 主机 <span class="math inline">→</span>
+本地域名服务器使用递归查询（主机只管问，<strong>本地服务器负责搞定</strong>）。
+- 本地域名服务器 <span class="math inline">→</span> 其他服务器 (根, TLD,
+权限)： 使用迭代查询（本地服务器自己跑腿，逐级询问）。</p>
+<p>传输协议：DNS 查询和响应报文通常使用 <strong>UDP</strong>
+协议进行封装，服务器监听熟知<strong>端口号 53</strong>。 &gt; 注：
+在某些特殊情况下（如响应报文过长超过 UDP 限制，或进行区域传送时），DNS
+也会使用 TCP 端口 53。</p>
+<h3 id="dns-缓存与生存时间-ttl">DNS 缓存与生存时间 (TTL)</h3>
+<p>DNS 查询（尤其是涉及根、TLD
+和权限服务器的迭代查询）可能需要<strong>多次网络往返</strong>，带来一定的延迟。为了优化这个过程，DNS
+系统广泛使用了<strong>高速缓存</strong> (Cache) 。</p>
+<ul>
+<li>提高域名解析效率： 对于经常访问的域名，可以直接从缓存中获取 IP
+地址，大大缩短查询时间 。</li>
+<li>减轻上级服务器负荷： 特别是减轻根域名服务器和顶级域名服务器的压力
+。如果每个查询都要从根开始，它们将不堪重负。</li>
+<li>减少因特网上的 DNS 查询报文数量： 降低整体网络流量 。</li>
+</ul>
+<p>DNS 缓存用来存放<strong>最近查询过的域名以及与其对应的 IP
+地址映射关系</strong>。它还会记录是从<strong>哪个服务器获得</strong>该映射信息的
+。</p>
+<p>查询流程：</p>
+<ol type="1">
+<li><p>当 DNS
+服务器（尤其是本地域名服务器）或用户主机收到一个域名解析请求时，它会<strong>首先检查自己的高速缓存</strong>
+。</p></li>
+<li><p>缓存命中 (Cache Hit):
+如果缓存中存在该域名的有效记录，则直接使用缓存中的 IP
+地址进行响应，无需再向其他 DNS 服务器发起查询。</p></li>
+<li><p>缓存未命中 (Cache Miss):
+如果缓存中没有该域名的记录，或者<strong>记录已过期</strong>，则按照标准的
+DNS 解析流程（递归/迭代查询）去获取 IP 地址
+。获取到结果后，将该映射关系<strong>存入缓存</strong>以备后续使用。</p></li>
+</ol>
+<p>不过, 域名到 IP 地址的映射关系并<strong>不是永久不变</strong>的
+（例如，服务器<strong>更换 IP
+地址</strong>）。如果缓存中的信息一直不更新，就可能导致用户访问到错误的
+IP 地址。</p>
+<p>这个问题的解决方案是生存时间 (<strong>Time-To-Live</strong>, TTL)</p>
+<p>为了保持缓存内容的正确性，DNS
+记录（由权限域名服务器提供）通常会包含一个<strong>生存时间 (TTL)
+值</strong>。</p>
+<p>DNS 服务器和主机在缓存某条记录时，也会记下它的 TTL 。缓存中的记录会在
+<strong>TTL 到期后被删除</strong>。</p>
+<p>这样，当下一次再查询该域名时，就会因为缓存未命中而重新向权限服务器获取最新的映射关系。</p>
+<blockquote>
+<p>实际 TTL
+由域名的管理者在权限服务器上配置，可以是几分钟到几天不等。</p>
+</blockquote>
+<p>DNS 缓存则存在于 DNS 解析路径的多个环节：</p>
+<ul>
+<li>用户主机： <strong>操作系统</strong>通常会维护自己的 DNS 缓存
+。有些<strong>应用程序</strong>（如浏览器）也可能有自己的缓存。</li>
+<li><strong>本地域名服务器</strong>：
+这是<strong>最主要的缓存地点</strong>，服务于大量用户，缓存命中率通常较高
+。</li>
+<li><strong>中间 DNS 服务器</strong>： 在迭代查询过程中，根服务器、TLD
+服务器等也可能进行一定程度的缓存（主要是缓存下一级服务器的地址）。</li>
+</ul>
+<h2 id="万维网-www">万维网 (WWW)</h2>
+<p>首先, 万维网和我们之前提到的因特网, 以太网等概念不同, 万维网 (World
+Wide Web, WWW)
+并非某种特殊的计算机网络，而是运行在因特网之上的一个<strong>分布式应用</strong>
+。</p>
+<p>它可以被看作是一个大规模的、联机式的<strong>信息储藏所</strong>。其核心机制是<strong>超链接</strong>
+(Hyperlink)：万维网通过网页之间的超链接，将分布在全球<strong>不同网站上的信息</strong>（网页）<strong>逻辑上连接</strong>成<strong>一张巨大的信息网</strong>。</p>
+<p>万维网的信息载体是<strong>网页</strong>（Web
+Page），它是通过<strong>HTML</strong>（超文本标记语言）编写的文档，通常包含文本、图像、视频等多媒体内容。用户可以通过浏览器访问这些网页，并通过超链接在不同网页之间导航。</p>
+<p>而说到<strong>浏览器</strong>,
+它是用户<strong>访问万维网的主要工具</strong>。浏览器通过<strong>HTTP</strong>（超文本传输协议）与托管网页的<strong>Web
+服务器</strong>进行通信，获取网页内容并呈现给用户。</p>
+<blockquote>
+<p>浏览器最重要的部分是<strong>渲染引擎</strong>，也称为<strong>浏览器内核</strong>。它负责<strong>解析网页内容</strong>（HTML,
+CSS, JavaScript 等）并将其显示 (渲染) 在屏幕上。
+不同浏览器使用不同的渲染引擎, 例如Chrome和Edge 使用
+<strong>Blink</strong>，Firefox 使用 <strong>Gecko</strong>，Safari 使用
+<strong>WebKit</strong>等。不同的浏览器内核对网页内容的解析可能存在差异，因此同一个网页在不同内核的浏览器中显示效果可能不同,
+Web 开发者需要考虑跨浏览器兼容性 。</p>
+</blockquote>
+<p>万维网应用的基本交互过程: 1. 用户输入 URL：
+用户在浏览器地址栏输入网站的域名（例如 www.google.com） 。 2. DNS 解析：
+浏览器通过 DNS 服务器将域名解析为对应的 IP 地址 。 3. 浏览器发送请求：
+<strong>浏览器进程</strong> (作为 HTTP 客户端)
+向目标万维网<strong>服务器</strong>发送 <strong>HTTP 请求报文</strong>。
+4. 服务器处理与响应： 万维网服务器进程 (作为 HTTP 服务器)
+收到请求后，执行相应操作（如查找文件），然后向<strong>浏览器</strong>发回
+<strong>HTTP 响应报文</strong> 。 5. 浏览器<strong>渲染</strong>：
+浏览器接收并解析响应报文中的内容（如 HTML
+文件），然后将其渲染成用户可见的网页 。</p>
+<p>这个看似简单的过程，实际上涉及了 TCP/IP
+体系结构中多个层次的协议协同工作，包括应用层的 HTTP, DHCP, DNS；传输层的
+TCP；网际层的 IP,
+ARP；以及网络接口层的数据链路层协议。本章后续将重点介绍 HTTP。</p>
+<h3 id="统一资源定位符-url">统一资源定位符 (URL)</h3>
+<p>为了方便、统一地访问分布在世界范围内的各种文档或资源，万维网使用<strong>统一资源定位符</strong>
+(Uniform Resource Locator, URL) 来指明因特网上任何种类资源的位置。</p>
+<p>URL
+一般由四个部分组成：<code>&lt;协议&gt;://&lt;主机&gt;:&lt;端口&gt;/&lt;路径&gt;</code></p>
+<ul>
+<li><p>&lt;协议&gt; (Protocol)： 指明访问该资源所使用的协议。常见的有：</p>
+<ul>
+<li>http：超文本传输协议。</li>
+<li>https：安全的超文本传输协议。</li>
+<li>ftp：文件传输协议。</li>
+<li>file：本地文件系统。</li>
+</ul></li>
+<li><p>&lt;主机&gt; (Host)：
+指明<strong>存放资源的服务器</strong>。可以是<strong>域名</strong>或
+<strong>IP 地址</strong>。</p></li>
+<li><p>&lt;端口&gt; (Port)：
+指明<strong>服务器上监听请求的端口号</strong>。</p>
+<ul>
+<li>每个协议都有默认端口（例如 HTTP 默认 80 ，HTTPS 默认 443）。</li>
+<li>如果 URL 中省略了端口号，浏览器会自动使用该协议的默认端口。</li>
+</ul></li>
+<li><p>&lt;路径&gt; (Path)：
+指明<strong>资源在服务器上的具体位置</strong>（类似文件路径）。</p>
+<ul>
+<li>例如 /index.htm 指向根目录下的 index.htm 文件。</li>
+<li>服务器也是一台主机,
+上面也有自己的文件系统。资源路径就是指向该文件系统中的具体文件或目录。</li>
+</ul></li>
+</ul>
+<h3 id="万维网文档">万维网文档</h3>
+<p>当我们浏览网页时，浏览器实际上是从 Web
+服务器获取并解析、渲染一系列文档。这些文档共同构成了我们看到的丰富多彩、交互式的网页。万维网文档主要由以下三种核心技术（语言）组成
+：</p>
+<ol type="1">
+<li>HTML (HyperText Markup Language) - 超文本标记语言</li>
+</ol>
+<ul>
+<li>核心作用： 定义网页的结构和内容 。</li>
+<li>如何工作： HTML 使用各种“标签” (Tag)
+来标记文本的不同部分，告诉浏览器这部分内容是什么。
+<ul>
+<li>例如，<code>&lt;p&gt;</code>
+标签表示一个段落，<code>&lt;h1&gt;</code>
+标签表示一级标题，<code>&lt;img&gt;</code>
+标签表示一张图片，<code>&lt;a&gt;</code> 标签表示一个超链接。</li>
+</ul></li>
+<li>结构： 一个基本的 HTML 文档通常包含
+<code>&lt;head&gt;</code>（首部）和
+<code>&lt;body&gt;</code>（主体）两大部分 。
+<ul>
+<li><code>&lt;head&gt;</code> 部分包含元信息，如网页标题
+(<code>&lt;title&gt;</code>) 、引用的外部文件等。</li>
+<li><code>&lt;body&gt;</code>
+部分包含用户实际看到的网页内容，如文本、图片、链接等 。</li>
+</ul></li>
+<li>本质： HTML 负责网页的骨架和原始素材。</li>
+</ul>
+<ol start="2" type="1">
+<li>CSS (Cascading Style Sheets) - 层叠样式表</li>
+</ol>
+<ul>
+<li>核心作用： 描述网页的样式或外观（从审美的角度）。</li>
+<li>解决的问题： 纯 HTML
+只能定义结构，无法很好地控制内容的显示效果（如颜色、字体大小、布局等）。CSS
+的出现实现了内容与样式的分离。</li>
+<li>如何工作： CSS 定义规则 (Rule)，指定某个或某些 HTML
+元素应该如何显示。</li>
+<li>引入方式： CSS 规则可以写在 HTML
+文件内部（<code>&lt;style&gt;</code> 标签或 style
+属性），但更常见和推荐的方式是写在独立的 .css 文件中，然后在 HTML 文档的
+<code>&lt;head&gt;</code> 部分使用 <code>&lt;link&gt;</code>
+标签将其引入。</li>
+<li>本质： CSS 负责网页的“妆造”和“排版”。</li>
+</ul>
+<ol start="3" type="1">
+<li>JavaScript (JS)</li>
+</ol>
+<ul>
+<li>核心作用： 控制网页的行为，实现交互功能 。</li>
+<li>解决的问题： HTML 和 CSS
+主要负责静态内容的展示。如果希望网页能够响应用户的操作（如点击按钮、输入内容）、动态地修改页面内容、与服务器进行异步通信等，就需要
+JavaScript。</li>
+<li>如何工作： JavaScript
+是一种<strong>脚本语言</strong>，可以在<strong>浏览器中运行</strong>。它可以：
+<ul>
+<li>操作 HTML 元素： 改变元素的样式、内容、属性等。</li>
+<li>响应用户事件： 如鼠标点击、键盘输入、页面加载等。</li>
+<li>与服务器通信：
+在不刷新整个页面的情况下，向服务器发送请求并更新部分页面内容
+(AJAX)。</li>
+</ul></li>
+<li>引入方式： JavaScript 代码可以写在 HTML
+文件内部（<code>&lt;script&gt;</code>
+标签），但更常见和推荐的方式是写在独立的 .js 文件中，然后在 HTML 文档的
+<code>&lt;head&gt;</code> 或 <code>&lt;body&gt;</code> 末尾使用
+<code>&lt;script src="..."&gt;</code> 标签将其引入 。</li>
+<li>本质： JavaScript 负责网页的“动作”和“智能”。</li>
+</ul>
+<p>HTML、CSS 和 JavaScript 是构建现代网页的三大基石
+。它们各自负责不同的层面：HTML 构建结构和内容，CSS
+美化样式和布局，JavaScript
+实现交互和动态行为。浏览器内核的工作就是将这三者结合起来，解析并渲染出用户最终看到的完整网页。这些文档（静态页面或由服务器后端程序动态生成）都需要通过
+HTTP 协议从服务器传输到用户的浏览器。</p>
+<h3 id="超文本传输协议-http">超文本传输协议 (HTTP)</h3>
+<p>HTTP 定义了浏览器 (Web 客户端) <strong>如何向 Web
+服务器请求</strong>万维网文档（如 HTML, CSS, JS 文件,
+图片等），以及服务器如何将这些文档传送给浏览器 。</p>
+<p>基本流程：</p>
+<ol type="1">
+<li>建立 <strong>TCP 连接</strong>： 浏览器进程（HTTP
+客户进程）首先需要与 Web 服务器进程（HTTP 服务器进程）建立一条 TCP 连接
+。Web 服务器通常监听熟知端口号 80 。</li>
+<li>发送 <strong>HTTP 请求报文</strong>： TCP
+连接建立后，浏览器通过该连接向服务器发送一个 HTTP 请求报文 。</li>
+<li>服务器处理请求： Web
+服务器收到请求报文后，执行相应的操作（如查找请求的文件）。</li>
+<li>发送 <strong>HTTP 响应报文</strong>： 服务器通过同一条 TCP
+连接向浏览器发回一个 HTTP 响应报文 。</li>
+<li>（可能）释放 TCP 连接： 根据 HTTP 版本的不同，TCP
+连接可能会在此之后关闭，也可能保持打开以供后续请求使用。</li>
+</ol>
+<h4 id="http-的连接方式">HTTP 的连接方式</h4>
+<p><strong>非持续连接方式</strong> (Non-Persistent Connection) -
+<strong>HTTP/1.0</strong></p>
+<ul>
+<li><p>工作模式： 每次浏览器要<strong>请求一个文件</strong>（例如一个
+HTML 文件，或该 HTML 文件引用的一个图片），都需要与服务器建立一个新的
+TCP 连接 。当<strong>收到对该文件的响应后</strong>，<strong>TCP
+连接立即关闭</strong>。</p></li>
+<li><p>时间开销：</p>
+<ul>
+<li>建立 TCP 连接需要 1 个 RTT (往返时间)。</li>
+<li>发送 HTTP 请求并等待响应需要 1 个 RTT。</li>
+<li>因此，请求一个文档至少需要 2 RTT 的开销，再加上文档本身的传输时延
+。</li>
+</ul></li>
+<li><p>缺点： 如果一个网页包含多个对象（HTML 文件 + 10
+张图片），则需要建立 11 次 TCP 连接，产生 22 RTT
+的开销，效率非常低。虽然浏览器可以通过建立多个<strong>并行 TCP
+连接</strong>来缓解时延，但这会大量占用服务器资源 。 <img lazyload src="/images/loading.svg" data-src="image-5.png" alt="alt text"> <strong>持续连接方式</strong>
+(Persistent Connection) - <strong>HTTP/1.1</strong></p></li>
+<li><p>工作模式： 万维网服务器在<strong>发送响应后</strong>仍然保持
+<strong>TCP 连接打开</strong>
+。同一个客户（浏览器）和服务器可以在这条已建立的连接上<strong>继续传送后续的
+HTTP
+请求和响应报文</strong>。这不仅限于同一个页面上的对象，只要是访问<strong>同一个服务器</strong>上的资源即可
+。</p></li>
+<li><p>流水线 (Pipelining)： HTTP/1.1
+的持续连接还可以使用<strong>流水线</strong>方式进一步提高效率
+。浏览器可以在<strong>收到前一个响应之前</strong>，就<strong>连续发送多个
+HTTP 请求报文</strong> 。服务器收到这些请求后，再依次发回对应的响应报文
+。</p></li>
+<li><p>优点： 极大地减少了建立 TCP 连接所需的 RTT
+开销和服务器负担，提高了文档下载效率 。</p></li>
+</ul>
+<h4 id="http-的报文格式">HTTP 的报文格式</h4>
+<p>HTTP 是<strong>面向文本</strong>的协议，其报文中的每个字段都是 ASCII
+码串，并且<strong>字段长度不确定</strong>
+。报文由<strong>行</strong>组成，每行以<strong>回车换行</strong> (CRLF)
+结束 。 <img lazyload src="/images/loading.svg" data-src="image-6.png" alt="alt text"> <strong>HTTP
+请求报文</strong> (Request Message) 由以下几部分组成：</p>
+<ul>
+<li><p>请求行 (Request Line)：<code>方法 URL 版本 CRLF</code>。</p>
+<ul>
+<li>方法 (Method)：指明<strong>对资源的操作</strong>，如
+<strong>GET</strong>, <strong>POST</strong> 等 。</li>
+<li>URL：请求的资源标识符, 简写形式（不含协议和主机部分）即可，如
+<code>/index.htm</code> 。</li>
+<li>版本 (Version)：使用的 HTTP 版本，如 HTTP/1.1 。</li>
+</ul></li>
+<li><p>首部行 (Header Lines)：
+<code>首部字段名: 值 CRLF</code>。可以有零个或多个,
+用于传递附加信息，例如，告知服务器浏览器类型、请求的主机名、连接方式等
+。</p></li>
+<li><p>空行 (Empty Line)： 一个 CRLF 。标志着首部行的结束。</p></li>
+<li><p>实体主体 (Entity Body)： 实际要传输的数据（例如 POST
+方法提交的表单数据）。对于 GET 请求，通常不用 。</p></li>
+</ul>
+<p><img lazyload src="/images/loading.svg" data-src="image-7.png" alt="alt text"> 请求行示例：
+<code>GET /index.htm HTTP/1.1</code>。 首部行示例：</p>
+<ul>
+<li><code>Host: www.hnust.cn</code>：指明请求的服务器域名。</li>
+<li><code>Connection: close</code>：告知服务器发送响应后关闭 TCP
+连接（非持续连接）。</li>
+<li><code>User-Agent: Mozilla/5.0</code>：告知服务器浏览器的类型和版本。</li>
+<li><code>Accept-Language: cn</code>：告知服务器用户希望优先接收中文版本的文档。</li>
+</ul>
+<p>请求行的常见方法： - GET：请求获取 URL 标识的资源。 -
+HEAD：请求资源的首部信息（与 GET 类似，但响应中没有主体）。 -
+POST：向服务器提交数据（如表单）。 - PUT：在指定 URL
+处存储一个文档（上传）。 - DELETE：删除 URL 标识的资源。</p>
+<p><img lazyload src="/images/loading.svg" data-src="image-8.png" alt="alt text"> <strong>HTTP
+响应报文</strong> (Response Message) 的格式如下：</p>
+<ul>
+<li><p>状态行 (Status Line)： <code>版本 状态码 短语 CRLF</code> 。</p>
+<ul>
+<li>版本 (Version)：HTTP 版本，如 HTTP/1.1 。</li>
+<li>状态码 (Status Code)：三位数字，表示请求处理的结果。常见状态码包括：
+<ul>
+<li>200：请求成功。</li>
+<li>301：资源永久移动（重定向）。</li>
+<li>404：未找到资源。</li>
+<li>500：服务器内部错误。</li>
+</ul></li>
+<li>短语 (Reason Phrase)：对状态码的简短文本描述。</li>
+</ul></li>
+<li><p>首部行 (Header Lines)： 与请求报文类似，首部字段名: 值 CRLF
+。</p></li>
+<li><p>空行 (Empty Line)： 一个 CRLF 。</p></li>
+<li><p>实体主体 (Entity Body)： 实际返回的资源内容（如 HTML
+文档、图片数据）。有些响应（如 HEAD
+请求的响应，或某些错误响应）可能没有主体 。</p></li>
+</ul>
+<p>状态码分类： - 1xx：信息性，表示请求已接收，继续处理 。 -
+2xx：成功，表示请求已被成功接收、理解、接受 。如 200 OK, 202 Accepted。
+- 3xx：重定向，需要后续操作才能完成请求 。如 301 Moved Permanently, 304
+Not Modified。 - 4xx：客户端错误，表示请求包含语法错误或无法完成 。如
+400 Bad Request, 404 Not Found。 -
+5xx：服务器错误，表示服务器在处理请求的过程中发生了错误 。如 500
+Internal Server Error, 503 Service Unavailable。</p>
+<p>下面是一些状态行示例： -
+<code>HTTP/1.1 202 Accepted</code>：请求已被接受 。 -
+<code>HTTP/1.1 400 Bad Request</code>：请求有语法错误 。 -
+<code>HTTP/1.1 404 Not Found</code>：服务器找不到请求的资源 。 -
+<code>HTTP/1.1 500 Internal Server Error</code>：服务器内部错误 。 -
+<code>HTTP/1.1 503 Service Unavailable</code>：服务不可用 。</p>
+<p>不过,
+浏览器通常不会直接显示状态码，而是以更友好的方式（如特定的错误页面）告知用户。例如，看到“找不到页面”通常对应
+404 状态码 。</p>
+<h3 id="使用-cookie-在服务器上记录信息">使用 Cookie
+在服务器上记录信息</h3>
+<p>早期的万维网应用主要是用户查看存放在不同服务器上的静态文档。为了简化服务器的设计，HTTP
+被设计成一种<strong>无状态 (Stateless) 协议</strong> 。</p>
+<p>服务器<strong>不保存关于过去客户端请求的任何信息</strong>。每个 HTTP
+请求都被视为一个<strong>独立的事务</strong>，与之前的任何请求都没有关联。服务器处理完请求并发回响应后，就“忘记”了这个客户端。</p>
+<p>但是随着万维网的发展，出现了网上购物、电子商务、社交网络等需要<strong>识别用户身份并保持用户状态的应用</strong>
+。例如购物网站需要记住用户的购物车内容, 社交网站需要记住用户的登录状态,
+新闻网站需要根据用户的偏好推送内容。</p>
+<p>如果 HTTP
+完全无状态，用户每次点击页面或刷新，服务器都会“忘记”他是谁，导致无法实现这些功能（例如，购物车每次都会被清空）。</p>
+<p>上述问题的解决方案就是 <strong>Cookie</strong> - <strong>为无状态的
+HTTP 增加状态</strong></p>
+<p>Cookie 提供了一种机制，使得 Web
+服务器能够“<strong>记住</strong>”（识别）用户，而无需用户在每个请求中都主动提供身份信息（如反复输入用户名密码）
+。</p>
+<p>本质： Cookie 是一种对无状态的 HTTP 进行<strong>状态化</strong>
+(Stateful) 的技术
+。它允许服务器在<strong>客户端（浏览器）存储少量信息</strong>，并在<strong>后续请求中取回这些信息</strong>。</p>
+<h4 id="基本工作原理">基本工作原理</h4>
+<p>Cookie 的工作涉及浏览器和服务器之间的一系列交互： 1.
+<strong>首次请求</strong> (浏览器 <span class="math inline">→</span>
+服务器)：当用户的浏览器第一次访问某个 Web
+服务器时，它发送一个<strong>普通的 HTTP 请求报文</strong>。 2.
+<strong>服务器生成 Cookie 并创建记录</strong> (服务器端)：Web
+服务器收到请求后，意识到这是一个<strong>新用户</strong>（<strong>请求中没有携带
+Cookie 信息</strong>）。服务器为该用户（浏览器）<strong>生成一个唯一的
+Cookie 识别码</strong> (Cookie ID)。服务器以此 Cookie ID
+作为<strong>索引</strong>，在其<strong>后端数据库中创建一个条目</strong>，用来<strong>记录该用户访问该网站的各种信息</strong>（例如登录状态、购物车内容、偏好设置等）。
+3. <strong>服务器发送 Cookie</strong> (服务器 <span class="math inline">→</span> 浏览器)：服务器在<strong>发回给浏览器的
+HTTP
+响应报文</strong>中，添加一个<strong>特殊的首部行</strong>：<code>Set-Cookie: xxx</code>，其值就是刚刚生成的那个唯一的
+Cookie ID (例如 Set-Cookie: 12345678)。 4. <strong>浏览器存储
+Cookie</strong> (浏览器端)：浏览器收到带有 Set-Cookie:
+首部的响应后，会解析出服务器的域名和 Cookie
+ID。浏览器将这对信息（<strong>服务器域名, Cookie
+ID</strong>）存储在<strong>本地</strong>一个特定的 <strong>Cookie
+文件或内存</strong>中。 5. <strong>后续请求</strong> (浏览器 <span class="math inline">→</span>
+服务器)：当用户再次使用该浏览器访问同一个网站（域名相同）时。浏览器在发送
+HTTP 请求报文之前，会<strong>自动检查本地 Cookie
+文件</strong>。它会找到之前存储的、与该域名对应的 Cookie ID (例如
+12345678)。浏览器将这个 <strong>Cookie ID
+放入请求报文的一个首部行</strong>：<code>Cookie: xxx</code>
+中<strong>发送给服务器</strong> (例如 Cookie: 12345678)。 6.
+服务器识别用户 (服务器端)：Web 服务器收到带有 Cookie:
+首部的请求后，<strong>提取出其中的 Cookie</strong> ID。服务器使用这个
+Cookie ID 在其后端数据库中<strong>查找</strong>对应的记录。 7.
+服务器返回个性化内容 (服务器 <span class="math inline">→</span>
+浏览器)：通过 Cookie ID
+识别出用户后，服务器就可以获取该用户的状态信息（如登录状态、购物车内容等）。服务器据此生成并返回一个个性化的网页给用户。例如，显示“欢迎回来，用户名！”或展示用户上次加入购物车的商品。</p>
+<p><img lazyload src="/images/loading.svg" data-src="image-9.png" alt="alt text"> 例如,
+当用户在某些网页登录时勾选了“<strong>记住我</strong>” ，服务器可能会在
+<code>Set-Cookie: xxx</code> 响应中为这个 Cookie
+设置一个<strong>较长的过期时间</strong>。这样，即使用户关闭了浏览器甚至重启了电脑，只要
+Cookie 文件中的记录没过期，下次访问该网站时浏览器仍会自动发送该
+Cookie，服务器就能识别用户，实现自动登录。</p>
+<h3 id="万维网缓存与代理服务器">万维网缓存与代理服务器</h3>
+<p>为了提高万维网 (WWW) 的访问效率，减少网络流量和用户感受到的延迟，Web
+系统广泛使用了<strong>缓存</strong> (Caching) 机制,
+这主要体现在两个方面：</p>
+<ul>
+<li><p><strong>Web 缓存 (Web Cache)</strong>：</p>
+<ul>
+<li>是一种存储<strong>最近访问过的 Web 对象</strong>（如 HTML
+页面、图片、CSS 文件等）副本的机制 。</li>
+<li>位置：
+可以位于<strong>客户端</strong>（例如浏览器自己的缓存），也可以位于<strong>网络中的中间系统</strong>。</li>
+</ul></li>
+<li><p><strong>代理服务器 (Proxy Server)</strong>：</p>
+<ul>
+<li>位于<strong>中间系统上的 Web
+缓存</strong>，通常服务于一个机构（如校园网、企业网）内的<strong>多个用户</strong>
+。</li>
+<li>作用： 充当用户（浏览器）和原始 Web 服务器之间的中介。</li>
+</ul></li>
+</ul>
+<h4 id="web-缓存的基本工作原理">Web 缓存的基本工作原理</h4>
+<p>Web 缓存（无论是浏览器缓存还是代理服务器）会把最近的一些 HTTP
+请求及其对应的响应（包含 Web
+对象）暂存在本地存储（如<strong>磁盘</strong>）中 。</p>
+<p>当一个新的 HTTP 请求到达时（例如，浏览器请求一个图片）：</p>
+<ul>
+<li><strong>浏览器缓存</strong>： 浏览器首先检查自己的缓存。</li>
+<li><strong>代理服务器</strong>：
+如果<strong>浏览器未缓存</strong>或<strong>配置了使用代理</strong>，请求会发往代理服务器，代理服务器检查自己的缓存。</li>
+</ul>
+<p>此时有两种可能的情况： - <strong>缓存命中 (Cache Hit)</strong>：
+如果缓存中存在所请求对象的有效副本，缓存（浏览器或代理）就直接将这个副本返回给请求者，无需再向原始
+Web 服务器发起请求 。 - <strong>缓存未命中 (Cache Miss)</strong>：
+如果缓存中没有所请求对象的副本，或者副本已失效（见下文），<strong>缓存服务器</strong>（代理）则会代表请求者，<strong>向原始
+Web
+服务器发起请求</strong>，获取该对象。获取到对象后，<strong>先将其存入自己的缓存</strong>，然后再返回给最初的请求者。</p>
+<blockquote>
+<p>浏览器缓存和代理服务器缓存有点类似一级缓存和二级缓存的关系。浏览器缓存是用户本地的一级缓存，代理服务器缓存是网络中的二级缓存。</p>
+</blockquote>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-10.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h4 id="缓存一致性问题">缓存一致性问题</h4>
+<p>Web 缓存的一个重要挑战是<strong>缓存一致性</strong> (Cache
+Consistency)
+问题：如果原始服务器上的文档已经被修改了，但代理服务器（或浏览器）缓存中的副本还是旧版本，用户获取到的将是过期的信息。如何确保缓存副本与原始文档保持一致？</p>
+<p>解决方案是 <strong>HTTP 缓存验证机制</strong>. HTTP
+协议通过特定的首部字段来处理缓存一致性问题：</p>
+<p>原始服务器在响应中通常会包含：</p>
+<ul>
+<li><strong>Last-Modified</strong>：资源最后修改的时间 。</li>
+<li><strong>Expires</strong>：资源的过期时间（在此时间前，缓存可认为副本是新鲜的）
+。</li>
+<li><strong>ETag</strong>：资源的实体标签，用于标识特定版本的资源。</li>
+<li><strong>Cache-Control</strong>：指示缓存机制的指令。</li>
+</ul>
+<p>缓存验证流程：</p>
+<ol type="1">
+<li><p>检查本地副本新鲜度：
+当代理服务器收到请求时，先检查缓存中是否有该对象的副本。</p>
+<ul>
+<li><p>副本未过期： 如果副本存在且根据 Expires
+字段判断未过期，则直接返回缓存副本给主机 。</p></li>
+<li><p>副本已过期 (或无 Expires 信息)：
+如果副本已过期或没有过期信息，代理服务器不能直接返回副本，需要向原始服务器验证
+。</p></li>
+</ul></li>
+<li><p>发送<strong>条件 GET 请求</strong> (Conditional GET)：
+代理服务器向原始服务器发送一个特殊的 GET 请求，其中包含一个首部行
+If-Modified-Since:，其值就是缓存副本的 Last-Modified 时间
+。这个请求的意思是：“请把这个资源发给我，但前提是它在 XXX
+时间之后被修改过”。</p></li>
+<li><p>原始服务器响应：</p>
+<ul>
+<li><p>未修改 (图 6-51b)： 如果原始服务器发现资源自 If-Modified-Since:
+指定的时间以来没有被修改过，它就不会发送整个资源内容，而是返回一个状态码为
+304 Not Modified 的响应报文（该响应没有实体主体） 。</p></li>
+<li><p>已修改 (图 6-51c)：
+如果资源已经被修改，原始服务器会返回一个正常的 200 OK
+响应，其中包含更新后的资源内容以及新的 Last-Modified 和
+Expires（或其他缓存控制）头 。</p></li>
+</ul></li>
+<li><p>代理服务器处理响应：</p>
+<ul>
+<li><p>收到 304：
+代理服务器知道缓存中的副本仍然是有效的。它会更新副本的元数据（如新的
+Expires 时间），然后将缓存中的副本返回给主机 。</p></li>
+<li><p>收到 200：
+代理服务器用响应中的新内容更新本地缓存的副本及其元数据，然后将新内容返回给主机
+。 <img lazyload src="/images/loading.svg" data-src="image-11.png" alt="alt text"></p></li>
+</ul></li>
+</ol>
+<p>通过这种条件 GET
+机制，即使缓存副本过期需要验证，如果资源并未实际更改，也可以避免传输整个资源内容，只需传输一个简短的
+304 响应即可，仍然节省了带宽。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/web/">#web</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/computer-network/">#computer network</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/24/lang/CPP/%E5%B8%B8%E7%94%A8%E5%BA%93/%E6%97%B6%E9%97%B4%E5%BA%93_chrono/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48"></span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/22/web/Computer%20Network/%E4%BC%A0%E8%BE%93%E5%B1%82/%E4%BC%A0%E8%BE%93%E5%B1%82/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">传输层</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">应用层</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%B9%E5%BC%8F%E5%92%8C%E5%AF%B9%E7%AD%89%E6%96%B9%E5%BC%8F"><span class="nav-text">客户&#x2F;服务器方式和对等方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%B9%E5%BC%8F-clientserver-cs"><span class="nav-text">客户&#x2F;服务器方式 (Client&#x2F;Server,
+C&#x2F;S)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%AD%89%E6%96%B9%E5%BC%8F-peer-to-peer-p2p"><span class="nav-text">对等方式 (Peer-to-Peer, P2P)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E5%8D%8F%E8%AE%AE-dhcp"><span class="nav-text">动态主机配置协议 (DHCP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-text">动态主机配置协议的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dhcp-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-text">DHCP 的工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ip-%E5%9C%B0%E5%9D%80%E7%A7%9F%E7%BA%A6%E7%9A%84%E6%9B%B4%E6%96%B0-%E7%BB%AD%E7%BA%A6"><span class="nav-text">IP 地址租约的更新 (续约)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dhcp-%E4%B8%AD%E7%BB%A7%E4%BB%A3%E7%90%86"><span class="nav-text">DHCP 中继代理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns"><span class="nav-text">域名系统(DNS)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dns-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">DNS 的基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E7%BB%93%E6%9E%84"><span class="nav-text">因特网的域名结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">因特网的域名服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-text">因特网的域名解析过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns-%E7%BC%93%E5%AD%98%E4%B8%8E%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4-ttl"><span class="nav-text">DNS 缓存与生存时间 (TTL)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91-www"><span class="nav-text">万维网 (WWW)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6-url"><span class="nav-text">统一资源定位符 (URL)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91%E6%96%87%E6%A1%A3"><span class="nav-text">万维网文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE-http"><span class="nav-text">超文本传输协议 (HTTP)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#http-%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F"><span class="nav-text">HTTP 的连接方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#http-%E7%9A%84%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="nav-text">HTTP 的报文格式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-cookie-%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E8%AE%B0%E5%BD%95%E4%BF%A1%E6%81%AF"><span class="nav-text">使用 Cookie
+在服务器上记录信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">基本工作原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91%E7%BC%93%E5%AD%98%E4%B8%8E%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">万维网缓存与代理服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#web-%E7%BC%93%E5%AD%98%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">Web 缓存的基本工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-text">缓存一致性问题</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,25 +833,43 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>该条款的核心论点是，std::async 的默认启动策略虽然为标准库调度器提供了有用的灵活性，但也给程序员带来了不确定性，可能导致难以发现的bug。因此，当你确实需要函数必须异步执行时，就应该明确指定这一点。</p>
-<h3 id="std-async-的启动策略"><a href="#std-async-的启动策略" class="headerlink" title="std::async 的启动策略"></a>std::async 的启动策略</h3><p>std::async 可以接受一个启动策略参数，来控制任务的执行方式：</p>
-<ul>
-<li>std::launch::async：此策略保证任务会在一个不同的线程上异步执行 。</li>
-<li>std::launch::deferred：此策略意味着任务会被延迟执行。它只会在返回的 std::future 对象上调用 get() 或 wait() 时，才同步地（即阻塞地）在调用 get() 或 wait() 的那个线程上执行。如果 get() 或 wait() 一直未被调用，任务将永远不会执行 。</li>
-<li>默认启动策略：如果你不指定任何策略，std::async 会使用 std::launch::async | std::launch::deferred 的组合策略 。</li>
-</ul>
+			<p>该条款的核心论点是，std::async
+的默认启动策略虽然为标准库调度器提供了有用的灵活性，但也给程序员带来了不确定性，可能导致难以发现的bug。因此，当你确实需要函数必须异步执行时，就应该明确指定这一点。</p>
+<h3 id="stdasync-的启动策略">std::async 的启动策略</h3>
+<p>std::async 可以接受一个启动策略参数，来控制任务的执行方式： -
+std::launch::async：此策略保证任务会在一个不同的线程上异步执行 。 -
+std::launch::deferred：此策略意味着任务会被延迟执行。它只会在返回的
+std::future 对象上调用 get() 或 wait() 时，才同步地（即阻塞地）在调用
+get() 或 wait() 的那个线程上执行。如果 get() 或 wait()
+一直未被调用，任务将永远不会执行 。 -
+默认启动策略：如果你不指定任何策略，std::async 会使用 std::launch::async
+| std::launch::deferred 的组合策略 。</p>
 <p>默认的组合策略赋予了标准库调度器极大的灵活性，让它可以根据系统当前的线程负载情况来决定任务的执行方式，这有助于避免线程耗尽和超订问题（如条款35所述）。然而，这种灵活性也给程序员带来了几个严重的不确定性：</p>
 <ul>
-<li>无法预知任务是否并发运行：你无法保证任务 f 会与调用 std::async 的线程 t 并发执行 。</li>
-<li>无法预知任务运行在哪一个线程上：你无法确定任务 f 是运行在一个新线程上，还是运行在对 future 调用 get() 或 wait() 的那个线程上 。这对 thread_local 变量的使用会产生影响 。</li>
-<li>无法保证任务一定会被执行：如果 std::async 返回的 future 在程序的任何路径上都未被调用 get() 或 wait()，那么被延迟执行的任务可能永远不会启动。</li>
+<li>无法预知任务是否并发运行：你无法保证任务 f 会与调用 std::async
+的线程 t 并发执行 。</li>
+<li>无法预知任务运行在哪一个线程上：你无法确定任务 f
+是运行在一个新线程上，还是运行在对 future 调用 get() 或 wait()
+的那个线程上 。这对 thread_local 变量的使用会产生影响 。</li>
+<li>无法保证任务一定会被执行：如果 std::async 返回的 future
+在程序的任何路径上都未被调用 get() 或
+wait()，那么被延迟执行的任务可能永远不会启动。</li>
 </ul>
-<h3 id="核心陷阱：基于超时的-wait-与无限循环"><a href="#核心陷阱：基于超时的-wait-与无限循环" class="headerlink" title="核心陷阱：基于超时的 wait 与无限循环"></a>核心陷阱：基于超时的 wait 与无限循环</h3><p>默认策略最危险的陷阱在于它与基于超时的等待函数（如 wait_for）的交互</p>
+<h3 id="核心陷阱基于超时的-wait-与无限循环">核心陷阱：基于超时的 wait
+与无限循环</h3>
+<p>默认策略最危险的陷阱在于它与基于超时的等待函数（如
+wait_for）的交互</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std::literals;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>{</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(<span class="number">1</span>s);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> fut = std::<span class="built_in">async</span>(f); <span class="comment">// 采用默认启动策略</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 意图是每 100ms 检查一次任务是否完成</span></span><br><span class="line"><span class="keyword">while</span> (fut.<span class="built_in">wait_for</span>(<span class="number">100</span>ms) != std::future_status::ready) {</span><br><span class="line">    <span class="comment">// ... 这个循环可能永远不会结束！</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>如果调度器因为系统负载过高等原因，为任务 f 选择了 std::launch::deferred 策略，那么 fut.wait_for(…) 的返回值将永远是 std::future_status::deferred。这也就意味着, fut.wait_for(…) 的结果永远不等于 std::future_status::ready，导致 while 循环成为一个无限循环。这个bug非常隐蔽，因为它可能只在高负载的生产环境中才会出现。</p>
-<h3 id="解决方案：显式指定启动策略"><a href="#解决方案：显式指定启动策略" class="headerlink" title="解决方案：显式指定启动策略"></a>解决方案：显式指定启动策略</h3><p>该条款给出的结论非常明确：如果你需要确保任务必须异步执行，从而避免上述所有不确定性和陷阱，你就必须在调用 std::async 时显式指定 std::launch::async 启动策略。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> fut = std::<span class="built_in">async</span>(std::launch::async, f); <span class="comment">// 保证 f 会异步执行</span></span><br></pre></td></tr></table></figure></div>
-<p>这样做之后，f 一定会在一个不同的线程上运行，你可以安全地使用基于超时的 wait，并且不必担心任务会因为未调用 get 或 wait 而不被执行。</p>
+<p>如果调度器因为系统负载过高等原因，为任务 f 选择了
+std::launch::deferred 策略，那么 fut.wait_for(…) 的返回值将永远是
+std::future_status::deferred。这也就意味着, fut.wait_for(…)
+的结果永远不等于 std::future_status::ready，导致 while
+循环成为一个无限循环。这个bug非常隐蔽，因为它可能只在高负载的生产环境中才会出现。</p>
+<h3 id="解决方案显式指定启动策略">解决方案：显式指定启动策略</h3>
+<p>该条款给出的结论非常明确：如果你需要确保任务必须异步执行，从而避免上述所有不确定性和陷阱，你就必须在调用
+std::async 时显式指定 std::launch::async 启动策略。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> fut = std::<span class="built_in">async</span>(std::launch::async, f); <span class="comment">// 保证 f 会异步执行</span></span><br></pre></td></tr></table></figure></div>
+这样做之后，f 一定会在一个不同的线程上运行，你可以安全地使用基于超时的
+wait，并且不必担心任务会因为未调用 get 或 wait 而不被执行。</p>
 
 		</div>
 
@@ -877,12 +895,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
+				<a class="prev" rel="prev" href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款35 ：优先选用基于任务而非基于线程的程序设计</span>
+						<span class="post-nav-title-item truncate max-w-48">Thread线程库的基本使用</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -890,9 +908,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">
+				<a class="next" rel="next" href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">GDB</span>
+						<span class="post-nav-title-item truncate max-w-48">条款35 ：优先选用基于任务而非基于线程的程序设计</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -914,7 +932,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款36 ：如果异步是必要的，则指定 std::launch::async</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-async-%E7%9A%84%E5%90%AF%E5%8A%A8%E7%AD%96%E7%95%A5"><span class="nav-text">std::async 的启动策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%99%B7%E9%98%B1%EF%BC%9A%E5%9F%BA%E4%BA%8E%E8%B6%85%E6%97%B6%E7%9A%84-wait-%E4%B8%8E%E6%97%A0%E9%99%90%E5%BE%AA%E7%8E%AF"><span class="nav-text">核心陷阱：基于超时的 wait 与无限循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E6%98%BE%E5%BC%8F%E6%8C%87%E5%AE%9A%E5%90%AF%E5%8A%A8%E7%AD%96%E7%95%A5"><span class="nav-text">解决方案：显式指定启动策略</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#stdasync-%E7%9A%84%E5%90%AF%E5%8A%A8%E7%AD%96%E7%95%A5"><span class="nav-text">std::async 的启动策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%99%B7%E9%98%B1%E5%9F%BA%E4%BA%8E%E8%B6%85%E6%97%B6%E7%9A%84-wait-%E4%B8%8E%E6%97%A0%E9%99%90%E5%BE%AA%E7%8E%AF"><span class="nav-text">核心陷阱：基于超时的 wait
+与无限循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%98%BE%E5%BC%8F%E6%8C%87%E5%AE%9A%E5%90%AF%E5%8A%A8%E7%AD%96%E7%95%A5"><span class="nav-text">解决方案：显式指定启动策略</span></a></li></ol>
 
 	</div>
 </div>
@@ -943,11 +962,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

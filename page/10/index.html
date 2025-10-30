@@ -742,15 +742,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -782,15 +782,15 @@ mjx-container[display="true"] + br {
 </div>
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -815,26 +815,669 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20-%20%E7%90%86%E8%A7%A3%20decltype/">
-                            条款3：理解 decltype
+                        <a href="/2025/09/23/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.%20%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+                            线程池
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            decltype 是 C++11 引入的一个非常重要的关键字. 作为一个类型说明符 (type specifier), 它是 “declared type” (声明的类型) 的缩写, 也是 C++ 泛型编程（模板）和类型推导系统中至关重要的一块拼图。
-它的核心功能是：在编译时检查一个表达式，并“返回”该表达式所对应的确切类型，但并不会实际计算（执行）这个表达式。
-不过在介绍decltype之...
+                            线程池 (Thread Pool)
+是一种并发设计模式，它预先创建并维护一组可复用的工作线程，而不是在需要时才创建新线程。这些线程“池化”在一起，等待执行分配给它们的任务。
+它的核心思想是将“任务的提交”与“任务的执行”解耦。应用程序的各个部分可以将任务提交给线程池，而无需关心任务具体由哪个线程执行、何时执行。
+一个典型的线程池包含以下几个关键部分： - 任务队列
+(std::que...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 13 2025 20:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Tue Sep 23 2025 12:00:00 GMT+0800">
                 
-                    2025-09-13
+                    2025-09-23
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/23/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.%20%E7%BA%BF%E7%A8%8B%E6%B1%A0/">Read more<span class="seo-reader-text">线程池</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/7.%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/">
+                            异步/并发编程模型
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在C++并发编程中，核心挑战之一是在不同线程间安全、高效地传递数据。特别是当一个线程（生产者/Provider）需要将一个计算结果（值或异常）传递给另一个线程（消费者/Consumer）时。std::future,
+std::promise, std::packaged_task, 和 std::async
+共同构成了一个异步编程模型，其设计哲学是关注点分离 (Separation of...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 23:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/7.%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/">Read more<span class="seo-reader-text">异步/并发编程模型</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/5.%20%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+                            条件变量和多线程数据共享
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            条件变量 (Condition Variable)
+是一种同步原语，它允许一个或多个线程等待（阻塞），直到另一个线程修改了某个共享状态并通知它们。
+它的核心思想不是为了“锁住”资源，而是提供一种“等待-通知”
+(Wait-Notify) 机制。线程可以高效地等待某个特定条件 (Condition)
+变为真，而无需通过循环不断地检查（这种低效的方式称为忙等待
+(Busy-Waitin...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 17:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/5.%20%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">Read more<span class="seo-reader-text">条件变量和多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/4.%20std%20call_once/">
+                            std::call_once 解决多线程数据共享
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在多线程环境中，我们经常会遇到一个需求：确保某段代码（通常是初始化代码）在整个程序的生命周期中，无论有多少个线程并发调用它，都只被执行一次。一个经典的例子就是线程安全的懒汉式单例模式
+(Lazy-Initialized Singleton)。 12345678910111213141516#include &lt;iostream&gt;class Singleton {public:  ...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 16:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/4.%20std%20call_once/">Read more<span class="seo-reader-text">std::call_once 解决多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/3.%20%E4%BA%92%E6%96%A5%E9%87%8F%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%A7%A3%E5%86%B3%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+                            互斥量和原子操作解决多线程数据共享
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在多个线程中共享数据时，需要注意线程安全问题。如果多个线程同时访问同一个变量，并且其中至少有一个线程对该变量进行了写操作，那么就会出现数据竞争问题。
+数据竞争可能会导致程序崩溃、产生未定义的结果，或者得到错误的结果。为了避免数据竞争问题，需要使用同步机制来确保多个线程之间对共享数据的访问是安全的。常见的同步机制包括互斥量、条件变量、原子操作等。
+互斥量
+问题的根源：竞争条件 (Race...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 13:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/3.%20%E4%BA%92%E6%96%A5%E9%87%8F%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%A7%A3%E5%86%B3%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">Read more<span class="seo-reader-text">互斥量和原子操作解决多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90%E9%97%AE%E9%A2%98/">
+                            Thread线程库中的资源问题
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在单线程程序中，对象的创建和销毁顺序是可预测的。但在多线程程序中，新线程的执行时机是不确定的。它可能在创建它的函数返回之前、之中或之后才真正开始运行。“数据未定义错误”的根源就是，程序员错误地假设了新线程会比它所需要的数据“死”得更早，但事实往往相反。
+下面这些问题的本质原因在于:
+线程的生命周期与其访问的数据的生命周期不匹配，导致线程访问了无效的内存
+数据未定义的情况
+传递临时变量...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 12:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90%E9%97%AE%E9%A2%98/">Read more<span class="seo-reader-text">Thread线程库中的资源问题</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
+                            Thread线程库的基本使用
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            C++11
+标准的发布是一个里程碑，它首次将线程支持纳入了标准库。这意味着开发者终于可以编写跨平台的、标准化的多线程程序了。
+在使用 std::thread 之前，必须包含头文件 :
+#include &lt;thread&gt;
+创建和启动线程
+在 C++11 中，创建一个 std::thread 对象的同时，新线程就已经开始执行了,
+同时主线程立即、不阻塞地继续往下执行,新线...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 11:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">Read more<span class="seo-reader-text">Thread线程库的基本使用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">
+                            条款36 ：如果异步是必要的，则指定 std::launch::async
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            该条款的核心论点是，std::async
+的默认启动策略虽然为标准库调度器提供了有用的灵活性，但也给程序员带来了不确定性，可能导致难以发现的bug。因此，当你确实需要函数必须异步执行时，就应该明确指定这一点。
+std::async 的启动策略
+std::async 可以接受一个启动策略参数，来控制任务的执行方式： -
+std::launch::async：此策略保证任务会在一个不同的...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 10:00:00 GMT+0800">
+                
+                    2025-09-22
                 
             </span>
         </span>
@@ -875,7 +1518,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20-%20%E7%90%86%E8%A7%A3%20decltype/">Read more<span class="seo-reader-text">条款3：理解 decltype</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">Read more<span class="seo-reader-text">条款36 ：如果异步是必要的，则指定 std::launch::async</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -890,33 +1533,31 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">
-                            条款 24：区分万能引用和右值引用
+                        <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
+                            条款35 ：优先选用基于任务而非基于线程的程序设计
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            回忆左值（Lvalue）和右值（Rvalue）左值（Lvalue）表示一个有名字、可寻址、在表达式结束后仍然存在的对象。其特点是：
-
-可以出现在赋值语句的左边：x = 5;
-可以取地址：&amp;x
-通常是变量、数组元素、对象成员、函数形参等
-
-右值（Rvalue）表示一个临时值，通常在表达式中短暂存在，不能取地址。其特点是：
-
-只能出现在赋值语句的右边：x = 5;
-通常是字面量、临时对象...
+                            该条款的核心观点是，当需要异步运行一个函数时，使用
+std::async 的基于任务 (task-based)
+的方法，通常优于直接使用 std::thread
+的基于线程 (thread-based) 的方法。
+基于线程 (Thread-based) 与
+std::thread
+std::thread 是 C++ 标准库中对操作系统线程 (Thread)
+的直接封装。线程可以...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 13 2025 16:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 22 2025 10:00:00 GMT+0800">
                 
-                    2025-09-13
+                    2025-09-22
                 
             </span>
         </span>
@@ -957,7 +1598,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">Read more<span class="seo-reader-text">条款 24：区分万能引用和右值引用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">Read more<span class="seo-reader-text">条款35 ：优先选用基于任务而非基于线程的程序设计</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -972,27 +1613,31 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20-%20%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
-                            条款2：理解 auto 型别推导
+                        <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">
+                            GDB
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            首先我们抛出这一讲的核心思想: auto 类型推导几乎就是模板类型推导, 除了稍后会介绍到的唯一区别之外
-两者概念性的转换这种对应关系可以通过一个概念性的转换来理解。例如, 对于前一讲介绍的函数模板调用：
-1234template&lt;typename T&gt;void f(ParamType param);f(expr); // 编译器利用 expr 推导 T 和 ParamType
-...
+                            使用gdb之前，要求对文件进行编译时增加-g参数，加了这个参数过后生成的编译文件会大一些，这是因为增加了gdb调试内容
+基础指令：
+-g：使用该参数编译可以执行文件，得到调试表。
+gdb ./a.out: 开始调试
+list/l： l 1 列出源码, 因为分页显示, 后续直接l即可
+b： b 20 在20行位置设置断点。
+run/r: 运行程序
+n/next: 下一条指令（会越...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 13 2025 12:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sun Sep 21 2025 22:00:00 GMT+0800">
                 
-                    2025-09-13
+                    2025-09-21
                 
             </span>
         </span>
@@ -1005,7 +1650,17 @@ mjx-container[display="true"] + br {
                     
                         
                         <li>
-                            <a href="/categories/language/">language</a>&nbsp;
+                            <a href="/categories/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/system/linux/">linux</a>&nbsp;
                         </li>
                     
                     
@@ -1020,12 +1675,7 @@ mjx-container[display="true"] + br {
                     
                         <li>
                             
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                            <a href="/tags/system/">system</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1033,533 +1683,7 @@ mjx-container[display="true"] + br {
         
     </div>
 
-    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20-%20%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">Read more<span class="seo-reader-text">条款2：理解 auto 型别推导</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE23%20-%20%20%E7%90%86%E8%A7%A3%20move%20%E5%92%8C%20forward/">
-                            条款 23：理解 std::move std::forward
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            移动语义 (Move Semantics) 和 完美转发 (Perfect Forwarding) 是 C++11 中引入的两个革命性特性，它们共同解决了 C++ 中长期存在的资源管理效率和泛型编程（模板）中的参数传递问题。
-移动语义 (Move Semantics)在 C++11 之前，我们只有“拷贝语义”。当我们处理包含堆内存（如指针指向的数据、文件句柄、网络套接字等）的对象时，拷贝操作...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 12 2025 22:00:00 GMT+0800">
-                
-                    2025-09-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE23%20-%20%20%E7%90%86%E8%A7%A3%20move%20%E5%92%8C%20forward/">Read more<span class="seo-reader-text">条款 23：理解 std::move std::forward</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE7%20-%20%E5%8C%BA%E5%88%AB%E4%BD%BF%E7%94%A8(%20)%E4%B8%8E%7B%20%7D%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1/">
-                            条款7：区别使用( )与{ }创建对象
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            复习初始化语法在 C++11 中, 进行对象初始化的语法大致可以分为三类:
-
-使用小括号, 如 int x(10);
-使用大括号, 如 int x{10};
-使用等号, 如 int x = 10;当然, 很多情况下也可以使用一个等号和大括号来初始化对象, 如：int z = { o } ; , 下面的讨论我们将忽略这种”等号加大括号“语法，因为 C++ 通常会把它和只有大括号的语法同样处理。...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 12 2025 22:00:00 GMT+0800">
-                
-                    2025-09-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE7%20-%20%E5%8C%BA%E5%88%AB%E4%BD%BF%E7%94%A8(%20)%E4%B8%8E%7B%20%7D%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1/">Read more<span class="seo-reader-text">条款7：区别使用( )与{ }创建对象</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
-                            条款1 ：理解模板型别推导
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            如果一个复杂系统的用户对于该系统的运作方式一无所知，然而却对其提供的服务表示满意，这就充分说明系统设计得好。如果从这样的角度来看， C++的模板型别推导取得了极大的成功。
-模板的型别推导，是现代C++最广泛应用的特性之一 ———— auto的基础。也就是说，如果你对C++98 推导模板型别的运作方式感觉满意，那么你也会自然而然地愉快接受C++11 中推导 auto 型别的运作方式。而坏消息则...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 12 2025 12:00:00 GMT+0800">
-                
-                    2025-09-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">Read more<span class="seo-reader-text">条款1 ：理解模板型别推导</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%AD%97%E7%AC%A6%E4%B8%B2/">
-                            字符串
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            std::string 是 C++ 标准库中用于处理字符串的类，位于  头文件中，命名空间为 std
-
-在 C++ 中，强烈建议使用 string 类表示字符串，因为它是真正的字符串类型。而在 C 语言中实际上没有字符串类型，只是用字符数组和字符指针来模拟字符串，而且后者不太安全
-
-
-char* (C 风格字符串)：本身没有成员函数，不能使用 .size() 或 .length()。要获取其...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Sep 03 2025 18:00:00 GMT+0800">
-                
-                    2025-09-03
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/cpp/">cpp</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%AD%97%E7%AC%A6%E4%B8%B2/">Read more<span class="seo-reader-text">字符串</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C/">
-                            哈希 Hash
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            哈希函数对象 (Hash Functor) – std::hashstd::hash 是 C++ 标准库中定义的一个类模板，位于  头文件中。它的主要作用是作为一个函数对象（Functor），为给定的数据类型计算一个唯一的、稳定的哈希值。
-从本质上讲，std::hash 是一个提供了标准哈希计算接口的工具或者说算法(算子)。
-123456789101112131415161718192021...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Sep 03 2025 18:00:00 GMT+0800">
-                
-                    2025-09-03
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/cpp/">cpp</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C/">Read more<span class="seo-reader-text">哈希 Hash</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/02/algorithms/DynamicProgramming/DynamicProgramming/">
-                            动态规划(Dynamic Programming)
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            动态规划（Dynamic Programming, DP） 是一种通过将复杂问题分解为更小的、重叠的子问题来求解的算法思想。它与分治法（Divide and Conquer）有些相似，但不同之处在于，动态规划适用于子问题重叠的场景，即不同的子问题会共享更小的子子问题。
-DP的核心思想是 “记忆化” 或 “表格法”，即计算过一次的子问题的解，就将其存储起来，避免重复计算。这是一种典型的 “空间...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Sep 02 2025 22:00:00 GMT+0800">
-                
-                    2025-09-02
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/algorithms/">algorithms</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/02/algorithms/DynamicProgramming/DynamicProgramming/">Read more<span class="seo-reader-text">动态规划(Dynamic Programming)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/01/web/Computer%20Network/OSI/2.%20OSI/">
-                            OSI model
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            OSI 模型（Open Systems Interconnection model，开放式系统互联模型）是一个由国际标准化组织（ISO）提出的概念模型，旨在为不同计算机网络之间的通信提供一个标准的参考框架。它将复杂的通信过程划分为七个独立的、功能明确的层次（Layer）。
-这个模型的核心思想是 “分层”。每一层都负责特定的网络功能，并为其上一层提供服务，同时使用其下一层提供的服务。这种分层结...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Sep 01 2025 22:00:00 GMT+0800">
-                
-                    2025-09-01
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/web/">web</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/web/">web</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/computer-network/">computer network</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/01/web/Computer%20Network/OSI/2.%20OSI/">Read more<span class="seo-reader-text">OSI model</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">Read more<span class="seo-reader-text">GDB</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1569,7 +1693,7 @@ DP的核心思想是 “记忆化” 或 “表格法”，即计算过一次的
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/9/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/11/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/9/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/11/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1597,11 +1721,11 @@ DP的核心思想是 “记忆化” 或 “表格法”，即计算过一次的
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

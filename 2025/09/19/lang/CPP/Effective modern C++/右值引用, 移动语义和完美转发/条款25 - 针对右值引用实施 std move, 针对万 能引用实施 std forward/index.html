@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,33 +833,54 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>我们在条款23了解了std::move 与 std::forward, 而条款25提供了一个简单、强大且几乎永远正确的指导方针，用于决定何时使用 std::move 以及何时使用 std::forward, 那就是:</p>
-<ul>
-<li>对<strong>右值引用</strong>，总是使用 <strong>std::move</strong> 来进行转发。</li>
-<li>对<strong>万能引用</strong>，总是使用 <strong>std::forward</strong> 来进行转发。</li>
-</ul>
-<h3 id="std-move-用于右值引用"><a href="#std-move-用于右值引用" class="headerlink" title="std::move 用于右值引用"></a>std::move 用于右值引用</h3><p>右值引用（如 Widget&amp;&amp;）在形参中有一个明确的特性：它只能绑定到右值，即那些可以被移动的对象。虽然形参本身（例如 rhs）是一个左值，但我们确切地知道它所引用的对象是临时的或被显式标记为可移动的。</p>
-<p>因此，当我们要将这个形参传递给其他函数（例如，在构造函数中初始化成员）时，我们应该无条件地将其转换为右值，以触发移动操作。std::move 就是执行这种无条件转换的工具。</p>
-<p>如下, 在移动构造函数中，形参 rhs 是一个右值引用。我们使用 std::move 来移动其成员 name 和 p 到当前对象的成员中。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Widget</span>(Widget&amp;&amp; rhs) <span class="comment">// rhs 是右值引用</span></span><br><span class="line">      : <span class="built_in">name</span>(std::<span class="built_in">move</span>(rhs.name)), <span class="comment">// 对 rhs 的成员实施移动</span></span><br><span class="line">        <span class="built_in">p</span>(std::<span class="built_in">move</span>(rhs.p))</span><br><span class="line">    { ... }</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string name;</span><br><span class="line">    std::shared_ptr&lt;SomeDataStructure&gt; p;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+			<p>我们在条款23了解了std::move 与 std::forward,
+而条款25提供了一个简单、强大且几乎永远正确的指导方针，用于决定何时使用
+std::move 以及何时使用 std::forward, 那就是: -
+对<strong>右值引用</strong>，总是使用 <strong>std::move</strong>
+来进行转发。 - 对<strong>万能引用</strong>，总是使用
+<strong>std::forward</strong> 来进行转发。</p>
+<h3 id="stdmove-用于右值引用">std::move 用于右值引用</h3>
+<p>右值引用（如
+Widget&amp;&amp;）在形参中有一个明确的特性：它只能绑定到右值，即那些可以被移动的对象。虽然形参本身（例如
+rhs）是一个左值，但我们确切地知道它所引用的对象是临时的或被显式标记为可移动的。</p>
+<p>因此，当我们要将这个形参传递给其他函数（例如，在构造函数中初始化成员）时，我们应该无条件地将其转换为右值，以触发移动操作。std::move
+就是执行这种无条件转换的工具。</p>
+<p>如下, 在移动构造函数中，形参 rhs 是一个右值引用。我们使用 std::move
+来移动其成员 name 和 p 到当前对象的成员中。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Widget</span>(Widget&amp;&amp; rhs) <span class="comment">// rhs 是右值引用</span></span><br><span class="line">      : <span class="built_in">name</span>(std::<span class="built_in">move</span>(rhs.name)), <span class="comment">// 对 rhs 的成员实施移动</span></span><br><span class="line">        <span class="built_in">p</span>(std::<span class="built_in">move</span>(rhs.p))</span><br><span class="line">    { ... }</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string name;</span><br><span class="line">    std::shared_ptr&lt;SomeDataStructure&gt; p;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<p>这个指导方针也适用于按值返回的函数。当你在 <strong>return
+语句中返回</strong>一个绑定到<strong>右值引用</strong>的<strong>形参对象</strong>时，应该相应地使用
+std::move 来避免拷贝, 提升效率。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Matrix <span class="keyword">operator</span>+(Matrix&amp;&amp; lhs, <span class="type">const</span> Matrix&amp; rhs) {</span><br><span class="line">    lhs += rhs;</span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">move</span>(lhs); <span class="comment">// 将 lhs 移动到返回值中</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<p>然而, 如果你的 <strong>return 语句中返回的是局部变量</strong>,
+千万<strong>不要</strong>对局部变量使用 <strong>std::move</strong>,
+例如这样的代码 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget <span class="title">makeWidget</span><span class="params">()</span> </span>{</span><br><span class="line">    Widget w;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">move</span>(w); <span class="comment">// 错误的做法！</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 上述两者之所以不同, 是因为 C++
+编译器具有<strong>返回值优化</strong>(Return Value Optimization, RVO)
+机制。对于 <code>return w;</code>
+这样的语句，编译器通常可以直接在为函数返回值分配的内存中构造
+局部变量w，从而完全避免任何复制或移动操作。同时, C++标准规定，<strong>在
+return 语句中，局部变量会被自动视为右值</strong>。这意味着 return w;
+的行为等同于 return std::move(w);</p>
+<p>如果使用 std::move(w) 会将 w
+转换为右值引用。返回一个局部对象的引用会阻止编译器执行 RVO。因此，添加
+std::move 不仅没有好处，反而可能阻止一项重要的编译器优化，弄巧成拙,
+导致性能下降。</p>
+<p>而返回形参时, 由于形参不是函数内部创建的局部对象,
+被视为左值，且不受RVO规则的约束。为了触发移动，你必须使用 std::move</p>
+<h3 id="stdforward-用于万能引用">std::forward 用于万能引用</h3>
+<p>万能引用（在模板中声明为
+T&amp;&amp;）则不同，它既可以绑定到右值，也可以绑定到左值。我们需要在转发它时保留其原始的左/右值属性。如果原始实参是右值，我们就应该将其作为右值转发；如果原始实参是左值，我们就应该将其作为左值转发
+。</p>
+<p>因此, std::forward 正是执行这种有条件的转换的工具。它会检查模板参数 T
+的推导类型，并仅在原始实参是右值的情况下，才将形参转换为右值。</p>
+<p>如下,在一个接受万能引用的 setName 函数中，我们使用 std::forward 来将
+newName 转发给成员 name 的赋值运算符, 从而确保了当 setName
+接收到右值时，会触发 std::string
+的移动赋值；而当接收到左值时，则触发复制赋值。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="type">void</span> <span class="title">setName</span><span class="params">(T&amp;&amp; newName)</span> </span>{ <span class="comment">// newName 是万能引用</span></span><br><span class="line">        name = std::forward&lt;T&gt;(newName); <span class="comment">// 转发 newName</span></span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function">std::string <span class="title">getWidgetName</span><span class="params">()</span></span>; <span class="comment">// 工厂函数，返回右值</span></span><br><span class="line">Widget w;</span><br><span class="line">w.<span class="built_in">setName</span>(<span class="built_in">getWidgetName</span>()); <span class="comment">// 调用时传入右值，setName 内部发生移动赋值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> n = <span class="built_in">getWidgetName</span>();</span><br><span class="line">w.<span class="built_in">setName</span>(n); <span class="comment">// 调用时传入左值 n，setName 内部发生复制赋值</span></span><br></pre></td></tr></table></figure></div> &gt;
+如果在万能引用上误用
+std::move，将导致一个严重的bug：它会无条件地将形参转换为右值，即使调用者传入的是一个左值。这会导致调用者的局部变量被意外“掏空”</p>
+<p>同理, 当你在 <strong>return
+语句中</strong>返回一个绑定到<strong>万能引用形参</strong>的对象时，应该相应地使用
+std::forward。这里的情况与上述的std::move一致 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">Fraction <span class="title">reduceAndCopy</span><span class="params">(T&amp;&amp; frac)</span> <span class="comment">// frac 是一个万能引用</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    frac.<span class="built_in">reduce</span>();</span><br><span class="line">    <span class="comment">// 关键：按值返回，但使用 std::forward 转发 frac</span></span><br><span class="line">    <span class="keyword">return</span> std::forward&lt;T&gt;(frac); </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
 
-<p>这个指导方针也适用于按值返回的函数。当你在 <strong>return 语句中返回</strong>一个绑定到<strong>右值引用</strong>的<strong>形参对象</strong>时，应该相应地使用 std::move 来避免拷贝, 提升效率。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Matrix <span class="keyword">operator</span>+(Matrix&amp;&amp; lhs, <span class="type">const</span> Matrix&amp; rhs) {</span><br><span class="line">    lhs += rhs;</span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">move</span>(lhs); <span class="comment">// 将 lhs 移动到返回值中</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>然而, 如果你的 <strong>return 语句中返回的是局部变量</strong>, 千万<strong>不要</strong>对局部变量使用 <strong>std::move</strong>, 例如这样的代码</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Widget <span class="title">makeWidget</span><span class="params">()</span> </span>{</span><br><span class="line">    Widget w;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">move</span>(w); <span class="comment">// 错误的做法！</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>上述两者之所以不同, 是因为 C++ 编译器具有<strong>返回值优化</strong>(Return Value Optimization, RVO) 机制。对于 <code>return w;</code> 这样的语句，编译器通常可以直接在为函数返回值分配的内存中构造 局部变量w，从而完全避免任何复制或移动操作。同时, C++标准规定，<strong>在 return 语句中，局部变量会被自动视为右值</strong>。这意味着 return w; 的行为等同于 return std::move(w);</p>
-<p>如果使用 std::move(w) 会将 w 转换为右值引用。返回一个局部对象的引用会阻止编译器执行 RVO。因此，添加 std::move 不仅没有好处，反而可能阻止一项重要的编译器优化，弄巧成拙, 导致性能下降。</p>
-<p>而返回形参时, 由于形参不是函数内部创建的局部对象, 被视为左值，且不受RVO规则的约束。为了触发移动，你必须使用 std::move</p>
-<h3 id="std-forward-用于万能引用"><a href="#std-forward-用于万能引用" class="headerlink" title="std::forward 用于万能引用"></a>std::forward 用于万能引用</h3><p>万能引用（在模板中声明为 T&amp;&amp;）则不同，它既可以绑定到右值，也可以绑定到左值。我们需要在转发它时保留其原始的左/右值属性。如果原始实参是右值，我们就应该将其作为右值转发；如果原始实参是左值，我们就应该将其作为左值转发 。</p>
-<p>因此, std::forward 正是执行这种有条件的转换的工具。它会检查模板参数 T 的推导类型，并仅在原始实参是右值的情况下，才将形参转换为右值。</p>
-<p>如下,在一个接受万能引用的 setName 函数中，我们使用 std::forward 来将 newName 转发给成员 name 的赋值运算符, 从而确保了当 setName 接收到右值时，会触发 std::string 的移动赋值；而当接收到左值时，则触发复制赋值。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="type">void</span> <span class="title">setName</span><span class="params">(T&amp;&amp; newName)</span> </span>{ <span class="comment">// newName 是万能引用</span></span><br><span class="line">        name = std::forward&lt;T&gt;(newName); <span class="comment">// 转发 newName</span></span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function">std::string <span class="title">getWidgetName</span><span class="params">()</span></span>; <span class="comment">// 工厂函数，返回右值</span></span><br><span class="line">Widget w;</span><br><span class="line">w.<span class="built_in">setName</span>(<span class="built_in">getWidgetName</span>()); <span class="comment">// 调用时传入右值，setName 内部发生移动赋值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> n = <span class="built_in">getWidgetName</span>();</span><br><span class="line">w.<span class="built_in">setName</span>(n); <span class="comment">// 调用时传入左值 n，setName 内部发生复制赋值</span></span><br></pre></td></tr></table></figure></div>
-<blockquote>
-<p>如果在万能引用上误用 std::move，将导致一个严重的bug：它会无条件地将形参转换为右值，即使调用者传入的是一个左值。这会导致调用者的局部变量被意外“掏空” </p>
-</blockquote>
-<p>同理, 当你在 <strong>return 语句中</strong>返回一个绑定到<strong>万能引用形参</strong>的对象时，应该相应地使用 std::forward。这里的情况与上述的std::move一致</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">Fraction <span class="title">reduceAndCopy</span><span class="params">(T&amp;&amp; frac)</span> <span class="comment">// frac 是一个万能引用</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    frac.<span class="built_in">reduce</span>();</span><br><span class="line">    <span class="comment">// 关键：按值返回，但使用 std::forward 转发 frac</span></span><br><span class="line">    <span class="keyword">return</span> std::forward&lt;T&gt;(frac); </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
 		</div>
 
 		
@@ -884,12 +905,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE30%20-%20%E7%86%9F%E6%82%89%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%83%85%E5%BD%A2/">
+				<a class="prev" rel="prev" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE26%20-%20%E9%81%BF%E5%85%8D%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 30 - 熟悉完美转发的失败情形</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 26 - 避免依万能引用型别进行重载</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -897,9 +918,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/18/lang/CPP/Effective%20modern%20C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E6%9D%A1%E6%AC%BE20%20-%20%E5%AF%B9%E7%B1%BB%E4%BC%BC%20std%20shared_ptr%20%E4%BD%86%E6%9C%89%E5%8F%AF%E8%83%BD%E7%A9%BA%20%E6%82%AC%E7%9A%84%E6%8C%87%E9%92%88%E4%BD%BF%E7%94%A8%20std%20weak_ptr/">
+				<a class="next" rel="next" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE30%20-%20%E7%86%9F%E6%82%89%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%83%85%E5%BD%A2/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 20 - 对类似 std::shared_ptr 但有可能空悬的指针使用 std::weak_ptr</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 30 - 熟悉完美转发的失败情形</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -921,7 +942,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款 25 - 针对右值引用实施 std move, 针对万能引用实施 std forward</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-move-%E7%94%A8%E4%BA%8E%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="nav-text">std::move 用于右值引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-forward-%E7%94%A8%E4%BA%8E%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8"><span class="nav-text">std::forward 用于万能引用</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#stdmove-%E7%94%A8%E4%BA%8E%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="nav-text">std::move 用于右值引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdforward-%E7%94%A8%E4%BA%8E%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8"><span class="nav-text">std::forward 用于万能引用</span></a></li></ol>
 
 	</div>
 </div>
@@ -950,11 +971,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

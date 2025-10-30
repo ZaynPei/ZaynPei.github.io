@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,197 +833,260 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="电路交换-报文交换和分组交换"><a href="#电路交换-报文交换和分组交换" class="headerlink" title="电路交换, 报文交换和分组交换"></a>电路交换, 报文交换和分组交换</h3><p><img lazyload src="/images/loading.svg" data-src="/20250916144228.png"></p>
-<p>在计算机网络中，数据交换技术是指在<strong>网络节点之间</strong>传输数据时所采用的方式。根据数据传输的组织形式，主要分为三种基本类型：电路交换 (Circuit Switching)、报文交换 (Message Switching) 和 分组交换 (Packet Switching), 三种方式的比较如上图</p>
-<h4 id="电路交换"><a href="#电路交换" class="headerlink" title="电路交换"></a>电路交换</h4><p>电路交换 是一种在通信双方之间建立一条<strong>专用物理连接</strong>（电路）的技术。在整个通信过程中，这条电路被双方<strong>独占</strong>，直到通信结束才被释放。电路交换的通信过程严格分为三个阶段：</p>
+			<h3 id="电路交换-报文交换和分组交换">电路交换, 报文交换和分组交换</h3>
+<p><img lazyload src="/images/loading.svg" data-src="20250916144228.png"></p>
+<p>在计算机网络中，数据交换技术是指在<strong>网络节点之间</strong>传输数据时所采用的方式。根据数据传输的组织形式，主要分为三种基本类型：电路交换
+(Circuit Switching)、报文交换 (Message Switching) 和 分组交换 (Packet
+Switching), 三种方式的比较如上图</p>
+<h4 id="电路交换">电路交换</h4>
+<p>电路交换
+是一种在通信双方之间建立一条<strong>专用物理连接</strong>（电路）的技术。在整个通信过程中，这条电路被双方<strong>独占</strong>，直到通信结束才被释放。电路交换的通信过程严格分为三个阶段：</p>
 <ul>
-<li><strong>建立连接</strong> (Circuit Establishment): 在数据传输开始之前，源节点（如打电话的人）向网络发出连接请求。网络通过一系列交换机（节点）为通信双方分配并建立一条专用的物理路径。</li>
+<li><strong>建立连接</strong> (Circuit Establishment):
+在数据传输开始之前，源节点（如打电话的人）向网络发出连接请求。网络通过一系列交换机（节点）为通信双方分配并建立一条专用的物理路径。</li>
 </ul>
-<p>此步骤的目的是预留通信所需的所有资源（如信道带宽、交换机端口等），以确保后续数据传输的服务质量 (QoS)，如固定的速率和时延。</p>
+<p>此步骤的目的是预留通信所需的所有资源（如信道带宽、交换机端口等），以确保后续数据传输的服务质量
+(QoS)，如固定的速率和时延。</p>
 <ul>
-<li><strong>数据传输</strong> (Data Transfer): 连接建立后，源节点开始沿着这条专用电路向目的节点发送数据。数据以恒定的速率传输，中间节点（交换机）<strong>不对数据进行存储</strong>，<strong>而是直接进行转发</strong>。</li>
+<li><strong>数据传输</strong> (Data Transfer):
+连接建立后，源节点开始沿着这条专用电路向目的节点发送数据。数据以恒定的速率传输，中间节点（交换机）<strong>不对数据进行存储</strong>，<strong>而是直接进行转发</strong>。</li>
 </ul>
 <p>由于电路是专用的，数据传输几乎没有时延（仅有传播时延和节点处理时延），且时延是固定的，非常适合实时通信。</p>
 <ul>
-<li><strong>释放连接</strong> (Circuit Release): 通信结束后，任何一方（通常是发起方）发出拆除连接的信令。网络收回为该连接分配的所有资源。</li>
+<li><strong>释放连接</strong> (Circuit Release):
+通信结束后，任何一方（通常是发起方）发出拆除连接的信令。网络收回为该连接分配的所有资源。</li>
 </ul>
 <p>释放资源是为了让其他用户可以使用这些空闲的信道和端口，提高网络资源的整体利用率。</p>
-<p>优点：</p>
+<p>优点： - 实时性强：
+一旦连接建立，数据传输时延极小且固定，非常适用于<strong>对时延敏感</strong>的实时业务（如语音、视频通话）。
+- 服务质量保证：
+通信双方独占带宽，数据传输速率恒定，不会出现网络拥塞导致的速率波动。</p>
+<p>缺点： - 线路利用率低：
+无论双方是否在传输数据（例如通话中的沉默时段），电路都会被占用，导致资源浪费，尤其不适合突发性（bursty）的数据通信。
+- 建立连接时延： 在数据传输前，必须花费额外的时间来建立连接。 -
+难以实现差错控制: 中间节点不具备存储和检验数据的能力,
+无法识别和纠正差错</p>
+<h4 id="报文交换-message-switching">报文交换 (Message Switching)</h4>
+<p>报文交换
+是一种<strong>无需预先建立专用路径</strong>的数据交换技术。它以报文
+(Message)（即<strong>一个完整的数据单元</strong>，如一封电子邮件）为单位进行传输，并采用“<strong>存储-转发</strong>”
+(Store-and-Forward) 机制。工作原理如下:</p>
 <ul>
-<li>实时性强： 一旦连接建立，数据传输时延极小且固定，非常适用于<strong>对时延敏感</strong>的实时业务（如语音、视频通话）。</li>
-<li>服务质量保证： 通信双方独占带宽，数据传输速率恒定，不会出现网络拥塞导致的速率波动。</li>
+<li><p><strong>发送报文</strong>：
+源节点将要发送的数据（报文）<strong>附加上目标地址等控制信息</strong>，然后将整个报文发送给<strong>相邻的第一个交换节点</strong>。</p></li>
+<li><p><strong>存储和转发</strong>：交换节点收到完整的报文后，先将其存储在本地缓存（如硬盘）中,
+节点需要接收完整的报文并保存，一方面是为了进行<strong>差错校验</strong>，另一方面是<strong>等待输出链路可用</strong>。当输出链路空闲时，节点再将该报文转发给下一个节点。这种方式允许<strong>多个不同来源的报文共享同一条链路</strong>，提高了链路的利用率。</p></li>
+<li><p><strong>中继传输</strong>：
+报文在网络中<strong>逐个节点地“存储-转发”</strong>，直到最终到达目的节点。</p></li>
 </ul>
-<p>缺点：</p>
+<p>优点在于: - 线路利用率高：
+交换节点可以动态分配链路资源，只有在传输报文时才占用链路，提高了信道利用率。
+- 无需建立连接： 省去了电路交换中建立连接所需的时间。</p>
+<p>缺点： - 时延大且不固定：
+每个节点都需要<strong>完整接收并存储报文</strong>，导致较大的“存储转发时延”。时延会随着网络负载的增加而显著增加。
+- 节点缓存要求高：
+交换节点必须有<strong>足够大的缓存空间</strong>（通常是磁盘）来存储可能很长的整个报文。
+- 不适合实时通信： 较大的时延使其无法满足实时交互的需求。</p>
+<h4 id="分组交换-packet-switching">分组交换 (Packet Switching)</h4>
+<p>分组交换 是目前互联网 (Internet)
+使用的核心技术。它结合了报文交换的优点（高效的链路共享），并克服了其缺点（时延大、缓存要求高）。互联网
+(Internet)、局域网 (LAN)、广域网 (WAN)
+等几乎所有现代数据网络都使用这种方式。</p>
+<p>它同样采用“<strong>存储-转发</strong>”机制，但其<strong>传输的基本单位是分组</strong>
+(Packet)——即将<strong>一个完整的报文拆分成多个较小的数据块</strong>。工作原理为:</p>
 <ul>
-<li>线路利用率低： 无论双方是否在传输数据（例如通话中的沉默时段），电路都会被占用，导致资源浪费，尤其不适合突发性（bursty）的数据通信。</li>
-<li>建立连接时延： 在数据传输前，必须花费额外的时间来建立连接。</li>
-<li>难以实现差错控制: 中间节点不具备存储和检验数据的能力, 无法识别和纠正差错</li>
-</ul>
-<h4 id="报文交换-Message-Switching"><a href="#报文交换-Message-Switching" class="headerlink" title="报文交换 (Message Switching)"></a>报文交换 (Message Switching)</h4><p>报文交换 是一种<strong>无需预先建立专用路径</strong>的数据交换技术。它以报文 (Message)（即<strong>一个完整的数据单元</strong>，如一封电子邮件）为单位进行传输，并采用“<strong>存储-转发</strong>” (Store-and-Forward) 机制。工作原理如下: </p>
+<li><p><strong>报文分组</strong> (Segmentation):
+在源节点，一个完整的报文（如一个网页、一封邮件）被分割成多个<strong>固定或可变长度</strong>的分组。每个分组都会被<strong>添加一个头部
+(Header)</strong>，包含源地址、目的地址、分组序号等控制信息。这里的将大报文拆分成小单元（分组），有几个关键好处：</p>
 <ul>
-<li><p><strong>发送报文</strong>： 源节点将要发送的数据（报文）<strong>附加上目标地址等控制信息</strong>，然后将整个报文发送给<strong>相邻的第一个交换节点</strong>。</p>
-</li>
-<li><p><strong>存储和转发</strong>：交换节点收到完整的报文后，先将其存储在本地缓存（如硬盘）中, 节点需要接收完整的报文并保存，一方面是为了进行<strong>差错校验</strong>，另一方面是<strong>等待输出链路可用</strong>。当输出链路空闲时，节点再将该报文转发给下一个节点。这种方式允许<strong>多个不同来源的报文共享同一条链路</strong>，提高了链路的利用率。</p>
-</li>
-<li><p><strong>中继传输</strong>： 报文在网络中<strong>逐个节点地“存储-转发”</strong>，直到最终到达目的节点。</p>
-</li>
-</ul>
-<p>优点在于: </p>
+<li><p>减少时延：
+交换节点只需接收一个很小的分组即可开始转发，而无需等待整个报文。这使得网络可以实现“<strong>流水线</strong>”
+(Pipelining) 传输(边接受边传输)，大大降低了端到端时延。</p></li>
+<li><p>减少缓存需求：
+节点缓存中只需存储较小的分组，而非完整的大报文。</p></li>
+<li><p>提高可靠性：
+如果传输中出现错误，只需重传错误的分组，而不是整个报文。</p></li>
+</ul></li>
+<li><p><strong>存储和转发</strong> (Store-and-Forward):
+每个分组在网络中被独立地进行“存储-转发”。交换节点（路由器）接收一个分组，将其<strong>暂存在内存（速度远快于报文交换的磁盘）</strong>中，检查其头部，然后根据<strong>路由表</strong>选择最佳路径转发给下一个节点。这种方式非常灵活，分组可以动态地选择路径，适应网络拥塞或链路故障。</p>
 <ul>
-<li>线路利用率高： 交换节点可以动态分配链路资源，只有在传输报文时才占用链路，提高了信道利用率。</li>
-<li>无需建立连接： 省去了电路交换中建立连接所需的时间。</li>
+<li>路径选择 (Routing):
+不同的分组可能会沿着不同的路径传输到目的地。（这主要取决于使用的是数据报方式还是虚电路方式,
+数据报方式具有无连接性, 每个分组独立路由; 而虚电路(Virtual Circuit,
+VC)则在数据传输前先建立一条逻辑连接（虚电路）,
+所有分组都沿着这条逻辑路径按顺序传输）。</li>
+</ul></li>
+<li><p><strong>重组</strong> (Reassembly):
+分组到达目的节点后，目的主机根据分组头部中的序号信息，将这些<strong>可能乱序到达的分组重新排序</strong>，组装成原始的报文(由于分组独立路由，它们到达目的地的顺序可能与发送顺序不同，必须重组才能恢复原始数据)</p></li>
 </ul>
-<p>缺点：</p>
+<p>这种方式的优点在于： -
+线路利用率极高：动态共享链路，资源利用率在三种方式中最高。 - 灵活高效：
+传输单位小，时延相对较低（虽然不固定）。 - 鲁棒性强 (Robust)：
+节点或链路故障时，分组可以动态选择其他路径绕过故障点。</p>
+<p>缺点则是： - 时延不固定 (Jitter)：
+每个分组的存储转发时延和排队时延是变化的，会导致“时延抖动”，对实时业务（如高质量视频会议）有一定挑战。
+- 额外开销：每个分组都需要附加包头信息，这会产生一定的传输开销。</p>
+<h3 id="计算机网络的分类">计算机网络的分类</h3>
+<p>计算机网络可以从多个不同的维度进行分类:</p>
+<h4 id="按分布范围分类">按分布范围分类</h4>
+<p>这是最常用的一种分类方式，它根据网络所覆盖的地理区域大小来划分：</p>
 <ul>
-<li>时延大且不固定： 每个节点都需要<strong>完整接收并存储报文</strong>，导致较大的“存储转发时延”。时延会随着网络负载的增加而显著增加。</li>
-<li>节点缓存要求高： 交换节点必须有<strong>足够大的缓存空间</strong>（通常是磁盘）来存储可能很长的整个报文。</li>
-<li>不适合实时通信： 较大的时延使其无法满足实时交互的需求。</li>
+<li><p>广域网 (WAN - Wide Area Network):
+覆盖范围非常大，通常直径为几十到几千公里，可以覆盖一个国家、一个大洲甚至全球。它的任务是提供长距离通信，<strong>连接不同地区的主机或局域网</strong>。它通常使用高速链路和<strong>交换机</strong>（如路由器）进行数据传输。互联网
+(Internet) 的核心部分就是一个全球最大的广域网。</p></li>
+<li><p>城域网 (MAN - Metropolitan Area Network):
+覆盖范围介于WAN和LAN之间，通常覆盖一个城市（直径约 5 km 到 50
+km）。它可以被视为一个<strong>大型的局域网</strong>，通常采用以太网等技术，用于连接城市内的多个局域网。</p></li>
+<li><p>局域网 (LAN - Local Area Network):
+覆盖范围较小，通常是直径为几米到几千米的区域，例如一栋办公楼、一个校园或一个家庭。局域网通常具有较高的传输速率和较低的误码率。传统上，<strong>局域网多采用广播技术</strong>（如早期的以太网），而<strong>广域网多采用点对点交换技术</strong>。</p></li>
+<li><p>个人区域网 (PAN - Personal Area Network):
+覆盖范围最小，通常在个人工作区域（约几米内）。用于在个人设备之间（如智能手机、平板电脑、笔记本电脑、蓝牙耳机）进行短距离通信。当它使用无线技术时，也称为
+无线个人区域网 (WPAN)。</p></li>
 </ul>
-<h4 id="分组交换-Packet-Switching"><a href="#分组交换-Packet-Switching" class="headerlink" title="分组交换 (Packet Switching)"></a>分组交换 (Packet Switching)</h4><p>分组交换 是目前互联网 (Internet) 使用的核心技术。它结合了报文交换的优点（高效的链路共享），并克服了其缺点（时延大、缓存要求高）。互联网 (Internet)、局域网 (LAN)、广域网 (WAN) 等几乎所有现代数据网络都使用这种方式。</p>
-<p>它同样采用“<strong>存储-转发</strong>”机制，但其<strong>传输的基本单位是分组</strong> (Packet)——即将<strong>一个完整的报文拆分成多个较小的数据块</strong>。工作原理为: </p>
+<h4 id="按传输技术分类">按传输技术分类</h4>
 <ul>
-<li><p><strong>报文分组</strong> (Segmentation): 在源节点，一个完整的报文（如一个网页、一封邮件）被分割成多个<strong>固定或可变长度</strong>的分组。每个分组都会被<strong>添加一个头部 (Header)</strong>，包含源地址、目的地址、分组序号等控制信息。这里的将大报文拆分成小单元（分组），有几个关键好处：</p>
-<ul>
-<li><p>减少时延： 交换节点只需接收一个很小的分组即可开始转发，而无需等待整个报文。这使得网络可以实现“<strong>流水线</strong>” (Pipelining) 传输(边接受边传输)，大大降低了端到端时延。</p>
-</li>
-<li><p>减少缓存需求： 节点缓存中只需存储较小的分组，而非完整的大报文。</p>
-</li>
-<li><p>提高可靠性： 如果传输中出现错误，只需重传错误的分组，而不是整个报文。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>存储和转发</strong> (Store-and-Forward): 每个分组在网络中被独立地进行“存储-转发”。交换节点（路由器）接收一个分组，将其<strong>暂存在内存（速度远快于报文交换的磁盘）<strong>中，检查其头部，然后根据</strong>路由表</strong>选择最佳路径转发给下一个节点。这种方式非常灵活，分组可以动态地选择路径，适应网络拥塞或链路故障。</p>
-<ul>
-<li>路径选择 (Routing): 不同的分组可能会沿着不同的路径传输到目的地。（这主要取决于使用的是数据报方式还是虚电路方式, 数据报方式具有无连接性, 每个分组独立路由; 而虚电路(Virtual Circuit, VC)则在数据传输前先建立一条逻辑连接（虚电路）, 所有分组都沿着这条逻辑路径按顺序传输）。</li>
-</ul>
-</li>
-<li><p><strong>重组</strong> (Reassembly): 分组到达目的节点后，目的主机根据分组头部中的序号信息，将这些<strong>可能乱序到达的分组重新排序</strong>，组装成原始的报文(由于分组独立路由，它们到达目的地的顺序可能与发送顺序不同，必须重组才能恢复原始数据)</p>
-</li>
-</ul>
-<p>这种方式的优点在于：</p>
-<ul>
-<li>线路利用率极高：动态共享链路，资源利用率在三种方式中最高。</li>
-<li>灵活高效： 传输单位小，时延相对较低（虽然不固定）。</li>
-<li>鲁棒性强 (Robust)： 节点或链路故障时，分组可以动态选择其他路径绕过故障点。</li>
-</ul>
-<p>缺点则是：</p>
-<ul>
-<li>时延不固定 (Jitter)： 每个分组的存储转发时延和排队时延是变化的，会导致“时延抖动”，对实时业务（如高质量视频会议）有一定挑战。</li>
-<li>额外开销：每个分组都需要附加包头信息，这会产生一定的传输开销。</li>
-</ul>
-<h3 id="计算机网络的分类"><a href="#计算机网络的分类" class="headerlink" title="计算机网络的分类"></a>计算机网络的分类</h3><p>计算机网络可以从多个不同的维度进行分类:</p>
-<h4 id="按分布范围分类"><a href="#按分布范围分类" class="headerlink" title="按分布范围分类"></a>按分布范围分类</h4><p>这是最常用的一种分类方式，它根据网络所覆盖的地理区域大小来划分：</p>
-<ul>
-<li><p>广域网 (WAN - Wide Area Network): 覆盖范围非常大，通常直径为几十到几千公里，可以覆盖一个国家、一个大洲甚至全球。它的任务是提供长距离通信，<strong>连接不同地区的主机或局域网</strong>。它通常使用高速链路和<strong>交换机</strong>（如路由器）进行数据传输。互联网 (Internet) 的核心部分就是一个全球最大的广域网。</p>
-</li>
-<li><p>城域网 (MAN - Metropolitan Area Network): 覆盖范围介于WAN和LAN之间，通常覆盖一个城市（直径约 5 km 到 50 km）。它可以被视为一个<strong>大型的局域网</strong>，通常采用以太网等技术，用于连接城市内的多个局域网。</p>
-</li>
-<li><p>局域网 (LAN - Local Area Network): 覆盖范围较小，通常是直径为几米到几千米的区域，例如一栋办公楼、一个校园或一个家庭。局域网通常具有较高的传输速率和较低的误码率。传统上，<strong>局域网多采用广播技术</strong>（如早期的以太网），而<strong>广域网多采用点对点交换技术</strong>。</p>
-</li>
-<li><p>个人区域网 (PAN - Personal Area Network): 覆盖范围最小，通常在个人工作区域（约几米内）。用于在个人设备之间（如智能手机、平板电脑、笔记本电脑、蓝牙耳机）进行短距离通信。当它使用无线技术时，也称为 无线个人区域网 (WPAN)。</p>
-</li>
-</ul>
-<h4 id="按传输技术分类"><a href="#按传输技术分类" class="headerlink" title="按传输技术分类"></a>按传输技术分类</h4><ul>
-<li><strong>广播式</strong>网络 (Broadcast Networks): 网络中所有联网的计算机共享一个<strong>公共通信信道</strong>。当一台计算机发送一个分组时，信道上的所有其他计算机都会“收听”到这个分组。每台计算机通过<strong>检查分组中的目的地址</strong>来判断这个分组是否是发送给自己的，从而决定是否接收它。</li>
+<li><strong>广播式</strong>网络 (Broadcast Networks):
+网络中所有联网的计算机共享一个<strong>公共通信信道</strong>。当一台计算机发送一个分组时，信道上的所有其他计算机都会“收听”到这个分组。每台计算机通过<strong>检查分组中的目的地址</strong>来判断这个分组是否是发送给自己的，从而决定是否接收它。</li>
 </ul>
 <p>传统的<strong>局域网</strong>（如总线型以太网）基本都采用广播式通信。此外，无线网络和卫星通信网络也属于广播式网络。</p>
 <ul>
-<li><strong>点对点</strong>网络 (Point-to-Point Networks): 网络由多条独立的物理线路组成，每条线路连接一对计算机（节点）。如果两台主机没有被一条线路直接连接，它们之间的通信就需要通过中间节点的中继。</li>
+<li><strong>点对点</strong>网络 (Point-to-Point Networks):
+网络由多条独立的物理线路组成，每条线路连接一对计算机（节点）。如果两台主机没有被一条线路直接连接，它们之间的通信就需要通过中间节点的中继。</li>
 </ul>
-<p>这通常需要“<strong>存储-转发</strong>” (Store-and-Forward) 机制，即中间节点（如路由器）接收整个分组，将其存储下来，然后查找路由表，最后转发给下一个节点。<strong>广域网</strong>大多采用点对点技术。</p>
-<h4 id="按拓扑结构分类"><a href="#按拓扑结构分类" class="headerlink" title="按拓扑结构分类"></a>按拓扑结构分类</h4><p>拓扑结构是指网络中节点（如主机、路由器）与通信线路之间的<strong>几何关系</strong>，它主要定义了网络的物理布局。</p>
+<p>这通常需要“<strong>存储-转发</strong>” (Store-and-Forward)
+机制，即中间节点（如路由器）接收整个分组，将其存储下来，然后查找路由表，最后转发给下一个节点。<strong>广域网</strong>大多采用点对点技术。</p>
+<h4 id="按拓扑结构分类">按拓扑结构分类</h4>
+<p>拓扑结构是指网络中节点（如主机、路由器）与通信线路之间的<strong>几何关系</strong>，它主要定义了网络的物理布局。</p>
 <ul>
-<li>总线形 (Bus Topology): 所有计算机都连接到一根单根传输线（称为“总线”）上。</li>
+<li>总线形 (Bus Topology):
+所有计算机都连接到一根单根传输线（称为“总线”）上。</li>
 </ul>
-<p>其优点是建网容易，增/减节点方便，节省线路成本; 缺点则在于通信效率在重负载时不高（容易冲突）, 且总线是网络的命脉，任意一处故障都可能导致整个网络瘫痪。</p>
+<p>其优点是建网容易，增/减节点方便，节省线路成本;
+缺点则在于通信效率在重负载时不高（容易冲突）,
+且总线是网络的命脉，任意一处故障都可能导致整个网络瘫痪。</p>
 <ul>
-<li>星形 (Star Topology): 网络中有一个<strong>中央设备</strong>（如交换机、集线器或路由器），每个终端或计算机都通过单独的线路与该中央设备相连。</li>
+<li>星形 (Star Topology):
+网络中有一个<strong>中央设备</strong>（如交换机、集线器或路由器），每个终端或计算机都通过单独的线路与该中央设备相连。</li>
 </ul>
-<p>其优点是便于集中控制和管理, 单个节点的故障不会影响其他节点; 缺点则是线路成本较高, 中央设备是网络的“瓶颈”，一旦中央设备发生故障，整个网络都会瘫痪。</p>
+<p>其优点是便于集中控制和管理, 单个节点的故障不会影响其他节点;
+缺点则是线路成本较高,
+中央设备是网络的“瓶颈”，一旦中央设备发生故障，整个网络都会瘫痪。</p>
 <p>现代的<strong>局域网</strong>（如以太网交换机）基本都采用星形结构。</p>
 <ul>
-<li><p>环形 (Ring Topology): 所有计算机接口设备被连接成一个<strong>闭合的环</strong>，信号在环中沿着一个方向单向传输。典型的例子是令牌环 (Token Ring) 局域网。</p>
-</li>
-<li><p>网状 (Mesh Topology): 每个节点至少有两条路径与其他节点相连，存在高度的冗余连接。</p>
-</li>
+<li><p>环形 (Ring Topology):
+所有计算机接口设备被连接成一个<strong>闭合的环</strong>，信号在环中沿着一个方向单向传输。典型的例子是令牌环
+(Token Ring) 局域网。</p></li>
+<li><p>网状 (Mesh Topology):
+每个节点至少有两条路径与其他节点相连，存在高度的冗余连接。</p></li>
 </ul>
 <p>一个显著优点在于可靠性极高。某条链路或某个节点出现故障时，数据可以自动选择其他路径进行传输。</p>
-<p>缺点也很显而易见： 控制非常复杂（需要动态路由算法），线路成本极高。因此多用于广域网的核心层和互联网的骨干网，以确保通信的鲁棒性。</p>
-<h4 id="按传输介质分类"><a href="#按传输介质分类" class="headerlink" title="按传输介质分类"></a>按传输介质分类</h4><ul>
-<li><p>有线网络 (Wired Networks): 使用物理线缆作为传输介质的网络。包括双绞线网络（如以太网）、同轴电缆网络（如早期的有线电视网）、光纤网络等。</p>
-</li>
-<li><p>无线网络 (Wireless Networks): 使用电磁波在空间中进行数据传输，无需物理线缆。包括 Wi-Fi、蓝牙 (Bluetooth)、微波通信、蜂窝移动网络 (4G/5G) 等。</p>
-</li>
-</ul>
-<h3 id="计算机网络的性能指标"><a href="#计算机网络的性能指标" class="headerlink" title="计算机网络的性能指标"></a>计算机网络的性能指标</h3><p><strong>速率 (Rate)</strong>: 也常称为数据率(Data Rate)或比特率(Bit Rate), 是指连接到计算机网络上的节点在数字信道上传送数据的速率, 基本单位是 b/s (比特/秒，即 bps)。</p>
+<p>缺点也很显而易见：
+控制非常复杂（需要动态路由算法），线路成本极高。因此多用于广域网的核心层和互联网的骨干网，以确保通信的鲁棒性。</p>
+<h4 id="按传输介质分类">按传输介质分类</h4>
 <ul>
-<li>kb/s (千比特/秒) = 10³ b/s </li>
-<li>Mb/s (兆比特/秒) = 10⁶ b/s  </li>
-<li>Gb/s (吉比特/秒) = 10⁹ b/s </li>
-<li>Tb/s (太比特/秒) = 10¹² b/s</li>
+<li><p>有线网络 (Wired Networks):
+使用物理线缆作为传输介质的网络。包括双绞线网络（如以太网）、同轴电缆网络（如早期的有线电视网）、光纤网络等。</p></li>
+<li><p>无线网络 (Wireless Networks):
+使用电磁波在空间中进行数据传输，无需物理线缆。包括 Wi-Fi、蓝牙
+(Bluetooth)、微波通信、蜂窝移动网络 (4G/5G) 等。</p></li>
 </ul>
-<p><strong>带宽 (Bandwidth)</strong>: 在计算机网络中，带宽通常是“<strong>最高数据传输速率</strong>”的同义词, 因此单位也是 b/s (比特/秒)。我们常说的“我家拉了100兆的宽带”，指的就是这条线路的理论最高速率为 100 Mb/s。它代表了链路传输数据的最大能力。</p>
-<blockquote>
-<p>在信息论中，带宽 (Bandwidth) 指的是<strong>信号频率范围</strong>，单位为赫兹 (Hz)。例如，一个信道的带宽为 3000 Hz，表示它可以传输从<strong>某一频率到该频率加3000 Hz范围内</strong>的信号。</p>
-</blockquote>
-<p><strong>吞吐量 (Throughput)</strong>: 是指在<strong>单位时间</strong>内，通过某个网络（或信道、接口）的<strong>实际数据量</strong>。其单位为 b/s, Mb/s, Gb/s 等. 实际的吞吐量会受到网络拥塞、设备处理能力、协议开销、时延等多种因素的限制。因此，吞吐量总是小于或等于带宽。</p>
-<p><strong>信道利用率 (Channel Utilization)</strong>: 指某条信道在特定时间段内，<strong>有数据通过的时间</strong>所占的<strong>百分比</strong>。这是衡量信道繁忙程度或效率的指标。不过实际上并非信道利用率越高越好。根据排队理论，当信道利用率过高（例如接近100%）时，会导致分组在路由器队列中等待的时间（即排队时延）急剧增加，网络性能（总时延）会严重恶化，甚至导致大量丢包。</p>
-<p><strong>时延带宽积 (Delay-Bandwidth Product)</strong>: 这是一个表示<strong>容量</strong>的复合指标，它等于传播时延与信道带宽的乘积<br>计算公式：时延带宽积 (bit) = 传播时延 (s)× 带宽 (b/s)</p>
-<p>我们可以将链路想象成一个圆柱形管道：</p>
-<ul>
-<li>管道的长度 = 传播时延（数据通过管道所需的时间）</li>
-<li>管道的横截面积 = 带宽（单位时间能塞入多少数据）</li>
-<li>时延带宽积 = 管道的容积（这条链路最多能容纳多少比特）</li>
-</ul>
-<p><strong>往返时延 (Round-Trip Time, RTT)</strong>: RTT 是指从发送端<strong>发送一个短分组</strong>开始，到发送端<strong>接收到来自接收端的确认分组</strong>为止，所经历的总时间, 它是衡量网络响应速度和进行交互式应用（如网页浏览、在线游戏）时非常重要的指标</p>
-<p>需要注意的是, 它并不仅仅*是“传播时延的两倍”。一个完整的RTT至少包括：去程的传播时延 + 接收端的处理时延（用于生成确认）+ 确认分组的发送时延（通常很短）+ 回程的传播时延. 在实际的互联网中，RTT还包含了数据分组和确认分组在所有中间路由器上所经历的处理时延和排队时延。因此，RTT通常是一个动态变化的值。</p>
-<h4 id="时延"><a href="#时延" class="headerlink" title="时延"></a>时延</h4><p>在计算机网络中，时延 (Delay) 是一个核心的性能指标。它指的是一个数据单元（例如一个报文或一个分组）从网络（或链路）的一端传输到另一端所需要的总时间。<br>这个总时延 (T<sub>总</sub>) 并不是单一因素决定的，而是由以下四个主要部分构成的：</p>
-<p>T<sub>总</sub> = T<sub>发送</sub> + T<sub>传播</sub> + T<sub>处理</sub> + T<sub>排队</sub></p>
-<h5 id="发送时延-Transmission-Delay"><a href="#发送时延-Transmission-Delay" class="headerlink" title="发送时延 (Transmission Delay)"></a>发送时延 (Transmission Delay)</h5><p>定义：发送时延，也常被称为传输时延，是指网络节点（如主机或路由器）将一个分组的所有比特”推送”到通信链路（如光纤、网线）上所花费的时间，从第一个Bit开始发送，到最后一个Bit发送完成。</p>
+<h3 id="计算机网络的性能指标">计算机网络的性能指标</h3>
+<p><strong>速率 (Rate)</strong>: 也常称为数据率(Data Rate)或比特率(Bit
+Rate), 是指连接到计算机网络上的节点在数字信道上传送数据的速率,
+基本单位是 b/s (比特/秒，即 bps)。 - kb/s (千比特/秒) = 10³ b/s - Mb/s
+(兆比特/秒) = 10⁶ b/s<br>
+- Gb/s (吉比特/秒) = 10⁹ b/s - Tb/s (太比特/秒) = 10¹² b/s</p>
+<p><strong>带宽 (Bandwidth)</strong>:
+在计算机网络中，带宽通常是“<strong>最高数据传输速率</strong>”的同义词,
+因此单位也是 b/s
+(比特/秒)。我们常说的“我家拉了100兆的宽带”，指的就是这条线路的理论最高速率为
+100 Mb/s。它代表了链路传输数据的最大能力。 &gt; 在信息论中，带宽
+(Bandwidth) 指的是<strong>信号频率范围</strong>，单位为赫兹
+(Hz)。例如，一个信道的带宽为 3000
+Hz，表示它可以传输从<strong>某一频率到该频率加3000
+Hz范围内</strong>的信号。</p>
+<p><strong>吞吐量 (Throughput)</strong>:
+是指在<strong>单位时间</strong>内，通过某个网络（或信道、接口）的<strong>实际数据量</strong>。其单位为
+b/s, Mb/s, Gb/s 等.
+实际的吞吐量会受到网络拥塞、设备处理能力、协议开销、时延等多种因素的限制。因此，吞吐量总是小于或等于带宽。</p>
+<p><strong>信道利用率 (Channel Utilization)</strong>:
+指某条信道在特定时间段内，<strong>有数据通过的时间</strong>所占的<strong>百分比</strong>。这是衡量信道繁忙程度或效率的指标。不过实际上并非信道利用率越高越好。根据排队理论，当信道利用率过高（例如接近100%）时，会导致分组在路由器队列中等待的时间（即排队时延）急剧增加，网络性能（总时延）会严重恶化，甚至导致大量丢包。</p>
+<p><strong>时延带宽积 (Delay-Bandwidth Product)</strong>:
+这是一个表示<strong>容量</strong>的复合指标，它等于传播时延与信道带宽的乘积
+计算公式：时延带宽积 (bit) = 传播时延 (s)× 带宽 (b/s)</p>
+<p>我们可以将链路想象成一个圆柱形管道： - 管道的长度 =
+传播时延（数据通过管道所需的时间） - 管道的横截面积 =
+带宽（单位时间能塞入多少数据） - 时延带宽积 =
+管道的容积（这条链路最多能容纳多少比特）</p>
+<p><strong>往返时延 (Round-Trip Time, RTT)</strong>: RTT
+是指从发送端<strong>发送一个短分组</strong>开始，到发送端<strong>接收到来自接收端的确认分组</strong>为止，所经历的总时间,
+它是衡量网络响应速度和进行交互式应用（如网页浏览、在线游戏）时非常重要的指标</p>
+<p>需要注意的是,
+它并不仅仅*是“传播时延的两倍”。一个完整的RTT至少包括：去程的传播时延 +
+接收端的处理时延（用于生成确认）+ 确认分组的发送时延（通常很短）+
+回程的传播时延.
+在实际的互联网中，RTT还包含了数据分组和确认分组在所有中间路由器上所经历的处理时延和排队时延。因此，RTT通常是一个动态变化的值。</p>
+<h4 id="时延">时延</h4>
+<p>在计算机网络中，时延 (Delay)
+是一个核心的性能指标。它指的是一个数据单元（例如一个报文或一个分组）从网络（或链路）的一端传输到另一端所需要的总时间。
+这个总时延 (T<sub>总</sub>)
+并不是单一因素决定的，而是由以下四个主要部分构成的：</p>
+<p>T<sub>总</sub> = T<sub>发送</sub> + T<sub>传播</sub> +
+T<sub>处理</sub> + T<sub>排队</sub></p>
+<h5 id="发送时延-transmission-delay">发送时延 (Transmission Delay)</h5>
+<p>定义：发送时延，也常被称为传输时延，是指网络节点（如主机或路由器）将一个分组的所有比特”推送”到通信链路（如光纤、网线）上所花费的时间，从第一个Bit开始发送，到最后一个Bit发送完成。</p>
 <p>计算公式：</p>
 <p>T<sub>发送</sub> = 分组长度 (bit) / 发送速率 (bit/s)</p>
 <p>这个时延取决于分组的大小和链路的发送速率（也称为带宽）。</p>
-<h5 id="传播时延-Propagation-Delay"><a href="#传播时延-Propagation-Delay" class="headerlink" title="传播时延 (Propagation Delay)"></a>传播时延 (Propagation Delay)</h5><p>定义：传播时延是指电磁波（或光信号）在信道（传输介质）中传播一定距离所花费的时间。通俗地说，就是一个比特从链路的始端传播到末端所需的时间。</p>
+<h5 id="传播时延-propagation-delay">传播时延 (Propagation Delay)</h5>
+<p>定义：传播时延是指电磁波（或光信号）在信道（传输介质）中传播一定距离所花费的时间。通俗地说，就是一个比特从链路的始端传播到末端所需的时间。</p>
 <p>计算公式：</p>
 <p>T<sub>传播</sub> = 信道长度 (m) / 电磁波在信道上的传播速率 (m/s)</p>
 <p>从公式中可以看出，这个时间与分组有多大、发送速率有多快无关。</p>
-<h5 id="处理时延-Processing-Delay"><a href="#处理时延-Processing-Delay" class="headerlink" title="处理时延 (Processing Delay)"></a>处理时延 (Processing Delay)</h5><p>定义：指分组到达交换节点（如路由器）时，节点为进行存储转发而进行一系列必要处理所花费的时间。</p>
-<p>路由器不是一个简单的”直通”管道。它必须对收到的每个分组进行分析才能决定下一步做什么。处理内容包括：</p>
-<ul>
-<li>检查分组首部：分析目标地址、协议类型等信息</li>
-<li>差错校验：检查分组在传输过程中是否出现损坏</li>
-<li>查找路由：根据目标地址查询本地路由表，确定将分组转发到哪一个输出端口</li>
-</ul>
+<h5 id="处理时延-processing-delay">处理时延 (Processing Delay)</h5>
+<p>定义：指分组到达交换节点（如路由器）时，节点为进行存储转发而进行一系列必要处理所花费的时间。</p>
+<p>路由器不是一个简单的”直通”管道。它必须对收到的每个分组进行分析才能决定下一步做什么。处理内容包括：
+- 检查分组首部：分析目标地址、协议类型等信息 -
+差错校验：检查分组在传输过程中是否出现损坏 -
+查找路由：根据目标地址查询本地路由表，确定将分组转发到哪一个输出端口</p>
 <p>在现代高速路由器中，处理时延通常非常短（在微秒或更低的级别）。</p>
-<h5 id="排队时延-Queuing-Delay"><a href="#排队时延-Queuing-Delay" class="headerlink" title="排队时延 (Queuing Delay)"></a>排队时延 (Queuing Delay)</h5><p>定义：指分组在路由器的输入队列或输出队列中排队等待所花费的时间。</p>
+<h5 id="排队时延-queuing-delay">排队时延 (Queuing Delay)</h5>
+<p>定义：指分组在路由器的输入队列或输出队列中排队等待所花费的时间。</p>
 <p>因为当多个分组同时到达，而路由器无法立即处理它们时（例如，多个输入链路的分组都要转发到同一个正忙的输出链路），这些分组就必须排队等待。</p>
-<p>其特点是：</p>
-<ul>
-<li>排队时延是四个时延中唯一一个高度可变的</li>
-<li>它完全取决于网络的拥塞状况</li>
-<li>如果网络非常空闲，排队时延可能接近于0</li>
-<li>如果网络非常拥塞，排队时延可能会变得非常大，成为总时延中最主要的部分，甚至导致路由器缓存溢出而发生丢包 (Packet Loss)</li>
-</ul>
-<h3 id="计算机网络分层结构"><a href="#计算机网络分层结构" class="headerlink" title="计算机网络分层结构"></a>计算机网络分层结构</h3><p>计算机网络的分层结构是一种将复杂的网络通信任务划分为<strong>多个独立层次</strong>的设计方法。每一层都负责<strong>特定的功能</strong>，并通过定义良好的<strong>接口与相邻层进行交互</strong>。</p>
-<p>其基本原则是: </p>
-<ul>
-<li>分层：每一层都执行一组明确定义的功能。</li>
-<li>服务提供：每一层都为其紧邻的上一层提供服务，同时隐藏了实现该服务的具体细节。</li>
-<li>对等通信：不同计算机上的<strong>同一层</strong>（称为<strong>对等层</strong>）之间<strong>似乎在直接通信</strong>。实际上，这种通信是<strong>通过下层提供的服务</strong>来实现的，并由<strong>该层的协议</strong>来规范。</li>
-</ul>
-<p>这里有几个概念需要区分: </p>
-<p><strong>服务</strong> (Service): 是下层通过层间接口向上层提供的功能。它描述了某一层能为它的上一层做什么。服务的核心在于<strong>功能抽象</strong>。上层不需要关心下层是如何实现这些功能的，只需要知道如何使用这些功能即可。</p>
-<p>例如, 传输层为应用层提供“可靠的数据传输服务”。应用层（如网页浏览器）只需要请求传输层发送数据，并相信数据会准确无误地到达目的地，而不需要关心传输层是如何通过确认、重传等机制来保证可靠性的。</p>
-<p><strong>接口</strong> (Interface): 接口是同一台计算机上<strong>相邻两个层次之间的交互点</strong>。它定义了上层如何访问下层所提供的服务。它规定了一套操作和参数，用于在层与层之间传递控制信息和数据。</p>
-<p>可以将其看作是一个软件函数库的<strong>API</strong>（应用程序编程接口）。传输层会提供像 send() 和 receive() 这样的函数调用作为接口，供应用层来使用它的数据传输服务。</p>
-<p><strong>协议</strong> (Protocol): 协议是控制不同计算机上<strong>对等实体</strong>（Peer Entities，即不同机器上的<strong>同一层</strong>）之间通信的<strong>一组规则</strong>。它规定了通信双方需要共同遵守的格式、顺序和操作，确保它们能够正确地理解对方发送的信息。<strong>协议是水平的</strong>，<strong>服务和接口是垂直的</strong>。</p>
-<p>协议三要素：</p>
-<ul>
-<li>语法 (Syntax)：数据与控制<strong>信息的结构或格式</strong>。例如，HTTP协议规定一个HTTP请求报文必须包含请求行、请求头和请求体。</li>
-<li>语义 (Semantics)：需要发出何种控制信息，完成何种动作以及<strong>做出何种应答</strong>。例如，规定收到一个特定的状态码（如404）代表“未找到资源”。</li>
-<li>时序 (Timing)：事件实现的顺序。例如，规定发送方发送数据后，必须在多长时间内收到接收方的确认。</li>
-</ul>
-<h3 id="计算机网络的两种参考模型"><a href="#计算机网络的两种参考模型" class="headerlink" title="计算机网络的两种参考模型"></a>计算机网络的两种参考模型</h3><p><img lazyload src="/images/loading.svg" data-src="/image.png" alt="alt text"></p>
+<p>其特点是： - 排队时延是四个时延中唯一一个高度可变的 -
+它完全取决于网络的拥塞状况 - 如果网络非常空闲，排队时延可能接近于0 -
+如果网络非常拥塞，排队时延可能会变得非常大，成为总时延中最主要的部分，甚至导致路由器缓存溢出而发生丢包
+(Packet Loss)</p>
+<h3 id="计算机网络分层结构">计算机网络分层结构</h3>
+<p>计算机网络的分层结构是一种将复杂的网络通信任务划分为<strong>多个独立层次</strong>的设计方法。每一层都负责<strong>特定的功能</strong>，并通过定义良好的<strong>接口与相邻层进行交互</strong>。</p>
+<p>其基本原则是: - 分层：每一层都执行一组明确定义的功能。 -
+服务提供：每一层都为其紧邻的上一层提供服务，同时隐藏了实现该服务的具体细节。
+-
+对等通信：不同计算机上的<strong>同一层</strong>（称为<strong>对等层</strong>）之间<strong>似乎在直接通信</strong>。实际上，这种通信是<strong>通过下层提供的服务</strong>来实现的，并由<strong>该层的协议</strong>来规范。</p>
+<p>这里有几个概念需要区分:</p>
+<p><strong>服务</strong> (Service):
+是下层通过层间接口向上层提供的功能。它描述了某一层能为它的上一层做什么。服务的核心在于<strong>功能抽象</strong>。上层不需要关心下层是如何实现这些功能的，只需要知道如何使用这些功能即可。</p>
+<p>例如,
+传输层为应用层提供“可靠的数据传输服务”。应用层（如网页浏览器）只需要请求传输层发送数据，并相信数据会准确无误地到达目的地，而不需要关心传输层是如何通过确认、重传等机制来保证可靠性的。</p>
+<p><strong>接口</strong> (Interface):
+接口是同一台计算机上<strong>相邻两个层次之间的交互点</strong>。它定义了上层如何访问下层所提供的服务。它规定了一套操作和参数，用于在层与层之间传递控制信息和数据。</p>
+<p>可以将其看作是一个软件函数库的<strong>API</strong>（应用程序编程接口）。传输层会提供像
+send() 和 receive()
+这样的函数调用作为接口，供应用层来使用它的数据传输服务。</p>
+<p><strong>协议</strong> (Protocol):
+协议是控制不同计算机上<strong>对等实体</strong>（Peer
+Entities，即不同机器上的<strong>同一层</strong>）之间通信的<strong>一组规则</strong>。它规定了通信双方需要共同遵守的格式、顺序和操作，确保它们能够正确地理解对方发送的信息。<strong>协议是水平的</strong>，<strong>服务和接口是垂直的</strong>。</p>
+<p>协议三要素： - 语法
+(Syntax)：数据与控制<strong>信息的结构或格式</strong>。例如，HTTP协议规定一个HTTP请求报文必须包含请求行、请求头和请求体。
+- 语义
+(Semantics)：需要发出何种控制信息，完成何种动作以及<strong>做出何种应答</strong>。例如，规定收到一个特定的状态码（如404）代表“未找到资源”。
+- 时序
+(Timing)：事件实现的顺序。例如，规定发送方发送数据后，必须在多长时间内收到接收方的确认。</p>
+<h3 id="计算机网络的两种参考模型">计算机网络的两种参考模型</h3>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
 
 		</div>
 
@@ -1062,7 +1125,7 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/15/algorithms/Computing%20Theory/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E4%B8%8E%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/">
+				<a class="next" rel="next" href="/2025/09/15/algorithms/Computing%20Theory/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E5%92%8C%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E4%B8%8E%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA/">
 					<span class="title flex justify-center items-center">
 						<span class="post-nav-title-item truncate max-w-48">正则语言与有限自动机</span>
 						<span class="post-nav-item">Next posts</span>
@@ -1086,7 +1149,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">计算机网络体系结构</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2-%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2%E5%92%8C%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2"><span class="nav-text">电路交换, 报文交换和分组交换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2"><span class="nav-text">电路交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2-Message-Switching"><span class="nav-text">报文交换 (Message Switching)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2-Packet-Switching"><span class="nav-text">分组交换 (Packet Switching)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-text">计算机网络的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E5%88%86%E5%B8%83%E8%8C%83%E5%9B%B4%E5%88%86%E7%B1%BB"><span class="nav-text">按分布范围分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E4%BC%A0%E8%BE%93%E6%8A%80%E6%9C%AF%E5%88%86%E7%B1%BB"><span class="nav-text">按传输技术分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84%E5%88%86%E7%B1%BB"><span class="nav-text">按拓扑结构分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E4%BC%A0%E8%BE%93%E4%BB%8B%E8%B4%A8%E5%88%86%E7%B1%BB"><span class="nav-text">按传输介质分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-text">计算机网络的性能指标</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E5%BB%B6"><span class="nav-text">时延</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%97%B6%E5%BB%B6-Transmission-Delay"><span class="nav-text">发送时延 (Transmission Delay)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%A0%E6%92%AD%E6%97%B6%E5%BB%B6-Propagation-Delay"><span class="nav-text">传播时延 (Propagation Delay)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E6%97%B6%E5%BB%B6-Processing-Delay"><span class="nav-text">处理时延 (Processing Delay)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%92%E9%98%9F%E6%97%B6%E5%BB%B6-Queuing-Delay"><span class="nav-text">排队时延 (Queuing Delay)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E7%BB%93%E6%9E%84"><span class="nav-text">计算机网络分层结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%8F%82%E8%80%83%E6%A8%A1%E5%9E%8B"><span class="nav-text">计算机网络的两种参考模型</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2-%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2%E5%92%8C%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2"><span class="nav-text">电路交换, 报文交换和分组交换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2"><span class="nav-text">电路交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2-message-switching"><span class="nav-text">报文交换 (Message Switching)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2-packet-switching"><span class="nav-text">分组交换 (Packet Switching)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-text">计算机网络的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E5%88%86%E5%B8%83%E8%8C%83%E5%9B%B4%E5%88%86%E7%B1%BB"><span class="nav-text">按分布范围分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E4%BC%A0%E8%BE%93%E6%8A%80%E6%9C%AF%E5%88%86%E7%B1%BB"><span class="nav-text">按传输技术分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84%E5%88%86%E7%B1%BB"><span class="nav-text">按拓扑结构分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E4%BC%A0%E8%BE%93%E4%BB%8B%E8%B4%A8%E5%88%86%E7%B1%BB"><span class="nav-text">按传输介质分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-text">计算机网络的性能指标</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E5%BB%B6"><span class="nav-text">时延</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%97%B6%E5%BB%B6-transmission-delay"><span class="nav-text">发送时延 (Transmission Delay)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%A0%E6%92%AD%E6%97%B6%E5%BB%B6-propagation-delay"><span class="nav-text">传播时延 (Propagation Delay)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E6%97%B6%E5%BB%B6-processing-delay"><span class="nav-text">处理时延 (Processing Delay)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%92%E9%98%9F%E6%97%B6%E5%BB%B6-queuing-delay"><span class="nav-text">排队时延 (Queuing Delay)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E7%BB%93%E6%9E%84"><span class="nav-text">计算机网络分层结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%8F%82%E8%80%83%E6%A8%A1%E5%9E%8B"><span class="nav-text">计算机网络的两种参考模型</span></a></li></ol>
 
 	</div>
 </div>
@@ -1115,11 +1178,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

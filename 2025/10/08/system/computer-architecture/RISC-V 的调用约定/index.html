@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -828,43 +828,53 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="什么是调用约定"><a href="#什么是调用约定" class="headerlink" title="什么是调用约定"></a>什么是调用约定</h3><p>首先，我们需要理解什么是调用约定（Calling Convention）。它是一套规则，用于规定<strong>函数在调用时如何进行交互</strong>。这套规则确保了由不同程序员编写、甚至由不同编译器编译的函数能够正确地相互调用。</p>
+			<h3 id="什么是调用约定">什么是调用约定</h3>
+<p>首先，我们需要理解什么是调用约定（Calling
+Convention）。它是一套规则，用于规定<strong>函数在调用时如何进行交互</strong>。这套规则确保了由不同程序员编写、甚至由不同编译器编译的函数能够正确地相互调用。</p>
 <p>调用约定通常定义了以下内容：</p>
 <ul>
-<li><p>参数传递：如何将参数传递给函数（使用寄存器还是栈）。</p>
-</li>
-<li><p>返回值：函数如何将返回值传回给调用者。</p>
-</li>
-<li><p>寄存器使用：调用者（Caller）和被调用者（Callee）如何划分和使用寄存器。</p>
-</li>
-<li><p>栈管理：如何分配和释放栈帧（Stack Frame）。</p>
-</li>
+<li><p>参数传递：如何将参数传递给函数（使用寄存器还是栈）。</p></li>
+<li><p>返回值：函数如何将返回值传回给调用者。</p></li>
+<li><p>寄存器使用：调用者（Caller）和被调用者（Callee）如何划分和使用寄存器。</p></li>
+<li><p>栈管理：如何分配和释放栈帧（Stack Frame）。</p></li>
 </ul>
-<h3 id="RISC-V-标准调用约定-LP64"><a href="#RISC-V-标准调用约定-LP64" class="headerlink" title="RISC-V 标准调用约定 (LP64)"></a>RISC-V 标准调用约定 (LP64)</h3><p>RISC-V 的标准调用约定非常清晰和高效，主要依赖<strong>寄存器</strong>来传递参数。下面是其核心内容的总结，以标准的 64 位架构（RV64I）为例。</p>
-<ol>
+<h3 id="risc-v-标准调用约定-lp64">RISC-V 标准调用约定 (LP64)</h3>
+<p>RISC-V
+的标准调用约定非常清晰和高效，主要依赖<strong>寄存器</strong>来传递参数。下面是其核心内容的总结，以标准的
+64 位架构（RV64I）为例。</p>
+<ol type="1">
 <li>参数传递 (Argument Passing)</li>
 </ol>
 <ul>
-<li><p>整型/指针参数：前 8 个整型或指针参数通过寄存器 a0 到 a7 (x10 - x17) 传递。</p>
-</li>
-<li><p>浮点参数：前 8 个浮点参数通过浮点寄存器 fa0 到 fa7 传递。</p>
-</li>
-<li><p>更多参数：如果参数超过 8 个，多余的参数将从右到左依次压入**栈（Stack）**中进行传递。</p>
-</li>
+<li><p>整型/指针参数：前 8 个整型或指针参数通过寄存器 a0 到 a7 (x10 -
+x17) 传递。</p></li>
+<li><p>浮点参数：前 8 个浮点参数通过浮点寄存器 fa0 到 fa7
+传递。</p></li>
+<li><p>更多参数：如果参数超过 8
+个，多余的参数将从右到左依次压入<strong>栈（Stack）</strong>中进行传递。</p></li>
 </ul>
-<ol start="2">
+<ol start="2" type="1">
 <li>返回值 (Return Values)</li>
 </ol>
 <ul>
-<li><p>整型/指针返回值：返回值通常放在 a0 (x10) 中。如果返回值需要 128 位（例如一个大的结构体），则高 64 位放在 a1 (x11) 中，低 64 位放在 a0 中。</p>
-</li>
-<li><p>浮点返回值：同样，浮点返回值使用 fa0 和 fa1。</p>
-</li>
+<li><p>整型/指针返回值：返回值通常放在 a0 (x10) 中。如果返回值需要 128
+位（例如一个大的结构体），则高 64 位放在 a1 (x11) 中，低 64 位放在 a0
+中。</p></li>
+<li><p>浮点返回值：同样，浮点返回值使用 fa0 和 fa1。</p></li>
 </ul>
-<ol start="3">
-<li>寄存器用途表<br>RISC-V 共有 32 个通用整型寄存器 (x0 - x31)，它们在调用约定中扮演着不同的角色。使用 ABI (Application Binary Interface) 名称可以更容易地记住它们的用途。</li>
+<ol start="3" type="1">
+<li>寄存器用途表 RISC-V 共有 32 个通用整型寄存器 (x0 -
+x31)，它们在调用约定中扮演着不同的角色。使用 ABI (Application Binary
+Interface) 名称可以更容易地记住它们的用途。</li>
 </ol>
 <table>
+<colgroup>
+<col style="width: 30%">
+<col style="width: 18%">
+<col style="width: 10%">
+<col style="width: 15%">
+<col style="width: 26%">
+</colgroup>
 <thead>
 <tr>
 <th>寄存器 (ABI 名称)</th>
@@ -874,7 +884,8 @@ mjx-container[display="true"] + br {
 <th>描述</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>zero</td>
 <td>x0</td>
 <td>硬编码零</td>
@@ -958,38 +969,47 @@ mjx-container[display="true"] + br {
 <td>Caller-Saved</td>
 <td>用于存放临时数据。</td>
 </tr>
-</tbody></table>
-<h3 id="Caller-Saved-与-Callee-Saved-寄存器的区别"><a href="#Caller-Saved-与-Callee-Saved-寄存器的区别" class="headerlink" title="Caller-Saved 与 Callee-Saved 寄存器的区别"></a>Caller-Saved 与 Callee-Saved 寄存器的区别</h3><p>这是调用约定中关于寄存器管理的核心。这个策略旨在最小化内存访问（保存/恢复寄存器到栈），从而提高性能。</p>
-<ol>
+</tbody>
+</table>
+<h3 id="caller-saved-与-callee-saved-寄存器的区别">Caller-Saved 与
+Callee-Saved 寄存器的区别</h3>
+<p>这是调用约定中关于寄存器管理的核心。这个策略旨在最小化内存访问（保存/恢复寄存器到栈），从而提高性能。</p>
+<ol type="1">
 <li>调用者保存寄存器 (Caller-Saved Registers)</li>
 </ol>
-<p>也称为临时寄存器（Temporary Registers）或易变寄存器（Volatile Registers）。这些寄存器可以被**被调用函数（Callee）**自由地、无条件地修改。</p>
+<p>也称为临时寄存器（Temporary Registers）或易变寄存器（Volatile
+Registers）。这些寄存器可以被<strong>被调用函数（Callee）</strong>自由地、无条件地修改。</p>
 <p>工作流程：</p>
 <ul>
-<li><p>调用前：如果一个调用者函数（例如 main）在一个 Caller-Saved 寄存器（例如 t0）中存放了一个重要的值，并且希望在被调用函数（例如 funcA）返回后继续使用这个值。</p>
-</li>
-<li><p>保存：那么 main 函数必须在执行 call funcA 指令之前，自己负责将 t0 的值保存到栈上。</p>
-</li>
-<li><p>调用后：funcA 返回后，main 函数再从栈上恢复 t0 的值。</p>
-</li>
+<li><p>调用前：如果一个调用者函数（例如 main）在一个 Caller-Saved
+寄存器（例如 t0）中存放了一个重要的值，并且希望在被调用函数（例如
+funcA）返回后继续使用这个值。</p></li>
+<li><p>保存：那么 main 函数必须在执行 call funcA 指令之前，自己负责将 t0
+的值保存到栈上。</p></li>
+<li><p>调用后：funcA 返回后，main 函数再从栈上恢复 t0 的值。</p></li>
 </ul>
-<p>为什么这么设计？funcA 可以无所顾忌地使用这些寄存器进行计算，而不需要执行任何保存/恢复操作，这使得那些简短的、不需要太多寄存器的叶子函数（leaf function）执行得非常快。例如RISC-V 中的ra, t0-t6, a0-a7等</p>
-<ol start="2">
+<p>为什么这么设计？funcA
+可以无所顾忌地使用这些寄存器进行计算，而不需要执行任何保存/恢复操作，这使得那些简短的、不需要太多寄存器的叶子函数（leaf
+function）执行得非常快。例如RISC-V 中的ra, t0-t6, a0-a7等</p>
+<ol start="2" type="1">
 <li>被调用者保存寄存器 (Callee-Saved Registers)</li>
 </ol>
-<p>也称为保存寄存器（Saved Registers）或非易变寄存器（Non-Volatile Registers）。这些寄存器的值在函数调用前后必须保持不变。</p>
+<p>也称为保存寄存器（Saved Registers）或非易变寄存器（Non-Volatile
+Registers）。这些寄存器的值在函数调用前后必须保持不变。</p>
 <p>工作流程：</p>
 <ul>
-<li><p>调用前：调用者函数（main）可以放心地将一个长期有效的值（例如一个循环计数器）存放在一个 Callee-Saved 寄存器（例如 s0）中，然后去调用 funcA。</p>
-</li>
-<li><p>被调用者内部：如果 funcA 需要使用 s0 寄存器，它必须在函数的开头（prologue）先把 s0 的原始值保存到自己的栈帧中。</p>
-</li>
-<li><p>返回前：在 funcA 返回之前（epilogue），它必须从栈中恢复 s0 的原始值。</p>
-</li>
-<li><p>调用后：这样，当 funcA 返回到 main 时，main 可以确信 s0 里的值和调用前一模一样。</p>
-</li>
+<li><p>调用前：调用者函数（main）可以放心地将一个长期有效的值（例如一个循环计数器）存放在一个
+Callee-Saved 寄存器（例如 s0）中，然后去调用 funcA。</p></li>
+<li><p>被调用者内部：如果 funcA 需要使用 s0
+寄存器，它必须在函数的开头（prologue）先把 s0
+的原始值保存到自己的栈帧中。</p></li>
+<li><p>返回前：在 funcA 返回之前（epilogue），它必须从栈中恢复 s0
+的原始值。</p></li>
+<li><p>调用后：这样，当 funcA 返回到 main 时，main 可以确信 s0
+里的值和调用前一模一样。</p></li>
 </ul>
-<p>为什么这么设计？调用者可以放心地使用这些寄存器来存储重要的局部变量，而不用在每次函数调用时都去保存和恢复它们，这减少了不必要的内存操作。在RISC-V 中的例子有sp, s0-s11。</p>
+<p>为什么这么设计？调用者可以放心地使用这些寄存器来存储重要的局部变量，而不用在每次函数调用时都去保存和恢复它们，这减少了不必要的内存操作。在RISC-V
+中的例子有sp, s0-s11。</p>
 
 		</div>
 
@@ -1048,7 +1068,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">RISC-V 的调用约定</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A"><span class="nav-text">什么是调用约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RISC-V-%E6%A0%87%E5%87%86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A-LP64"><span class="nav-text">RISC-V 标准调用约定 (LP64)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Caller-Saved-%E4%B8%8E-Callee-Saved-%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">Caller-Saved 与 Callee-Saved 寄存器的区别</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A"><span class="nav-text">什么是调用约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#risc-v-%E6%A0%87%E5%87%86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A-lp64"><span class="nav-text">RISC-V 标准调用约定 (LP64)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#caller-saved-%E4%B8%8E-callee-saved-%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">Caller-Saved 与
+Callee-Saved 寄存器的区别</span></a></li></ol>
 
 	</div>
 </div>
@@ -1077,11 +1098,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

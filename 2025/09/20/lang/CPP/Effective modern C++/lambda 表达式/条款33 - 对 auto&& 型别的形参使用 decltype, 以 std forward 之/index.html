@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,21 +833,36 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>该条款的核心是解决一个在 C++14 泛型 lambda 中进行完美转发时遇到的具体语法问题。</p>
-<h3 id="泛型lambda"><a href="#泛型lambda" class="headerlink" title="泛型lambda"></a>泛型lambda</h3><p>简单来说，泛型 Lambda (Generic Lambda) 是一种可以使用 <strong>auto 关键字作为参数类型</strong>的 Lambda 表达式。这使得该 Lambda 能够<strong>接受任意类型的参数</strong>，其行为类似于一个函数模板。</p>
+			<p>该条款的核心是解决一个在 C++14 泛型 lambda
+中进行完美转发时遇到的具体语法问题。</p>
+<h3 id="泛型lambda">泛型lambda</h3>
+<p>简单来说，泛型 Lambda (Generic Lambda) 是一种可以使用 <strong>auto
+关键字作为参数类型</strong>的 Lambda 表达式。这使得该 Lambda
+能够<strong>接受任意类型的参数</strong>，其行为类似于一个函数模板。</p>
 <blockquote>
-<p>在 C++14 之前，如果你想让一个 Lambda 接受不同类型的参数，你需要为每种类型写一个 Lambda，或者使用更复杂的模板技巧（比如定义一个带模板化 operator() 的函数对象）。C++14 通过允许在 Lambda 参数中使用 auto，极大地简化了这一过程。</p>
+<p>在 C++14 之前，如果你想让一个 Lambda
+接受不同类型的参数，你需要为每种类型写一个
+Lambda，或者使用更复杂的模板技巧（比如定义一个带模板化 operator()
+的函数对象）。C++14 通过允许在 Lambda 参数中使用
+auto，极大地简化了这一过程。</p>
 </blockquote>
-<p>正如我们前面所说, lambda的本质是闭包类, 因此泛型 Lambda 的本质也是闭包类, 只是这个闭包类的 operator() 是一个模板函数, 可以接受任意类型的参数。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> my_lambda = [](<span class="keyword">auto</span> x) { <span class="comment">/* ... */</span> };</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以理解为下列代码</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">__compiler_generated_functor_name</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">auto</span> <span class="title">operator</span><span class="params">()</span><span class="params">(T x)</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="comment">/* ... */</span></span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> my_lambda = __compiler_generated_functor_name{};</span><br></pre></td></tr></table></figure></div>
-<p>也就是说, 泛型 Lambda 本质上是一个拥有<strong>模板化的函数调用运算符</strong> (operator()) 的<strong>函数对象</strong>的语法糖。这使得每一次用不同类型的参数调用该 Lambda 时，编译器都能为其生成一个特定的函数实例。</p>
-<h3 id="泛型-Lambda-与完美转发"><a href="#泛型-Lambda-与完美转发" class="headerlink" title="泛型 Lambda 与完美转发"></a>泛型 Lambda 与完美转发</h3><p>而在许多情况下(例如工厂函数), 我们需要在泛型 Lambda 中进行完美转发, 即保留参数的左值/右值属性, 为此我们需要将 lambda 的形参声明为万能引用 auto&amp;&amp;，并在内部使用 std::forward. 此时会出现一个问题</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// auto&amp;&amp; x 是万能引用</span></span><br><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span>&amp;&amp; x) {</span><br><span class="line">    <span class="comment">// ??? 应该是什么类型？</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(std::forward&lt;???&gt;(x)));</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>在常规的函数模板中，我们会写 std::forward<t>(x)，这里的 T 是模板参数。但在 lambda 表达式中，我们无法直接访问到编译器在背后为我们生成的那个模板参数 T。那么，??? 处应该填什么呢？</t></p>
-<p>条款33给出的解决方案是使用 decltype 来获取 lambda 形参的类型，并将其作为 std::forward 的模板参数, 也就是:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span>&amp;&amp; param) {</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(std::forward&lt;<span class="keyword">decltype</span>(param)&gt;(param)));</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
-
+<p>正如我们前面所说, lambda的本质是闭包类, 因此泛型 Lambda
+的本质也是闭包类, 只是这个闭包类的 operator() 是一个模板函数,
+可以接受任意类型的参数。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> my_lambda = [](<span class="keyword">auto</span> x) { <span class="comment">/* ... */</span> };</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以理解为下列代码</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">__compiler_generated_functor_name</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">auto</span> <span class="title">operator</span><span class="params">()</span><span class="params">(T x)</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="comment">/* ... */</span></span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> my_lambda = __compiler_generated_functor_name{};</span><br></pre></td></tr></table></figure></div> 也就是说, 泛型 Lambda
+本质上是一个拥有<strong>模板化的函数调用运算符</strong> (operator())
+的<strong>函数对象</strong>的语法糖。这使得每一次用不同类型的参数调用该
+Lambda 时，编译器都能为其生成一个特定的函数实例。</p>
+<h3 id="泛型-lambda-与完美转发">泛型 Lambda 与完美转发</h3>
+<p>而在许多情况下(例如工厂函数), 我们需要在泛型 Lambda 中进行完美转发,
+即保留参数的左值/右值属性, 为此我们需要将 lambda 的形参声明为万能引用
+auto&amp;&amp;，并在内部使用 std::forward. 此时会出现一个问题
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// auto&amp;&amp; x 是万能引用</span></span><br><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span>&amp;&amp; x) {</span><br><span class="line">    <span class="comment">// ??? 应该是什么类型？</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(std::forward&lt;???&gt;(x)));</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 在常规的函数模板中，我们会写 std::forward<t>(x)，这里的 T
+是模板参数。但在 lambda
+表达式中，我们无法直接访问到编译器在背后为我们生成的那个模板参数
+T。那么，??? 处应该填什么呢？</t></p>
+<p>条款33给出的解决方案是使用 decltype 来获取 lambda
+形参的类型，并将其作为 std::forward 的模板参数, 也就是:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span>&amp;&amp; param) {</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(std::forward&lt;<span class="keyword">decltype</span>(param)&gt;(param)));</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
 
 		</div>
 
@@ -910,7 +925,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款33：对 auto&amp;&amp; 型别的形参使用 decltype, 以 std forward 之</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8Blambda"><span class="nav-text">泛型lambda</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8B-Lambda-%E4%B8%8E%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"><span class="nav-text">泛型 Lambda 与完美转发</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8Blambda"><span class="nav-text">泛型lambda</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8B-lambda-%E4%B8%8E%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"><span class="nav-text">泛型 Lambda 与完美转发</span></a></li></ol>
 
 	</div>
 </div>
@@ -939,11 +954,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

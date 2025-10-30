@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,27 +833,44 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>“特种成员函数”指的是那些C++编译器在特定情况下会自动生成的成员函数。在C++11之后, 特种成员函数指的是默认构造函数, 析构函数, 拷贝构造函数, 拷贝赋值运算符, 移动构造函数, 移动赋值运算符。一般来说, 这些函数仅在<strong>代码中需要</strong>它们，且程序员<strong>没有显式声明</strong>它们时才会被自动生成。同时, 这些函数的自动生成存在一些机制, 下面我们来详细了解一下。</p>
-<h3 id="移动操作的生成规则"><a href="#移动操作的生成规则" class="headerlink" title="移动操作的生成规则"></a>移动操作的生成规则</h3><p>编译器仅在同时满足以下所有三个条件时，才会为类生成移动操作（移动构造函数和移动赋值运算符） ：</p>
+			<p>“特种成员函数”指的是那些C++编译器在特定情况下会自动生成的成员函数。在C++11之后,
+特种成员函数指的是默认构造函数, 析构函数, 拷贝构造函数, 拷贝赋值运算符,
+移动构造函数, 移动赋值运算符。一般来说,
+这些函数仅在<strong>代码中需要</strong>它们，且程序员<strong>没有显式声明</strong>它们时才会被自动生成。同时,
+这些函数的自动生成存在一些机制, 下面我们来详细了解一下。</p>
+<h3 id="移动操作的生成规则">移动操作的生成规则</h3>
+<p>编译器仅在同时满足以下所有三个条件时，才会为类生成移动操作（移动构造函数和移动赋值运算符）
+：</p>
 <ul>
 <li>类中没有用户声明的<strong>拷贝操作</strong>（拷贝构造函数或拷贝赋值运算符）。</li>
 <li>类中没有用户声明的<strong>移动操作</strong>（移动构造函数或移动赋值运算符）。</li>
 <li>类中没有用户声明的<strong>析构函数</strong>。</li>
 </ul>
-<p>针对上述内容, 解释如下: </p>
-<p>首先, 如果程序员为一个类编写了拷贝操作，这表明默认的、按成员拷贝的方式不适用于该类。编译器据此推断，默认的、按成员移动的方式很可能也不适用，因此不再自动生成移动操作 。</p>
-<p>而如果程序员编写了析构函数，这通常意味着该类在进行某种需要手动清理的资源管理，这正是C++98“三法则”（Rule of Three）的核心思想。在这种情况下，编译器假定默认的成员移动操作是不正确的，因此也会禁止生成移动操作。</p>
+<p>针对上述内容, 解释如下:</p>
+<p>首先,
+如果程序员为一个类编写了拷贝操作，这表明默认的、按成员拷贝的方式不适用于该类。编译器据此推断，默认的、按成员移动的方式很可能也不适用，因此不再自动生成移动操作
+。</p>
+<p>而如果程序员编写了析构函数，这通常意味着该类在进行某种需要手动清理的资源管理，这正是C++98“三法则”（Rule
+of
+Three）的核心思想。在这种情况下，编译器假定默认的成员移动操作是不正确的，因此也会禁止生成移动操作。</p>
 <blockquote>
-<p>三法则是指, 如果你声明了拷贝构造函数、拷贝赋值运算符，或析构函数中的任何一个，你就得同时声明所有三个函数。</p>
+<p>三法则是指,
+如果你声明了拷贝构造函数、拷贝赋值运算符，或析构函数中的任何一个，你就得同时声明所有三个函数。</p>
 </blockquote>
-<h3 id="拷贝操作的生成规则"><a href="#拷贝操作的生成规则" class="headerlink" title="拷贝操作的生成规则"></a>拷贝操作的生成规则</h3><p>如果用户为一个类<strong>声明了移动操作</strong>（移动构造函数或移动赋值运算符），编译器会将拷贝操作（拷贝构造函数和拷贝赋值运算符）删除（即 delete）。</p>
+<h3 id="拷贝操作的生成规则">拷贝操作的生成规则</h3>
+<p>如果用户为一个类<strong>声明了移动操作</strong>（移动构造函数或移动赋值运算符），编译器会将拷贝操作（拷贝构造函数和拷贝赋值运算符）删除（即
+delete）。</p>
 <p>其逻辑是，如果一个类需要自定义的移动逻辑，那么简单的按成员拷贝很可能是不正确的。为了防止意外调用了行为不正确的拷贝函数，编译器选择直接将其删除，而不是简单地不生成。</p>
-<p>但是, 为了兼容部分C++98代码, 如果用户声明了析构函数或复制构造函数，编译器仍然会自动生成复制赋值运算符</p>
-<h3 id="强制生成函数：-default"><a href="#强制生成函数：-default" class="headerlink" title="强制生成函数：= default"></a>强制生成函数：= default</h3><p>如果因为上述规则，某个特种成员函数没有被自动生成（例如，因为声明了析构函数而导致移动操作被抑制），但我们确信编译器生成的默认实现正是所需要的，可以使用 = default 来显式地要求编译器生成默认版本 。</p>
+<p>但是, 为了兼容部分C++98代码,
+如果用户声明了析构函数或复制构造函数，编译器仍然会自动生成复制赋值运算符</p>
+<h3 id="强制生成函数-default">强制生成函数：= default</h3>
+<p>如果因为上述规则，某个特种成员函数没有被自动生成（例如，因为声明了析构函数而导致移动操作被抑制），但我们确信编译器生成的默认实现正是所需要的，可以使用
+= default 来显式地要求编译器生成默认版本 。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() = <span class="keyword">default</span>;  <span class="comment">// 一旦用户声明了析构函数，移动操作的自动生成就被抑制了 </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 因此还需要制编译器生成被抑制的移动操作</span></span><br><span class="line">    <span class="built_in">Base</span>(Base&amp;&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Base&amp; <span class="keyword">operator</span>=(Base&amp;&amp;) = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为了可移动，最好也把复制操作加上</span></span><br><span class="line">    <span class="built_in">Base</span>(<span class="type">const</span> Base&amp;) = <span class="keyword">default</span>;</span><br><span class="line">    Base&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Base&amp;) = <span class="keyword">default</span>;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="其他规则"><a href="#其他规则" class="headerlink" title="其他规则"></a>其他规则</h3><p>默认构造函数仅当类中不包含用户声明的构造函数时才生成。</p>
-<p>另外, 一个需要特别注意的规则是：类中的成员函数模板（例如一个接受任意类型的构造函数模板）永远不会抑制编译器生成任何特种成员函数 </p>
+<h3 id="其他规则">其他规则</h3>
+<p>默认构造函数仅当类中不包含用户声明的构造函数时才生成。</p>
+<p>另外,
+一个需要特别注意的规则是：类中的成员函数模板（例如一个接受任意类型的构造函数模板）永远不会抑制编译器生成任何特种成员函数</p>
 
 		</div>
 
@@ -916,7 +933,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款 17 - 理解特种成员函数的生成机制</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E6%93%8D%E4%BD%9C%E7%9A%84%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99"><span class="nav-text">移动操作的生成规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%B7%E8%B4%9D%E6%93%8D%E4%BD%9C%E7%9A%84%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99"><span class="nav-text">拷贝操作的生成规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%88%B6%E7%94%9F%E6%88%90%E5%87%BD%E6%95%B0%EF%BC%9A-default"><span class="nav-text">强制生成函数：&#x3D; default</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%A7%84%E5%88%99"><span class="nav-text">其他规则</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E6%93%8D%E4%BD%9C%E7%9A%84%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99"><span class="nav-text">移动操作的生成规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%B7%E8%B4%9D%E6%93%8D%E4%BD%9C%E7%9A%84%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99"><span class="nav-text">拷贝操作的生成规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%88%B6%E7%94%9F%E6%88%90%E5%87%BD%E6%95%B0-default"><span class="nav-text">强制生成函数：&#x3D; default</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%A7%84%E5%88%99"><span class="nav-text">其他规则</span></a></li></ol>
 
 	</div>
 </div>
@@ -945,11 +962,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

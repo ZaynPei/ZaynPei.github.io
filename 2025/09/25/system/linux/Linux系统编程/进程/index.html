@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -838,45 +838,83 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="进程和程序-Process-and-Program"><a href="#进程和程序-Process-and-Program" class="headerlink" title="进程和程序 (Process and Program)"></a>进程和程序 (Process and Program)</h3><p>程序(Program)是一组指令的集合，通常存储在磁盘等静态存储介质上。它本身是静态的、被动的，不占用系统的运行资源（如CPU时间、内存等）。</p>
+			<h3 id="进程和程序-process-and-program">进程和程序 (Process and
+Program)</h3>
+<p>程序(Program)是一组指令的集合，通常存储在磁盘等静态存储介质上。它本身是静态的、被动的，不占用系统的运行资源（如CPU时间、内存等）。</p>
 <p>进程(Process)是<strong>程序的一次执行实例</strong>。当程序被<strong>加载到内存</strong>中并开始执行时，就创建了一个进程。它是动态的、活动的，是操作系统资源分配（如内存、文件句柄）和CPU调度的基本单位(更精确的说法是将线程视为独立调度单位)。</p>
-<h3 id="进程的状态-Process-States"><a href="#进程的状态-Process-States" class="headerlink" title="进程的状态 (Process States)"></a>进程的状态 (Process States)</h3><p>在三态模型中，进程状态分为三个基本状态，即：运行态、就绪态、阻塞态；<br>在五态模型中，进程状态分为五个基本状态，即：新建态、终止态、运行态、就绪态、阻塞态；</p>
-<h4 id="ps-命令"><a href="#ps-命令" class="headerlink" title="ps 命令"></a>ps 命令</h4><p>ps (Process Status) 命令用于显示当前系统的进程快照，即执行命令那一刻的进程信息。通常使用<code>ps aux</code>来显示所有用户的(a)、包含完整格式的、包括无终端进程(x)在内的所有进程的详细状态(u)。</p>
-<h4 id="top-命令"><a href="#top-命令" class="headerlink" title="top 命令"></a>top 命令</h4><p>top 命令用于动态显示系统中各个进程的<strong>资源占用情况</strong>，默认每隔几秒刷新一次。它提供了一个<strong>实时</strong>的视图，可以看到 CPU 和内存的使用情况，以及各个进程的状态。</p>
-<h4 id="kill-命令"><a href="#kill-命令" class="headerlink" title="kill 命令"></a>kill 命令</h4><p>kill 命令用于向进程发送<strong>终止进程</strong>的信号（Signal）, 常见的流程为:</p>
+<h3 id="进程的状态-process-states">进程的状态 (Process States)</h3>
+<p>在三态模型中，进程状态分为三个基本状态，即：运行态、就绪态、阻塞态；
+在五态模型中，进程状态分为五个基本状态，即：新建态、终止态、运行态、就绪态、阻塞态；</p>
+<h4 id="ps-命令">ps 命令</h4>
+<p>ps (Process Status)
+命令用于显示当前系统的进程快照，即执行命令那一刻的进程信息。通常使用<code>ps aux</code>来显示所有用户的(a)、包含完整格式的、包括无终端进程(x)在内的所有进程的详细状态(u)。</p>
+<h4 id="top-命令">top 命令</h4>
+<p>top
+命令用于动态显示系统中各个进程的<strong>资源占用情况</strong>，默认每隔几秒刷新一次。它提供了一个<strong>实时</strong>的视图，可以看到
+CPU 和内存的使用情况，以及各个进程的状态。</p>
+<h4 id="kill-命令">kill 命令</h4>
+<p>kill 命令用于向进程发送<strong>终止进程</strong>的信号（Signal）,
+常见的流程为:</p>
 <ul>
 <li>使用 ps 或 top 找到目标进程的ID（PID）。</li>
 <li>执行 kill <pid>。</pid></li>
 <li>如果进程没有响应，可以执行 kill -9 <pid> 强制终止。</pid></li>
 </ul>
-<h3 id="进程号和相关函数-Process-IDs-and-Related-Functions"><a href="#进程号和相关函数-Process-IDs-and-Related-Functions" class="headerlink" title="进程号和相关函数 (Process IDs and Related Functions)"></a>进程号和相关函数 (Process IDs and Related Functions)</h3><p>在操作系统内部，每个进程都有唯一的标识符和关联信息。在编程中，我们可以通过特定的函数来获取这些信息。</p>
+<h3 id="进程号和相关函数-process-ids-and-related-functions">进程号和相关函数
+(Process IDs and Related Functions)</h3>
+<p>在操作系统内部，每个进程都有唯一的标识符和关联信息。在编程中，我们可以通过特定的函数来获取这些信息。</p>
 <ul>
 <li>进程ID (PID)：每个进程都有一个唯一的非负整数标识符。</li>
-<li>父进程ID (PPID)：标识创建当前进程的那个进程。所有进程（除了初始的 init 进程）都是由其他进程创建的。</li>
-<li>进程组ID (PGID)：进程组是<strong>一个或多个进程的集合</strong>。通常，同一个作业（Job）中的所有进程属于同一个进程组。</li>
+<li>父进程ID (PPID)：标识创建当前进程的那个进程。所有进程（除了初始的
+init 进程）都是由其他进程创建的。</li>
+<li>进程组ID
+(PGID)：进程组是<strong>一个或多个进程的集合</strong>。通常，同一个作业（Job）中的所有进程属于同一个进程组。</li>
 </ul>
 <p>在C语言等编程环境中，可以通过以下标准函数获取这些ID：</p>
 <p><strong>getpid()</strong>: 获取当前进程的ID。</p>
 <p>原型：pid_t getpid(void);</p>
-<p>说明：该函数<strong>不接受参数</strong>，并返回<strong>调用它的进程的PID</strong>。pid_t 通常是一个整数类型。</p>
+<p>说明：该函数<strong>不接受参数</strong>，并返回<strong>调用它的进程的PID</strong>。pid_t
+通常是一个整数类型。</p>
 <p><strong>getppid()</strong>: 获取当前进程的父进程的ID。</p>
 <p>原型：pid_t getppid(void);</p>
 <p>说明：返回创建<strong>当前进程的那个父进程</strong>的PID。</p>
-<p><strong>getpgid()</strong>: 获取<strong>指定进程的进程组ID</strong>。</p>
+<p><strong>getpgid()</strong>:
+获取<strong>指定进程的进程组ID</strong>。</p>
 <p>原型：pid_t getpgid(pid_t pid);</p>
-<p>说明：如果参数 pid 为0，则返回当前进程的进程组ID。否则，返回PID为 pid 的进程的进程组ID。</p>
-<h3 id="进程的创建-Process-Creation"><a href="#进程的创建-Process-Creation" class="headerlink" title="进程的创建 (Process Creation)"></a>进程的创建 (Process Creation)</h3><p>在 Linux/Unix-like 操作系统中，创建一个新进程的主要方式是通过 <strong>fork()</strong> 系统调用。</p>
-<p>fork() 的工作机制非常独特：它会创建一个与调用它的进程（称为父进程）几乎一模一样的新进程（称为子进程）。这个<strong>子进程是父进程的一个副本</strong>，它从 fork() 调用返回之后开始执行。</p>
+<p>说明：如果参数 pid 为0，则返回当前进程的进程组ID。否则，返回PID为 pid
+的进程的进程组ID。</p>
+<h3 id="进程的创建-process-creation">进程的创建 (Process Creation)</h3>
+<p>在 Linux/Unix-like 操作系统中，创建一个新进程的主要方式是通过
+<strong>fork()</strong> 系统调用。</p>
+<p>fork()
+的工作机制非常独特：它会创建一个与调用它的进程（称为父进程）几乎一模一样的新进程（称为子进程）。这个<strong>子进程是父进程的一个副本</strong>，它从
+fork() 调用返回之后开始执行。</p>
 <div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">fork</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line">功能:</span><br><span class="line">    从一个已存在的进程中创建一个新进程(子进程), 该子进程是调用进程(父进程)的一个副本</span><br><span class="line">参数: </span><br><span class="line">    无</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 在父进程中返回子进程的 PID, 在子进程中返回 <span class="number">0</span></span><br><span class="line">    失败时, 返回 <span class="number">-1</span>, 并设置 errno</span><br></pre></td></tr></table></figure></div>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="comment">//创建子进程</span></span><br><span class="line">    fork();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>上述代码编译执行后会输出两次 “hello world”，原因在于当父进程调用 fork() 时，操作系统会创建一个几乎与父进程完全相同的子进程, 这两个进程（父进程和子进程）在创建完毕后都会<strong>从 fork() 调用处返回</strong>, 继续<strong>执行 fork() 下一行的后续代码</strong>，因此 printf(“hello world\n”); 这行代码会被父子进程执行两次。</p>
-<h4 id="循环创建进程-Creating-Processes-in-a-Loop"><a href="#循环创建进程-Creating-Processes-in-a-Loop" class="headerlink" title="循环创建进程 (Creating Processes in a Loop)"></a>循环创建进程 (Creating Processes in a Loop)</h4><p>当 fork() 被放置在循环中时, 会创建多个子进程, 每个子进程又会继续执行循环体内的代码, 这可能会导致<strong>指数级增长的进程数量</strong>。</p>
+<p>上述代码编译执行后会输出两次 “hello world”，原因在于当父进程调用
+fork() 时，操作系统会创建一个几乎与父进程完全相同的子进程,
+这两个进程（父进程和子进程）在创建完毕后都会<strong>从 fork()
+调用处返回</strong>, 继续<strong>执行 fork()
+下一行的后续代码</strong>，因此 printf(“hello world”);
+这行代码会被父子进程执行两次。</p>
+<h4 id="循环创建进程-creating-processes-in-a-loop">循环创建进程
+(Creating Processes in a Loop)</h4>
+<p>当 fork() 被放置在循环中时, 会创建多个子进程,
+每个子进程又会继续执行循环体内的代码,
+这可能会导致<strong>指数级增长的进程数量</strong>。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) {</span><br><span class="line">    fork();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>如上, 原始进程 P0 调用 fork()，创建子进程 C1。现在有两个进程：P0 和 C1, 在第2次循环 (i=1)中P0 和 C1 都会 继续执行循环产生共计四个进程, 接着又会产生更多进程……</p>
-<p>也就是说, 在循环中直接调用 fork() 会导致进程数量呈指数级增长。如果不加控制，这种代码会迅速耗尽系统资源，形成所谓的“fork 炸弹”（Fork Bomb），可能导致系统崩溃。因此，在实际应用中，通常会结合 if 判断 fork() 的返回值，确保只有父进程（或特定进程）继续创建新的子进程。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) {</span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (pid &gt; <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 父进程继续创建子进程</span></span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 子进程跳出循环，避免继续创建子进程</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// 处理 fork() 失败的情况</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"fork failed"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h4 id="父子进程关系-Parent-Child-Process-Relationship"><a href="#父子进程关系-Parent-Child-Process-Relationship" class="headerlink" title="父子进程关系 (Parent-Child Process Relationship)"></a>父子进程关系 (Parent-Child Process Relationship)</h4><p>通过 fork() 创建的进程之间形成了明确的父子关系，这种关系是进程管理的基础。子进程在创建时会<strong>继承父进程的大部分资源和属性</strong>，包括：</p>
+<p>如上, 原始进程 P0 调用 fork()，创建子进程 C1。现在有两个进程：P0 和
+C1, 在第2次循环 (i=1)中P0 和 C1 都会 继续执行循环产生共计四个进程,
+接着又会产生更多进程……</p>
+<p>也就是说, 在循环中直接调用 fork()
+会导致进程数量呈指数级增长。如果不加控制，这种代码会迅速耗尽系统资源，形成所谓的“fork
+炸弹”（Fork Bomb），可能导致系统崩溃。因此，在实际应用中，通常会结合 if
+判断 fork() 的返回值，确保只有父进程（或特定进程）继续创建新的子进程。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) {</span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (pid &gt; <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 父进程继续创建子进程</span></span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// 子进程跳出循环，避免继续创建子进程</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// 处理 fork() 失败的情况</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"fork failed"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="父子进程关系-parent-child-process-relationship">父子进程关系
+(Parent-Child Process Relationship)</h4>
+<p>通过 fork()
+创建的进程之间形成了明确的父子关系，这种关系是进程管理的基础。子进程在创建时会<strong>继承父进程的大部分资源和属性</strong>，包括：</p>
 <ul>
 <li>进程地址空间的副本（下文详述）。</li>
 <li>打开的文件描述符（File Descriptors）(因此也共享文件偏移量)。</li>
@@ -884,134 +922,153 @@ mjx-container[display="true"] + br {
 <li>当前工作目录。</li>
 <li>用户ID (UID) 和组ID (GID)。</li>
 </ul>
-<p>另一方面, 虽然子进程是父进程的副本，但它们是两个独立的进程，拥有自己独特的属性：</p>
+<p>另一方面,
+虽然子进程是父进程的副本，但它们是两个独立的进程，拥有自己独特的属性：</p>
 <ul>
 <li>进程ID (PID)：子进程有自己唯一的 PID。</li>
 <li>父进程ID (PPID)：子进程的 PPID 是其父进程的 PID。</li>
 <li>资源统计：CPU时间、内存使用等资源消耗是独立计算的。</li>
 </ul>
-<p>父进程的责任：父进程通常需要负责“回收”子进程的资源。当子进程结束后，它会变成一个<strong>僵尸进程</strong> (Zombie Process)，直到父进程通过 <strong>wait()</strong> 或 <strong>waitpid()</strong> 系统调用获取其退出状态后，子进程才会彻底消失。如果父进程不执行此操作，僵尸进程会一直占用系统资源。</p>
-<h4 id="父子进程地址空间-Parent-Child-Address-Space"><a href="#父子进程地址空间-Parent-Child-Address-Space" class="headerlink" title="父子进程地址空间 (Parent-Child Address Space)"></a>父子进程地址空间 (Parent-Child Address Space)</h4><p>进程地址空间是指进程可以访问的内存区域，包括代码段、数据段、堆和栈。父子进程的地址空间遵循以下几个原则：</p>
-<p><strong>独立性</strong>原则：fork() 之后，父进程和子进程拥有<strong>各自独立的地址空间</strong>。任何一方对其地址空间中的数据（如变量）进行修改，都不会影响到另一方。</p>
-<p><strong>读时共享, 写时复制</strong> (Copy-on-Write, <strong>COW</strong>): 虽然逻辑上地址空间是独立的，但操作系统为了提高效率，并不会在 fork() 时立即完整地复制父进程的所有物理内存页给子进程。</p>
-<p>相反, 当 fork() 创建子进程时，子进程的虚拟地址空间与父进程相同，并且它们<strong>共享相同的物理内存页</strong>。这些内存页被内核标记为“<strong>只读</strong>”。</p>
-<p>当父进程或子进程<strong>尝试写入</strong>某个共享的内存页时，会触发一个缺页异常 (Page Fault)。内核捕获到这个异常，此时才会<strong>为写入方复制一份该内存页的副本</strong>，并将该副本映射到其地址空间，然后执行写入操作。</p>
-<p>这些原则使得 fork() 的创建速度非常快，因为它避免了大量不必要的内存复制; 同时还兼具智能性：如果子进程创建后立即调用 exec() 系列函数来执行一个新程序（这是一种非常常见的模式），那么之前的地址空间会被完全替换。COW 机制避免了在这种情况下进行无用的内存复制，极大地提升了系统性能。</p>
+<p>父进程的责任：父进程通常需要负责“回收”子进程的资源。当子进程结束后，它会变成一个<strong>僵尸进程</strong>
+(Zombie Process)，直到父进程通过 <strong>wait()</strong> 或
+<strong>waitpid()</strong>
+系统调用获取其退出状态后，子进程才会彻底消失。如果父进程不执行此操作，僵尸进程会一直占用系统资源。</p>
+<h4 id="父子进程地址空间-parent-child-address-space">父子进程地址空间
+(Parent-Child Address Space)</h4>
+<p>进程地址空间是指进程可以访问的内存区域，包括代码段、数据段、堆和栈。父子进程的地址空间遵循以下几个原则：</p>
+<p><strong>独立性</strong>原则：fork()
+之后，父进程和子进程拥有<strong>各自独立的地址空间</strong>。任何一方对其地址空间中的数据（如变量）进行修改，都不会影响到另一方。</p>
+<p><strong>读时共享, 写时复制</strong> (Copy-on-Write,
+<strong>COW</strong>):
+虽然逻辑上地址空间是独立的，但操作系统为了提高效率，并不会在 fork()
+时立即完整地复制父进程的所有物理内存页给子进程。</p>
+<p>相反, 当 fork()
+创建子进程时，子进程的虚拟地址空间与父进程相同，并且它们<strong>共享相同的物理内存页</strong>。这些内存页被内核标记为“<strong>只读</strong>”。</p>
+<p>当父进程或子进程<strong>尝试写入</strong>某个共享的内存页时，会触发一个缺页异常
+(Page
+Fault)。内核捕获到这个异常，此时才会<strong>为写入方复制一份该内存页的副本</strong>，并将该副本映射到其地址空间，然后执行写入操作。</p>
+<p>这些原则使得 fork()
+的创建速度非常快，因为它避免了大量不必要的内存复制;
+同时还兼具智能性：如果子进程创建后立即调用 exec()
+系列函数来执行一个新程序（这是一种非常常见的模式），那么之前的地址空间会被完全替换。COW
+机制避免了在这种情况下进行无用的内存复制，极大地提升了系统性能。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>COW机制的示例</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 父子进程地址空间</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="type">int</span> var = <span class="number">88</span>;</span><br><span class="line">    <span class="type">pid_t</span> pid = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个子进程</span></span><br><span class="line">    pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">-1</span> == pid)</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"fork"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == pid)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">// 子进程</span></span><br><span class="line">        <span class="built_in">sleep</span>(<span class="number">1</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"子进程睡醒之后 var = %d\n"</span>, var); <span class="comment">//88</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    {</span><br><span class="line">        <span class="comment">// 父进程</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"父进程之前 var = %d\n"</span>, var); <span class="comment">//88</span></span><br><span class="line">        var++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"父进程之后 var = %d\n"</span>, var); <span class="comment">//89</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>可以看到, 在 fork() 之前，父子进程共享变量 var 的内存页; 父进程执行 var++; 将其私有 var 从 88 改为 89。此时，COW 触发，内核为父进程分配了一个新的内存页来存放父进程的 var=89, 而子进程的 var 仍然指向原来的内存页，值仍为 88。父子进程各自拥有独立的 var 变量，互不影响。</p>
-<h3 id="进程的终止-Process-Termination"><a href="#进程的终止-Process-Termination" class="headerlink" title="进程的终止 (Process Termination)"></a>进程的终止 (Process Termination)</h3><p>进程终止是指一个进程完成其任务并退出运行的过程。进程可以通过多种方式终止，包括正常退出和异常终止。</p>
-<p>进程的正常退出通常是通过调用 exit() 函数或者 _exit() 函数来实现的。</p>
+<p>可以看到, 在 fork() 之前，父子进程共享变量 var 的内存页; 父进程执行
+var++; 将其私有 var 从 88 改为 89。此时，COW
+触发，内核为父进程分配了一个新的内存页来存放父进程的 var=89, 而子进程的
+var 仍然指向原来的内存页，值仍为 88。父子进程各自拥有独立的 var
+变量，互不影响。</p>
+<h3 id="进程的终止-process-termination">进程的终止 (Process
+Termination)</h3>
+<p>进程终止是指一个进程完成其任务并退出运行的过程。进程可以通过多种方式终止，包括正常退出和异常终止。</p>
+<p>进程的正常退出通常是通过调用 exit() 函数或者 _exit()
+函数来实现的。</p>
 <div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">exit</span><span class="params">(<span class="type">int</span> status)</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> _exit(<span class="type">int</span> status);</span><br><span class="line">功能:</span><br><span class="line">    终止调用进程, 并将状态码 status 返回给父进程</span><br><span class="line">参数:</span><br><span class="line">    status: 进程的退出状态码, 一般传入<span class="number">0</span>表示正常退出</span><br></pre></td></tr></table></figure></div>
-<p>这两者的主要区别在于，<strong>exit()</strong> 是一个C 标准库 libc 中的库函数, 会执行<strong>标准I/O缓冲区的清理工作</strong>（如刷新缓冲区、关闭文件等），而 <strong>_exit()</strong> 是一个系统调用，由内核直接处理, <strong>直接终止进程</strong>，不进行任何清理操作。</p>
-<p>因此, exit()主要用于进程的正常退出, 清理资源; 而 _exit() 通常用于在<strong>子进程</strong>中调用，以确保<strong>子进程终止时不会影响父进程的资源状态</strong>。</p>
-<h3 id="等待子进程退出的函数"><a href="#等待子进程退出的函数" class="headerlink" title="等待子进程退出的函数"></a>等待子进程退出的函数</h3><p>当一个子进程结束其生命周期时，它的父进程有责任去“回收”它。这个回收过程主要有两个目的：</p>
+<p>这两者的主要区别在于，<strong>exit()</strong> 是一个C 标准库 libc
+中的库函数,
+会执行<strong>标准I/O缓冲区的清理工作</strong>（如刷新缓冲区、关闭文件等），而
+**_exit()** 是一个系统调用，由内核直接处理,
+<strong>直接终止进程</strong>，不进行任何清理操作。</p>
+<p>因此, exit()主要用于进程的正常退出, 清理资源; 而 _exit()
+通常用于在<strong>子进程</strong>中调用，以确保<strong>子进程终止时不会影响父进程的资源状态</strong>。</p>
+<h3 id="等待子进程退出的函数">等待子进程退出的函数</h3>
+<p>当一个子进程结束其生命周期时，它的父进程有责任去“回收”它。这个回收过程主要有两个目的：</p>
 <p>获取子进程的退出状态：父进程可以了解到子进程是正常结束的，还是因为某个错误或信号而异常终止的，以及它的返回值是什么。</p>
 <p>清理子进程的资源：通过执行等待函数，父进程通知内核它已经知晓子进程的状态，内核此时可以彻底释放子进程在进程表中占用的条目和其他资源。</p>
-<p>如果父进程不执行这个回收操作，那么已经终止的子进程将变成一个僵尸进程，持续占用系统资源。因此，使用 wait() 或 waitpid() 函数是健壮的并发程序设计中必不可少的一环。</p>
-<h4 id="wait-函数"><a href="#wait-函数" class="headerlink" title="wait() 函数"></a>wait() 函数</h4><p>wait 函数是的最基本的方法</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line"></span><br><span class="line">pid_t wait(int *wstatus);</span><br><span class="line">功能:</span><br><span class="line">    阻塞父进程(调用进程), 直到其任意一个子进程终止</span><br><span class="line">参数:</span><br><span class="line">    wstatus: 一个指向int类型的指针, 是传出参数, 用于存储子进程的退出状态信息. 如果不关心子进程的退出状态, 可以传入 NULL. 我们可以使用一组宏来解析这个状态值：</span><br><span class="line">        WIFEXITED(wstatus)：如果子进程是正常退出的，则返回真。</span><br><span class="line">        WEXITSTATUS(wstatus)：如果 WIFEXITED 为真，这个宏会返回子进程的退出码（即 main 函数的 return 值或 exit() 的参数）。</span><br><span class="line">        WIFSIGNALED(wstatus)：如果子进程是因信号而异常终止的，则返回真。</span><br><span class="line">        WTERMSIG(wstatus)：如果 WIFSIGNALED 为真，这个宏会返回导致子进程终止的信号编号。</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 返回终止的子进程的 PID</span><br><span class="line">    失败时, 返回 -1, 并设置 errno</span><br></pre></td></tr></table></figure></div>
-
-<h4 id="waitpid-函数"><a href="#waitpid-函数" class="headerlink" title="waitpid() 函数"></a>waitpid() 函数</h4><p>waitpid 函数是 wait 函数的一个更强大、更灵活的版本。它可以等待<strong>指定的子进程</strong>，并且可以选择<strong>非阻塞的方式</strong>进行等待。</p>
-<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">waitpid</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span> *wstatus, <span class="type">int</span> options)</span>;</span><br><span class="line">功能:</span><br><span class="line">    等待指定的子进程终止, 或者在非阻塞模式下检查子进程的状态</span><br><span class="line">参数:</span><br><span class="line">    pid: 指定要等待的子进程的 PID。它有几种特殊的取值:</span><br><span class="line">        pid &gt; <span class="number">0</span>: 等待 PID 等于 pid 的子进程。</span><br><span class="line">        pid == <span class="number">0</span>: 等待与调用进程在同一进程组中的任意子进程。</span><br><span class="line">        pid &lt; <span class="number">-1</span>: 等待进程组 ID 等于 -pid 的任意子进程。</span><br><span class="line">        pid == <span class="number">-1</span>: 等同于 wait()，等待任意子进程。</span><br><span class="line">    wstatus: 一个指向 <span class="type">int</span> 类型的指针, 用于存储子进程的退出状态信息. 如果不关心子进程的退出状态, 可以传入 <span class="literal">NULL</span>.</span><br><span class="line">    options: 控制 waitpid 行为的选项, 常用的选项包括:</span><br><span class="line">        WNOHANG: 非阻塞模式, 如果当前没有子进程终止, 则立即返回<span class="number">0</span>, 而不是阻塞等待.</span><br><span class="line">        WUNTRACED: 如果子进程被停止(如接收到 SIGSTOP 信号), 也会返回其状态.</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 返回终止的子进程的 PID. 如果使用 WNOHANG 选项且没有子进程终止, 则返回 <span class="number">0</span></span><br><span class="line">    失败时, 返回 <span class="number">-1</span>, 并设置 errno</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="僵尸进程-孤儿进程-Zombie-Process-Orphan-Process"><a href="#僵尸进程-孤儿进程-Zombie-Process-Orphan-Process" class="headerlink" title="僵尸进程 & 孤儿进程 (Zombie Process & Orphan Process)"></a>僵尸进程 &amp; 孤儿进程 (Zombie Process &amp; Orphan Process)</h3><p>这两个概念是理解进程生命周期管理的关键。</p>
+<p>如果父进程不执行这个回收操作，那么已经终止的子进程将变成一个僵尸进程，持续占用系统资源。因此，使用
+wait() 或 waitpid() 函数是健壮的并发程序设计中必不可少的一环。</p>
+<h4 id="wait-函数">wait() 函数</h4>
+<p>wait 函数是的最基本的方法 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line"></span><br><span class="line">pid_t wait(int *wstatus);</span><br><span class="line">功能:</span><br><span class="line">    阻塞父进程(调用进程), 直到其任意一个子进程终止</span><br><span class="line">参数:</span><br><span class="line">    wstatus: 一个指向int类型的指针, 是传出参数, 用于存储子进程的退出状态信息. 如果不关心子进程的退出状态, 可以传入 NULL. 我们可以使用一组宏来解析这个状态值：</span><br><span class="line">        WIFEXITED(wstatus)：如果子进程是正常退出的，则返回真。</span><br><span class="line">        WEXITSTATUS(wstatus)：如果 WIFEXITED 为真，这个宏会返回子进程的退出码（即 main 函数的 return 值或 exit() 的参数）。</span><br><span class="line">        WIFSIGNALED(wstatus)：如果子进程是因信号而异常终止的，则返回真。</span><br><span class="line">        WTERMSIG(wstatus)：如果 WIFSIGNALED 为真，这个宏会返回导致子进程终止的信号编号。</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 返回终止的子进程的 PID</span><br><span class="line">    失败时, 返回 -1, 并设置 errno</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="waitpid-函数">waitpid() 函数</h4>
+<p>waitpid 函数是 wait
+函数的一个更强大、更灵活的版本。它可以等待<strong>指定的子进程</strong>，并且可以选择<strong>非阻塞的方式</strong>进行等待。
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">waitpid</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span> *wstatus, <span class="type">int</span> options)</span>;</span><br><span class="line">功能:</span><br><span class="line">    等待指定的子进程终止, 或者在非阻塞模式下检查子进程的状态</span><br><span class="line">参数:</span><br><span class="line">    pid: 指定要等待的子进程的 PID。它有几种特殊的取值:</span><br><span class="line">        pid &gt; <span class="number">0</span>: 等待 PID 等于 pid 的子进程。</span><br><span class="line">        pid == <span class="number">0</span>: 等待与调用进程在同一进程组中的任意子进程。</span><br><span class="line">        pid &lt; <span class="number">-1</span>: 等待进程组 ID 等于 -pid 的任意子进程。</span><br><span class="line">        pid == <span class="number">-1</span>: 等同于 wait()，等待任意子进程。</span><br><span class="line">    wstatus: 一个指向 <span class="type">int</span> 类型的指针, 用于存储子进程的退出状态信息. 如果不关心子进程的退出状态, 可以传入 <span class="literal">NULL</span>.</span><br><span class="line">    options: 控制 waitpid 行为的选项, 常用的选项包括:</span><br><span class="line">        WNOHANG: 非阻塞模式, 如果当前没有子进程终止, 则立即返回<span class="number">0</span>, 而不是阻塞等待.</span><br><span class="line">        WUNTRACED: 如果子进程被停止(如接收到 SIGSTOP 信号), 也会返回其状态.</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 返回终止的子进程的 PID. 如果使用 WNOHANG 选项且没有子进程终止, 则返回 <span class="number">0</span></span><br><span class="line">    失败时, 返回 <span class="number">-1</span>, 并设置 errno</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="僵尸进程-孤儿进程-zombie-process-orphan-process">僵尸进程 &amp;
+孤儿进程 (Zombie Process &amp; Orphan Process)</h3>
+<p>这两个概念是理解进程生命周期管理的关键。</p>
 <p><strong>僵尸进程</strong> (Zombie Process)</p>
 <ul>
-<li><p>定义：一个<strong>已经执行完毕</strong>、<strong>终止运行</strong>，但其父进程<strong>尚未</strong>通过 wait() 或 waitpid() <strong>回收</strong>它的进程。</p>
-</li>
-<li><p>产生原因：<strong>子进程先于父进程结束</strong>, 子进程结束后，其在内核进程表中的条目（包含PID、退出状态等信息）需要被保留，直到父进程读取这些信息。</p>
-</li>
-<li><p>状态：在 ps 或 top 命令中，状态通常显示为 <strong>Z</strong> (Zombie)。</p>
-</li>
-<li><p>危害：僵尸进程本身<strong>不占用CPU或内存</strong>，但它会<strong>占用进程表中的一个位置(PID)</strong>。如果系统中存在大量僵尸进程，可能会耗尽可用的PID资源，导致无法创建新进程。</p>
-</li>
-<li><p>解决方法：父进程必须<strong>调用 wait</strong> 或 <strong>waitpid</strong> 来回收子进程。如果父进程异常退出，其子僵尸进程会被 init 进程（PID为1）接管并自动回收。</p>
-</li>
+<li><p>定义：一个<strong>已经执行完毕</strong>、<strong>终止运行</strong>，但其父进程<strong>尚未</strong>通过
+wait() 或 waitpid() <strong>回收</strong>它的进程。</p></li>
+<li><p>产生原因：<strong>子进程先于父进程结束</strong>,
+子进程结束后，其在内核进程表中的条目（包含PID、退出状态等信息）需要被保留，直到父进程读取这些信息。</p></li>
+<li><p>状态：在 ps 或 top 命令中，状态通常显示为 <strong>Z</strong>
+(Zombie)。</p></li>
+<li><p>危害：僵尸进程本身<strong>不占用CPU或内存</strong>，但它会<strong>占用进程表中的一个位置(PID)</strong>。如果系统中存在大量僵尸进程，可能会耗尽可用的PID资源，导致无法创建新进程。</p></li>
+<li><p>解决方法：父进程必须<strong>调用 wait</strong> 或
+<strong>waitpid</strong>
+来回收子进程。如果父进程异常退出，其子僵尸进程会被 init
+进程（PID为1）接管并自动回收。</p></li>
 </ul>
 <p><strong>孤儿进程</strong> (Orphan Process)</p>
 <ul>
-<li><p>定义：一个<strong>父进程已经终止</strong>，但它<strong>自身还在运行的子进程</strong>。</p>
-</li>
-<li><p>产生原因：<strong>父进程先于子进程结束</strong>。</p>
-</li>
-<li><p>生命周期：当一个进程变成孤儿进程后，为了确保它最终能被回收，操作系统会将其<strong>过继给 init 进程</strong>(在现代系统中可能是 systemd)，其<strong>PPID变为1</strong>。</p>
-</li>
-<li><p>“领养”过程：<strong>init 进程会自动成为所有孤儿进程的新的父进程</strong>。init 进程有一个循环，会<strong>定期调用 wait 来回收</strong>它所有已终止的子进程（包括它领养的这些孤儿进程）。</p>
-</li>
-<li><p>结论：孤儿进程<strong>不会对系统造成危害</strong>，因为它们<strong>会被 init 进程妥善管理和回收</strong>，不会变成僵尸进程。</p>
-</li>
+<li><p>定义：一个<strong>父进程已经终止</strong>，但它<strong>自身还在运行的子进程</strong>。</p></li>
+<li><p>产生原因：<strong>父进程先于子进程结束</strong>。</p></li>
+<li><p>生命周期：当一个进程变成孤儿进程后，为了确保它最终能被回收，操作系统会将其<strong>过继给
+init 进程</strong>(在现代系统中可能是
+systemd)，其<strong>PPID变为1</strong>。</p></li>
+<li><p>“领养”过程：<strong>init
+进程会自动成为所有孤儿进程的新的父进程</strong>。init
+进程有一个循环，会<strong>定期调用 wait
+来回收</strong>它所有已终止的子进程（包括它领养的这些孤儿进程）。</p></li>
+<li><p>结论：孤儿进程<strong>不会对系统造成危害</strong>，因为它们<strong>会被
+init 进程妥善管理和回收</strong>，不会变成僵尸进程。</p></li>
 </ul>
-<h3 id="进程替换-Process-Replacement"><a href="#进程替换-Process-Replacement" class="headerlink" title="进程替换 (Process Replacement)"></a>进程替换 (Process Replacement)</h3><p>在 Unix/Linux 系统中，进程替换是指一个进程通过调用进程替换函数来<strong>加载并执行一个新的程序</strong>，从而替换掉当前进程的<strong>地址空间</strong>、<strong>代码</strong>和<strong>数据</strong>, 同时<strong>保留其原有的进程ID</strong>和其他<strong>系统资源</strong>（如文件描述符、信号处理程序等），从而实现了进程的动态更新。</p>
-<p>常用的进程替换函数是 <strong>exec</strong> 函数族. 在替换后, 以下几个关键点需要注意:</p>
+<h3 id="进程替换-process-replacement">进程替换 (Process
+Replacement)</h3>
+<p>在 Unix/Linux
+系统中，进程替换是指一个进程通过调用进程替换函数来<strong>加载并执行一个新的程序</strong>，从而替换掉当前进程的<strong>地址空间</strong>、<strong>代码</strong>和<strong>数据</strong>,
+同时<strong>保留其原有的进程ID</strong>和其他<strong>系统资源</strong>（如文件描述符、信号处理程序等），从而实现了进程的动态更新。</p>
+<p>常用的进程替换函数是 <strong>exec</strong> 函数族. 在替换后,
+以下几个关键点需要注意:</p>
 <ul>
-<li><strong>进程 ID 不变</strong>： 这是 exec 与 fork 的最大区别。fork 创建一个新进程，exec 是在当前进程上加载新程序。</li>
-<li><strong>地址空间替换</strong>： 当前进程的<strong>整个用户区地址空间</strong>（包括 .text、.data、堆、栈等）都会被新的程序代码和数据覆盖和替换。</li>
-<li><strong>成功不返回</strong>： 如果 exec 函数调用成功，新的程序将从其自己的 main() 函数开始执行，exec 函数永远不会返回。只有在 exec 调用失败时，它才会返回 −1。</li>
-<li><strong>文件描述符保留</strong>： 默认情况下，所有打开的<strong>文件描述符</strong>（包括标准输入 FD 0、标准输出 FD 1 等）都会被<strong>新程序继承</strong>。</li>
+<li><strong>进程 ID 不变</strong>： 这是 exec 与 fork 的最大区别。fork
+创建一个新进程，exec 是在当前进程上加载新程序。</li>
+<li><strong>地址空间替换</strong>：
+当前进程的<strong>整个用户区地址空间</strong>（包括
+.text、.data、堆、栈等）都会被新的程序代码和数据覆盖和替换。</li>
+<li><strong>成功不返回</strong>： 如果 exec
+函数调用成功，新的程序将从其自己的 main() 函数开始执行，exec
+函数永远不会返回。只有在 exec 调用失败时，它才会返回 −1。</li>
+<li><strong>文件描述符保留</strong>：
+默认情况下，所有打开的<strong>文件描述符</strong>（包括标准输入
+FD 0、标准输出 FD 1 等）都会被<strong>新程序继承</strong>。</li>
 </ul>
-<p>exec 族函数有六个主要成员（execl、execlp、execle、execv、execvp、execvpe），它们的区别主要在于如何传递参数和如何查找程序：</p>
-<table>
-<thead>
-<tr>
-<th>函数名</th>
-<th>参数传递方式</th>
-<th>环境变量传递</th>
-<th>程序查找方式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>execl</td>
-<td>可变参数列表(l)</td>
-<td>使用当前环境变量</td>
-<td>需要提供完整路径</td>
-</tr>
-<tr>
-<td>execlp</td>
-<td>可变参数列表(l)</td>
-<td>使用当前环境变量</td>
-<td>使用 PATH 环境变量查找程序(p)</td>
-</tr>
-<tr>
-<td>execle</td>
-<td>可变参数列表(l)</td>
-<td>需要提供环境变量(e)</td>
-<td>需要提供完整路径</td>
-</tr>
-<tr>
-<td>execv</td>
-<td>参数数组(v)</td>
-<td>使用当前环境变量</td>
-<td>需要提供完整路径</td>
-</tr>
-<tr>
-<td>execvp</td>
-<td>参数数组(v)</td>
-<td>使用当前环境变量</td>
-<td>使用 PATH 环境变量查找程序(p)</td>
-</tr>
-<tr>
-<td>execvpe</td>
-<td>参数数组(v)</td>
-<td>需要提供环境变量(e)</td>
-<td>使用 PATH 环境变量查找程序(p)</td>
-</tr>
-</tbody></table>
-<h4 id="execlp-函数"><a href="#execlp-函数" class="headerlink" title="execlp() 函数"></a>execlp() 函数</h4><p>该函数通常用来调用系统的可执行程序，如：cat、ls、date</p>
-<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">execlp</span><span class="params">(<span class="type">const</span>  <span class="type">char</span> *file，<span class="type">const</span>  <span class="type">char</span> *arg，...)</span></span><br><span class="line">功能:</span><br><span class="line">    用于在当前进程中执行一个新的程序, 替换当前进程的地址空间</span><br><span class="line">参数:</span><br><span class="line">    file: 要执行的程序的文件名, 如果不包含路径, 则会在 PATH 环境变量指定的目录中查找</span><br><span class="line">    arg: 可变参数列表, 代表传递给新程序的参数. 第一个参数是程序的名称, 后面的参数是传递给程序的命令行参数. 最后一个参数必须是 <span class="literal">NULL</span>, 以标识参数列表的结束.</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 不返回, 因为当前进程的地址空间被新程序替换</span><br><span class="line">    失败时, 返回 -1, 并设置 errno</span><br></pre></td></tr></table></figure></div>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span>(pid &lt; <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//fork失败</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"fork"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid == <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//子进程</span></span><br><span class="line">        <span class="built_in">execlp</span>(<span class="string">"ls"</span>,<span class="string">"ls"</span>,<span class="string">"-l"</span>,<span class="string">"-h"</span>,<span class="literal">NULL</span>); <span class="comment">// 第一个是新进程的文件名, 第二个是传递给新进程的argv[0], 后面是参数列表, 最后一个必须是NULL</span></span><br><span class="line">        <span class="comment">// 因为执行ls时第一个参数也是ls, 所以这里共传递两个"ls"</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"execlp error"</span>);  <span class="comment">//如果execlp成功，下面的不执行</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid &gt; <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">    <span class="comment">//父进程</span></span><br><span class="line">    <span class="built_in">sleep</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"我是父进程:%d\n"</span>,<span class="built_in">getpid</span>());</span><br><span class="line">    <span class="built_in">wait</span>(<span class="literal">NULL</span>); <span class="comment">//等待子进程退出</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>需要注意的是, exec 函数族中的任何一个函数（如 execlp, execl 等）执行成功，它将永远不会返回到调用它的原函数或原程序。 </p>
-<p>这是因为 exec 的本质是进程替换（Process Replacement），而不是函数调用或程序跳转。一旦 exec 函数成功后，当前进程的地址空间已经被新程序完全替换，这个进程的PC地址被设置为新进程的的 main() 函数。因此，任何在 exec 调用之后的代码都不会被执行，除非 exec 调用失败。</p>
-<p>不过, 原先的父进程通常仍然需要 wait（或 waitpid） 来等待子进程结束并回收资源。因为父子关系仍然存在，新程序执行完毕后，它也会调用 exit() 或 return，导致子进程终止, 进而影响父进程。</p>
-<h4 id="execl-函数"><a href="#execl-函数" class="headerlink" title="execl() 函数"></a>execl() 函数</h4><div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ...)</span>;</span><br><span class="line">功能:</span><br><span class="line">    用于在当前进程中执行一个新的程序, 替换当前进程的地址空间</span><br><span class="line">参数:</span><br><span class="line">    path: 要执行的程序的完整路径, 通常用来执行自己当前目录下的可执行文件</span><br><span class="line">    arg: 可变参数列表, 代表传递给新程序的参数. 第一个参数是程序的名称, 后面的参数是传递给程序的命令行参数. 最后一个参数必须是 <span class="literal">NULL</span>, 以标识参数列表的结束.</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 不返回, 因为当前进程的地址空间被新程序替换</span><br><span class="line">    失败时, 返回 <span class="number">-1</span>, 并设置 errno</span><br></pre></td></tr></table></figure></div>
+<p>exec
+族函数有六个主要成员（execl、execlp、execle、execv、execvp、execvpe），它们的区别主要在于如何传递参数和如何查找程序：
+| 函数名 | 参数传递方式 | 环境变量传递 | 程序查找方式 |
+|——–|—————-|———–|——————-| | execl | 可变参数列表(l) | 使用当前环境变量 |
+需要提供完整路径 | | execlp | 可变参数列表(l) | 使用当前环境变量 | 使用
+PATH 环境变量查找程序(p) | | execle | 可变参数列表(l) |
+需要提供环境变量(e) | 需要提供完整路径 | | execv | 参数数组(v) |
+使用当前环境变量 | 需要提供完整路径 | | execvp | 参数数组(v) |
+使用当前环境变量 | 使用 PATH 环境变量查找程序(p) | | execvpe|
+参数数组(v) | 需要提供环境变量(e) | 使用 PATH 环境变量查找程序(p) |</p>
+<h4 id="execlp-函数">execlp() 函数</h4>
+<p>该函数通常用来调用系统的可执行程序，如：cat、ls、date <div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">execlp</span><span class="params">(<span class="type">const</span>  <span class="type">char</span> *file，<span class="type">const</span>  <span class="type">char</span> *arg，...)</span></span><br><span class="line">功能:</span><br><span class="line">    用于在当前进程中执行一个新的程序, 替换当前进程的地址空间</span><br><span class="line">参数:</span><br><span class="line">    file: 要执行的程序的文件名, 如果不包含路径, 则会在 PATH 环境变量指定的目录中查找</span><br><span class="line">    arg: 可变参数列表, 代表传递给新程序的参数. 第一个参数是程序的名称, 后面的参数是传递给程序的命令行参数. 最后一个参数必须是 <span class="literal">NULL</span>, 以标识参数列表的结束.</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 不返回, 因为当前进程的地址空间被新程序替换</span><br><span class="line">    失败时, 返回 -1, 并设置 errno</span><br></pre></td></tr></table></figure></div>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span>(pid &lt; <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//fork失败</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"fork"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid == <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//子进程</span></span><br><span class="line">        <span class="built_in">execlp</span>(<span class="string">"ls"</span>,<span class="string">"ls"</span>,<span class="string">"-l"</span>,<span class="string">"-h"</span>,<span class="literal">NULL</span>); <span class="comment">// 第一个是新进程的文件名, 第二个是传递给新进程的argv[0], 后面是参数列表, 最后一个必须是NULL</span></span><br><span class="line">        <span class="comment">// 因为执行ls时第一个参数也是ls, 所以这里共传递两个"ls"</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"execlp error"</span>);  <span class="comment">//如果execlp成功，下面的不执行</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid &gt; <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">    <span class="comment">//父进程</span></span><br><span class="line">    <span class="built_in">sleep</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"我是父进程:%d\n"</span>,<span class="built_in">getpid</span>());</span><br><span class="line">    <span class="built_in">wait</span>(<span class="literal">NULL</span>); <span class="comment">//等待子进程退出</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 需要注意的是, exec 函数族中的任何一个函数（如 execlp,
+execl 等）执行成功，它将永远不会返回到调用它的原函数或原程序。</p>
+<p>这是因为 exec 的本质是进程替换（Process
+Replacement），而不是函数调用或程序跳转。一旦 exec
+函数成功后，当前进程的地址空间已经被新程序完全替换，这个进程的PC地址被设置为新进程的的
+main() 函数。因此，任何在 exec 调用之后的代码都不会被执行，除非 exec
+调用失败。</p>
+<p>不过, 原先的父进程通常仍然需要 wait（或 waitpid）
+来等待子进程结束并回收资源。因为父子关系仍然存在，新程序执行完毕后，它也会调用
+exit() 或 return，导致子进程终止, 进而影响父进程。</p>
+<h4 id="execl-函数">execl() 函数</h4>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ...)</span>;</span><br><span class="line">功能:</span><br><span class="line">    用于在当前进程中执行一个新的程序, 替换当前进程的地址空间</span><br><span class="line">参数:</span><br><span class="line">    path: 要执行的程序的完整路径, 通常用来执行自己当前目录下的可执行文件</span><br><span class="line">    arg: 可变参数列表, 代表传递给新程序的参数. 第一个参数是程序的名称, 后面的参数是传递给程序的命令行参数. 最后一个参数必须是 <span class="literal">NULL</span>, 以标识参数列表的结束.</span><br><span class="line">返回值:</span><br><span class="line">    成功时, 不返回, 因为当前进程的地址空间被新程序替换</span><br><span class="line">    失败时, 返回 <span class="number">-1</span>, 并设置 errno</span><br></pre></td></tr></table></figure></div>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span>(pid &lt; <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//fork失败</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"fork"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid == <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//子进程</span></span><br><span class="line">        <span class="built_in">execl</span>(<span class="string">"./wait"</span>,<span class="string">"wait"</span>,<span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">"execlp error"</span>);  <span class="comment">//如果execl成功，下面的不执行</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid &gt; <span class="number">0</span>)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">//父进程</span></span><br><span class="line">        <span class="built_in">sleep</span>(<span class="number">1</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"我是父进程:%d\n"</span>,<span class="built_in">getpid</span>());</span><br><span class="line">        <span class="built_in">wait</span>(<span class="literal">NULL</span>); <span class="comment">//等待子进程退出</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h4 id="fork-和-exec-的协作"><a href="#fork-和-exec-的协作" class="headerlink" title="fork 和 exec 的协作"></a>fork 和 exec 的协作</h4><p>在 Linux 中，启动一个新的程序(例如在 Shell 中调用 ls.exe)通常是一个两步过程，它们必须配合使用：</p>
+<h4 id="fork-和-exec-的协作">fork 和 exec 的协作</h4>
+<p>在 Linux 中，启动一个新的程序(例如在 Shell 中调用
+ls.exe)通常是一个两步过程，它们必须配合使用：</p>
 <ul>
 <li>fork()： 父进程(这里的shell)调用 fork，创建一个子进程。</li>
 <li>exec()： 子进程调用 exec 族函数，将自己替换成新的程序(如 ls)。</li>
 <li>父进程等待： 父进程通常会调用 wait() 等待子进程执行完毕并退出。</li>
 </ul>
-<p>这种 fork + exec 模式是 Linux/Unix 操作系统构建命令行环境和启动新应用的基石。</p>
+<p>这种 fork + exec 模式是 Linux/Unix
+操作系统构建命令行环境和启动新应用的基石。</p>
 
 		</div>
 
@@ -1070,7 +1127,15 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">进程</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%A8%8B%E5%BA%8F-Process-and-Program"><span class="nav-text">进程和程序 (Process and Program)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81-Process-States"><span class="nav-text">进程的状态 (Process States)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ps-%E5%91%BD%E4%BB%A4"><span class="nav-text">ps 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#top-%E5%91%BD%E4%BB%A4"><span class="nav-text">top 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kill-%E5%91%BD%E4%BB%A4"><span class="nav-text">kill 命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%8F%B7%E5%92%8C%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0-Process-IDs-and-Related-Functions"><span class="nav-text">进程号和相关函数 (Process IDs and Related Functions)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA-Process-Creation"><span class="nav-text">进程的创建 (Process Creation)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B-Creating-Processes-in-a-Loop"><span class="nav-text">循环创建进程 (Creating Processes in a Loop)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%85%B3%E7%B3%BB-Parent-Child-Process-Relationship"><span class="nav-text">父子进程关系 (Parent-Child Process Relationship)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4-Parent-Child-Address-Space"><span class="nav-text">父子进程地址空间 (Parent-Child Address Space)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%88%E6%AD%A2-Process-Termination"><span class="nav-text">进程的终止 (Process Termination)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%BE%85%E5%AD%90%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">等待子进程退出的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#wait-%E5%87%BD%E6%95%B0"><span class="nav-text">wait() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#waitpid-%E5%87%BD%E6%95%B0"><span class="nav-text">waitpid() 函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B-%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B-Zombie-Process-Orphan-Process"><span class="nav-text">僵尸进程 &amp; 孤儿进程 (Zombie Process &amp; Orphan Process)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%9B%BF%E6%8D%A2-Process-Replacement"><span class="nav-text">进程替换 (Process Replacement)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#execlp-%E5%87%BD%E6%95%B0"><span class="nav-text">execlp() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#execl-%E5%87%BD%E6%95%B0"><span class="nav-text">execl() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E5%92%8C-exec-%E7%9A%84%E5%8D%8F%E4%BD%9C"><span class="nav-text">fork 和 exec 的协作</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%A8%8B%E5%BA%8F-process-and-program"><span class="nav-text">进程和程序 (Process and
+Program)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81-process-states"><span class="nav-text">进程的状态 (Process States)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ps-%E5%91%BD%E4%BB%A4"><span class="nav-text">ps 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#top-%E5%91%BD%E4%BB%A4"><span class="nav-text">top 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kill-%E5%91%BD%E4%BB%A4"><span class="nav-text">kill 命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%8F%B7%E5%92%8C%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0-process-ids-and-related-functions"><span class="nav-text">进程号和相关函数
+(Process IDs and Related Functions)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA-process-creation"><span class="nav-text">进程的创建 (Process Creation)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B-creating-processes-in-a-loop"><span class="nav-text">循环创建进程
+(Creating Processes in a Loop)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%85%B3%E7%B3%BB-parent-child-process-relationship"><span class="nav-text">父子进程关系
+(Parent-Child Process Relationship)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4-parent-child-address-space"><span class="nav-text">父子进程地址空间
+(Parent-Child Address Space)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%88%E6%AD%A2-process-termination"><span class="nav-text">进程的终止 (Process
+Termination)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%BE%85%E5%AD%90%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">等待子进程退出的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#wait-%E5%87%BD%E6%95%B0"><span class="nav-text">wait() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#waitpid-%E5%87%BD%E6%95%B0"><span class="nav-text">waitpid() 函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B-%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B-zombie-process-orphan-process"><span class="nav-text">僵尸进程 &amp;
+孤儿进程 (Zombie Process &amp; Orphan Process)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%9B%BF%E6%8D%A2-process-replacement"><span class="nav-text">进程替换 (Process
+Replacement)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#execlp-%E5%87%BD%E6%95%B0"><span class="nav-text">execlp() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#execl-%E5%87%BD%E6%95%B0"><span class="nav-text">execl() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E5%92%8C-exec-%E7%9A%84%E5%8D%8F%E4%BD%9C"><span class="nav-text">fork 和 exec 的协作</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1099,11 +1164,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

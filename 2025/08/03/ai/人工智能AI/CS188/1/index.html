@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,60 +833,67 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>第一章笔记是该课程的开篇介绍, 核心是定义什么是智能体 (Agent) 以及智能体所处的环境 (Environment)</p>
-<h2 id="智能体-Agents"><a href="#智能体-Agents" class="headerlink" title="智能体 (Agents)"></a>智能体 (Agents)</h2><p>AI的中心问题是创建一个理性的智能体 (rational agent) 。理性智能体是一个拥有目标或偏好，并试图执行一系列行动以期在这些目标下获得最佳（或最优）期望结果的实体 。</p>
+			<p>第一章笔记是该课程的开篇介绍, 核心是定义什么是智能体 (Agent)
+以及智能体所处的环境 (Environment)</p>
+<h2 id="智能体-agents">智能体 (Agents)</h2>
+<p>AI的中心问题是创建一个理性的智能体 (rational agent)
+。理性智能体是一个拥有目标或偏好，并试图执行一系列行动以期在这些目标下获得最佳（或最优）期望结果的实体
+。</p>
 <blockquote>
 <p>智能体的“理性”并非指无所不知或完美，而是在其知识范围内做出最优的期望选择。</p>
 </blockquote>
 <p>智能体的构成与环境：</p>
 <ul>
-<li><p>智能体存在于一个环境 (environment) 中，该环境是针对特定智能体实例的 。</p>
-</li>
-<li><p>智能体通过传感器 (sensors) 与环境交互，并通过执行器 (actuators) 对环境施加影响 。</p>
-</li>
-<li><p>智能体与其所处的环境共同构成一个世界 (world) 。例如，一个跳棋程序的“世界”就是虚拟棋盘和对手 。</p>
-</li>
+<li><p>智能体存在于一个环境 (environment)
+中，该环境是针对特定智能体实例的 。</p></li>
+<li><p>智能体通过传感器 (sensors) 与环境交互，并通过执行器 (actuators)
+对环境施加影响 。</p></li>
+<li><p>智能体与其所处的环境共同构成一个世界 (world)
+。例如，一个跳棋程序的“世界”就是虚拟棋盘和对手 。</p></li>
 </ul>
-<p><img lazyload src="/images/loading.svg" data-src="/2025/08/03/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/1/20250804192311.png"></p>
-<h2 id="环境类型-Types-of-Environments"><a href="#环境类型-Types-of-Environments" class="headerlink" title="环境类型 (Types of Environments)"></a>环境类型 (Types of Environments)</h2><p>智能体的设计在很大程度上取决于其所处环境的类型 。因此，理解环境的属性至关重要。根据不同的分类依据, 智能体所处的环境可以有如下几种: </p>
+<p><img lazyload src="/images/loading.svg" data-src="20250804192311.png"></p>
+<h2 id="环境类型-types-of-environments">环境类型 (Types of
+Environments)</h2>
+<p>智能体的设计在很大程度上取决于其所处环境的类型
+。因此，理解环境的属性至关重要。根据不同的分类依据,
+智能体所处的环境可以有如下几种:</p>
 <ul>
 <li><p>可观察性 (Observability)：</p>
 <ul>
-<li><p>在完全可观察 (fully observable) 的环境中，智能体完全了解其状态 。</p>
-</li>
-<li><p>在部分可观察 (partially observable) 的环境中，智能体无法获得关于状态的全部信息，因此必须维护一个对世界状态的内部估计 。</p>
-</li>
-</ul>
-</li>
+<li><p>在完全可观察 (fully observable) 的环境中，智能体完全了解其状态
+。</p></li>
+<li><p>在部分可观察 (partially observable)
+的环境中，智能体无法获得关于状态的全部信息，因此必须维护一个对世界状态的内部估计
+。</p></li>
+</ul></li>
 <li><p>确定性 (Determinism)：</p>
 <ul>
-<li><p>在确定性 (deterministic) 环境中，在特定状态下执行一个行动只有一个确定的结果 。</p>
-</li>
-<li><p>在随机性 (stochastic) 环境中，转移模型存在不确定性，即一个行动可能有多个不同概率的结果 。</p>
-</li>
-</ul>
-</li>
+<li><p>在确定性 (deterministic)
+环境中，在特定状态下执行一个行动只有一个确定的结果 。</p></li>
+<li><p>在随机性 (stochastic)
+环境中，转移模型存在不确定性，即一个行动可能有多个不同概率的结果
+。</p></li>
+</ul></li>
 <li><p>智能体数量 (Number of Agents)：</p>
 <ul>
-<li>在多智能体 (multi-agent) 环境中，一个智能体需要与其他智能体共同行动 。为了避免行为被其他智能体预测，它可能需要将其行动随机化 (randomize) 。</li>
-</ul>
-</li>
+<li>在多智能体 (multi-agent) 环境中，一个智能体需要与其他智能体共同行动
+。为了避免行为被其他智能体预测，它可能需要将其行动随机化 (randomize)
+。</li>
+</ul></li>
 <li><p>动态性 (Dynamism)：</p>
 <ul>
-<li><p>如果环境在智能体行动时不会发生变化，则称之为静态 (static) 环境 。</p>
-</li>
-<li><p>动态 (dynamic) 环境则会随着智能体的交互而改变 。</p>
-</li>
-</ul>
-</li>
+<li><p>如果环境在智能体行动时不会发生变化，则称之为静态 (static) 环境
+。</p></li>
+<li><p>动态 (dynamic) 环境则会随着智能体的交互而改变 。</p></li>
+</ul></li>
 <li><p>物理规则 (Physics)：</p>
 <ul>
-<li><p>如果环境具有已知的物理规则 (known physics)，智能体就了解其转移模型（即使是随机的），并可以在规划时利用这些知识 。</p>
-</li>
-<li><p>如果物理规则是未知的 (unknown)，智能体则需要通过有目的的行动来学习这些动态规律 。</p>
-</li>
-</ul>
-</li>
+<li><p>如果环境具有已知的物理规则 (known
+physics)，智能体就了解其转移模型（即使是随机的），并可以在规划时利用这些知识
+。</p></li>
+<li><p>如果物理规则是未知的
+(unknown)，智能体则需要通过有目的的行动来学习这些动态规律 。</p></li>
+</ul></li>
 </ul>
 
 		</div>
@@ -950,7 +957,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">Intro to AI, Rational Agents</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93-Agents"><span class="nav-text">智能体 (Agents)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E7%B1%BB%E5%9E%8B-Types-of-Environments"><span class="nav-text">环境类型 (Types of Environments)</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93-agents"><span class="nav-text">智能体 (Agents)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E7%B1%BB%E5%9E%8B-types-of-environments"><span class="nav-text">环境类型 (Types of
+Environments)</span></a></li></ol>
 
 	</div>
 </div>
@@ -979,11 +987,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

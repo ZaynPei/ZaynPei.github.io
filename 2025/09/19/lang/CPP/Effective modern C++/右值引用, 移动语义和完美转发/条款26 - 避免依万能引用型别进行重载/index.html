@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,25 +833,59 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>这一讲开门见山: 将一个<strong>接受万能引用参数</strong>的函数或模板与其他函数进行<strong>重载</strong>，是一个非常<strong>危险</strong>的设计，因为它几乎总是会导致意想不到的行为和难以理解的编译错误。</p>
-<h2 id="核心问题：万能引用的“贪婪”"><a href="#核心问题：万能引用的“贪婪”" class="headerlink" title="核心问题：万能引用的“贪婪”"></a>核心问题：万能引用的“贪婪”</h2><p>万能引用（在模板中声明为 T&amp;&amp;）之所以危险，是因为它过于“贪婪”。根据C++的模板类型推导和重载决议规则，<strong>万能引用可以为几乎任何类型的实参生成一个精确匹配</strong> (Exact Match) 的函数实例。</p>
-<p>在重载决议中，精确匹配的优先级非常高，高于那些需要<strong>类型提升</strong>（如 short 到 int）、<strong>类型转换</strong>（如派生类到基类）或<strong>添加 const</strong> 的匹配。这意味着，一旦万能引用版本的重载成为候选，它就会像磁铁一样“吸走”大量本意是想调用其他重载版本的函数调用。</p>
-<h3 id="示例一：logAndAdd-——-万能引用与常规函数的重载"><a href="#示例一：logAndAdd-——-万能引用与常规函数的重载" class="headerlink" title="示例一：logAndAdd —— 万能引用与常规函数的重载"></a>示例一：logAndAdd —— 万能引用与常规函数的重载</h3><p>这个例子展示了最直接的问题。假设我们有一个高效的、使用万能引用的 logAndAdd 函数，同时为了方便，我们又重载了一个接受 int 索引的版本, 当我们用一个 short 类型的变量来调用它时: </p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局数据</span></span><br><span class="line">std::multiset&lt;std::string&gt; names;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载版本 1: 万能引用</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(T&amp;&amp; name)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(std::forward&lt;T&gt;(name));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载版本 2: int</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(<span class="type">int</span> idx)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(<span class="built_in">nameFromIdx</span>(idx));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">short</span> nameIdx;</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(nameIdx); <span class="comment">// 错误！调用的是万能引用版本</span></span><br></pre></td></tr></table></figure></div>
-<p>首先, 程序员的意图非常明确，short 是一个整数类型，应该调用 logAndAdd(int idx) 这个版本。而重载决议过程却不是这样的. 它会尝试下列两种匹配</p>
-<p>对于尝试匹配 logAndAdd(int)：short 到 int 的转换是<strong>类型提升</strong> (Promotion)，这是一个合法的匹配，但不是精确匹配。</p>
-<p>而对于匹配 logAndAdd(T&amp;&amp;)：编译器可以为<strong>万能引用实例化一个版本</strong>，其中 T 被推导为 short&amp;。这个 logAndAdd(short&amp;) 的实例对于 short 类型的实参来说是<strong>精确匹配</strong> (Exact Match)。</p>
-<p>由于精确匹配的优先级高于类型提升，编译器选择了万能引用版本的 logAndAdd。也就是说, 在万能引用版本的函数体内，代码尝试用一个 short 去构造 names（一个 std::multiset<a class="link" href="std::string">std::string<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>）中的 std::string。由于不存在从 short 到 std::string 的构造函数，代码最终在 emplace 这一步编译失败。这个错误信息通常非常复杂，因为它发生在模板的深层实例化中，让程序员难以定位问题的根源。</p>
-<h3 id="示例二：Person-构造函数-——-完美转发构造函数的危险"><a href="#示例二：Person-构造函数-——-完美转发构造函数的危险" class="headerlink" title="示例二：Person 构造函数 —— 完美转发构造函数的危险"></a>示例二：Person 构造函数 —— 完美转发构造函数的危险</h3><p>这个例子揭示了一个更微妙、更危险的问题。当一个<strong>类的构造函数被重载为万能引用</strong>时（通常被称为“完美转发构造函数”），它会“劫持”类的<strong>拷贝和移动</strong>机制。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 完美转发构造函数</span></span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(T&amp;&amp; n)</span> : name(std::forward&lt;T&gt;(n)) {</span>}</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(<span class="type">int</span> idx)</span> : name(nameFromIdx(idx)) {</span>}</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 编译器会自动生成拷贝和移动构造函数</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function">Person <span class="title">p</span><span class="params">(<span class="string">"Nancy"</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">cloneOfP</span><span class="params">(p)</span></span>; <span class="comment">// 或者Person cloneOfP(p), 意图是调用拷贝构造函数</span></span><br></pre></td></tr></table></figure></div>
-<p>当客户端代码尝试拷贝一个 Person 对象时, 程序员希望调用编译器生成的拷贝构造函数 Person(const Person&amp;)。此时重载决议过程如下：</p>
+			<p>这一讲开门见山:
+将一个<strong>接受万能引用参数</strong>的函数或模板与其他函数进行<strong>重载</strong>，是一个非常<strong>危险</strong>的设计，因为它几乎总是会导致意想不到的行为和难以理解的编译错误。</p>
+<h2 id="核心问题万能引用的贪婪">核心问题：万能引用的“贪婪”</h2>
+<p>万能引用（在模板中声明为
+T&amp;&amp;）之所以危险，是因为它过于“贪婪”。根据C++的模板类型推导和重载决议规则，<strong>万能引用可以为几乎任何类型的实参生成一个精确匹配</strong>
+(Exact Match) 的函数实例。</p>
+<p>在重载决议中，精确匹配的优先级非常高，高于那些需要<strong>类型提升</strong>（如
+short 到
+int）、<strong>类型转换</strong>（如派生类到基类）或<strong>添加
+const</strong>
+的匹配。这意味着，一旦万能引用版本的重载成为候选，它就会像磁铁一样“吸走”大量本意是想调用其他重载版本的函数调用。</p>
+<h3 id="示例一logandadd-万能引用与常规函数的重载">示例一：logAndAdd ——
+万能引用与常规函数的重载</h3>
+<p>这个例子展示了最直接的问题。假设我们有一个高效的、使用万能引用的
+logAndAdd 函数，同时为了方便，我们又重载了一个接受 int 索引的版本,
+当我们用一个 short 类型的变量来调用它时: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局数据</span></span><br><span class="line">std::multiset&lt;std::string&gt; names;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载版本 1: 万能引用</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(T&amp;&amp; name)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(std::forward&lt;T&gt;(name));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载版本 2: int</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">logAndAdd</span><span class="params">(<span class="type">int</span> idx)</span> </span>{</span><br><span class="line">    names.<span class="built_in">emplace</span>(<span class="built_in">nameFromIdx</span>(idx));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">short</span> nameIdx;</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="built_in">logAndAdd</span>(nameIdx); <span class="comment">// 错误！调用的是万能引用版本</span></span><br></pre></td></tr></table></figure></div> 首先,
+程序员的意图非常明确，short 是一个整数类型，应该调用 logAndAdd(int idx)
+这个版本。而重载决议过程却不是这样的. 它会尝试下列两种匹配</p>
+<p>对于尝试匹配 logAndAdd(int)：short 到 int
+的转换是<strong>类型提升</strong>
+(Promotion)，这是一个合法的匹配，但不是精确匹配。</p>
+<p>而对于匹配
+logAndAdd(T&amp;&amp;)：编译器可以为<strong>万能引用实例化一个版本</strong>，其中
+T 被推导为 short&amp;。这个 logAndAdd(short&amp;) 的实例对于 short
+类型的实参来说是<strong>精确匹配</strong> (Exact Match)。</p>
+<p>由于精确匹配的优先级高于类型提升，编译器选择了万能引用版本的
+logAndAdd。也就是说, 在万能引用版本的函数体内，代码尝试用一个 short
+去构造 names（一个 std::multiset<std::string>）中的
+std::string。由于不存在从 short 到 std::string 的构造函数，代码最终在
+emplace
+这一步编译失败。这个错误信息通常非常复杂，因为它发生在模板的深层实例化中，让程序员难以定位问题的根源。</std::string></p>
+<h3 id="示例二person-构造函数-完美转发构造函数的危险">示例二：Person
+构造函数 —— 完美转发构造函数的危险</h3>
+<p>这个例子揭示了一个更微妙、更危险的问题。当一个<strong>类的构造函数被重载为万能引用</strong>时（通常被称为“完美转发构造函数”），它会“劫持”类的<strong>拷贝和移动</strong>机制。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 完美转发构造函数</span></span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(T&amp;&amp; n)</span> : name(std::forward&lt;T&gt;(n)) {</span>}</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Person</span><span class="params">(<span class="type">int</span> idx)</span> : name(nameFromIdx(idx)) {</span>}</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 编译器会自动生成拷贝和移动构造函数</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function">Person <span class="title">p</span><span class="params">(<span class="string">"Nancy"</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">cloneOfP</span><span class="params">(p)</span></span>; <span class="comment">// 或者Person cloneOfP(p), 意图是调用拷贝构造函数</span></span><br></pre></td></tr></table></figure></div> 当客户端代码尝试拷贝一个 Person 对象时,
+程序员希望调用编译器生成的拷贝构造函数 Person(const
+Person&amp;)。此时重载决议过程如下：</p>
 <ul>
-<li>匹配拷贝构造函数：实参 p 的类型是 Person（一个非 const 左值）。为了匹配拷贝构造函数的参数 const Person&amp;，需要为 p 添加 const 限定符。这是一个合法的匹配，但不是精确匹配。</li>
-<li>匹配完美转发构造函数：编译器可以为万能引用构造函数实例化一个版本，其中 T 被推导为 Person&amp;。这个 Person(Person&amp;) 的实例对于 Person 类型的左值实参 p 来说是精确匹配。</li>
+<li>匹配拷贝构造函数：实参 p 的类型是 Person（一个非 const
+左值）。为了匹配拷贝构造函数的参数 const Person&amp;，需要为 p 添加
+const 限定符。这是一个合法的匹配，但不是精确匹配。</li>
+<li>匹配完美转发构造函数：编译器可以为万能引用构造函数实例化一个版本，其中
+T 被推导为 Person&amp;。这个 Person(Person&amp;) 的实例对于 Person
+类型的左值实参 p 来说是精确匹配。</li>
 </ul>
-<p>同样，精确匹配胜出。编译器选择了完美转发构造函数，而不是拷贝构造函数。在完美转发构造函数体内，代码尝试用 p（一个 Person 对象）来初始化 name（一个 std::string 成员）。这当然会失败，并产生一堆令人费解的错误信息。</p>
-<p>在这个例子里, 完美转发构造函数破坏了类的基本功能（拷贝）。它同样会劫持派生类对基类的拷贝和移动调用，导致继承体系出现问题。</p>
-<p>总而言之, 在设计函数和类时，应极力<strong>避免将接受万能引用的版本与其他版本进行重载</strong>。在下一讲条款27会详细介绍如何处理那些确实需要类似重载行为的场景，例如使用标签分派、static_assert 或 C++20 的 concepts 等技术来约束模板，从而安全地实现期望的功能。</p>
+<p>同样，精确匹配胜出。编译器选择了完美转发构造函数，而不是拷贝构造函数。在完美转发构造函数体内，代码尝试用
+p（一个 Person 对象）来初始化 name（一个 std::string
+成员）。这当然会失败，并产生一堆令人费解的错误信息。</p>
+<p>在这个例子里,
+完美转发构造函数破坏了类的基本功能（拷贝）。它同样会劫持派生类对基类的拷贝和移动调用，导致继承体系出现问题。</p>
+<p>总而言之,
+在设计函数和类时，应极力<strong>避免将接受万能引用的版本与其他版本进行重载</strong>。在下一讲条款27会详细介绍如何处理那些确实需要类似重载行为的场景，例如使用标签分派、static_assert
+或 C++20 的 concepts 等技术来约束模板，从而安全地实现期望的功能。</p>
 
 		</div>
 
@@ -890,9 +924,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE30%20-%20%E7%86%9F%E6%82%89%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%83%85%E5%BD%A2/">
+				<a class="next" rel="next" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE25%20-%20%E9%92%88%E5%AF%B9%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20move,%20%E9%92%88%E5%AF%B9%E4%B8%87%20%E8%83%BD%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20forward/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 30 - 熟悉完美转发的失败情形</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 25 - 针对右值引用实施 std move, 针对万能引用实施 std forward</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -914,7 +948,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款 26 - 避免依万能引用型别进行重载</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E7%9A%84%E2%80%9C%E8%B4%AA%E5%A9%AA%E2%80%9D"><span class="nav-text">核心问题：万能引用的“贪婪”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%B8%80%EF%BC%9AlogAndAdd-%E2%80%94%E2%80%94-%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E4%B8%8E%E5%B8%B8%E8%A7%84%E5%87%BD%E6%95%B0%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-text">示例一：logAndAdd —— 万能引用与常规函数的重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C%EF%BC%9APerson-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E2%80%94%E2%80%94-%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%8D%B1%E9%99%A9"><span class="nav-text">示例二：Person 构造函数 —— 完美转发构造函数的危险</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E7%9A%84%E8%B4%AA%E5%A9%AA"><span class="nav-text">核心问题：万能引用的“贪婪”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%B8%80logandadd-%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E4%B8%8E%E5%B8%B8%E8%A7%84%E5%87%BD%E6%95%B0%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-text">示例一：logAndAdd ——
+万能引用与常规函数的重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BA%8Cperson-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%8D%B1%E9%99%A9"><span class="nav-text">示例二：Person
+构造函数 —— 完美转发构造函数的危险</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -943,11 +979,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

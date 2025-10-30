@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,23 +833,49 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>虽然 auto 是一个强大的工具（如条款5所述），但它推导出的类型有时会与程序员的直觉或意图不符。这种情况尤其容易发生在涉及“隐形”代理类（proxy class）的表达式中。</p>
+			<p>虽然 auto
+是一个强大的工具（如条款5所述），但它推导出的类型有时会与程序员的直觉或意图不符。这种情况尤其容易发生在涉及“隐形”代理类（proxy
+class）的表达式中。</p>
 <blockquote>
-<p>什么是代理类: 在 C++ 中，代理类（Proxy Class）是一种设计模式的实现，属于结构型设计模式的一种。它的主要作用是为某个对象提供一个替代者或中介，以控制对该对象的访问。这个模式被称为代理模式（Proxy Pattern）。广为人知的std::shared_ptr即是这一类</p>
+<p>什么是代理类: 在 C++ 中，代理类（Proxy
+Class）是一种设计模式的实现，属于结构型设计模式的一种。它的主要作用是为某个对象提供一个替代者或中介，以控制对该对象的访问。这个模式被称为代理模式（Proxy
+Pattern）。广为人知的std::shared_ptr即是这一类</p>
 </blockquote>
-<h3 id="auto遇到代理类"><a href="#auto遇到代理类" class="headerlink" title="auto遇到代理类"></a>auto遇到代理类</h3><p>下面使用 std::vector<bool> 作为核心示例。假设我们有一个函数返回 std::vector<bool>，并且我们想获取第五个元素, 下面的代码可以正常运行。</bool></bool></p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">bool</span>&gt; <span class="title">features</span><span class="params">(<span class="type">const</span> Widget&amp; w)</span></span>;</span><br><span class="line">Widget w;</span><br><span class="line"><span class="type">bool</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>]; <span class="comment">// 显式声明类型为 bool</span></span><br><span class="line"><span class="built_in">processWidget</span>(w, highPriority); <span class="comment">// 正常运行</span></span><br></pre></td></tr></table></figure></div>
-<p>然而，如果只是简单地将 bool 替换为 auto，就会导致未定义行为：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>]; <span class="comment">// 类型推导</span></span><br><span class="line"><span class="built_in">processWidget</span>(w, highPriority); <span class="comment">// 未定义行为！</span></span><br></pre></td></tr></table></figure></div>
-<p>究其原因, 在于使用auto推断遇到了std::vector<bool>的代理类, 而不是bool类型。</bool></p>
-<p>std::vector<bool> 是标准库中的一个特化版本，它为了节省空间，将每个布尔值存储为一个比特位。由于 C++ 禁止对单个比特位（bit）进行引用，因此 std::vector<bool> 的 operator[] 并不会返回 bool&amp;。相反，它返回一个扮演 bool&amp; 角色的代理类对象，这个类的类型是 std::vector<bool>::reference。</bool></bool></bool></p>
-<p>这个 std::vector<bool>::reference 代理对象被设计为可以隐式转换为 bool（即它所代表的比特位的值）。对于前一类代码<code>bool highPriority = ...</code>，在这行代码中，features(w)[5] 返回一个 std::vector<bool>::reference 对象。为了初始化 bool 类型的变量 highPriority，这个代理对象会执行向 bool 的隐式类型转换。因此，highPriority 得到了第5个比特位的值，一切正常。</bool></bool></p>
-<p>而在后者中, features(w) 返回的是一个临时对象 (一个右值 std::vector<bool>)。且operator[] 返回的 std::vector<bool>::reference 代理对象（现在被 highPriority 持有）其内部实现通常包含一个指向那个临时向量所管理的机器字的指针。在 <code>auto highPriority = ...</code> 这条语句的末尾，features(w) 返回的临时 std::vector<bool> 对象被析构了。这导致 highPriority（那个代理对象）现在内部持有一个空悬指针 (dangling pointer)。当这个含有空悬指针的 highPriority 对象在后续代码（如 processWidget）中被使用时，就会产生未定义行为。</bool></bool></bool></p>
-<p>因此, 我们要避免写出<code>auto someVar = 隐形”代理型别表达式</code>的代码。</p>
-<h3 id="解决方案：带显式型别的初始化物习惯用法"><a href="#解决方案：带显式型别的初始化物习惯用法" class="headerlink" title="解决方案：带显式型别的初始化物习惯用法"></a>解决方案：带显式型别的初始化物习惯用法</h3><p>auto 本身并不是问题所在；问题在于它推导出的类型（代理类）不是我们想要的类型（值 bool）。</p>
-<p>条款6提出的解决方案是继续使用 auto，但通过显式类型转换来“引导” auto 推导出我们想要的类型。这种方法被称为“带显式型别的初始化物习惯用法”（explicitly typed initializer idiom）。</p>
+<h3 id="auto遇到代理类">auto遇到代理类</h3>
+<p>下面使用 std::vector<bool> 作为核心示例。假设我们有一个函数返回
+std::vector<bool>，并且我们想获取第五个元素, 下面的代码可以正常运行。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">bool</span>&gt; <span class="title">features</span><span class="params">(<span class="type">const</span> Widget&amp; w)</span></span>;</span><br><span class="line">Widget w;</span><br><span class="line"><span class="type">bool</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>]; <span class="comment">// 显式声明类型为 bool</span></span><br><span class="line"><span class="built_in">processWidget</span>(w, highPriority); <span class="comment">// 正常运行</span></span><br></pre></td></tr></table></figure></div> 然而，如果只是简单地将 bool 替换为
+auto，就会导致未定义行为： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> highPriority = <span class="built_in">features</span>(w)[<span class="number">5</span>]; <span class="comment">// 类型推导</span></span><br><span class="line"><span class="built_in">processWidget</span>(w, highPriority); <span class="comment">// 未定义行为！</span></span><br></pre></td></tr></table></figure></div> 究其原因,
+在于使用auto推断遇到了std::vector<bool>的代理类, 而不是bool类型。</bool></bool></bool></p>
+<p>std::vector<bool>
+是标准库中的一个特化版本，它为了节省空间，将每个布尔值存储为一个比特位。由于
+C++ 禁止对单个比特位（bit）进行引用，因此 std::vector<bool> 的
+operator[] 并不会返回 bool&amp;。相反，它返回一个扮演 bool&amp;
+角色的代理类对象，这个类的类型是 std::vector<bool>::reference。</bool></bool></bool></p>
+<p>这个 std::vector<bool>::reference 代理对象被设计为可以隐式转换为
+bool（即它所代表的比特位的值）。对于前一类代码<code>bool highPriority = ...</code>，在这行代码中，features(w)[5]
+返回一个 std::vector<bool>::reference 对象。为了初始化 bool 类型的变量
+highPriority，这个代理对象会执行向 bool
+的隐式类型转换。因此，highPriority 得到了第5个比特位的值，一切正常。</bool></bool></p>
+<p>而在后者中, features(w) 返回的是一个临时对象 (一个右值
+std::vector<bool>)。且operator[] 返回的 std::vector<bool>::reference
+代理对象（现在被 highPriority
+持有）其内部实现通常包含一个指向那个临时向量所管理的机器字的指针。在
+<code>auto highPriority = ...</code> 这条语句的末尾，features(w)
+返回的临时 std::vector<bool> 对象被析构了。这导致
+highPriority（那个代理对象）现在内部持有一个空悬指针 (dangling
+pointer)。当这个含有空悬指针的 highPriority 对象在后续代码（如
+processWidget）中被使用时，就会产生未定义行为。</bool></bool></bool></p>
+<p>因此,
+我们要避免写出<code>auto someVar = 隐形”代理型别表达式</code>的代码。
+### 解决方案：带显式型别的初始化物习惯用法</p>
+<p>auto
+本身并不是问题所在；问题在于它推导出的类型（代理类）不是我们想要的类型（值
+bool）。</p>
+<p>条款6提出的解决方案是继续使用 auto，但通过显式类型转换来“引导” auto
+推导出我们想要的类型。这种方法被称为“带显式型别的初始化物习惯用法”（explicitly
+typed initializer idiom）。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过 static_cast&lt;bool&gt;(...) 强制调用该代理对象的向 bool 的类型转换运算符</span></span><br><span class="line"><span class="keyword">auto</span> highPriority = <span class="built_in">static_cast</span>&lt;<span class="type">bool</span>&gt;(<span class="built_in">features</span>(w)[<span class="number">5</span>]);</span><br></pre></td></tr></table></figure></div>
-
 <p>这种习惯用法不仅限于解决代理类问题，它还可以用来明确表达程序员的意图，使那些故意的类型转换在代码中更加清晰可见</p>
 
 		</div>
@@ -913,7 +939,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款6：auto 推导的型别不符合要求时，使用带显式型别的初始化物习惯用法</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E9%81%87%E5%88%B0%E4%BB%A3%E7%90%86%E7%B1%BB"><span class="nav-text">auto遇到代理类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%B8%A6%E6%98%BE%E5%BC%8F%E5%9E%8B%E5%88%AB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E7%89%A9%E4%B9%A0%E6%83%AF%E7%94%A8%E6%B3%95"><span class="nav-text">解决方案：带显式型别的初始化物习惯用法</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#auto%E9%81%87%E5%88%B0%E4%BB%A3%E7%90%86%E7%B1%BB"><span class="nav-text">auto遇到代理类</span></a></li></ol>
 
 	</div>
 </div>
@@ -942,11 +968,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

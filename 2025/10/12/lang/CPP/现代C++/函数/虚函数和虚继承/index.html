@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/12/lang/cpp/现代c++/函数/虚函数和虚继承/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚函数和虚继承">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/12/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%87%BD%E6%95%B0/%E8%99%9A%E5%87%BD%E6%95%B0%E5%92%8C%E8%99%9A%E7%BB%A7%E6%89%BF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-12T08:52:02.000Z">
+<meta property="article:modified_time" content="2025-10-12T03:14:36.540Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CPP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            虚函数和虚继承 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">虚函数和虚继承</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-12 16:52:02</span>
+        <span class="mobile">2025-10-12 16:52:02</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-12 11:14:36</span>
+            <span class="mobile">2025-10-12 11:14:36</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/CPP/%E5%87%BD%E6%95%B0/">函数</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/CPP/">CPP</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>8.6k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>32 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="虚函数">虚函数</h2>
+<h3 id="静态类型与动态类型">静态类型与动态类型</h3>
+<p>为了理解虚函数中的动态绑定，首先必须区分两种“类型”。</p>
+<ul>
+<li>静态类型 (Static Type): 一个对象或指针在 <strong>声明</strong>时
+的类型，它在 <strong>编译期</strong>间 就已经完全确定，并且永远不会改变
+。
+<ul>
+<li>Derive derive; 中，derive 的静态类型是 Derive。</li>
+<li>Base* pbase = new Derive(); 中，不管 pbase
+实际指向什么，它在声明时是 Base<em>，所以它的 静态类型 就是
+Base</em>。</li>
+</ul></li>
+<li>动态类型 (Dynamic Type): 通常指一个
+<strong>指针</strong>或<strong>引用</strong> 在
+程序<strong>运行时</strong> 实际所<strong>指向的</strong>对象的类型
+。这个类型是在运行时决定的，并且可以改变 。
+<ul>
+<li>Base* pbase = new Derive(); 中，pbase 的 动态类型 是 Derive。</li>
+<li>如果后续代码执行 pbase = new Derive2();，那么 pbase
+的动态类型就会变为 Derive2 。</li>
+<li>普通对象（如 derive）和未指向任何对象的指针（如 Base*
+pbase;）没有动态类型的说法 。</li>
+</ul></li>
+</ul>
+<p>与之对应的,
+函数调用如何确定最终执行哪个函数版本，取决于它的绑定方式。</p>
+<ul>
+<li>静态绑定 (Static Binding): 函数调用在 编译期
+就决定了。编译器会根据调用者（对象或指针）的 静态类型 来选择要调用的函数
+。<strong>普通成员函数</strong> 和 <strong>函数参数的默认值</strong>
+都是静态绑定的 。
+<ul>
+<li>函数参数的默认值是静态绑定的, 这会引发一个问题: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> {</span><br><span class="line"><span class="keyword">public</span>: </span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">int</span> x = <span class="number">1</span>)</span> </span>{ <span class="comment">// x 的默认值是 1</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Base::func, x = "</span> &lt;&lt; x &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derive</span> : <span class="keyword">public</span> Base {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">int</span> x = <span class="number">2</span>)</span> <span class="keyword">override</span> </span>{ <span class="comment">// x 的默认值是 2</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Derive::func, x = "</span> &lt;&lt; x &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Base* pbase = <span class="keyword">new</span> <span class="built_in">Derive</span>();</span><br><span class="line">    pbase-&gt;<span class="built_in">func</span>(); <span class="comment">// 调用的是 Derive::func，但传入的 x 是 1</span></span><br><span class="line">    <span class="keyword">delete</span> pbase;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 如上,
+虽然 pbase 指向一个 Derive 对象，调用的确实是 Derive::func，但传入的 x
+却是 Base::func 中定义的默认值 1
+。这是因为默认参数值在编译期就已经确定了，取决于指针的静态类型 Base*
+。因此,
+为了避免这种混乱，<strong>不要在子类中重新定义虚函数的默认参数</strong>
+。</li>
+</ul></li>
+<li>动态绑定 (Dynamic Binding): 函数调用在 运行时
+才决定。系统会根据指针或引用所指向对象的 动态类型 来选择要调用的函数
+。<strong>虚函数</strong>
+(当通过<strong>指针</strong>或<strong>引用</strong>调用时) 是动态绑定的
+。</li>
+</ul>
+<h3 id="虚函数返回类型协变">虚函数返回类型协变</h3>
+<p>返回类型协变 (Covariant Return Types)
+是指在一个派生类中重写基类的虚函数时，可以返回一个比基类虚函数返回类型更具体的派生类型的指针或引用。</p>
+<p>换句话说，如果基类的一个虚函数返回
+Base<em>（基类指针），那么派生类重写这个函数时，可以合法地返回
+Derived</em>（派生类指针），只要 Derived 是 Base 的子类。</p>
+<h3 id="虚函数底层实现">虚函数底层实现</h3>
+<p>为了实现动态绑定，编译器通常会使用 虚函数表 (Virtual Function Table,
+vtable) 和 虚函数指针 (Virtual Function Pointer, vptr)。</p>
+<ul>
+<li><p><strong>虚函数表</strong> (vtable):
+是一个<strong>静态</strong>的<strong>函数指针数组</strong>，它在<strong>编译期</strong>就已经创建好,
+属于 <strong>类</strong>
+而不是对象。每个<strong>包含虚函数</strong>（或继承自包含虚函数的类）的类都有一个自己的
+vtable, 存储在<strong>只读数据段(.rodata)</strong>中。</p>
+<ul>
+<li><p>这个表中存储了<strong>类中所有虚函数的地址</strong>。表中的条目顺序由<strong>函数在类中声明的顺序</strong>决定。</p></li>
+<li><p>如何构建：</p>
+<ul>
+<li>基类的 vtable：包含了基类中所有虚函数的地址。</li>
+<li>派生类的 vtable：首先，它会复制基类的 vtable。如果派生类 重写
+(override) 了某个基类的虚函数，那么派生类 vtable
+中对应位置的函数指针会被<strong>替换为派生类重写的函数地址</strong>。如果派生类<strong>定义了新的虚函数</strong>，这些新虚函数的地址会被<strong>添加到
+vtable 的末尾</strong>。</li>
+</ul></li>
+</ul></li>
+<li><p><strong>虚函数指针</strong> (vptr):
+是一个隐藏的<strong>成员指针</strong>，一般存在对象内存布局的<strong>开头部分</strong>,
+在运行期创建。它属于<strong>对象</strong>。当一个类拥有虚函数时，<strong>编译器会自动为该类的每个对象添加一个
+vptr</strong>(具体实现是在构造函数中初始化)。</p>
+<ul>
+<li><p>这个指针指向该对象所属类的 vtable。</p></li>
+<li><p>如何工作：当创建一个对象时（例如 new
+Derived()），对象的构造函数会被调用。在构造函数的初始化阶段，对象的 vptr
+会被设置为指向该类的 vtable。当调用虚函数时，程序会通过对象的 vptr
+找到对应的
+vtable，然后根据函数的偏移位置找到正确的函数地址并调用它。</p></li>
+</ul></li>
+</ul>
+<h3 id="vcall-thunk-和-adjustor-thunk">vcall thunk 和 Adjustor
+thunk</h3>
+<p>通过前面的分析我们知道，虚函数的调用（通过指针或引用时）依赖于虚函数表。然而，当我们尝试验证这一点时，一个矛盾出现了：</p>
+<ul>
+<li>代码打印的地址：通过 printf(“地址 = %p”, &amp;MYACLS::myvirfunc1);
+这样的代码，我们可以打印出虚函数的地址</li>
+<li>调试器观察的地址：在调试程序时，我们可以观察到一个具体对象（例如
+pmyobj）的内存布局，找到其虚函数表指针（vptr），并进一步查看虚函数表（vtable）中为
+myvirfunc1 存储的真实函数地址 。</li>
+</ul>
+<p>关键问题在于：这两者得到的地址有时会完全不同。<strong>代码打印出来的地址</strong>并不是<strong>虚函数表中真正存储的那个地址</strong>。</p>
+<p>实际上,
+代码打印出的地址实际上是一个<strong>中间跳转站</strong>的地址。这个由编译器生成的、用于<strong>辅助虚函数调用</strong>的中间代码段，就被称为
+<strong>vcall thunk</strong> 。而虚函数表中的地址,
+也未必是直接指向虚函数的实现代码，取决于具体的继承结构。</p>
+<blockquote>
+<p>如果 this 指针“天生正确”，虚函数表就存储真实地址。 如果 this
+指针需要“后天修正”，虚函数表就存储 <strong>Adjustor thunk
+地址</strong>，由 thunk 负责修正后再去调用真实地址。</p>
+</blockquote>
+<p>vcall 是 “virtual call”（虚调用）的缩写。thunk
+是一个计算机术语，通常指一小段用于辅助调用另一段子程序的代码。</p>
+<p>而 Adjustor thunk 是 “adjustor thunk” 的缩写，指的是一种特殊类型的
+thunk，用于调整传递给函数的 this 指针，以确保它指向正确的对象部分。</p>
+<p>在实际多态执行的过程中, 这两类 thunk 的作用如下： - <strong>vcall
+thunk</strong>: 当通过基类指针或引用调用虚函数时，程序首先跳转到 vcall
+thunk。这个 thunk 的主要任务是从对象的 vptr 中获取正确的
+vtable，然后根据虚函数在类中声明的顺序找到对应的函数地址。接着，thunk
+会跳转到这个地址去执行实际的虚函数实现(这个虚函数可能是真实函数地址,
+也可能是 Adjustor thunk 地址)。 - <strong>Adjustor thunk</strong>:
+在<strong>多重继承</strong>或<strong>虚继承</strong>的情况下,
+由于对象的内存布局变得复杂，this
+指针可能并不总是指向对象的起始位置。Adjustor thunk
+的任务就是在调用实际的虚函数之前，调整 this
+指针，使其指向正确的对象部分。调整完成后，thunk
+再跳转到真正的虚函数实现。</p>
+<p>下面分情况解释这个过程：</p>
+<ol type="1">
+<li>基础情况：单继承 (指针指向起始位置):
+在最简单的单继承中，派生类对象的内存布局通常是这样的：</li>
+</ol>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">派生类对象 (Derive)</span><br><span class="line">+-------------------------+</span><br><span class="line">|  基类子对象 (Base)       |  &lt;-- Base* 指针指向这里</span><br><span class="line">|  (包含 vptr在开头)       |</span><br><span class="line">+-------------------------+</span><br><span class="line">|  派生类自己的成员变量     |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure></div>
+<p>当执行 Base* pbase = new Derive(); 时，pbase 指针和 new Derive()
+返回的指针值是<strong>完全相同</strong>的。它们都指向<strong>整个 Derive
+对象的内存起始地址</strong>。</p>
+<p>在这种情况下，调用虚函数 pbase-&gt;virtual_func() 时，传递给函数的
+this 指针就是对象的起始地址，不需要任何调整, 因此<strong>vptr直接指向
+vtable 中的虚函数地址</strong>即可，调用过程非常直接, vcall thunk
+直接跳转到虚函数实现。</p>
+<ol start="2" type="1">
+<li>复杂情况一：多重继承 (指针不再指向起始位置): 假设 Derive 同时继承自
+Base 和 Base2 。</li>
+</ol>
+<p>Derive 对象的内存布局会像这样： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Derive 对象的完整内存块</span><br><span class="line">+-------------------------+ 0x1000 (起始地址)</span><br><span class="line">|  Base 子对象            |  &lt;-- Base* pbase 指向这里</span><br><span class="line">|  (包含 vptr1在开头)      |</span><br><span class="line">+-------------------------+ 0x1004 (假设 Base 大小为 4)</span><br><span class="line">|  Base2 子对象           |  &lt;-- Base2* pb2 指向这里</span><br><span class="line">|  (包含 vptr2在开头)      |</span><br><span class="line">+-------------------------+</span><br><span class="line">|  Derive 自己的成员       |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure></div> 现在，关键来了：当执行
+Base2* pb2 = new Derive(); 时，编译器知道 Base2 子对象并不是从 Derive
+对象的起始位置开始的。为了让 pb2 能够正确地访问 Base2
+的成员，编译器会自动将 new Derive()
+返回的起始地址（0x1000）加上一个偏移量（sizeof(Base)，即4字节），使得
+pb2 的值变为 0x1004 。</p>
+<p>所以，此时 pb2 指针并不指向 Derive 对象的内存起始位置。当我们通过 pb2
+调用一个被 Derive 重写的虚析构函数时，比如 <code>delete pb2;</code>
+会发生什么？</p>
+<ul>
+<li>调用目标：delete 操作需要调用 Derive 的析构函数 ~Derive()。</li>
+<li>this 指针的期望：Derive 的析构函数期望接收到的 this 指针是整个
+Derive
+对象的起始地址（0x1000），这样它才能正确地访问和析构所有成员（包括来自
+Base 的部分）。</li>
+<li>实际传入的指针：但我们现在拥有的指针是 pb2，它的值是
+0x1004。如果直接把 0x1004 当作 <strong>this 指针传给</strong>
+~Derive()(任何成员函数的调用都需要传入this指针)，函数就会错误地认为对象是从
+0x1004 开始的，从而导致访问越界、内存损坏和程序崩溃 。</li>
+</ul>
+<p>这个问题的解决方案就是 vcall thunk 和 Adjustor thunk ：Derive
+对象中与 Base2 对应的虚函数表（vtbl2）里，析构函数那一项存储的不是
+~Derive() 的直接地址, 它<strong>存储的是一个 thunk 代码块的地址</strong>
+。</p>
+<p>当 <code>delete pb2;</code> 触发析构函数调用时，首先跳转到 vcall
+thunk, 接着 vcall thunk 跳转到虚函数表找到对应函数地址, 此时是 adjustor
+thunk。这个 thunk
+的代码非常简单，其核心操作就是调整指针。减去4字节后，就得到了正确的
+Derive 对象起始地址 0x1000。调整完毕后，thunk 再跳转到真正的 ~Derive()
+函数去执行，此时传递的 this 指针已经是正确的了 。</p>
+<p>同样，当通过派生类指针调用基类函数 pd2-&gt;hBase2();
+时，也需要调整。pd2 指向对象开头，但 hBase2 需要一个指向 Base2 子对象的
+this 指针，所以此时 thunk 会将指针向后调整 。</p>
+<ol start="3" type="1">
+<li>复杂情况二：虚继承:
+在虚继承中，为了共享同一个基类子对象，内存布局变得更加复杂。通常，共享的虚基类会被放在派生类对象的末尾，并通过一个<strong>虚基类表指针（vbptr）</strong>来定位。
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Derive 对象的完整内存块</span><br><span class="line">+-------------------------+ 0x2000 (起始地址)</span><br><span class="line">|  vbptr (虚基类表指针)   |  &lt;-- Derive* pderive 指向这里</span><br><span class="line">+-------------------------+</span><br><span class="line">|  Derive 自己的成员      |</span><br><span class="line">+-------------------------+</span><br><span class="line">|                         |</span><br><span class="line">|  ... (内存对齐填充) ... |</span><br><span class="line">|                         |</span><br><span class="line">+-------------------------+ 0x2008 (某个偏移后)</span><br><span class="line">|  共享的 Base 子对象     |  &lt;-- Base* pbase 指向这里</span><br><span class="line">|  (包含 vptr)           |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure></div> 当执行 Base* pbase = new Derive(); 时，pbase 必须指向 Base
+子对象，所以它的值会是 0x2008。显然，这个 pbase 指针也不指向 Derive
+对象的内存起始位置 。</li>
+</ol>
+<p>当通过 pbase 调用虚函数时，首先会跳转到 vcall thunk。vcall thunk
+会通过 pbase 的 vptr 找到 Base 的虚函数表，然后找到对应的虚函数地址。
+但这个地址可能是一个 Adjustor thunk，因为 this 指针需要调整。Adjustor
+thunk 会通过 Derive 对象的 vbptr 找到共享的 Base 子对象在整个 Derive
+对象内存中的偏移位置，然后调整 this 指针，使其指向整个 Derive
+对象的起始地址。调整完成后，thunk 再跳转到真正的虚函数实现。</p>
+<p>总之,
+在多重继承和虚继承中，为了保证每个<strong>基类指针</strong>都能正确工作，它们被调整为指向各自<strong>子对象在完整派生类对象内存中的偏移位置</strong>，而不是整个对象的起始地址。</p>
+<p>vcall thunk 就像一个中间人，负责找到正确的虚函数地址。而 Adjustor
+thunk 则像一个翻译官，确保传递给函数的 this
+指针是正确的。通过这种机制，C++
+实现了强大的多态性，同时保证了内存访问的安全和正确。</p>
+<h3 id="为什么析构函数需要虚函数">为什么析构函数需要虚函数</h3>
+<p>首先, 我们假设这样一个情境( ): 当 Derive 同时继承 Base 和 Base2
+时，其对象的内存布局大致如下： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Derive 对象</span><br><span class="line">+------------------+ &lt;-- Derive* 和 Base* 指针指向这里</span><br><span class="line">|  Base 子对象     |</span><br><span class="line">|  (含 vptr1)      |</span><br><span class="line">+------------------+</span><br><span class="line">|  Base2 子对象    | &lt;-- Base2* 指针指向这里</span><br><span class="line">|  (含 vptr2)      |</span><br><span class="line">+------------------+</span><br><span class="line">|  Derive 成员     |</span><br><span class="line">+------------------+</span><br></pre></td></tr></table></figure></div></p>
+<p>我们已经知道, 当用一个第二基类（Base2）的指针指向一个 Derive
+对象时（Base2* pb2 = new Derive();），pb2 指针为了能正确访问 Base2
+的成员，其指向的地址会被编译器自动偏移，指向 Base2
+子对象的起始位置，而不是整个 Derive 对象的起始位置 。</p>
+<p>而如果此时 Base2 的析构函数不是虚函数，那么执行 delete pb2;
+将会引发一场灾难：</p>
+<ul>
+<li>静态绑定：由于析构函数非虚，编译器会进行静态绑定，直接决定调用
+Base2::~Base2() 。</li>
+<li>资源泄露：Derive 的析构函数和 Base 的析构函数完全不会被调用，如果
+Derive
+在其构造函数中分配了任何资源（如动态内存），这些资源将永久丢失，造成严重的内存泄露。</li>
+<li>内存损坏与程序崩溃：更致命的是，系统会尝试从 pb2
+指针的位置（对象的中间部分）开始释放内存。这与 new
+操作分配的内存块的起始地址不符，会破坏堆的结构，极有可能导致程序立即或在未来的某个时刻崩溃
+。</li>
+</ul>
+<p>若将 Base2 的析构函数声明为 virtual，就能完美解决这个问题。delete
+pb2; 的执行流程变为：</p>
+<ul>
+<li>动态绑定：delete 操作会触发动态绑定，通过 pb2 的 vptr2 查找到 Derive
+对象中对应的虚函数表（vtbl2）。</li>
+<li>thunk 的介入：在多继承下，vtbl2 中析构函数的位置存放的并不是 Derive
+析构函数的直接地址，而是一个被称为 thunk
+的一小段特殊汇编代码的地址。</li>
+<li>this 指针的调整：这个 thunk 执行两项关键任务：调整 this 指针, 它会将
+pb2 的指针值减去 Base 子对象的大小，使其回退到整个 Derive
+对象的起始地址。接着调用真实析构函数, 用这个调整好的、正确的 this
+指针去调用 Derive 的虚析构函数 Derive::~Derive() 。</li>
+</ul>
+<p>所以正确的析构链是: Derive::~Derive()
+首先执行自己的析构代码。然后，它会自动、反向地调用其所有基类的析构函数，即
+Base2::~Base2() 和 Base::~Base() 。最后，系统使用由 thunk
+调整过的、指向对象真正起始位置的指针来调用 operator
+delete，安全地释放整块内存 。</p>
+<p>因此, 任何时候，当你打算通过一个<strong>基类指针来 delete
+一个派生类对象</strong>时（这是多态的常见用法），你必须将该<strong>基类的析构函数声明为
+virtual</strong>。这保证了无论指针是什么类型，都能通过动态绑定和 thunk
+机制正确地调用到最深层派生类的析构函数，从而启动一个完整的、自下而上的析构链，确保所有资源被释放，内存被安全回收。</p>
+<blockquote>
+<p>这部分内容不同编译器实现细节可能有所不同，但核心原理和机制在所有主流
+C++ 编译器中都是类似的。</p>
+</blockquote>
+<h3 id="rtti-运行时类型识别">RTTI (运行时类型识别)</h3>
+<p>RTTI (Run-Time Type Information) 是 C++
+提供的一种机制，它允许程序<strong>在运行时查询一个对象的真实类型</strong>。这在处理多态（Polymorphism）时尤其有用，当你通过基类指针或引用操作派生类对象时，RTTI
+能帮助你揭示这个指针或引用“背后”的实际类型。</p>
+<p>为什么需要
+RTTI？设想这样一个场景：你的程序是一个动物园，里面有各种动物。你有一个统一的管理手册，上面写着“所有动物都需要喂食”，这对应于一个基类
+Animal 和一个虚函数 feed()。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">feed</span><span class="params">()</span> </span>{ <span class="comment">/* 通用喂食方法 */</span> }</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Animal</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Monkey</span> : <span class="keyword">public</span> Animal { <span class="comment">/* ... */</span> };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Lion</span> : <span class="keyword">public</span> Animal { <span class="comment">/* ... */</span> };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Elephant</span> : <span class="keyword">public</span> Animal { <span class="comment">/* ... */</span> };</span><br></pre></td></tr></table></figure></div> 你可以用一个 Animal*
+指针指向任何动物，并调用
+feed()，多态会确保调用正确的喂食方法。这非常优雅。</p>
+<p>但是，现在有一个特殊需求：只有当眼前的动物是猴子时，你才能给它一根香蕉。这个
+giveBanana() 方法是 Monkey 类特有的，Animal 基类并不知道。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Monkey</span> : <span class="keyword">public</span> Animal {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">giveBanana</span><span class="params">()</span> </span>{ <span class="comment">/* 给香蕉 */</span> }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line">Animal* some_animal = <span class="built_in">get_random_animal</span>(); <span class="comment">// 可能返回 Monkey* 或 Lion*</span></span><br><span class="line"><span class="comment">// 如何安全地调用 giveBanana() ?</span></span><br><span class="line"><span class="comment">// some_animal-&gt;giveBanana(); // 编译错误！Animal 没有这个方法</span></span><br></pre></td></tr></table></figure></div>
+当你只有一个 Animal* 指针时，你怎么知道它指向的是不是一只猴子呢？RTTI
+就是解决这个问题的工具。它允许你在运行时“询问”some_animal：“嘿，你的真实身份到底是不是
+Monkey？”</p>
+<h4 id="c-rtti-的两大核心工具">C++ RTTI 的两大核心工具</h4>
+<p>C++ 通过两个主要的操作符来实现 RTTI：dynamic_cast 和 typeid。</p>
+<p><strong>dynamic_cast</strong>：安全地进行<strong>向下转型</strong></p>
+<p>dynamic_cast 是 RTTI
+中最常用也最重要的工具。它的作用是在运行时尝试将一个<strong>基类</strong>指针或引用安全地转换成<strong>派生类</strong>的指针或引用。</p>
+<p>核心特性：安全。如果转换是非法的（比如你试图将一个指向 Lion 对象的
+Animal* 转换成
+Monkey*），它不会导致程序崩溃，而是会给你一个明确的失败信号。</p>
+<ul>
+<li>对于指针：如果转换成功，它返回一个指向派生类对象的有效指针；如果转换失败，它返回
+nullptr。</li>
+<li>对于引用：如果转换成功，它返回一个指向派生类对象的有效引用；如果转换失败，它会抛出一个
+std::bad_cast 异常。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// (Animal, Monkey, Lion 类的定义如上)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">try_to_give_banana</span><span class="params">(Animal* animal_ptr)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (!animal_ptr) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"正在检查一只动物..."</span> &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 步骤说明：使用 dynamic_cast 尝试进行向下转型。</span></span><br><span class="line">    <span class="comment">// 这是 RTTI 的核心应用。我们询问：“animal_ptr 指向的对象，</span></span><br><span class="line">    <span class="comment">// 其真实类型是 Monkey 或 Monkey 的子类吗？”</span></span><br><span class="line">    Monkey* monkey_ptr = <span class="built_in">dynamic_cast</span>&lt;Monkey*&gt;(animal_ptr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：检查 dynamic_cast 的结果。</span></span><br><span class="line">    <span class="comment">// 这是保证类型安全的关键。</span></span><br><span class="line">    <span class="keyword">if</span> (monkey_ptr != <span class="literal">nullptr</span>) {</span><br><span class="line">        <span class="comment">// 转换成功！现在可以安全地调用 Monkey 的特有方法。</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"哦，这是一只猴子！给它一根香蕉。"</span> &lt;&lt; std::endl;</span><br><span class="line">        monkey_ptr-&gt;<span class="built_in">giveBanana</span>();</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// 转换失败，说明它不是猴子。</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"这不是猴子，不能给香蕉。"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 不过dynamic_cast
+只能用于具有虚函数的类（即<strong>多态类</strong>）。因为编译器只为这种类生成
+RTTI 所需的类型信息（通常存储在虚函数表 vtable
+中）。如果<strong>基类没有虚函数</strong>，使用
+<strong>dynamic_cast</strong> 会导致<strong>编译错误</strong>。</li>
+</ul>
+<p><strong>typeid</strong>：获取对象的类型信息</p>
+<p>typeid 操作符返回一个对 <strong>std::type_info
+对象的常量引用</strong>，这个对象包含了特定类型的元信息。主要用途是：</p>
+<ul>
+<li>比较类型：判断两个对象是否为完全相同的类型。</li>
+<li>获取类型名称：通过 .name()
+方法获取一个表示类型名称的字符串（注意：这个字符串的格式没有跨编译器的标准，可能是“美化”过的，也可能是“混淆”过的）。</li>
+</ul>
+<p>注意, typeid
+也只能用于<strong>多态类</strong>的指针或引用，以确保获取的是对象的<strong>动态类型</strong>信息。如果对非多态类使用
+typeid，得到的将是<strong>静态类型</strong>信息。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span> <span class="comment">// 需要包含这个头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// (Animal, Monkey, Lion 类的定义如上)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">check_exact_type</span><span class="params">(Animal* animal_ptr)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (!animal_ptr) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：使用 typeid 获取指针指向对象的真实类型信息。</span></span><br><span class="line">    <span class="comment">// 注意，要对指针解引用 *animal_ptr 才能获取动态类型。</span></span><br><span class="line">    <span class="type">const</span> std::type_info&amp; info = <span class="built_in">typeid</span>(*animal_ptr);</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"检查类型: "</span> &lt;&lt; info.<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：将运行时类型与已知的编译时类型进行比较。</span></span><br><span class="line">    <span class="keyword">if</span> (info == <span class="built_in">typeid</span>(Monkey)) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"这正是一只猴子，不多不少。"</span> &lt;&lt; std::endl;</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (info == <span class="built_in">typeid</span>(Lion)) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"这正是一只狮子。"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+dynamic_cast 与 typeid 的区别在于:</p>
+<ul>
+<li>dynamic_cast 检查的是“是否可以安全地视为”某种类型（Is-a
+relationship, 包括子类）。</li>
+<li>typeid 检查的是“是否完全就是”某种类型（Exact type）。</li>
+</ul>
+<h4 id="如何看待-rtti">如何看待 RTTI</h4>
+<p>当然, 天下没有免费的午餐。RTTI 功能是有成本的：</p>
+<ul>
+<li>内存开销：<strong>编译器</strong>(因此 RTTI
+信息是编译器确定的)需要为每个<strong>多态类生成额外的类型信息</strong>，并将其存储在程序的某个地方(通常存储在
+vtable 的某个固定偏移处), 这会稍微增加程序的大小。
+<ul>
+<li>在 Visual Studio 中，它通常位于虚函数表起始地址的前一个位置（vptr -
+1）。程序正是通过这个入口点来获取对象的运行时类型信息。</li>
+</ul></li>
+<li>性能开销：dynamic_cast 和 typeid
+的操作是在<strong>运行时</strong>进行的。尤其是
+dynamic_cast，它需要在类的继承体系中进行查找，可能会比一次普通的函数<strong>调用慢</strong>。</li>
+</ul>
+<p>因此，在性能极其敏感的代码中，开发者可能会选择禁用
+RTTI（通过编译器选项，如 GCC/Clang 的 -fno-rtti 或 MSVC 的 /GR-）。</p>
+<p>并且, 一个合理的设计原则是: <strong>优先使用虚函数</strong>，而不是
+RTTI。</p>
+<p>如果你的代码里充斥着 if/else if 结构，用 dynamic_cast
+来判断对象类型，然后调用不同的函数，这通常是一个糟糕设计的信号。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_animal</span><span class="params">(Animal* p)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">dynamic_cast</span>&lt;Monkey*&gt;(p)) {</span><br><span class="line">        <span class="comment">// ... do monkey stuff</span></span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">dynamic_cast</span>&lt;Lion*&gt;(p)) {</span><br><span class="line">        <span class="comment">// ... do lion stuff</span></span><br><span class="line">    } <span class="comment">// ... 每增加一种动物，就要修改这里</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 更好的做法是利用多态，让每个类自己处理自己的行为：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在每个动物类中实现自己的 process 方法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">process</span><span class="params">()</span> </span>= <span class="number">0</span>; <span class="comment">// 纯虚函数</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Monkey</span> : <span class="keyword">public</span> Animal {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">()</span> <span class="keyword">override</span> </span>{ <span class="comment">/* do monkey stuff */</span> }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Lion</span> : <span class="keyword">public</span> Animal {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">()</span> <span class="keyword">override</span> </span>{ <span class="comment">/* do lion stuff */</span> }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 客户端代码变得极其简单和稳定</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_animal</span><span class="params">(Animal* p)</span> </span>{</span><br><span class="line">    p-&gt;<span class="built_in">process</span>(); <span class="comment">// 不需要知道具体类型，直接调用即可</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> ## 虚继承</p>
+<p>当我们谈论虚继承时，首先必须理解它要解决的问题——菱形继承。</p>
+<h3 id="菱形继承的问题">菱形继承的问题</h3>
+<p>菱形继承是一种继承结构，指<strong>一个派生类同时继承了两个基类</strong>，而<strong>这两个基类又共同继承自同一个更顶层的基类</strong>。这种结构在类图上看起来像一个菱形，因此得名。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 顶层基类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> m_base_data;</span><br><span class="line">    <span class="built_in">Base</span>() : <span class="built_in">m_base_data</span>(<span class="number">0</span>) { std::cout &lt;&lt; <span class="string">"Base constructor"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 中间派生类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span> : <span class="keyword">public</span> Base {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> m_derived1_data;</span><br><span class="line">    <span class="built_in">Derived1</span>() : <span class="built_in">m_derived1_data</span>(<span class="number">1</span>) { std::cout &lt;&lt; <span class="string">"Derived1 constructor"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span> : <span class="keyword">public</span> Base {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> m_derived2_data;</span><br><span class="line">    <span class="built_in">Derived2</span>() : <span class="built_in">m_derived2_data</span>(<span class="number">2</span>) { std::cout &lt;&lt; <span class="string">"Derived2 constructor"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 底层派生类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Diamond</span> : <span class="keyword">public</span> Derived1, <span class="keyword">public</span> Derived2 {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> m_diamond_data;</span><br><span class="line">    <span class="built_in">Diamond</span>() : <span class="built_in">m_diamond_data</span>(<span class="number">3</span>) { std::cout &lt;&lt; <span class="string">"Diamond constructor"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Diamond d;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 问题1: 访问成员的二义性</span></span><br><span class="line">    <span class="comment">// d.m_base_data = 100; // 编译错误！ Ambiguous access</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 我们可以通过指定路径来解决二义性，但这暴露了底层问题</span></span><br><span class="line">    d.Derived1::m_base_data = <span class="number">100</span>;</span><br><span class="line">    d.Derived2::m_base_data = <span class="number">200</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"d.Derived1::m_base_data = "</span> &lt;&lt; d.Derived1::m_base_data &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"d.Derived2::m_base_data = "</span> &lt;&lt; d.Derived2::m_base_data &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"sizeof(Diamond) = "</span> &lt;&lt; <span class="built_in">sizeof</span>(Diamond) &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<p>没有虚继承的菱形继承会导致<strong>数据冗余</strong>和<strong>二义性</strong>问题:</p>
+<ul>
+<li><p>数据冗余 (Data Redundancy)：Diamond 类的对象 d 中包含了 两份 Base
+类的子对象（成员变量 m_base_data）。一份来自 Derived1 的继承，另一份来自
+Derived2 的继承。从 sizeof 的结果和可以分别对 d.Derived1::m_base_data 和
+d.Derived2::m_base_data
+赋值就可以看出这一点。这浪费了内存，也违背了我们的设计初衷（我们通常希望
+Diamond 只有一个 Base 部分）。</p></li>
+<li><p>访问二义性 (Ambiguity)：由于存在两份 m_base_data，当编译器遇到
+d.m_base_data 这样的代码时，它不知道你想要访问的是 Derived1
+路径下的那一份，还是 Derived2
+路径下的那一份，因此会报编译错误。</p></li>
+</ul>
+<p>非虚继承下的内存布局示意图： 一个 Diamond 对象在内存中看起来像这样：
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">+---------------------+</span><br><span class="line">|   Base subobject    |  (from Derived1)</span><br><span class="line">|  (m_base_data)      |</span><br><span class="line">+---------------------+</span><br><span class="line">| Derived1's members  |</span><br><span class="line">|  (m_derived1_data)  |</span><br><span class="line">+---------------------+</span><br><span class="line">|   Base subobject    |  (from Derived2)</span><br><span class="line">|  (m_base_data)      |</span><br><span class="line">+---------------------+</span><br><span class="line">| Derived2's members  |</span><br><span class="line">|  (m_derived2_data)  |</span><br><span class="line">+---------------------+</span><br><span class="line">| Diamond's members   |</span><br><span class="line">|  (m_diamond_data)   |</span><br><span class="line">+---------------------+</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="解决方案虚继承-virtual-inheritance">解决方案：虚继承 (Virtual
+Inheritance)</h3>
+<p>为了解决上述问题，C++ 引入了 虚继承。通过在继承方式前加上 virtual
+关键字，我们可以告诉编译器，我希望这个基类在派生类的继承体系中
+只保留一个共享的实例。</p>
+<p>我们只需要修改中间派生类的继承方式： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将继承方式改为 virtual public</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base { <span class="comment">/* ... */</span> };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base { <span class="comment">/* ... */</span> };</span><br><span class="line"></span><br><span class="line"><span class="comment">// Diamond 类和 Base 类无需改动</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Diamond</span> : <span class="keyword">public</span> Derived1, <span class="keyword">public</span> Derived2 { <span class="comment">/* ... */</span> };</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Diamond d;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在不再有二义性了！</span></span><br><span class="line">    d.m_base_data = <span class="number">100</span>; <span class="comment">// 编译通过！</span></span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; <span class="string">"d.m_base_data = "</span> &lt;&lt; d.m_base_data &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 验证 Derived1 和 Derived2 访问的是同一个数据</span></span><br><span class="line">    d.Derived1::m_base_data = <span class="number">200</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"d.Derived2::m_base_data = "</span> &lt;&lt; d.Derived2::m_base_data &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"sizeof(Diamond) = "</span> &lt;&lt; <span class="built_in">sizeof</span>(Diamond) &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 此时,
+d.m_base_data 不再有歧义，因为 Diamond 对象中现在 只有一个 Base
+子对象。</p>
+<p>通过 d.Derived1::m_base_data 修改的值，可以通过
+d.Derived2::m_base_data 读取出来，证明它们访问的是同一块内存。</p>
+<p>sizeof(Diamond) 的大小会比之前非虚继承时要小（因为它少了一份 Base
+的数据），但会比简单成员相加要大（因为它增加了额外的指针）。</p>
+<h3 id="虚继承的底层实现机制">虚继承的底层实现机制</h3>
+<p>那么，编译器是如何做到让 Derived1 和 Derived2 共享同一个 Base
+子对象的呢？这背后是通过 <strong>虚基类指针</strong> (virtual base
+pointer, vbptr) 和 <strong>虚基类表</strong> (virtual base table,
+vbtable) 实现的。</p>
+<p>对于 Derived1 来说，它无法在编译时确定其基类 Base 的成员 m_base_data
+相对于自己的起始地址的偏移量。因为如果 Derived1 被 Diamond 继承，Base
+子对象的位置由 Diamond 决定；如果 Derived1 被单独实例化，Base
+子对象的位置又不一样。这个偏移量必须在运行时才能确定。</p>
+<details class="green" data-header-exclude>
+    <summary><i class="fa-solid fa-chevron-right"></i>假如不使用虚基类表和虚基类指针 </summary>
+    <div class="content markdown-body">
+      <p>首先，我们看看没有 virtual 的情况，编译器是如何工作的。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> { <span class="keyword">public</span>: <span class="type">int</span> m_base_data; };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span> : <span class="keyword">public</span> Base { <span class="keyword">public</span>: <span class="type">int</span> m_derived1_data; };</span><br></pre></td></tr></table></figure></div> 当编译器在编译 Derived1 类的成员函数时（比如一个叫 foo()
+的函数），它需要生成访问 m_base_data 的机器码。而只要编译器看到 Derived1
+的定义，它能 100% 确定 Derived1 对象的内存布局：Base 子对象总是在最前面,
+Derived1 的成员跟在后面。</p>
+<p>内存布局如下： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+------------------+  &lt;- Derived1 对象的起始地址 (this)</span><br><span class="line">|   Base's part    |</span><br><span class="line">|  (m_base_data)   |</span><br><span class="line">+------------------+</span><br><span class="line">|  Derived1's part |</span><br><span class="line">| (m_derived1_data)|</span><br><span class="line">+------------------+</span><br></pre></td></tr></table></figure></div></p>
+<p>所以，当 Derived1::foo() 访问 m_base_data 时，编译器知道 m_base_data
+相对于 Derived1 对象的起始地址（也就是 this 指针的值）的偏移量 永远是
+0。这个 “0” 是一个 编译时常量。编译器可以直接生成高效的指令，比如 “从
+this 指针指向的地址读取一个整数”，也就是说<strong>编译器可以直接确定
+m_base_data 的位置</strong>。</p>
+<p>现在，我们加上 virtual 关键字：</p>
+<div class="code-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> { <span class="keyword">public</span>: <span class="type">int</span> m_base_data; };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base { <span class="keyword">public</span>: <span class="type">int</span> m_derived1_data; };</span><br></pre></td></tr></table></figure></div>
+<p>现在，编译器再次开始编译 Derived1 的成员函数 foo()。它又要生成访问
+m_base_data 的机器码。但是，编译器现在面临一个巨大的难题。它只看到了
+Derived1 的定义，但它<strong>不知道 Derived1
+将来会如何被使用</strong>。它遇到了两种完全可能且内存布局截然不同的情况：</p>
+<p><strong>情况 A</strong>：Derived1
+被<strong>单独实例化</strong><code>Derived1 obj1;</code></p>
+<p>在这种情况下，obj1
+是最终的对象。编译器会为它生成一个内存布局。一种常见的实现是这样的：
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------------------+  &lt;- obj1 的起始地址 (this)</span><br><span class="line">|    vbptr_for_D1    |  (指向一个表，表里说 Base 在下面 N 个字节处)</span><br><span class="line">+--------------------+</span><br><span class="line">|  m_derived1_data   |</span><br><span class="line">+--------------------+</span><br><span class="line">|   Shared Base      |  &lt;-- 共享的 Base 子对象</span><br><span class="line">|   (m_base_data)    |</span><br><span class="line">+--------------------+</span><br></pre></td></tr></table></figure></div> 在这个布局中，m_base_data 相对于 obj1
+起始地址的偏移量可能是，比如说，16 字节（假设 vbptr 和 m_derived1_data
+各占 8 字节）。所以，在情况 A 中，偏移量是 16。</p>
+<p><strong>情况 B</strong>：Derived1 <strong>作为 Diamond
+的一部分被实例化</strong></p>
+<div class="code-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用户的代码里可能是这样写的：</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base { <span class="comment">/* ... */</span> };</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Diamond</span> : <span class="keyword">public</span> Derived1, <span class="keyword">public</span> Derived2 { <span class="comment">/* ... */</span> };</span><br><span class="line">Diamond obj_diamond;</span><br></pre></td></tr></table></figure></div>
+<p>在这种情况下，Derived1 只是 <strong>Diamond
+对象内部的一个组件</strong>。Diamond
+作为“<strong>最远派生类</strong>”，它有权<strong>决定最终的内存布局</strong>，尤其是那个
+唯一的、共享的 Base 子对象 应该放在哪里。</p>
+<p>obj_diamond 的内存布局可能如下： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">+--------------------+  &lt;- obj_diamond 的起始地址</span><br><span class="line">| Derived1's part:   |  &lt;- 同时也是 obj_diamond 内部 Derived1 子对象的起始地址 (this)</span><br><span class="line">|   vbptr_for_D1     |</span><br><span class="line">|   m_derived1_data  |</span><br><span class="line">+--------------------+</span><br><span class="line">| Derived2's part:   |</span><br><span class="line">|   ...              |</span><br><span class="line">+--------------------+</span><br><span class="line">| Diamond's part:    |</span><br><span class="line">|   ...              |</span><br><span class="line">+--------------------+</span><br><span class="line">|   Shared Base      |  &lt;-- 唯一的 Base 子对象被放在了最底下</span><br><span class="line">|   (m_base_data)    |</span><br><span class="line">+--------------------+</span><br></pre></td></tr></table></figure></div>
+在这个布局中，m_base_data 相对于 obj_diamond 内部 Derived1
+子对象起始地址的偏移量可能变成了，比如说，48 字节。所以，在情况 B
+中，偏移量是 48。</p>
+<p>现在，回到编译器正在编译 Derived1::foo() 的那个时刻。它需要为访问
+m_base_data 生成机器码。它应该使用哪个偏移量呢？是 16 还是
+48？答案是：它无法知道。</p>
+<p>因为在编译 Derived1
+这个“组件”的时候，编译器根本不知道这个组件将来是会被单独使用（情况
+A），还是被组装进一个更大的 Diamond 对象里（情况 B）。</p>
+<p>这就是 “<strong>无法在编译时确定其基类…的偏移量</strong>”
+这句话的精确含义。这个偏移量不再是一个固定的编译时常量，它变成了一个<strong>变量</strong>，取决于
+<strong>Derived1 在运行时到底是以何种形式存在</strong>的。</p>
+<p>既然不能在编译时“写死”一个固定的偏移量，那就只能采用一种能在<strong>运行时</strong>“<strong>查找</strong>”偏移量的方法。这就是
+vbptr (虚基类指针) 登场的时刻。</p>
+<p>编译器生成的机器码不再是：“从 this 地址偏移一个固定的 N 值”,
+而是变成了一套更复杂的指令，其逻辑是：“找到 this 指针指向的对象内存里的
+vbptr。” (这个 vbptr 的位置是固定的) –&gt; “根据 vbptr 找到虚基类表
+(vbtable)。” –&gt; “从表中查出 Base 子对象的偏移量。”
+(这个表里的值是由最终对象的构造函数——Derived1() 或
+Diamond()——在创建对象时填好的) –&gt; “用 this
+的地址加上刚刚查到的偏移量，得到 Base 子对象的实际地址。” –&gt; “访问
+m_base_data。”</p>
+
+    </div>
+  </details>
+<p>为了解决这个运行时定位的问题，编译器引入了间接层来实现<strong>间接寻址</strong>：</p>
+<ul>
+<li><p>虚基类指针 (vbptr):
+编译器会给每一个<strong>虚继承的派生类对象</strong>（如 Derived1 和
+Derived2 的对象）安插一个隐藏的指针，即
+<strong>vbptr</strong>。这个指针指向一个<strong>虚基类表</strong>。</p></li>
+<li><p>虚基类表 (vbtable):
+这是一个<strong>静态</strong>的表，属于<strong>类</strong>,
+存放在<strong>数据段</strong> (.data) 或只读数据段 (.rodata)
+中。表中存放的是 偏移量 (offset)。这个偏移量指示了从当前 vbptr
+的地址出发，需要移动多少字节才能找到共享的虚基类子对象的起始地址。</p>
+<ul>
+<li>例如，Derived1 的 vbtable 中会有一个条目，记录了 Base 子对象相对于
+Derived1 对象起始地址的偏移量。</li>
+<li>这个偏移量是在 <strong>Diamond</strong> 对象编译时计算,
+并在创建时，由 Diamond 的构造函数设置的(因为 Diamond
+是最远派生类，负责最终的内存布局)。</li>
+</ul></li>
+</ul>
+<p>当 Derived1 的成员函数要访问 m_base_data 时, 它通过 this
+指针找到自身的 vbptr, 又通过 vbptr 找到对应的 vbtable, 从 vbtable
+中读取到指向 Base 子对象的偏移量。</p>
+<p>将当前对象的地址加上这个偏移量，就得到了共享的 Base 子对象的地址,
+最后通过这个计算出的地址去访问 m_base_data。</p>
+<p>在虚继承下一个 Diamond
+对象的内存布局（一种常见的编译器实现方式）可能如下： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">+---------------------+</span><br><span class="line">| Derived1's part:    |</span><br><span class="line">|   vbptr_for_D1      | --&gt; vbtable for D1 (contains offset to Base)</span><br><span class="line">|   m_derived1_data   |</span><br><span class="line">+---------------------+</span><br><span class="line">| Derived2's part:    |</span><br><span class="line">|   vbptr_for_D2      | --&gt; vbtable for D2 (contains offset to Base)</span><br><span class="line">|   m_derived2_data   |</span><br><span class="line">+---------------------+</span><br><span class="line">| Diamond's part:     |</span><br><span class="line">|   m_diamond_data    |</span><br><span class="line">+---------------------+</span><br><span class="line">| Shared Base object: |  &lt;-- The single, shared instance</span><br><span class="line">|   m_base_data       |</span><br><span class="line">+---------------------+</span><br></pre></td></tr></table></figure></div> -
+Base 子对象被放在了整个 Diamond
+对象内存布局的某个位置（通常是<strong>末尾</strong>）。 - Derived1 和
+Derived2 的子对象中都包含一个 vbptr。 - vbptr_for_D1
+指向的表告诉程序如何从 Derived1 部分找到 Base 部分。 - vbptr_for_D2
+指向的表告诉程序如何从 Derived2 部分找到 Base 部分。</p>
+<h3 id="虚继承的重要规则构造函数">虚继承的重要规则：构造函数</h3>
+<p>这里有一条重要规则：虚基类的构造函数由 <strong>最远派生类</strong>
+(most-derived class)
+的构造函数来调用，而中间派生类的构造函数对虚基类构造函数的调用在某些情况下会被忽略。</p>
+<p>在我们的例子中，Diamond 是最远派生类。因此，Diamond
+的构造函数负责初始化 Base。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Base</span>(<span class="type">int</span> i) { <span class="comment">/* ... */</span> }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 这个 : Base(10) 在创建 Diamond 对象时会被忽略</span></span><br><span class="line">    <span class="built_in">Derived1</span>() : <span class="built_in">Base</span>(<span class="number">10</span>) { } </span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 这个 : Base(20) 也会被忽略</span></span><br><span class="line">    <span class="built_in">Derived2</span>() : <span class="built_in">Base</span>(<span class="number">20</span>) { }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Diamond</span> : <span class="keyword">public</span> Derived1, <span class="keyword">public</span> Derived2 {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 必须由 Diamond 显式调用 Base 的构造函数</span></span><br><span class="line">    <span class="comment">// 如果不写，则会调用 Base 的默认构造函数（如果存在）</span></span><br><span class="line">    <span class="built_in">Diamond</span>() : <span class="built_in">Base</span>(<span class="number">30</span>) { } </span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 因为 Base
+子对象只有一个，它的构造函数也必须只被调用一次。如果允许多个中间派生类都去调用，就会产生冲突。因此，C++
+规定这个责任由继承体系中最下层的那个类来承担。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/CPP/">#CPP</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/12/algorithms/Coding%E6%8A%80%E5%B7%A7/%E5%9B%9E%E6%BA%AF/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">回溯</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/11/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%8D%8F%E7%A8%8B/Ucontext/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Ucontext</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">虚函数和虚继承</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0"><span class="nav-text">虚函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B"><span class="nav-text">静态类型与动态类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B%E5%8D%8F%E5%8F%98"><span class="nav-text">虚函数返回类型协变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-text">虚函数底层实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vcall-thunk-%E5%92%8C-adjustor-thunk"><span class="nav-text">vcall thunk 和 Adjustor
+thunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E9%9C%80%E8%A6%81%E8%99%9A%E5%87%BD%E6%95%B0"><span class="nav-text">为什么析构函数需要虚函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rtti-%E8%BF%90%E8%A1%8C%E6%97%B6%E7%B1%BB%E5%9E%8B%E8%AF%86%E5%88%AB"><span class="nav-text">RTTI (运行时类型识别)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#c-rtti-%E7%9A%84%E4%B8%A4%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7"><span class="nav-text">C++ RTTI 的两大核心工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%9C%8B%E5%BE%85-rtti"><span class="nav-text">如何看待 RTTI</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8F%B1%E5%BD%A2%E7%BB%A7%E6%89%BF%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">菱形继承的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%99%9A%E7%BB%A7%E6%89%BF-virtual-inheritance"><span class="nav-text">解决方案：虚继承 (Virtual
+Inheritance)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E7%BB%A7%E6%89%BF%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6"><span class="nav-text">虚继承的底层实现机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E7%BB%A7%E6%89%BF%E7%9A%84%E9%87%8D%E8%A6%81%E8%A7%84%E5%88%99%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-text">虚继承的重要规则：构造函数</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

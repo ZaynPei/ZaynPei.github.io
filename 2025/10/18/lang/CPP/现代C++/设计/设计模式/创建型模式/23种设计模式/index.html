@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/18/lang/cpp/现代c++/设计/设计模式/创建型模式/23种设计模式/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="23种设计模式">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/18/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/23%E7%A7%8D%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-18T09:49:06.000Z">
+<meta property="article:modified_time" content="2025-10-19T04:06:47.587Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            23种设计模式 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">23种设计模式</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-18 17:49:06</span>
+        <span class="mobile">2025-10-18 17:49:06</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-19 12:06:47</span>
+            <span class="mobile">2025-10-19 12:06:47</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>7.2k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>27 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>设计模式（Design
+Patterns）是在软件设计过程中，针对<strong>特定问题或场景</strong>的、经过反复验证的、可复用的<strong>解决方案</strong>。它们不是具体的代码，而是一套思想、蓝图或最佳实践，可以帮助开发者编写出更易于理解、维护和扩展的代码。</p>
+<p>这23种设计模式源于“四人帮”（Gang of Four, GoF）——Erich Gamma、Richard
+Helm、Ralph Johnson和John
+Vlissides——合著的经典书籍《设计模式：可复用面向对象软件的基础》。</p>
+<p>这些模式根据其目的和范围，被分为三大类：<strong>创建型模式</strong>、<strong>结构型模式</strong>和<strong>行为型模式</strong>。</p>
+<h2 id="创建型模式-creational-patterns">创建型模式 (Creational
+Patterns)</h2>
+<h3 id="工厂方法模式-factory-method-pattern">工厂方法模式 (Factory
+Method Pattern)</h3>
+<p>工厂模式的核心在于将对象的<strong>创建</strong>过程与<strong>使用</strong>过程<strong>分离</strong>。</p>
+<p>在没有使用工厂模式的情况下，客户端代码通常需要这样创建对象：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 客户端代码直接依赖具体的实现类</span></span><br><span class="line">Product* product = <span class="keyword">new</span> <span class="built_in">ConcreteProductA</span>();</span><br><span class="line">product-&gt;<span class="built_in">use</span>();</span><br></pre></td></tr></table></figure></div> 这种写法的问题是，客户端代码与具体的 ConcreteProductA
+类的构造<strong>紧密耦合</strong>。如果将来客户端想创建
+ConcreteProductB，就必须修改所有创建对象的<strong>客户端代码</strong>，这违反了软件设计中的开闭原则（对扩展开放，对修改关闭）。</p>
+<p>同时,
+在上面的情况中实体类的使用者必须知道实际的子类名称，以及会使程序的扩展性和维护变得越来越困难。</p>
+<p>工厂模式通过引入一个“工厂”来解决这个问题。客户端不再直接 new
+对象，而是向工厂请求一个对象, 从而实现了下面两大好处: -
+封装对象的创建，<strong>避免客户端直接依赖具体类</strong>。 -
+具体化类的工作延迟到了子类中。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 抽象产品：咖啡</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Coffee</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Coffee</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体产品：美式咖啡</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Americano</span> : <span class="keyword">public</span> Coffee {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"一杯美式咖啡"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体产品：拿铁</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Latte</span> : <span class="keyword">public</span> Coffee {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"一杯拿铁"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 抽象工厂</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CoffeeFactory</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 这是核心的工厂方法</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> Coffee* <span class="title">createCoffee</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">CoffeeFactory</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体工厂A：专门生产美式咖啡</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AmericanoFactory</span> : <span class="keyword">public</span> CoffeeFactory {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Coffee* <span class="title">createCoffee</span><span class="params">()</span> <span class="keyword">override</span> </span>{</span><br><span class="line">        <span class="comment">// 步骤说明：这里是具体化的实现，由子类决定实例化哪一个具体产品。</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Americano</span>();</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体工厂B：专门生产拿铁</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LatteFactory</span> : <span class="keyword">public</span> CoffeeFactory {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Coffee* <span class="title">createCoffee</span><span class="params">()</span> <span class="keyword">override</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Latte</span>();</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 客户端代码</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 我想要一杯拿铁，所以我去找拿铁工厂</span></span><br><span class="line">    CoffeeFactory* latteFactory = <span class="keyword">new</span> <span class="built_in">LatteFactory</span>();</span><br><span class="line">    Coffee* myCoffee = latteFactory-&gt;<span class="built_in">createCoffee</span>();</span><br><span class="line">    myCoffee-&gt;<span class="built_in">show</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">delete</span> myCoffee;</span><br><span class="line">    <span class="keyword">delete</span> latteFactory;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果想换成美式，只需要改变工厂即可，客户端其他代码不变</span></span><br><span class="line">    CoffeeFactory* americanoFactory = <span class="keyword">new</span> <span class="built_in">AmericanoFactory</span>();</span><br><span class="line">    myCoffee = americanoFactory-&gt;<span class="built_in">createCoffee</span>();</span><br><span class="line">    myCoffee-&gt;<span class="built_in">show</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">delete</span> myCoffee;</span><br><span class="line">    <span class="keyword">delete</span> americanoFactory;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<h4 id="理解将对象的选择和创建与对象的使用分离">理解将“对象的选择和创建”与“对象的使用”分离</h4>
+<p>在上面的示例代码中, 为了得到一杯拿铁，new Latte() 其实比 new
+LatteFactory() 然后再 createCoffee() 要简单直接得多。</p>
+<p>那么，为什么我们还要推崇工厂模式呢？</p>
+<p>关键在于，软件设计的优劣，看的不是在 main
+函数里写几行测试代码的复杂度，而是在大型、复杂、需要长期维护和扩展的系统中的表现,
+这就是工厂模式的核心:
+<strong>将“对象的选择和创建”与“对象的使用”分离</strong>。</p>
+<p>在上面的例子中，“决定要一杯拿铁”和“使用这杯拿铁”这两件事都发生在同一个地方（main
+函数）。但在真实项目中，这两件事通常发生在系统的不同模块、不同层次。</p>
+<ul>
+<li><p><strong>使用方</strong>
+(Client)：这是系统的<strong>业务逻辑</strong>部分。它只关心“我需要一个Coffee对象”，然后调用它的show()方法。它不应该，也不想关心这个Coffee对象具体是Latte还是Americano。使用方依赖的是<strong>抽象</strong>。</p></li>
+<li><p><strong>创建方</strong>
+(Creator/Assembler)：这是系统的<strong>配置</strong>或初始化部分。它的职责是根据某些条件（如配置文件、用户输入、环境变量等）来决定到底应该创建哪一个具体的工厂。创建方负责处理<strong>具体实现</strong>。</p></li>
+</ul>
+<p>一个更实际的场景是,
+假设我们正在开发一个咖啡店点单系统。系统的启动逻辑（main函数或某个初始化模块）会读取一个配置文件
+config.txt, 其内容可能是<code>CoffeeType = Latte</code></p>
+<p>那么，系统的初始化代码和业务端的代码会是这样的: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 这是系统的“配置/创建”部分</span></span><br><span class="line"><span class="function">CoffeeFactory* <span class="title">initialize_factory_from_config</span><span class="params">(<span class="type">const</span> std::string&amp; configFile)</span> </span>{</span><br><span class="line">    std::string type = <span class="built_in">read_config</span>(configFile); <span class="comment">// 一个读取配置文件的函数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据配置文件决定实例化哪个具体的工厂。</span></span><br><span class="line">    <span class="comment">// 这个决策点被集中在了这一个地方。</span></span><br><span class="line">    <span class="keyword">if</span> (type == <span class="string">"Latte"</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">LatteFactory</span>();</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (type == <span class="string">"Americano"</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">AmericanoFactory</span>();</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ... 其他咖啡种类</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这是系统的“业务逻辑/使用”部分</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">run_business_logic</span><span class="params">(CoffeeFactory* factory)</span> </span>{</span><br><span class="line">    <span class="comment">// 这里的代码完全不知道它处理的是什么咖啡</span></span><br><span class="line">    <span class="comment">// 它只知道它有一个能生产咖啡的工厂</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"顾客点了一杯咖啡..."</span> &lt;&lt; std::endl;</span><br><span class="line">    Coffee* coffee = factory-&gt;<span class="built_in">createCoffee</span>();</span><br><span class="line">    coffee-&gt;<span class="built_in">show</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 其他业务逻辑 ...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">delete</span> coffee;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 1. 初始化阶段：创建具体的工厂</span></span><br><span class="line">    CoffeeFactory* factory = <span class="built_in">initialize_factory_from_config</span>(<span class="string">"config.txt"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 运行阶段：将工厂传入业务逻辑中使用</span></span><br><span class="line">    <span class="keyword">if</span> (factory) {</span><br><span class="line">        <span class="built_in">run_business_logic</span>(factory);</span><br><span class="line">        <span class="keyword">delete</span> factory;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"><span class="function">CoffeeFactory* <span class="title">initialize_factory_from_config</span><span class="params">(<span class="type">const</span> std::string&amp; configFile)</span> </span>{</span><br><span class="line">    std::string type = <span class="built_in">read_config</span>(configFile); <span class="comment">// 一个读取配置文件的函数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据配置文件决定实例化哪个具体的工厂。</span></span><br><span class="line">    <span class="comment">// 这个决策点被集中在了这一个地方。</span></span><br><span class="line">    <span class="keyword">if</span> (type == <span class="string">"Latte"</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">LatteFactory</span>();</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (type == <span class="string">"Americano"</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">AmericanoFactory</span>();</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// ... 其他咖啡种类</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这是系统的“业务逻辑/使用”部分</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">run_business_logic</span><span class="params">(CoffeeFactory* factory)</span> </span>{</span><br><span class="line">    <span class="comment">// 这里的代码完全不知道它处理的是什么咖啡</span></span><br><span class="line">    <span class="comment">// 它只知道它有一个能生产咖啡的工厂</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"顾客点了一杯咖啡..."</span> &lt;&lt; std::endl;</span><br><span class="line">    Coffee* coffee = factory-&gt;<span class="built_in">createCoffee</span>();</span><br><span class="line">    coffee-&gt;<span class="built_in">show</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ... 其他业务逻辑 ...</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">delete</span> coffee;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 1. 初始化阶段：创建具体的工厂</span></span><br><span class="line">    CoffeeFactory* factory = <span class="built_in">initialize_factory_from_config</span>(<span class="string">"config.txt"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 运行阶段：将工厂传入业务逻辑中使用</span></span><br><span class="line">    <span class="keyword">if</span> (factory) {</span><br><span class="line">        <span class="built_in">run_business_logic</span>(factory);</span><br><span class="line">        <span class="keyword">delete</span> factory;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<p>现在，我们来看看这样做的好处：</p>
+<ul>
+<li><p>客户端（run_business_logic函数）完全<strong>解耦</strong>：它<strong>只认识抽象</strong>的
+CoffeeFactory 和 Coffee。它根本不知道 Latte 或 LatteFactory
+的存在。你可以把这个函数打包成一个库给别人用，别人只需要提供一个
+CoffeeFactory 的实现就能工作。</p></li>
+<li><p>易于扩展：现在我想增加一种“卡布奇诺”（Cappuccino）。我需要做什么？</p>
+<ul>
+<li><p>创建 Cappuccino 类和 CappuccinoFactory 类。</p></li>
+<li><p>只需要在 initialize_factory_from_config 函数里增加一个 else if
+(type == “Cappuccino”) 的分支。</p></li>
+<li><p>run_business_logic 函数的代码一行都不用改！
+这就是开闭原则的体现。</p></li>
+</ul></li>
+</ul>
+<p>如果不用工厂模式，run_business_logic 里面就必须写 if/else 来 new
+不同的咖啡，那么每次增加新品种，都得修改这个核心业务函数。</p>
+<p>工厂模式通过牺牲一点点“初始的简单性”（需要多定义几个工厂类），换来了整个系统长期的解耦、灵活性和可维护性,
+使得客户端不必了解它要使用的具体类，只需要”无脑”地通过工厂接口来获取对象,
+从而使得<strong>高层模块</strong>（业务逻辑）<strong>不依赖于底层模块</strong>（具体实现）而是<strong>依赖于抽象</strong>。</p>
+<blockquote>
+<p>另一方面, 工厂模式也能封装复杂的创建过程,
+因为有时候，创建一个对象不仅仅是 new
+一下那么简单。可能需要从数据库获取配置信息, 检查库存,
+初始化多个内部组件, 记录创建日志等,
+这些复杂的逻辑如果散落在客户端代码的各个角落，将是一场维护的噩梦。
+而使用工厂模式，就可以把这些复杂的逻辑全部封装在
+LatteFactory::createCoffee() 方法里。客户端只需要简单地调用
+factory-&gt;createCoffee()，代码会变得非常干净。</p>
+</blockquote>
+<h3 id="抽象工厂模式-abstract-factory-pattern">抽象工厂模式 (Abstract
+Factory Pattern)</h3>
+<p>工厂方法模式是针对一个产品的创建，而抽象工厂模式是它的升级版：它处理的是一族（或一个系列）相互关联的产品。因此，它也被称为“工厂的工厂”（Factory
+of Factories）。</p>
+<p>抽象工厂模式的核心目的是提供一个接口，用于创建一系列相关或相互依赖的对象，而无需指定它们具体的类。</p>
+<p>想象一下，我们不只是要生产一杯咖啡，而是要生产一整套风格统一的“下午茶套餐”，这个套餐里包括：一杯饮品
+(Drink)和一份甜点 (Dessert). 现在有两种风格的套餐：</p>
+<ul>
+<li><p>意式风情 (Italian Style)：包含 Espresso (浓缩咖啡) 和 Tiramisu
+(提拉米苏)。</p></li>
+<li><p>美式风情 (American Style)：包含 Americano (美式咖啡) 和
+Cheesecake (芝士蛋糕)。</p></li>
+</ul>
+<p>这里的关键点是：Espresso 必须和 Tiramisu 搭配，Americano 必须和
+Cheesecake 搭配。你不能把 Espresso 和 Cheesecake
+混在一个套餐里，这样会破坏风格的一致性。</p>
+<p>抽象工厂模式就是为了解决这个问题而生的。它能确保你<strong>创建的所有产品都属于同一个</strong>“<strong>产品族</strong>”，从而保证它们之间是相互兼容和匹配的。</p>
+<h4 id="结构组成">结构组成</h4>
+<p>抽象工厂模式的结构比工厂方法模式更复杂一些，它包含以下角色：</p>
+<ul>
+<li><p>AbstractFactory
+(抽象工厂)：声明一组用于创建不同抽象产品的方法。例如，createDrink() 和
+createDessert()。</p></li>
+<li><p>ConcreteFactory
+(具体工厂)：实现抽象工厂的接口，负责创建一族具体的产品。例如，ItalianDessertFactory
+会实现 createDrink() 来返回 Espresso，实现 createDessert() 来返回
+Tiramisu。</p></li>
+<li><p>AbstractProduct (抽象产品)：为某一类产品声明接口。例如，Drink
+接口和 Dessert 接口。</p></li>
+<li><p>ConcreteProduct
+(具体产品)：实现抽象产品的接口，是由具体工厂创建的实例。例如，Espresso,
+Tiramisu, Americano, Cheesecake。</p></li>
+<li><p>Client
+(客户端)：使用抽象工厂和抽象产品的接口。客户端只与抽象层交互，从而与具体的产品实现解耦。
+<img lazyload src="/images/loading.svg" data-src="image-1.png" alt="alt text"></p></li>
+</ul>
+<h4 id="示例代码">示例代码</h4>
+<p>上面情境的代码实现如下：</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== 1. 抽象产品 (Abstract Products) =====</span></span><br><span class="line"><span class="comment">// 抽象饮品</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Drink</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">taste</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Drink</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 抽象甜点</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dessert</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">show</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Dessert</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== 2. 具体产品 (Concrete Products) =====</span></span><br><span class="line"><span class="comment">// 具体产品族 A: 意式</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Espresso</span> : <span class="keyword">public</span> Drink {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">taste</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"品尝意式浓缩咖啡"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Tiramisu</span> : <span class="keyword">public</span> Dessert {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"展示意式提拉米苏"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体产品族 B: 美式</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Americano</span> : <span class="keyword">public</span> Drink {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">taste</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"品尝美式咖啡"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cheesecake</span> : <span class="keyword">public</span> Dessert {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> <span class="keyword">override</span> </span>{ std::cout &lt;&lt; <span class="string">"展示美式芝士蛋糕"</span> &lt;&lt; std::endl; }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== 3. 抽象工厂 (Abstract Factory) =====</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DessertFactory</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 步骤说明：定义创建一族产品的接口，但不实现。</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> Drink* <span class="title">createDrink</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> Dessert* <span class="title">createDessert</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">DessertFactory</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== 4. 具体工厂 (Concrete Factories) =====</span></span><br><span class="line"><span class="comment">// 具体工厂 A: 专门生产意式风情套餐</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ItalianDessertFactory</span> : <span class="keyword">public</span> DessertFactory {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Drink* <span class="title">createDrink</span><span class="params">()</span> <span class="keyword">override</span> </span>{</span><br><span class="line">        <span class="comment">// 步骤说明：返回产品族A的饮品。</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Espresso</span>();</span><br><span class="line">    }</span><br><span class="line">    <span class="function">Dessert* <span class="title">createDessert</span><span class="params">()</span> <span class="keyword">override</span> </span>{</span><br><span class="line">        <span class="comment">// 步骤说明：返回产品族A的甜点。</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Tiramisu</span>();</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体工厂 B: 专门生产美式风情套餐</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AmericanDessertFactory</span> : <span class="keyword">public</span> DessertFactory {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Drink* <span class="title">createDrink</span><span class="params">()</span> <span class="keyword">override</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Americano</span>();</span><br><span class="line">    }</span><br><span class="line">    <span class="function">Dessert* <span class="title">createDessert</span><span class="params">()</span> <span class="keyword">override</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Cheesecake</span>();</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== 5. 客户端 (Client) =====</span></span><br><span class="line"><span class="comment">// 客户端代码只依赖于抽象工厂和抽象产品, 并且不应该出现需要修改的地方(只增不改)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">client_code</span><span class="params">(DessertFactory* factory)</span> </span>{</span><br><span class="line">    Drink* drink = factory-&gt;<span class="built_in">createDrink</span>();</span><br><span class="line">    Dessert* dessert = factory-&gt;<span class="built_in">createDessert</span>();</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"--- 下午茶套餐 ---"</span> &lt;&lt; std::endl;</span><br><span class="line">    drink-&gt;<span class="built_in">taste</span>();</span><br><span class="line">    dessert-&gt;<span class="built_in">show</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">delete</span> drink;</span><br><span class="line">    <span class="keyword">delete</span> dessert;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"客户端配置了意式工厂:"</span> &lt;&lt; std::endl;</span><br><span class="line">    DessertFactory* italianFactory = <span class="keyword">new</span> <span class="built_in">ItalianDessertFactory</span>();</span><br><span class="line">    <span class="comment">// 步骤说明：客户端传入一个具体的工厂。</span></span><br><span class="line">    <span class="comment">// 之后的所有操作都通过抽象接口进行，保证了产品风格的一致性。</span></span><br><span class="line">    <span class="built_in">client_code</span>(italianFactory);</span><br><span class="line">    <span class="keyword">delete</span> italianFactory;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"\n客户端配置了美式工厂:"</span> &lt;&lt; std::endl;</span><br><span class="line">    DessertFactory* americanFactory = <span class="keyword">new</span> <span class="built_in">AmericanDessertFactory</span>();</span><br><span class="line">    <span class="comment">// 步骤说明：只需更换具体工厂，客户端代码`client_code`无需任何改动，</span></span><br><span class="line">    <span class="comment">// 就能获得一整套不同风格的产品。</span></span><br><span class="line">    <span class="built_in">client_code</span>(americanFactory);</span><br><span class="line">    <span class="keyword">delete</span> americanFactory;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>这里的client_code 函数是我们的使用方。它只认识<strong>抽象</strong>的
+DessertFactory，并用它来创建 Drink 和 Dessert。它完全不知道
+ItalianDessertFactory 或 Espresso 的存在。</p>
+<p>在 main 函数中，我们作为<strong>配置</strong>方，决定了今天是用
+ItalianDessertFactory 还是 AmericanDessertFactory。一旦工厂被选定并传入
+client_code，客户端创建的所有产品（饮品和甜点）都保证是同一个风格（产品族）的，实现了风格的统一和强制约束。</p>
+<p>对比上面的工厂方法模式，如果你的系统只需要根据不同情况创建不同版本的同一种对象，用工厂方法。</p>
+<p>如果你的系统需要创建<strong>一整套对象</strong>，并且要保证这套对象互相兼容、风格统一，用抽象工厂。</p>
+<h3 id="单例模式-singleton-pattern">单例模式 (Singleton Pattern)</h3>
+<p>单例模式 (Singleton Pattern)是 GoF
+23种设计模式中最著名也最简单的一种，但同时也是在实际应用中充满争议的一种。</p>
+<p>单例模式的核心目的是：确保<strong>一个类</strong>在任何情况下都绝对<strong>只有一个实例</strong>，并提供一个<strong>全局访问点来获取</strong>这个<strong>唯一的实例</strong>。换句话说，单例模式做了三件事：</p>
+<ul>
+<li>保证唯一性：一个类只能创建一个对象。</li>
+<li>自我创建：这个唯一的对象由类自己来创建。</li>
+<li>提供全局访问：必须提供一个公共的方法，让系统中的任何其他代码都能访问到这个对象。</li>
+</ul>
+<p>而要在 C++
+中实现一个单例类，必须满足以下几个关键条件，以“堵死”所有可能创建多个实例的途径：</p>
+<ul>
+<li><p>私有化构造函数 (Private Constructor)：阻止外部代码通过 new
+Singleton()
+的方式自由地创建实例。只有类自己内部才能调用构造函数。</p></li>
+<li><p>禁用拷贝构造函数和赋值运算符 (Delete Copy Constructor &amp;
+Assignment Operator)：防止通过拷贝 Singleton s2 = s1; 或赋值 s2 = s1;
+的方式创建出新的实例副本。在 C++11 及以后，通常使用 = delete;
+关键字来明确禁用它们。</p></li>
+<li><p>提供一个静态的公共访问方法 (Public Static getInstance
+Method)：这是外界获取唯一实例的唯一途径。通常命名为 getInstance() 或
+instance()。</p></li>
+<li><p>在类内部持有一个静态的私有实例指针/对象 (Private Static
+Instance)：用于保存那个独一无二的实例。</p></li>
+</ul>
+<h4 id="c-中的实现方式">C++ 中的实现方式</h4>
+<p>单例模式的实现有多种变体，主要区别在于实例化的时机（“懒汉式” vs
+“饿汉式”）和线程安全性。</p>
+<ol type="1">
+<li><p>懒汉式 (Lazy Initialization) - 非线程安全 这种方式在第一次调用
+getInstance() 时才创建实例，比较“懒惰”。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"> <span class="keyword">class</span> <span class="title class_">Singleton</span> {</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">     <span class="comment">// 1. 私有化构造函数</span></span><br><span class="line">     <span class="built_in">Singleton</span>() {</span><br><span class="line">         std::cout &lt;&lt; <span class="string">"单例对象已创建"</span> &lt;&lt; std::endl;</span><br><span class="line">     }</span><br><span class="line"></span><br><span class="line">     <span class="comment">// 4. 持有静态私有实例指针</span></span><br><span class="line">     <span class="type">static</span> Singleton* m_instance;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">     <span class="comment">// 2. 禁用拷贝和赋值</span></span><br><span class="line">     <span class="built_in">Singleton</span>(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">     Singleton&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// 3. 提供静态公共访问方法</span></span><br><span class="line">     <span class="function"><span class="type">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>{</span><br><span class="line">         <span class="comment">// 步骤说明：只有当实例不存在时，才进行创建。</span></span><br><span class="line">         <span class="keyword">if</span> (m_instance == <span class="literal">nullptr</span>) {</span><br><span class="line">             m_instance = <span class="keyword">new</span> <span class="built_in">Singleton</span>();</span><br><span class="line">         }</span><br><span class="line">         <span class="keyword">return</span> m_instance;</span><br><span class="line">     }</span><br><span class="line"> };</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 在类外初始化静态成员</span></span><br><span class="line"> Singleton* Singleton::m_instance = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 客户端代码</span></span><br><span class="line"> <span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">     Singleton* s1 = Singleton::<span class="built_in">getInstance</span>();</span><br><span class="line">     Singleton* s2 = Singleton::<span class="built_in">getInstance</span>();</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> (s1 == s2) {</span><br><span class="line">         std::cout &lt;&lt; <span class="string">"s1 和 s2 是同一个实例。"</span> &lt;&lt; std::endl;</span><br><span class="line">     }</span><br><span class="line">     <span class="comment">// 注意：这种简单的实现需要手动释放内存，否则会造成内存泄漏。</span></span><br><span class="line">     <span class="comment">// delete s1; // 但这又会带来新的问题，比如悬挂指针</span></span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> }</span><br></pre></td></tr></table></figure></div>
+这种实现的优点是实现了<strong>延迟加载</strong>，只有在<strong>需要时才创建实例</strong>，节省了资源。</p>
+<p>不过缺点是线程不安全：在多线程环境下，两个线程可能同时进入 if
+(m_instance == nullptr) 判断，导致创建出两个实例。</p>
+<p>而且也存在内存泄漏风险：需要手动管理 new
+出来的内存，容易忘记释放。</p></li>
+<li><p>线程安全的懒汉式 (使用 std::mutex 或 std::call_once)
+为了解决线程安全问题，一个常见的思路是加锁。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span> <span class="comment">// 引入互斥锁头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Singleton</span>() {}</span><br><span class="line">    <span class="type">static</span> Singleton* m_instance;</span><br><span class="line">    <span class="type">static</span> std::mutex m_mutex; <span class="comment">// 引入互斥锁</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="comment">// 使用双重检查锁定 (Double-Checked Locking) 优化性能</span></span><br><span class="line">        <span class="keyword">if</span> (m_instance == <span class="literal">nullptr</span>) { </span><br><span class="line">            <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(m_mutex)</span></span>; <span class="comment">// 自动加锁和解锁</span></span><br><span class="line">            <span class="keyword">if</span> (m_instance == <span class="literal">nullptr</span>) {</span><br><span class="line">                m_instance = <span class="keyword">new</span> <span class="built_in">Singleton</span>();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> m_instance;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line">Singleton* Singleton::m_instance = <span class="literal">nullptr</span>;  <span class="comment">// 初始化静态成员</span></span><br><span class="line">std::mutex Singleton::m_mutex;</span><br></pre></td></tr></table></figure></div>
+这种方式通过互斥锁保证了在多线程环境下只有一个线程能创建实例，解决了线程安全问题。</p>
+<p>但缺点是每次调用 getInstance() 都需要加锁，可能会影响性能。</p></li>
+<li><p>Meyers’ Singleton(懒汉式, C++11 及以后) 这种方式利用了 C++11
+引入的<strong>局部静态变量的线程安全</strong>特性，实现了简单且高效的单例模式。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Singleton</span>() {}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：返回一个静态局部对象的引用。</span></span><br><span class="line">    <span class="comment">// C++11标准保证，这个静态局部对象的初始化是懒惰的、线程安全的，</span></span><br><span class="line">    <span class="comment">// 且在程序结束时会自动销毁。</span></span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton&amp; <span class="title">getInstance</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="type">static</span> Singleton instance; <span class="comment">// 核心！</span></span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">showMessage</span><span class="params">()</span> </span>{</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Hello from Singleton!"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 这种实现方式非常简洁，实现了延迟加载,
+不需要手动管理内存(因为保存在静态存储区,
+其生命周期由程序管理，会在程序结束时自动析构)，也不需要显式加锁，性能较好。</p></li>
+<li><p>饿汉式 (Eager Initialization)
+这种方式在程序启动时就创建实例，适用于实例创建开销不大且一定会被使用的场景,
+通常是程序开始执行 <strong>main
+函数之前</strong>，作为<strong>静态成员变量</strong>初始化的一部分。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 1. 私有化构造函数</span></span><br><span class="line">    <span class="built_in">Singleton</span>() {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"单例对象已创建"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 持有静态私有实例对象</span></span><br><span class="line">    <span class="type">static</span> Singleton m_instance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 2. 禁用拷贝和赋值</span></span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 提供静态公共访问方法</span></span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton&amp; <span class="title">getInstance</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> m_instance;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在类外初始化静态成员</span></span><br><span class="line">Singleton Singleton::m_instance;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 客户端代码</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Singleton&amp; s1 = Singleton::<span class="built_in">getInstance</span>();</span><br><span class="line">    Singleton&amp; s2 = Singleton::<span class="built_in">getInstance</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (&amp;s1 == &amp;s2) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"s1 和 s2 是同一个实例。"</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+饿汉式的优点是实现简单，线程安全(这是它最大的优点。因为实例是在程序启动阶段、<strong>进入多线程环境之前</strong>，由主线程在静态初始化阶段创建的。当后续多个线程调用
+getInstance()
+时，它们只是在读取一个已经被初始化的变量，不存在竞争条件（Race
+Condition），因此完全不需要加锁。)</p>
+<p>缺点是无法延迟加载，如果实例创建开销较大且不一定会被使用，可能会浪费资源。
+&gt; 还有一个值得注意的风险是“静态初始化顺序灾难” (Static Initialization
+Order Fiasco)：在复杂的 C++
+项目中，如果一个静态对象（饿汉式单例）的构造函数依赖于另一个不同编译单元（.cpp
+文件）中的静态对象，C++
+标准不保证它们的初始化顺序。这可能导致在构造单例时，其依赖的另一个对象还未被创建，从而引发程序崩溃。</p></li>
+</ol>
+<p>当开发环境是 C++11 或更高版本时，强烈推荐使用 Meyers’
+Singleton（即函数内静态变量的实现方式），因为它完美结合了懒汉式的优点（延迟加载）和饿汉式的优点（实现简单、线程安全）。</p>
+<h4 id="单例模式的优缺点">单例模式的优缺点</h4>
+<p>尽管单例模式很常用，但它也像一个“全局变量”，因此备受争议。</p>
+<p>优点：</p>
+<ul>
+<li><p>资源共享与控制：确保了对唯一实例的受控访问，可以严格控制客户怎样以及何时访问它。</p></li>
+<li><p>节省资源：由于只有一个实例，避免了对资源的多重占用。</p></li>
+<li><p>延迟加载：懒汉式实现可以在需要时才创建对象。</p></li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>违反单一职责原则：一个类既要负责其核心业务逻辑，又要负责保证自己是单例，职责不单一。</p></li>
+<li><p><strong>难以测试</strong>：单例模式引入了全局状态，使得单元测试变得困难。因为测试用例之间会相互影响，无法轻松地用一个模拟（mock）对象来替换单例实例。</p></li>
+<li><p>扩展性差：单例的实现是硬编码的，如果想扩展成一个类允许有N个实例，就需要大幅修改代码。</p></li>
+<li><p>隐藏依赖：代码的调用方可能不知道自己依赖了一个全局的单例对象，使得模块间的耦合关系变得不明确。</p></li>
+</ul>
+<p>总之,
+单例模式是一个强大的工具，但应谨慎使用。在确实需要一个<strong>全局唯一的对象</strong>（如全局配置、日志服务）时，它非常有用。但在其他情况下，最好优先考虑<strong>依赖注入</strong>（Dependency
+Injection）等其他方案来管理对象的生命周期和依赖关系。</p>
+<h4 id="依赖注入dependency-injection-di">依赖注入（Dependency Injection,
+DI）</h4>
+<p>依赖注入（Dependency Injection,
+DI）是一种<strong>设计原则</strong>，用于实现<strong>控制反转</strong>（Inversion
+of Control,
+IoC）。它通过将对象的依赖关系从内部创建转移到外部提供，从而提高代码的灵活性和可测试性。</p>
+<p>与单例模式相比，依赖注入允许更灵活地管理对象的生命周期和作用域，避免了全局状态带来的问题。</p>
+<h5 id="什么是依赖">什么是依赖</h5>
+<p>为了理解依赖注入，我们首先要理解什么是“依赖”。</p>
+<ul>
+<li>依赖 (Dependency)：如果类 A 的一个方法中使用了类 B
+的一个实例，那么我们就说类 A 依赖于类 B。</li>
+</ul>
+<p>传统方式
+(没有依赖注入)：在传统的编程模式中，一个<strong>对象</strong>通常会自己负责<strong>创建它所依赖的对象</strong>。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 日志类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Logger</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">log</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>{</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"[LOG]: "</span> &lt;&lt; message &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 引擎类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Engine</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">start</span><span class="params">()</span> </span>{</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"引擎启动..."</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 汽车类 (Car) 自己创建它依赖的 Engine 和 Logger</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Engine* m_engine;</span><br><span class="line">    Logger* m_logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Car</span>() {</span><br><span class="line">        <span class="comment">// 步骤说明：Car类在其构造函数中，主动地、硬编码地创建了它所依赖的对象。</span></span><br><span class="line">        <span class="comment">// 这种行为叫做“高耦合”(Tight Coupling)。</span></span><br><span class="line">        m_engine = <span class="keyword">new</span> <span class="built_in">Engine</span>(); </span><br><span class="line">        m_logger = <span class="keyword">new</span> <span class="built_in">Logger</span>();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">drive</span><span class="params">()</span> </span>{</span><br><span class="line">        m_logger-&gt;<span class="built_in">log</span>(<span class="string">"开始驾驶"</span>);</span><br><span class="line">        m_engine-&gt;<span class="built_in">start</span>();</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    ~<span class="built_in">Car</span>() {</span><br><span class="line">        <span class="keyword">delete</span> m_engine;</span><br><span class="line">        <span class="keyword">delete</span> m_logger;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    Car myCar;</span><br><span class="line">    myCar.<span class="built_in">drive</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 这种方式的问题：</p>
+<ul>
+<li><p>高耦合：Car 类和 Engine、Logger
+这两个具体类焊死在了一起。如果我想给 Car <strong>换一个依赖类</strong>
+V8Engine (V8引擎)，或者换一个 FileLogger
+(记录到文件的日志)，我必须<strong>修改 Car
+类的源代码</strong>。这违反了开闭原则。</p></li>
+<li><p>难以测试：我想对 Car
+类进行单元测试，但我不想在测试时真的启动一个复杂的 Engine
+对象。我希望能用一个假的 MockEngine
+来代替。在上面的代码中，这几乎是不可能的，因为 Car 自己锁死了 Engine
+的创建。</p></li>
+</ul>
+<h5 id="依赖注入的实现方式">依赖注入的实现方式</h5>
+<p>依赖注入的核心思想正好相反：一个对象不应该自己创建它所依赖的对象，而应该由<strong>外部</strong>的“容器”或“框架”来<strong>创建</strong>这些依赖，并通过某种方式“<strong>注入</strong>”给它。对象的控制权发生了反转：</p>
+<ul>
+<li>之前：对象自己控制、创建依赖。</li>
+<li>现在：对象的依赖由外部控制和提供。 这就是控制反转 (IoC)。</li>
+</ul>
+<p>注入依赖的主要方式是以下两种:</p>
+<ol type="1">
+<li><p>构造函数注入 (Constructor Injection):
+这是最常用、也是最推荐的一种方式。依赖通过类的构造函数传入。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ===== 首先，我们依赖于抽象而非具体 =====</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IEngine</span> { <span class="comment">// 引擎接口</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">start</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">IEngine</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ILogger</span> { <span class="comment">// 日志接口</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">log</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ILogger</span>() {}</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== 具体的实现 =====</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">V6Engine</span> : <span class="keyword">public</span> IEngine { ... }; <span class="comment">// V6引擎</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FileLogger</span> : <span class="keyword">public</span> ILogger { ... }; <span class="comment">// 文件日志</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== 汽车类 (Car) 通过构造函数接收依赖 =====</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    IEngine* m_engine;</span><br><span class="line">    ILogger* m_logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 步骤说明：依赖关系通过构造函数的参数被“注入”进来。</span></span><br><span class="line">    <span class="comment">// Car类不再关心engine和logger是如何被创建的，它只知道自己需要它们。</span></span><br><span class="line">    <span class="built_in">Car</span>(IEngine* engine, ILogger* logger) </span><br><span class="line">        : <span class="built_in">m_engine</span>(engine), <span class="built_in">m_logger</span>(logger) {</span><br><span class="line">        <span class="keyword">if</span> (!m_engine || !m_logger) {</span><br><span class="line">            <span class="keyword">throw</span> std::<span class="built_in">invalid_argument</span>(<span class="string">"Engine and Logger must not be null."</span>);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">drive</span><span class="params">()</span> </span>{</span><br><span class="line">        m_logger-&gt;<span class="built_in">log</span>(<span class="string">"开始驾驶"</span>);</span><br><span class="line">        m_engine-&gt;<span class="built_in">start</span>();</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// ===== “组装层” 或 “配置层” (main函数) =====</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 步骤说明：对象的创建和组装工作由外部完成。</span></span><br><span class="line">    <span class="comment">// 这里是整个系统的配置中心。</span></span><br><span class="line">    V6Engine myEngine;</span><br><span class="line">    FileLogger myLogger;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将具体的依赖注入到Car中</span></span><br><span class="line">    <span class="function">Car <span class="title">myCar</span><span class="params">(&amp;myEngine, &amp;myLogger)</span></span>;</span><br><span class="line">    myCar.<span class="built_in">drive</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果我想换一个V8引擎和控制台日志，只需要改变这里即可</span></span><br><span class="line">    <span class="comment">// V8Engine v8;</span></span><br><span class="line">    <span class="comment">// ConsoleLogger consoleLogger;</span></span><br><span class="line">    <span class="comment">// Car mySuperCar(&amp;v8, &amp;consoleLogger);</span></span><br><span class="line">    <span class="comment">// mySuperCar.drive();</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+注意这里从原先的构造函数自己<strong>创建</strong>了<strong>具体</strong>类,
+变成了构造函数<strong>接收</strong>外部的<strong>抽象</strong>类,
+从而实现了<strong>依赖抽象</strong>+<strong>控制反转</strong>,
+通过构造函数的参数，从外部接收一个已经创建好的 IEngine
+实例。创建依赖的控制权被反转给了外部的调用者（组装层）。</p>
+<p>优点：</p>
+<ul>
+<li><p>依赖明确：构造函数清晰地表明了这个类“必须拥有”哪些依赖才能正常工作。</p></li>
+<li><p>保证不变性：一旦对象被创建，其核心依赖就无法被更改，状态更加稳定。</p></li>
+</ul>
+<p>缺点：如果依赖项过多，构造函数会变得很长。</p></li>
+<li><p>Setter 注入 (Setter Injection): 通过公共的 setter
+方法将依赖注入到对象中。这种方式相对灵活，但可能导致对象在创建后处于不完整状态。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    IEngine* m_engine = <span class="literal">nullptr</span>; <span class="comment">// 必须的依赖</span></span><br><span class="line">    ILogger* m_logger = <span class="literal">nullptr</span>; <span class="comment">// 可选的依赖</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 必须的依赖仍然通过构造函数注入</span></span><br><span class="line">    <span class="built_in">Car</span>(IEngine* engine) : <span class="built_in">m_engine</span>(engine) {}</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：为可选的依赖提供一个Setter方法。</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setLogger</span><span class="params">(ILogger* logger)</span> </span>{</span><br><span class="line">        m_logger = logger;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">drive</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="comment">// 步骤说明：在使用可选依赖前，最好进行检查。</span></span><br><span class="line">        <span class="keyword">if</span> (m_logger) {</span><br><span class="line">            m_logger-&gt;<span class="built_in">log</span>(<span class="string">"开始驾驶"</span>);</span><br><span class="line">        }</span><br><span class="line">        m_engine-&gt;<span class="built_in">start</span>();</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    V6Engine myEngine;</span><br><span class="line">    FileLogger myLogger;</span><br><span class="line">    </span><br><span class="line">    <span class="function">Car <span class="title">myCar</span><span class="params">(&amp;myEngine)</span></span>; <span class="comment">// 先创建Car对象</span></span><br><span class="line">    myCar.<span class="built_in">setLogger</span>(&amp;myLogger); <span class="comment">// 然后注入可选的依赖</span></span><br><span class="line">    myCar.<span class="built_in">drive</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 通过公开的 set
+方法来注入依赖。这种方式通常用于可选的依赖。 优点：</p>
+<ul>
+<li><p>灵活性高：可以在对象的生命周期内随时更改依赖。</p></li>
+<li><p>解决了构造函数参数过多的问题。</p></li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>对象可能处于一个“不完整”的状态（比如忘记调用
+setLogger）。</p></li>
+<li><p>依赖关系被隐藏在代码内部，不如构造函数注入那样一目了然。</p></li>
+</ul></li>
+</ol>
+<h5 id="总结">总结</h5>
+<p>依赖注入的巨大优势在于: - 降低耦合度 (Decoupling):
+这是最核心的优势。类不再依赖于具体的实现，而是依赖于抽象（接口）。这使得替换具体实现变得轻而易举，大大提高了代码的灵活性和可维护性。</p>
+<ul>
+<li><p>极大地提升了可测试性 (Testability):
+在单元测试中，我们可以轻松地创建一个“模拟对象”（Mock
+Object），并将其注入到被测试的类中。这样，我们就可以在完全隔离的环境下测试一个类的逻辑，而不用担心其依赖项的干扰。</p></li>
+<li><p>促进并行开发 (Parallel Development):
+团队成员可以先定义好接口，然后各自独立地开发实现这些接口的具体组件。只要接口不变，大家就可以并行工作，最后再通过依赖注入将它们“组装”在一起。</p></li>
+<li><p>集中管理配置:
+对象的创建和依赖关系的管理被集中到了一个或少数几个地方（“组装层”）。这使得整个应用的配置和结构一目了然，易于管理和修改。</p></li>
+</ul>
+<p>依赖注入不是目的，而是手段。
+它的最终目的是为了构建一个低耦合、高内聚、易于测试和维护的软件系统。</p>
+<p>简单来说，就是把“我需要什么，我自己去拿”的思维方式，转变为“我需要什么，你给我什么，我就用什么”的思维方式。这种控制权的反转，是现代软件架构设计的基石之一。</p>
+
+		</div>
+
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/19/lang/CPP/%E9%AB%98%E6%95%88%E7%BB%93%E6%9E%84/%E4%BE%B5%E5%85%A5%E5%BC%8F%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">侵入式数据结构 (Intrusive Data Structures)</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/16/misc/Quant/Strategy/Alpha%E5%AF%B9%E5%86%B2/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Alpha对冲</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">23种设计模式</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F-creational-patterns"><span class="nav-text">创建型模式 (Creational
+Patterns)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F-factory-method-pattern"><span class="nav-text">工厂方法模式 (Factory
+Method Pattern)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%B0%86%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%80%89%E6%8B%A9%E5%92%8C%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BD%BF%E7%94%A8%E5%88%86%E7%A6%BB"><span class="nav-text">理解将“对象的选择和创建”与“对象的使用”分离</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-abstract-factory-pattern"><span class="nav-text">抽象工厂模式 (Abstract
+Factory Pattern)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90"><span class="nav-text">结构组成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="nav-text">示例代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-singleton-pattern"><span class="nav-text">单例模式 (Singleton Pattern)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#c-%E4%B8%AD%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-text">C++ 中的实现方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">单例模式的优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5dependency-injection-di"><span class="nav-text">依赖注入（Dependency Injection,
+DI）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BE%9D%E8%B5%96"><span class="nav-text">什么是依赖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-text">依赖注入的实现方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

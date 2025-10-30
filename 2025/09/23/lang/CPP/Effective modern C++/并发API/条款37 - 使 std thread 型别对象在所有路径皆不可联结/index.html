@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,36 +833,70 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>该条款的核心论点是，由于销毁一个可联结（joinable）的 std::thread 对象会导致程序终止，因此开发者必须确保在 std::thread 对象被销毁前，在代码的所有可能路径上都将其变为不可联结状态(设定join()或detach())。</p>
-<h3 id="std-thread-的可联结性-Joinability"><a href="#std-thread-的可联结性-Joinability" class="headerlink" title="std::thread 的可联结性 (Joinability)"></a>std::thread 的可联结性 (Joinability)</h3><p>一个 std::thread 对象存在两种状态：</p>
+			<p>该条款的核心论点是，由于销毁一个可联结（joinable）的 std::thread
+对象会导致程序终止，因此开发者必须确保在 std::thread
+对象被销毁前，在代码的所有可能路径上都将其变为不可联结状态(设定join()或detach())。</p>
+<h3 id="stdthread-的可联结性-joinability">std::thread 的可联结性
+(Joinability)</h3>
+<p>一个 std::thread 对象存在两种状态：</p>
 <ul>
-<li>可联结 (Joinable)：该 std::thread 对象对应于一个底层的、正在运行或已完成运行的系统线程。</li>
-<li>不可联结 (Unjoinable)：该 std::thread 对象不对应任何正在运行的线程。这包括：<ul>
+<li>可联结 (Joinable)：该 std::thread
+对象对应于一个底层的、正在运行或已完成运行的系统线程。</li>
+<li>不可联结 (Unjoinable)：该 std::thread
+对象不对应任何正在运行的线程。这包括：
+<ul>
 <li>默认构造的 std::thread（还未关联任何线程）。</li>
 <li>已被移动的 std::thread（所有权已转移）。</li>
 <li>已被 join 的 std::thread（已等待其完成）。</li>
 <li>已被 detach 的 std::thread（已与其底层线程分离）。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p>最关键的规则：当一个可联结的 std::thread 对象的析构函数被调用时(此时还不应该结束)，程序的执行会立即终止。</p>
-<p>制定这条严格规则的原因是，另外两种看似合理的备选方案————隐式 join() 和隐式 detach()会带来更严重的问题。</p>
+<p>最关键的规则：当一个可联结的 std::thread
+对象的析构函数被调用时(此时还不应该结束)，程序的执行会立即终止。</p>
+<p>制定这条严格规则的原因是，另外两种看似合理的备选方案————隐式 join()
+和隐式 detach()会带来更严重的问题。</p>
 <blockquote>
-<p>隐式 Join (Implicit Join) 指的是一个管理线程生命周期的对象（例如一个<strong>线程包装类</strong>）在其<strong>析构函数中自动调用 join() 方法</strong>的行为。这意味着当该对象离开其作用域（scope）并被销毁时，程序会自动地、无需显式代码指示地阻塞，直到它所管理的线程执行完毕。这是一种设计选择，而不是 C++ std::thread 的标准行为。std::thread 本身不会进行隐式 join。</p>
+<p>隐式 Join (Implicit Join)
+指的是一个管理线程生命周期的对象（例如一个<strong>线程包装类</strong>）在其<strong>析构函数中自动调用
+join()
+方法</strong>的行为。这意味着当该对象离开其作用域（scope）并被销毁时，程序会自动地、无需显式代码指示地阻塞，直到它所管理的线程执行完毕。这是一种设计选择，而不是
+C++ std::thread 的标准行为。std::thread 本身不会进行隐式 join。</p>
 </blockquote>
 <ul>
-<li>隐式 Join 的缺陷：性能陷阱。它可能在开发者不经意间引入长时间的阻塞，使程序的性能变得不可预测和难以调试。一个看似简单的函数返回或对象销毁，背后可能隐藏着一个漫长的等待。</li>
-<li>隐式 Detach 的缺陷：未定义行为。如果析构函数自动 detach()，线程可能会继续访问已经销毁的局部变量（通过引用或指针捕获），导致内存崩溃。这是比性能问题更严重的安全问题。</li>
+<li>隐式 Join
+的缺陷：性能陷阱。它可能在开发者不经意间引入长时间的阻塞，使程序的性能变得不可预测和难以调试。一个看似简单的函数返回或对象销毁，背后可能隐藏着一个漫长的等待。</li>
+<li>隐式 Detach 的缺陷：未定义行为。如果析构函数自动
+detach()，线程可能会继续访问已经销毁的局部变量（通过引用或指针捕获），导致内存崩溃。这是比性能问题更严重的安全问题。</li>
 </ul>
-<p>由于隐式 join 和隐式 detach 都存在严重缺陷，标准委员会选择了最安全、最明确的策略：直接终止程序，<strong>迫使开发者必须显式地处理线程的生命周期</strong>。</p>
-<h3 id="解决方案：使用-RAII-对象确保线程被处理"><a href="#解决方案：使用-RAII-对象确保线程被处理" class="headerlink" title="解决方案：使用 RAII 对象确保线程被处理"></a>解决方案：使用 RAII 对象确保线程被处理</h3><p>确保在代码的所有退出路径（包括正常返回、break、continue 和异常）上都执行某个操作的最佳 C++ 实践是RAII (Resource Acquisition Is Initialization)。即创建一个局部对象，并在其析构函数中执行所需的操作。</p>
-<p>标准库没有为 std::thread 提供现成的 RAII 类，但我们可以自己轻松实现一个。</p>
+<p>由于隐式 join 和隐式 detach
+都存在严重缺陷，标准委员会选择了最安全、最明确的策略：直接终止程序，<strong>迫使开发者必须显式地处理线程的生命周期</strong>。</p>
+<h3 id="解决方案使用-raii-对象确保线程被处理">解决方案：使用 RAII
+对象确保线程被处理</h3>
+<p>确保在代码的所有退出路径（包括正常返回、break、continue
+和异常）上都执行某个操作的最佳 C++ 实践是RAII (Resource Acquisition Is
+Initialization)。即创建一个局部对象，并在其析构函数中执行所需的操作。</p>
+<p>标准库没有为 std::thread 提供现成的 RAII
+类，但我们可以自己轻松实现一个。</p>
 <blockquote>
-<p>你可能疑惑, 上面的隐式 join() 不也是通过 RAII 封装线程类实现的吗? 为什么上面的不可以, 而下面的可以? 问题的根源不在于使用 RAII 本身，而在于那个“坏”的 RAII 对象实现了一个糟糕的、隐晦的策略（比如总是 join 或总是 detach）; 而解决方案中的“好”的 RAII 对象，则实现了一个优秀的、明确的策略, 程序员通过将解决策略显式地指出, 确保我们预先设定的、明确的策略（通常是 join）在任何情况下都能被严格执行。</p>
+<p>你可能疑惑, 上面的隐式 join() 不也是通过 RAII 封装线程类实现的吗?
+为什么上面的不可以, 而下面的可以? 问题的根源不在于使用 RAII
+本身，而在于那个“坏”的 RAII 对象实现了一个糟糕的、隐晦的策略（比如总是
+join 或总是 detach）; 而解决方案中的“好”的 RAII
+对象，则实现了一个优秀的、明确的策略, 程序员通过将解决策略显式地指出,
+确保我们预先设定的、明确的策略（通常是
+join）在任何情况下都能被严格执行。</p>
 </blockquote>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdexcept&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">thread_guard</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 构造函数获取线程的引用</span></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">thread_guard</span><span class="params">(std::thread&amp; t)</span> : t_(t) {</span>}</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 析构函数：如果线程还 joinable，就 join 它</span></span><br><span class="line">    ~<span class="built_in">thread_guard</span>() {</span><br><span class="line">        <span class="keyword">if</span> (t_.<span class="built_in">joinable</span>()) {</span><br><span class="line">            t_.<span class="built_in">join</span>();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 删除拷贝构造和赋值操作，防止所有权混乱</span></span><br><span class="line">    <span class="built_in">thread_guard</span>(<span class="type">const</span> thread_guard&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    thread_guard&amp; <span class="keyword">operator</span>=(<span class="type">const</span> thread_guard&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::thread&amp; t_;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">do_something_in_background</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"后台任务运行中...\n"</span>;</span><br><span class="line">    <span class="comment">// 模拟抛出异常</span></span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">"后台任务发生错误!"</span>);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"后台任务完成。\n"</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process</span><span class="params">()</span> </span>{</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"process 函数开始。\n"</span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(do_something_in_background)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// *** 关键在这里 ***</span></span><br><span class="line">    <span class="comment">// 我们显式地创建了一个 guard 对象，其意图非常明确：</span></span><br><span class="line">    <span class="comment">// “我希望在这个作用域的任何出口处，都对线程 t 执行 join 操作”</span></span><br><span class="line">    <span class="function">thread_guard <span class="title">g</span><span class="params">(t)</span></span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"process 函数即将结束（或因异常退出）。\n"</span>;</span><br><span class="line">    <span class="comment">// 当 process 因为异常而退出时，g 的析构函数会被调用</span></span><br><span class="line">    <span class="comment">// g 的析构函数会安全地 join 线程 t</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="built_in">process</span>();</span><br><span class="line">    } <span class="built_in">catch</span> (<span class="type">const</span> std::exception&amp; e) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"main 捕获到异常: "</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>线程的创建 (std::thread t(…)) 和“生命周期管理策略” (thread_guard g(t)) 是分离的、显式的。程序员通过创建 thread_guard 对象，清晰地表达了“我要在这个作用域结束时 join 这个线程”的意图。这不再是隐式的行为，而是一种明确的声明。即使函数因为异常而提前退出，这个声明依然有效，保证了程序的健壮性。</p>
-<h3 id="C-20-的终极解决方案：std-jthread"><a href="#C-20-的终极解决方案：std-jthread" class="headerlink" title="C++20 的终极解决方案：std::jthread"></a>C++20 的终极解决方案：std::jthread</h3><p>C++20 标准直接引入了 std::jthread，它本质上就是一个官方实现的、更加完善的 thread_guard。它的析构函数总是会 join，但这是它公开的、众所周知的、作为其核心设计的行为。</p>
+<p>线程的创建 (std::thread t(…)) 和“生命周期管理策略” (thread_guard
+g(t)) 是分离的、显式的。程序员通过创建 thread_guard
+对象，清晰地表达了“我要在这个作用域结束时 join
+这个线程”的意图。这不再是隐式的行为，而是一种明确的声明。即使函数因为异常而提前退出，这个声明依然有效，保证了程序的健壮性。</p>
+<h3 id="c20-的终极解决方案stdjthread">C++20
+的终极解决方案：std::jthread</h3>
+<p>C++20 标准直接引入了
+std::jthread，它本质上就是一个官方实现的、更加完善的
+thread_guard。它的析构函数总是会
+join，但这是它公开的、众所周知的、作为其核心设计的行为。</p>
 
 		</div>
 
@@ -888,12 +922,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE40%20-%20%E5%AF%B9%E5%B9%B6%E5%8F%91%E4%BD%BF%E7%94%A8%20std%20atomic%EF%BC%8C%E5%AF%B9%E7%89%B9%E7%A7%8D%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%20volatile/">
+				<a class="prev" rel="prev" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE42%20-%20%E8%80%83%E8%99%91%E7%BD%AE%E5%85%A5%E8%80%8C%E9%9D%9E%E6%8F%92%E5%85%A5/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款40 ：对并发使用 std atomic，对特种内存使用 volatile</span>
+						<span class="post-nav-title-item truncate max-w-48">条款42 ：考虑置入而非插入</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -901,9 +935,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE38%20-%20%E5%AF%B9%E5%8F%98%E5%8C%96%E5%A4%9A%E7%AB%AF%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%8F%A5%E6%9F%84%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E8%A1%8C%E4%B8%BA%E4%BF%9D%E6%8C%81%E5%85%B3%E6%B3%A8/">
+				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE39%20-%20%E8%80%83%E8%99%91%E9%92%88%E5%AF%B9%E4%B8%80%E6%AC%A1%E6%80%A7%E4%BA%8B%E4%BB%B6%E9%80%9A%E4%BF%A1%E4%BD%BF%E7%94%A8%E4%BB%A5%20void%20%E4%B8%BA%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E5%AE%9E%E5%8F%82%E7%9A%84%E6%9C%9F%E5%80%BC/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款38 ：对变化多端的线程句柄析构函数行为保持关注</span>
+						<span class="post-nav-title-item truncate max-w-48">条款39 ：考虑针对一次性事件通信使用以 void 为模板型别实参的期值</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -925,7 +959,10 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款37 ：使 std::thread 型别对象在所有路径皆不可联结</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-thread-%E7%9A%84%E5%8F%AF%E8%81%94%E7%BB%93%E6%80%A7-Joinability"><span class="nav-text">std::thread 的可联结性 (Joinability)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8-RAII-%E5%AF%B9%E8%B1%A1%E7%A1%AE%E4%BF%9D%E7%BA%BF%E7%A8%8B%E8%A2%AB%E5%A4%84%E7%90%86"><span class="nav-text">解决方案：使用 RAII 对象确保线程被处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-20-%E7%9A%84%E7%BB%88%E6%9E%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9Astd-jthread"><span class="nav-text">C++20 的终极解决方案：std::jthread</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#stdthread-%E7%9A%84%E5%8F%AF%E8%81%94%E7%BB%93%E6%80%A7-joinability"><span class="nav-text">std::thread 的可联结性
+(Joinability)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%BD%BF%E7%94%A8-raii-%E5%AF%B9%E8%B1%A1%E7%A1%AE%E4%BF%9D%E7%BA%BF%E7%A8%8B%E8%A2%AB%E5%A4%84%E7%90%86"><span class="nav-text">解决方案：使用 RAII
+对象确保线程被处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c20-%E7%9A%84%E7%BB%88%E6%9E%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88stdjthread"><span class="nav-text">C++20
+的终极解决方案：std::jthread</span></a></li></ol>
 
 	</div>
 </div>
@@ -954,11 +991,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

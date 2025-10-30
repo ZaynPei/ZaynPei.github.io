@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -839,85 +839,114 @@ mjx-container[display="true"] + br {
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
 			<p>makefile： 用于管理项目。</p>
-<p>文件命名：只能是 makefile 或者 Makefile<br>配置完成后直接使用 make 命令执行</p>
+<p>文件命名：只能是 makefile 或者 Makefile<br>
+配置完成后直接使用 make 命令执行</p>
 <p><strong>1 个规则</strong>：</p>
-<pre><code>	目标：依赖条件
-	（一个tab缩进）命令
-</code></pre>
-<p>要求: 目标的时间必须晚于依赖条件的时间，否则，更新目标<br>      依赖条件如果不存在，找寻新的规则去产生依赖条件。</p>
-<p>ALL：指定 makefile 的终极目标。(因为makefile默认第一个目标文件为终极目标, 防止将中间文件放在第一个造成执行中断)</p>
+<pre><code>    目标：依赖条件
+    （一个tab缩进）命令</code></pre>
+<p>要求: 目标的时间必须晚于依赖条件的时间，否则，更新目标
+依赖条件如果不存在，找寻新的规则去产生依赖条件。</p>
+<p>ALL：指定 makefile
+的终极目标。(因为makefile默认第一个目标文件为终极目标,
+防止将中间文件放在第一个造成执行中断)</p>
 <p><strong>2 个函数</strong>：</p>
-<pre><code>	src = $(wildcard ./*.c): 匹配当前工作目录下的所有.c 文件。将文件名组成列表，赋值给变量 src (例如src = add.c sub.c div1.c)
+<pre><code>    src = $(wildcard ./*.c): 匹配当前工作目录下的所有.c 文件。将文件名组成列表，赋值给变量 src (例如src = add.c sub.c div1.c)
 
-	obj = $(patsubst %.c, %.o, $(src)): 将参数3($(src))中，包含参数1(%.c)的部分，替换为参数2(%.o)。 obj = add.o sub.o div1.o
+    obj = $(patsubst %.c, %.o, $(src)): 将参数3($(src))中，包含参数1(%.c)的部分，替换为参数2(%.o)。 obj = add.o sub.o div1.o
 
 在脚本语言中对一个对象使用$表示取其值
 
-clean:	(没有依赖)
-	-rm -rf $(obj) a.out	
+clean:  (没有依赖)
+    -rm -rf $(obj) a.out    
 上述脚本可以实现调用make clean即可清除.o文件
-“-”：作用是，删除不存在文件时，不报错。顺序执行结束。
-</code></pre>
+“-”：作用是，删除不存在文件时，不报错。顺序执行结束。</code></pre>
 <p><strong>3 个自动变量</strong>：</p>
-<p>$@: 在规则的<strong>命令</strong>中，表示规则中的<strong>目标</strong>。</p>
-<p>$^: 在规则的<strong>命令</strong>中，表示所有<strong>依赖条件</strong>。</p>
-<p>$&lt;: 在规则的<strong>命令</strong>中，表示<strong>第一个依赖条件</strong>。如果将该变量应用在模式规则中，它可将依赖条件列表中的依赖依次取出，套用模式规则。</p>
+<p>$@:
+在规则的<strong>命令</strong>中，表示规则中的<strong>目标</strong>。</p>
+<p>$^:
+在规则的<strong>命令</strong>中，表示所有<strong>依赖条件</strong>。</p>
+<p>$&lt;:
+在规则的<strong>命令</strong>中，表示<strong>第一个依赖条件</strong>。如果将该变量应用在模式规则中，它可将依赖条件列表中的依赖依次取出，套用模式规则。</p>
 <p>也就是上面三者用在命令中, 代指命令上一行的目标和依赖</p>
 <pre><code>模式规则：
 
-	%.o:%.c
-	   gcc -c $&lt; -o %@
+    %.o:%.c
+       gcc -c $&lt; -o %@
   
 含义是对于所有目标为.o文件的对象, 根据.c文件来执行gcc -c (%.c) -o (%.o)
 
 静态模式规则：
 
-	$(obj):%.o:%.c
-	   gcc -c $&lt; -o %@	
+    $(obj):%.o:%.c
+       gcc -c $&lt; -o %@  
 
 只对obj所指的对象执行这条命令
 
 伪目标：
 
-	.PHONY: clean ALL
+    .PHONY: clean ALL
 防止文件中出现同名clean和ALL的文件阻碍make
 
 参数：
-	-n：模拟执行make、make clean 命令。
+    -n：模拟执行make、make clean 命令。
 
-	-f：指定文件执行 make 命令。
-</code></pre>
-<p>makefile实现增量执行, 其检测原理：<br>修改文件后，文件的修改时间发生变化，会出现目<strong>标文件的时间早于作为依赖材料的时间</strong>，出现这种情况的文件会重新编译。<br>修改sub.c后，sub.o的时间就早于sub.c ，a.out的时间也早于sub.o的时间了，于是重新编译这俩文件了。</p>
-<p>还有一点, 编译时的参数，-g,-Wall这些，也可以放在makefile里面. 一份最终的makefile示例如下:</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">src = <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> <span class="comment"># 搜索当前目录下所有 .c 文件</span></span><br><span class="line"></span><br><span class="line">obj = <span class="variable">$(<span class="built_in">patsubst</span> %.c, %.o, <span class="variable">$(src)</span>)</span> <span class="comment"># 将所有 .c 文件转换为对应的 .o 文件名</span></span><br><span class="line"></span><br><span class="line">myArgs = -Wall -g <span class="comment"># 编译参数：显示所有警告并生成调试信息</span></span><br><span class="line"></span><br><span class="line"><span class="section">ALL: a.out # 默认目标</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(obj)</span>: %.o: %.c</span><br><span class="line">    gcc -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(myArgs)</span> <span class="comment"># 编译每个 .c 文件为 .o 文件并加入编译参数</span></span><br><span class="line"></span><br><span class="line"><span class="section">a.out: <span class="variable">$(obj)</span></span></span><br><span class="line">    gcc <span class="variable">$^</span> -o <span class="variable">$@</span> <span class="variable">$(myArgs)</span> <span class="comment"># 链接所有 .o 文件生成最终可执行文件 a.out</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -rf <span class="variable">$(obj)</span> a.out <span class="comment"># 清理所有生成的文件</span></span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: clean ALL # 声明伪目标，避免与同名文件冲突</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="export"><a href="#export" class="headerlink" title="export"></a>export</h3><p>export 是 GNU Make 中一个非常重要的指令，它的核心作用是控制<strong>变量</strong>如何从一个 Makefile <strong>传递到它的子 Make 进程</strong>中。</p>
+    -f：指定文件执行 make 命令。</code></pre>
+<p>makefile实现增量执行, 其检测原理：
+修改文件后，文件的修改时间发生变化，会出现目<strong>标文件的时间早于作为依赖材料的时间</strong>，出现这种情况的文件会重新编译。
+修改sub.c后，sub.o的时间就早于sub.c
+，a.out的时间也早于sub.o的时间了，于是重新编译这俩文件了。</p>
+<p>还有一点, 编译时的参数，-g,-Wall这些，也可以放在makefile里面.
+一份最终的makefile示例如下: <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">src = <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> <span class="comment"># 搜索当前目录下所有 .c 文件</span></span><br><span class="line"></span><br><span class="line">obj = <span class="variable">$(<span class="built_in">patsubst</span> %.c, %.o, <span class="variable">$(src)</span>)</span> <span class="comment"># 将所有 .c 文件转换为对应的 .o 文件名</span></span><br><span class="line"></span><br><span class="line">myArgs = -Wall -g <span class="comment"># 编译参数：显示所有警告并生成调试信息</span></span><br><span class="line"></span><br><span class="line"><span class="section">ALL: a.out # 默认目标</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(obj)</span>: %.o: %.c</span><br><span class="line">    gcc -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(myArgs)</span> <span class="comment"># 编译每个 .c 文件为 .o 文件并加入编译参数</span></span><br><span class="line"></span><br><span class="line"><span class="section">a.out: <span class="variable">$(obj)</span></span></span><br><span class="line">    gcc <span class="variable">$^</span> -o <span class="variable">$@</span> <span class="variable">$(myArgs)</span> <span class="comment"># 链接所有 .o 文件生成最终可执行文件 a.out</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -rf <span class="variable">$(obj)</span> a.out <span class="comment"># 清理所有生成的文件</span></span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: clean ALL # 声明伪目标，避免与同名文件冲突</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div></p>
+<h3 id="export">export</h3>
+<p>export 是 GNU Make
+中一个非常重要的指令，它的核心作用是控制<strong>变量</strong>如何从一个
+Makefile <strong>传递到它的子 Make 进程</strong>中。</p>
 <p>为什么需要 export？</p>
-<p>在大型项目中，我们通常会将代码和 Makefile 分散在不同的子目录中。<strong>顶层的 Makefile 负责调用子目录中的 Makefile 来完成局部的编译任务</strong>。这种通过一个 make 进程调用另一个 make 进程的方式，被称为<strong>递归 Make</strong> (Recursive Make) 或子 Make (Sub-make)。</p>
-<p>这时就出现了一个问题：默认情况下，<strong>父 Makefile 中定义的变量</strong>，在<strong>子 Make 进程中是不可见的</strong>。export 指令就是为了解决这个问题而存在的。</p>
-<p>export 的作用与 Shell 脚本中的 export 命令非常相似。它将一个 Make 变量“导出”为一个环境变量，这个环境变量对 make 启动的所有子进程（包括 Shell 命令和子 Make 进程）都是可见的。</p>
-<p>当顶层 make 调用子目录的 make 时, make 会为这个子 make 命令创建一个新的进程。在创建这个子进程之前，make 会将所有通过 <strong>export 指令导出的变量</strong>设置到该子进程的环境中。</p>
-<p>子 make 进程启动后，会从它的环境中读取这些变量，并将它们当作自己在 Makefile 中定义的变量来使用。</p>
-<p>简而言之：export 是父 Makefile 向子 Makefile <strong>传递变量</strong>的桥梁。</p>
-<h4 id="export-的使用示例"><a href="#export-的使用示例" class="headerlink" title="export 的使用示例"></a>export 的使用示例</h4><p>假设我们有一个简单的项目结构如下：</p>
+<p>在大型项目中，我们通常会将代码和 Makefile
+分散在不同的子目录中。<strong>顶层的 Makefile 负责调用子目录中的
+Makefile 来完成局部的编译任务</strong>。这种通过一个 make 进程调用另一个
+make 进程的方式，被称为<strong>递归 Make</strong> (Recursive Make) 或子
+Make (Sub-make)。</p>
+<p>这时就出现了一个问题：默认情况下，<strong>父 Makefile
+中定义的变量</strong>，在<strong>子 Make
+进程中是不可见的</strong>。export 指令就是为了解决这个问题而存在的。</p>
+<p>export 的作用与 Shell 脚本中的 export 命令非常相似。它将一个 Make
+变量“导出”为一个环境变量，这个环境变量对 make 启动的所有子进程（包括
+Shell 命令和子 Make 进程）都是可见的。</p>
+<p>当顶层 make 调用子目录的 make 时, make 会为这个子 make
+命令创建一个新的进程。在创建这个子进程之前，make 会将所有通过
+<strong>export 指令导出的变量</strong>设置到该子进程的环境中。</p>
+<p>子 make 进程启动后，会从它的环境中读取这些变量，并将它们当作自己在
+Makefile 中定义的变量来使用。</p>
+<p>简而言之：export 是父 Makefile 向子 Makefile
+<strong>传递变量</strong>的桥梁。</p>
+<h4 id="export-的使用示例">export 的使用示例</h4>
+<p>假设我们有一个简单的项目结构如下：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">项目结构:</span><br><span class="line"></span><br><span class="line">project/</span><br><span class="line">├── Makefile          # 顶层 Makefile</span><br><span class="line">└── subdir/</span><br><span class="line">    ├── main.c</span><br><span class="line">    └── Makefile      # 子 Makefile</span><br></pre></td></tr></table></figure></div>
 <p>不使用 export 的顶层 Makefile 可能如下所示：</p>
 <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 顶层 Makefile</span></span><br><span class="line">CC = gcc</span><br><span class="line">CFLAGS = -Wall -g</span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	<span class="variable">$(MAKE)</span> -C subdir</span><br></pre></td></tr></table></figure></div>
 <p>子 Makefile 可能如下所示：</p>
 <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 子 Makefile</span></span><br><span class="line"><span class="section">all: main</span></span><br><span class="line"><span class="section">main: main.c</span></span><br><span class="line">	<span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> -o main main.c</span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -f main</span><br></pre></td></tr></table></figure></div>
-<p>在这个例子中，顶层 Makefile 定义了编译器 (GCC)和编译选项 (CFLAGS)，但是子 Makefile 并不知道这些变量，因为它们没有被传递过去。</p>
-<p>如果我们想让子 Makefile 使用顶层 Makefile 中定义的变量，我们可以使用 export 指令：</p>
+<p>在这个例子中，顶层 Makefile 定义了编译器 (GCC)和编译选项
+(CFLAGS)，但是子 Makefile 并不知道这些变量，因为它们没有被传递过去。</p>
+<p>如果我们想让子 Makefile 使用顶层 Makefile 中定义的变量，我们可以使用
+export 指令：</p>
 <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 顶层 Makefile</span></span><br><span class="line"><span class="keyword">export</span> CC = gcc</span><br><span class="line"><span class="keyword">export</span> CFLAGS = -Wall -g</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	<span class="variable">$(MAKE)</span> -C subdir</span><br></pre></td></tr></table></figure></div>
-<p>现在，当顶层 Makefile 调用子 Makefile 时，子 Makefile 可以访问 CC 和 CFLAGS 变量，并使用它们来编译代码。</p>
-<h4 id="不同语法形式"><a href="#不同语法形式" class="headerlink" title="不同语法形式"></a>不同语法形式</h4><ul>
-<li>先定义，后导出: <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VAR = value</span><br><span class="line"><span class="keyword">export</span> VAR</span><br></pre></td></tr></table></figure></div>
-这种方式最清晰，易于阅读和维护。</li>
-<li>定义时直接导出:<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> VAR = value</span><br></pre></td></tr></table></figure></div></li>
-<li>全部导出:<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span></span><br></pre></td></tr></table></figure></div>
-如果 export 后面不跟任何变量名，它会导出当前 Makefile 中定义的所有变量。这通常被认为是不良实践，因为它可能会意外地将一些不希望传递的内部变量传递给子 Make，导致难以调试的错误。明确地导出需要的变量是更好的选择。</li>
+<p>现在，当顶层 Makefile 调用子 Makefile 时，子 Makefile 可以访问 CC 和
+CFLAGS 变量，并使用它们来编译代码。</p>
+<h4 id="不同语法形式">不同语法形式</h4>
+<ul>
+<li>先定义，后导出: <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VAR = value</span><br><span class="line"><span class="keyword">export</span> VAR</span><br></pre></td></tr></table></figure></div> 这种方式最清晰，易于阅读和维护。</li>
+<li>定义时直接导出: <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> VAR = value</span><br></pre></td></tr></table></figure></div></li>
+<li>全部导出: <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span></span><br></pre></td></tr></table></figure></div> 如果 export 后面不跟任何变量名，它会导出当前
+Makefile
+中定义的所有变量。这通常被认为是不良实践，因为它可能会意外地将一些不希望传递的内部变量传递给子
+Make，导致难以调试的错误。明确地导出需要的变量是更好的选择。</li>
 </ul>
 <p>与 export 相对的是 unexport，它用于取消一个变量的导出。</p>
-<p>如果一个变量是通过环境传入 make 的（例如，你在 shell 中 export CFLAGS=”-O3”），make 默认会把它再次 export 给子 Make。如果你不希望某个子 Make 继承这个环境变量，就可以使用 unexport。</p>
+<p>如果一个变量是通过环境传入 make 的（例如，你在 shell 中 export
+CFLAGS=“-O3”），make 默认会把它再次 export 给子 Make。如果你不希望某个子
+Make 继承这个环境变量，就可以使用 unexport。</p>
 
 		</div>
 
@@ -939,7 +968,7 @@ clean:	(没有依赖)
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/25/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+				<a class="prev" rel="prev" href="/2025/09/25/system/linux/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E9%AB%98%E5%B9%B6%E5%8F%91/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
@@ -952,9 +981,9 @@ clean:	(没有依赖)
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE42%20-%20%E8%80%83%E8%99%91%E7%BD%AE%E5%85%A5%E8%80%8C%E9%9D%9E%E6%8F%92%E5%85%A5/">
+				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE41%20-%20%E9%92%88%E5%AF%B9%E5%8F%AF%E5%A4%8D%E5%88%B6%E7%9A%84%E5%BD%A2%E5%8F%82%EF%BC%8C%E5%9C%A8%E7%A7%BB%E5%8A%A8%E6%88%90%E6%9C%AC%E4%BD%8E%E5%B9%B6%E4%B8%94%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%A2%AB%E5%A4%8D%E5%88%B6%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%EF%BC%8C%E8%80%83%E8%99%91%E5%B0%86%E5%85%B6%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款42 ：考虑置入而非插入</span>
+						<span class="post-nav-title-item truncate max-w-48">条款41 ：针对可复制的形参，在移动成本低并且一定会被复制的前提下，考虑将其按值传递</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -1005,11 +1034,11 @@ clean:	(没有依赖)
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

@@ -742,15 +742,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -782,15 +782,15 @@ mjx-container[display="true"] + br {
 </div>
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -815,66 +815,40 @@ mjx-container[display="true"] + br {
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE34%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20lambda%20%E5%BC%8F%EF%BC%8C%E8%80%8C%E9%9D%9E%20std%20bind/">
-                            条款34：优先选用 lambda 式，而非 std bind
+                        <a href="/2025/09/29/misc/%E5%B0%BE%E9%80%92%E5%BD%92%20(Tail%20Recursion)%20%E4%B8%8E%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96%20(TCO)/">
+                            尾递归 (Tail Recursion) 与尾调用优化 (TCO)
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            在 C++11 中，lambda 表达式几乎总是比 std::bind 更好的选择；到了 C++14，std::bind 基本上已无用武之地。std::bind 是一个源自 C++98 时代函数式编程思想的工具，虽然在 C++11 标准库中被正式引入，但其设计与现代 C++ 的 lambda 表达式相比，在多个方面都相形见绌。
-std::bindstd::bind 是 C++11 在  头文...
+                            要理解尾递归和尾递归优化，首先必须理解程序是如何执行函数调用的。
+函数调用与调用栈 (Call Stack)
+当一个函数被调用时，计算机会在内存中一个称为
+“调用栈” (Call Stack)
+的特殊区域创建一个“栈帧” (Stack
+Frame)。它可以看作是函数的一次执行实例的“工作区”。它存储了函数的：
+
+参数 (Arguments)：传递给函数的数值。
+局部变量 (L...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 19:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 14:20:22 GMT+0800">
                 
-                    2025-09-20
+                    2025-09-29
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE34%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20lambda%20%E5%BC%8F%EF%BC%8C%E8%80%8C%E9%9D%9E%20std%20bind/">Read more<span class="seo-reader-text">条款34：优先选用 lambda 式，而非 std bind</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/misc/%E5%B0%BE%E9%80%92%E5%BD%92%20(Tail%20Recursion)%20%E4%B8%8E%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96%20(TCO)/">Read more<span class="seo-reader-text">尾递归 (Tail Recursion) 与尾调用优化 (TCO)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -889,27 +863,27 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE33%20-%20%E5%AF%B9%20auto&&%20%E5%9E%8B%E5%88%AB%E7%9A%84%E5%BD%A2%E5%8F%82%E4%BD%BF%E7%94%A8%20decltype,%20%E4%BB%A5%20std%20forward%20%E4%B9%8B/">
-                            条款33：对 auto&amp;&amp; 型别的形参使用 decltype, 以 std forward 之
+                        <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/OOP/">
+                            OOP
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            该条款的核心是解决一个在 C++14 泛型 lambda 中进行完美转发时遇到的具体语法问题。
-泛型lambda简单来说，泛型 Lambda (Generic Lambda) 是一种可以使用 auto 关键字作为参数类型的 Lambda 表达式。这使得该 Lambda 能够接受任意类型的参数，其行为类似于一个函数模板。
-
-在 C++14 之前，如果你想让一个 Lambda 接受不同类型的参数...
+                            类和实例基础
+Python
+允许在运行时动态地为某个实例添加、修改或删除属性。
+123456789101112131415161718class Dog:    def __init__(self, name):        self.name = namedog1 = Dog("Buddy")print(dog1.name)  # 输出: Buddy# 动态添加属性dog1.age...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 17:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 14:05:14 GMT+0800">
                 
-                    2025-09-20
+                    2025-09-29
                 
             </span>
         </span>
@@ -922,7 +896,7 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         
                         <li>
-                            <a href="/categories/language/">language</a>&nbsp;
+                            <a href="/categories/python/">python</a>&nbsp;
                         </li>
                     
                     
@@ -942,7 +916,7 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         <li>
                             | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                            <a href="/tags/python/">python</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -950,7 +924,7 @@ std::bindstd::bind 是 C++11 在  头文...
         
     </div>
 
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE33%20-%20%E5%AF%B9%20auto&&%20%E5%9E%8B%E5%88%AB%E7%9A%84%E5%BD%A2%E5%8F%82%E4%BD%BF%E7%94%A8%20decltype,%20%E4%BB%A5%20std%20forward%20%E4%B9%8B/">Read more<span class="seo-reader-text">条款33：对 auto&amp;&amp; 型别的形参使用 decltype, 以 std forward 之</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/OOP/">Read more<span class="seo-reader-text">OOP</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -965,27 +939,28 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE32%20-%20%E4%BD%BF%E7%94%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E6%8D%95%E8%8E%B7%E5%B0%86%E5%AF%B9%E8%B1%A1%E7%A7%BB%E5%85%A5%E9%97%AD%E5%8C%85/">
-                            条款32：使用初始化捕获将对象移入闭包
+                        <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%87%BD%E6%95%B0/">
+                            函数
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            在 C++11 中，lambda 的捕获列表 [] 只能捕获在 lambda 所在作用域内可见的变量，捕获方式只有两种：按值复制或按引用。这导致了一个问题：C++11 无法直接将对象“移动”到闭包中。
-这个局限对两类对象影响很大：
-
-只移类型 (Move-only Types)：像 std::unique_ptr、std::future 或 std::thread 这样的类型，它们是不能被复...
+                            函数的参数(Parameters)
+在 Python
+中，函数的参数可以分为以下几种类型：必选参数、默认参数、可变参数
+(*args)、命名关键字参数和关键字参数 (**kwargs)。并且在定义函数时,
+必须按照这样的顺序来排列参数. 123def complex_function(pos1, pos2, default_arg='default', *args, kw_only1...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 13:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 14:05:14 GMT+0800">
                 
-                    2025-09-20
+                    2025-09-29
                 
             </span>
         </span>
@@ -998,7 +973,7 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         
                         <li>
-                            <a href="/categories/language/">language</a>&nbsp;
+                            <a href="/categories/python/">python</a>&nbsp;
                         </li>
                     
                     
@@ -1018,7 +993,7 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         <li>
                             | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                            <a href="/tags/python/">python</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1026,7 +1001,7 @@ std::bindstd::bind 是 C++11 在  头文...
         
     </div>
 
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE32%20-%20%E4%BD%BF%E7%94%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E6%8D%95%E8%8E%B7%E5%B0%86%E5%AF%B9%E8%B1%A1%E7%A7%BB%E5%85%A5%E9%97%AD%E5%8C%85/">Read more<span class="seo-reader-text">条款32：使用初始化捕获将对象移入闭包</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%87%BD%E6%95%B0/">Read more<span class="seo-reader-text">函数</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1041,25 +1016,30 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE31%20-%20%E9%81%BF%E5%85%8D%E9%BB%98%E8%AE%A4%E6%8D%95%E8%8E%B7%E6%A8%A1%E5%BC%8F/">
-                            条款31：避免默认捕获模式
+                        <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E7%94%9F%E6%88%90%E5%99%A8/">
+                            生成器
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            lambda 表达式Lambda 表达式（Lambda Expression）是一种在需要函数的地方，可以就地定义匿名函数对象的便捷方式。它本质上是一个可调用的代码单元，可以像函数一样使用，但无需为其命名(当然也可以为其命名)。它允许你编写简短、内联的函数，特别适用于作为算法或异步调用的参数，从而让代码更简洁、更具表现力。
-为何需要 Lambda？在 C++11 之前，如果你想向一个算法（如...
+                            生成器是一种特殊的迭代器，它不需要你手动去实现迭代器协议（即
+iter() 和 next()
+方法）。它允许你用一种更简单、更像普通函数的方式来生成一个值的序列。
+生成器的核心思想是 “懒加载” (Lazy Evaluation) 或
+“延迟计算”。它不会一次性在内存中创建并存储所有元素，而是在你请求下一个元素时才实时生成它。
+为什么要使用生成器？
+生成器最主要的优点是内存效率极...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 10:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 14:05:14 GMT+0800">
                 
-                    2025-09-20
+                    2025-09-29
                 
             </span>
         </span>
@@ -1072,7 +1052,7 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         
                         <li>
-                            <a href="/categories/language/">language</a>&nbsp;
+                            <a href="/categories/python/">python</a>&nbsp;
                         </li>
                     
                     
@@ -1092,7 +1072,7 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         <li>
                             | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                            <a href="/tags/python/">python</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1100,7 +1080,7 @@ std::bindstd::bind 是 C++11 在  头文...
         
     </div>
 
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE31%20-%20%E9%81%BF%E5%85%8D%E9%BB%98%E8%AE%A4%E6%8D%95%E8%8E%B7%E6%A8%A1%E5%BC%8F/">Read more<span class="seo-reader-text">条款31：避免默认捕获模式</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E7%94%9F%E6%88%90%E5%99%A8/">Read more<span class="seo-reader-text">生成器</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1115,68 +1095,38 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE28%20-%20%E7%90%86%E8%A7%A3%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0/">
-                            条款 28 - 理解引用折叠
+                        <a href="/2025/09/29/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/Agent%E5%85%A5%E9%97%A8/%E6%99%BA%E8%83%BD%E4%BD%93%E8%8C%83%E5%BC%8F/">
+                            智能体范式
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            这一条款是对之前条款的理论原理呈现, 揭示了支撑万能引用和 std::forward工作的底层核心机制。这个机制就是引用折叠 (Reference Collapsing, 在之前的条款24中已有介绍)
-引用折叠会在四种语境中发生：模板实例化、auto 类型生成、创建和运用 typedef 和别名声明，以及 decltype。
-详细内容请参考条款24。
-
+                            ReAct
+ReAct (Reason + Act)
+核心思想是模仿人类解决问题的方式，将推理 (Reasoning)
+与行动 (Acting)
+显式地结合起来，形成一个“思考-行动-观察”的循环。
+在ReAct诞生之前，主流的方法可以分为两类：一类是“纯思考”型，如思维链
+(Chain-of-Thought)，它能引导模型进行复杂的逻辑推理，但无法与外部世界交互，容易产生事实幻...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 23:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Mon Sep 29 2025 11:24:03 GMT+0800">
                 
-                    2025-09-19
+                    2025-09-29
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE28%20-%20%E7%90%86%E8%A7%A3%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0/">Read more<span class="seo-reader-text">条款 28 - 理解引用折叠</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/29/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/Agent%E5%85%A5%E9%97%A8/%E6%99%BA%E8%83%BD%E4%BD%93%E8%8C%83%E5%BC%8F/">Read more<span class="seo-reader-text">智能体范式</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1191,25 +1141,32 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE29%20-%20%E5%81%87%E5%AE%9A%E7%A7%BB%E5%8A%A8%E6%93%8D%E4%BD%9C%E4%B8%8D%E5%AD%98%E5%9C%A8%E3%80%81%E6%88%90%E6%9C%AC%E9%AB%98%E3%80%81%E6%9C%AA%E4%BD%BF%E7%94%A8/">
-                            条款 29 - 假定移动操作不存在、成本高、未使用
+                        <a href="/2025/09/28/system/OS/Structures/Structures/">
+                            Structures
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            该条款旨在为开发者对C++11移动语义的性能预期“降温”，提醒我们移动语义并非万能的性能优化选择。在编写代码时，尤其是在编写通用代码（如模板）时，更安全的做法是假定移动操作可能不存在、可能成本高昂，或者在特定上下文中可能不会被使用。
-移动语义是C++11的标志性特性，它允许编译器用成本低廉的移动操作来代替昂贵的复制操作，甚至在某些情况下，只需重新编译C++98的代码就能获得性能提升 。然而，...
+                            操作系统服务与接口
+这部分主要介绍了操作系统（OS）为用户和系统本身提供的核心功能，以及用户与操作系统交互的方式。
+操作系统服务 (Operating
+System Services)
+操作系统提供的服务可以从两个角度来看：为用户提供便利和确保系统高效运行。
+面向用户的服务：
+
+用户界面 (User
+Interface)：几乎所有操作系统都提供用户界面，主要包括命令行界面（C...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 23:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sun Sep 28 2025 22:00:00 GMT+0800">
                 
-                    2025-09-19
+                    2025-09-28
                 
             </span>
         </span>
@@ -1222,7 +1179,17 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         
                         <li>
-                            <a href="/categories/language/">language</a>&nbsp;
+                            <a href="/categories/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/system/OS/">OS</a>&nbsp;
                         </li>
                     
                     
@@ -1237,12 +1204,7 @@ std::bindstd::bind 是 C++11 在  头文...
                     
                         <li>
                             
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                            <a href="/tags/system/">system</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -1250,7 +1212,7 @@ std::bindstd::bind 是 C++11 在  头文...
         
     </div>
 
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE29%20-%20%E5%81%87%E5%AE%9A%E7%A7%BB%E5%8A%A8%E6%93%8D%E4%BD%9C%E4%B8%8D%E5%AD%98%E5%9C%A8%E3%80%81%E6%88%90%E6%9C%AC%E9%AB%98%E3%80%81%E6%9C%AA%E4%BD%BF%E7%94%A8/">Read more<span class="seo-reader-text">条款 29 - 假定移动操作不存在、成本高、未使用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/28/system/OS/Structures/Structures/">Read more<span class="seo-reader-text">Structures</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1265,68 +1227,34 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE27%20-%20%E7%86%9F%E6%82%89%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/">
-                            条款 27 - 熟悉依万能引用型别进行重载的替代方案
+                        <a href="/2025/09/28/algorithms/%E7%BC%93%E5%AD%98%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5/">
+                            缓存替换策略
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            条款26明确指出，对万能引用进行重载是一个坏主意，因为它过于“贪婪”，会意外地匹配到许多本意是想调用其他重载函数的调用。本条款则提供了多种替代方案，让我们可以在需要区分处理不同类型的同时，安全地使用万能引用的强大功能。
-简单的替代方案在介绍复杂技术之前，有几种简单的替代方法：
+                            自适应替换缓存（Adaptive
+Replacement Cache, ARC）
 
-舍弃重载，使用不同函数名：这是最简单的办法。与其重载 logAndAdd(T&amp;&amp;) 和 logAn...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 21:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sun Sep 28 2025 11:57:33 GMT+0800">
                 
-                    2025-09-19
+                    2025-09-28
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE27%20-%20%E7%86%9F%E6%82%89%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/">Read more<span class="seo-reader-text">条款 27 - 熟悉依万能引用型别进行重载的替代方案</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/28/algorithms/%E7%BC%93%E5%AD%98%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5/">Read more<span class="seo-reader-text">缓存替换策略</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1341,66 +1269,40 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE26%20-%20%E9%81%BF%E5%85%8D%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD/">
-                            条款 26 - 避免依万能引用型别进行重载
+                        <a href="/2025/09/28/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/List/">
+                            List
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            这一讲开门见山: 将一个接受万能引用参数的函数或模板与其他函数进行重载，是一个非常危险的设计，因为它几乎总是会导致意想不到的行为和难以理解的编译错误。
-核心问题：万能引用的“贪婪”万能引用（在模板中声明为 T&amp;&amp;）之所以危险，是因为它过于“贪婪”。根据C++的模板类型推导和重载决议规则，万能引用可以为几乎任何类型的实参生成一个精确匹配 (Exact Match) 的函数实例。...
+                            std::list
+是一个序列容器，它的底层实现是双向链表（Doubly-Linked
+List）。理解了“双向链表”这个数据结构，就理解了 std::list
+的所有优缺点和行为特性。
+std::list 的核心特性
+与 std::vector（动态数组）的连续内存布局截然不同，std::list
+的元素在内存中是非连续存储的。每个元素（节点）都包含三部分信息：
+
+存储的数...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 19:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sun Sep 28 2025 10:20:15 GMT+0800">
                 
-                    2025-09-19
+                    2025-09-28
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE26%20-%20%E9%81%BF%E5%85%8D%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD/">Read more<span class="seo-reader-text">条款 26 - 避免依万能引用型别进行重载</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/28/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/List/">Read more<span class="seo-reader-text">List</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1415,67 +1317,38 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE30%20-%20%E7%86%9F%E6%82%89%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%83%85%E5%BD%A2/">
-                            条款 30 - 熟悉完美转发的失败情形
+                        <a href="/2025/09/28/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/unique_ptr%E4%B8%8Eauto_ptr/">
+                            unique_ptr与auto_ptr
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            “完美转发”是 C++11 中一个极其强大的特性，但它并非在所有情况下都“完美”。该条款的核心是揭示几种完美转发会失败或产生非预期行为的边界情况，并提供相应的解决方案。
-什么是完美转发失败完美转发的理想目标是：一个转发函数 fwd 在接收某个表达式 expr 时，其行为应与将 expr 直接传递给目标函数 f 的行为完全相同。
-12f(expression);      // 直接调用fwd...
+                            std::unique_ptr 同样是 C++11
+中引入的，用于表示对动态分配对象的独占所有权（Exclusive
+Ownership）。
+std::unique_ptr：独占所有权的轻量级管理者
+与 shared_ptr 的“共享”理念完全相反，unique_ptr
+遵循“独裁”模式：在任何时刻，只能有一个 unique_ptr
+指向并拥有一个给定的对象。当这个 unique...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 12:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sun Sep 28 2025 09:27:55 GMT+0800">
                 
-                    2025-09-19
+                    2025-09-28
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE30%20-%20%E7%86%9F%E6%82%89%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%83%85%E5%BD%A2/">Read more<span class="seo-reader-text">条款 30 - 熟悉完美转发的失败情形</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/28/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/unique_ptr%E4%B8%8Eauto_ptr/">Read more<span class="seo-reader-text">unique_ptr与auto_ptr</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1490,70 +1363,39 @@ std::bindstd::bind 是 C++11 在  头文...
                 
                 <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
                     <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE25%20-%20%E9%92%88%E5%AF%B9%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20move,%20%E9%92%88%E5%AF%B9%E4%B8%87%20%E8%83%BD%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20forward/">
-                            条款 25 - 针对右值引用实施 std move, 针对万能引用实施 std forward
+                        <a href="/2025/09/27/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/shared_ptr%E4%B8%8Eweak_ptr/">
+                            shared_ptr与weak_ptr
                         </a>
                     </h3>
 
                     <div class="home-article-content markdown-body">
                         
                             
-                            我们在条款23了解了std::move 与 std::forward, 而条款25提供了一个简单、强大且几乎永远正确的指导方针，用于决定何时使用 std::move 以及何时使用 std::forward, 那就是:
-
-对右值引用，总是使用 std::move 来进行转发。
-对万能引用，总是使用 std::forward 来进行转发。
-
-std::move 用于右值引用右值引用（如 Widg...
+                            std::shared_ptr：共享所有权的管理者
+std::shared_ptr 是一种拥有共享所有权的智能指针。这意味着多个
+shared_ptr
+实例可以共同拥有和管理同一个动态分配的对象。当最后一个指向该对象的
+shared_ptr 被销毁或重置时，该对象会被自动释放。
+核心理念：引用计数
+shared_ptr 的核心机制是引用计数（Reference
+Counting...
                         
                     </div>
 
                     <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 12:00:00 GMT+0800">
+            <span class="home-article-date" data-date="Sat Sep 27 2025 21:57:27 GMT+0800">
                 
-                    2025-09-19
+                    2025-09-27
                 
             </span>
         </span>
         
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
         
     </div>
 
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE25%20-%20%E9%92%88%E5%AF%B9%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20move,%20%E9%92%88%E5%AF%B9%E4%B8%87%20%E8%83%BD%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20forward/">Read more<span class="seo-reader-text">条款 25 - 针对右值引用实施 std move, 针对万能引用实施 std forward</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/2025/09/27/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/shared_ptr%E4%B8%8Eweak_ptr/">Read more<span class="seo-reader-text">shared_ptr与weak_ptr</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
                 </div>
@@ -1563,7 +1405,7 @@ std::move 用于右值引用右值引用（如 Widg...
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/6/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/8/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/6/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/8/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1591,11 +1433,11 @@ std::move 用于右值引用右值引用（如 Widg...
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

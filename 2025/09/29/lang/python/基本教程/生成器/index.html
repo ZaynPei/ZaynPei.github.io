@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,9 +833,13 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>生成器是一种<strong>特殊的迭代器</strong>，它不需要你手动去实现迭代器协议（即 <strong>iter</strong>() 和 <strong>next</strong>() 方法）。它允许你用一种更简单、更<strong>像普通函数的方式</strong>来生成一个值的序列。</p>
-<p>生成器的核心思想是 “<strong>懒加载</strong>” (Lazy Evaluation) 或 “延迟计算”。它不会一次性在内存中创建并存储所有元素，而是在你<strong>请求下一个元素时才实时生成</strong>它。</p>
-<h3 id="为什么要使用生成器？"><a href="#为什么要使用生成器？" class="headerlink" title="为什么要使用生成器？"></a>为什么要使用生成器？</h3><p>生成器最主要的优点是<strong>内存效率</strong>极高。想象一下，你需要处理一个包含一百万个元素的序列。</p>
+			<p>生成器是一种<strong>特殊的迭代器</strong>，它不需要你手动去实现迭代器协议（即
+<strong>iter</strong>() 和 <strong>next</strong>()
+方法）。它允许你用一种更简单、更<strong>像普通函数的方式</strong>来生成一个值的序列。</p>
+<p>生成器的核心思想是 “<strong>懒加载</strong>” (Lazy Evaluation) 或
+“延迟计算”。它不会一次性在内存中创建并存储所有元素，而是在你<strong>请求下一个元素时才实时生成</strong>它。</p>
+<h3 id="为什么要使用生成器">为什么要使用生成器？</h3>
+<p>生成器最主要的优点是<strong>内存效率</strong>极高。想象一下，你需要处理一个包含一百万个元素的序列。</p>
 <ul>
 <li>使用列表：会立即在内存中创建并存储这一百万个元素，占用大量内存。</li>
 <li>使用生成器：它只在你<strong>需要时才逐一生成</strong>元素。在任何时刻，内存中只有一个元素存在，极大地节约了内存资源。</li>
@@ -846,21 +850,30 @@ mjx-container[display="true"] + br {
 <li>无限序列：例如，生成一个永不停止的斐波那契数列。</li>
 <li>数据流处理：在数据处理管道中，数据可以像水流一样通过各个生成器节点，而无需将整个数据集加载到内存中。</li>
 </ul>
-<h3 id="创建生成器"><a href="#创建生成器" class="headerlink" title="创建生成器"></a>创建生成器</h3><p>主要有两种方式可以创建生成器：</p>
-<ol>
-<li>生成器函数 (Generator Functions)<br>这是最常见的方式。一个<strong>普通的函数</strong>，只要包含了 <strong>yield 关键字</strong>，它就变成了一个生成器函数。</li>
+<h3 id="创建生成器">创建生成器</h3>
+<p>主要有两种方式可以创建生成器：</p>
+<ol type="1">
+<li>生成器函数 (Generator Functions)
+这是最常见的方式。一个<strong>普通的函数</strong>，只要包含了
+<strong>yield 关键字</strong>，它就变成了一个生成器函数。</li>
 </ol>
-<p>yield 关键字：这是生成器的魔法所在。yield 的作用<strong>类似于 return</strong>，但它并不会终止函数。相反，它会“<strong>暂停”函数的执行</strong>，并将其<strong>当前状态（包括局部变量）保存</strong>下来，然后将 yield 后面的<strong>值返回给调用者</strong>。当下次请求值时（例如通过 <strong>next()</strong> 或 <strong>for</strong> 循环），函数会从上次暂停的地方继续执行。</p>
+<p>yield 关键字：这是生成器的魔法所在。yield 的作用<strong>类似于
+return</strong>，但它并不会终止函数。相反，它会“<strong>暂停”函数的执行</strong>，并将其<strong>当前状态（包括局部变量）保存</strong>下来，然后将
+yield 后面的<strong>值返回给调用者</strong>。当下次请求值时（例如通过
+<strong>next()</strong> 或 <strong>for</strong>
+循环），函数会从上次暂停的地方继续执行。</p>
 <div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">countdown</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"开始倒计时！"</span>)</span><br><span class="line">    <span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">yield</span> n  <span class="comment"># 暂停并返回 n 的值</span></span><br><span class="line">        n -= <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"倒计时结束！"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 调用生成器函数，返回一个生成器对象，此时函数内的代码还未执行</span></span><br><span class="line">c = countdown(<span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(c)) <span class="comment"># &lt;class 'generator'&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 第一次调用 next()，函数开始执行，直到遇到第一个 yield</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">next</span>(c)) <span class="comment"># 输出 "开始倒计时！" 和 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 第二次调用 next()，函数从上次暂停处继续执行</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">next</span>(c)) <span class="comment"># 输出 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 第三次调用 next()</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">next</span>(c)) <span class="comment"># 输出 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 第四次调用 next()，循环结束，函数执行完毕</span></span><br><span class="line"><span class="comment">#    由于没有更多的 yield，函数会隐式地抛出 StopIteration 异常</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">next</span>(c) <span class="comment"># 输出 "倒计时结束！" 然后抛出异常</span></span><br><span class="line"><span class="keyword">except</span> StopIteration:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"生成器已耗尽。"</span>)</span><br></pre></td></tr></table></figure></div>
-
-<p>注意, 调用generator函数会创建一个generator对象，多次调用generator函数会创建多个相互独立的generator。假如在上面的代码中这样做:</p>
+<p>注意,
+调用generator函数会创建一个generator对象，多次调用generator函数会创建多个相互独立的generator。假如在上面的代码中这样做:
 <div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">next</span>(countdown(<span class="number">3</span>))) <span class="comment"># 每次调用都会创建一个新的生成器对象, 所以每次都是输出 3</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">next</span>(countdown(<span class="number">3</span>))) <span class="comment"># 每次调用都会创建一个新的生成器对象, 所以每次都是输出 3</span></span><br></pre></td></tr></table></figure></div>
-<p>正确的写法是创建一个generator对象，然后不断对这一个generator对象调用next()或者使用for循环.</p>
-<ol start="2">
-<li>生成器表达式 (Generator Expressions)<br>生成器表达式是<strong>列表生成式的近亲</strong>，语法上非常相似，但它返回的是一个<strong>生成器对象</strong>，而不是一个列表。</li>
+正确的写法是创建一个generator对象，然后不断对这一个generator对象调用next()或者使用for循环.</p>
+<ol start="2" type="1">
+<li>生成器表达式 (Generator Expressions)
+生成器表达式是<strong>列表生成式的近亲</strong>，语法上非常相似，但它返回的是一个<strong>生成器对象</strong>，而不是一个列表。</li>
 </ol>
-<p>语法：将列表生成式的 [] 替换为 <strong>()</strong> 即可</p>
-<div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列表生成式</span></span><br><span class="line">my_list = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>)]</span><br><span class="line"><span class="built_in">print</span>(my_list) <span class="comment"># 输出: [0, 1, 4, 9, 16]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成器表达式</span></span><br><span class="line">my_generator = (x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>))</span><br><span class="line"><span class="built_in">print</span>(my_generator) <span class="comment"># 输出: &lt;generator object &lt;genexpr&gt; at 0x...&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 像使用其他迭代器一样使用它</span></span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> my_generator:</span><br><span class="line">    <span class="built_in">print</span>(num, end=<span class="string">' '</span>) <span class="comment"># 输出: 0 1 4 9 16</span></span><br></pre></td></tr></table></figure></div>
+<p>语法：将列表生成式的 [] 替换为 <strong>()</strong> 即可
+<div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列表生成式</span></span><br><span class="line">my_list = [x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>)]</span><br><span class="line"><span class="built_in">print</span>(my_list) <span class="comment"># 输出: [0, 1, 4, 9, 16]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成器表达式</span></span><br><span class="line">my_generator = (x * x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>))</span><br><span class="line"><span class="built_in">print</span>(my_generator) <span class="comment"># 输出: &lt;generator object &lt;genexpr&gt; at 0x...&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 像使用其他迭代器一样使用它</span></span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> my_generator:</span><br><span class="line">    <span class="built_in">print</span>(num, end=<span class="string">' '</span>) <span class="comment"># 输出: 0 1 4 9 16</span></span><br></pre></td></tr></table></figure></div></p>
+
 		</div>
 
 		
@@ -898,9 +911,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/OOP/">
+				<a class="next" rel="next" href="/2025/09/29/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/Agent%E5%85%A5%E9%97%A8/%E6%99%BA%E8%83%BD%E4%BD%93%E8%8C%83%E5%BC%8F/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">OOP</span>
+						<span class="post-nav-title-item truncate max-w-48">智能体范式</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -922,7 +935,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">生成器</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%9F"><span class="nav-text">为什么要使用生成器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-text">创建生成器</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-text">为什么要使用生成器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-text">创建生成器</span></a></li></ol>
 
 	</div>
 </div>
@@ -951,11 +964,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

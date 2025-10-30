@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -828,57 +828,102 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>内容分发网络（Content Delivery Network, CDN）是一种构建在现有互联网基础之上的智能虚拟网络。它由分布在全球各地的大量边缘服务器（Edge Server）组成，旨在通过将网站内容缓存到离用户更近的服务器上，来更快速、更可靠地向用户交付内容。</p>
-<p>简单来说，CDN 就像一个遍布全球的“快递网络”。当您访问一个网站时，如果没有 CDN，您的请求需要直接发送到网站的“中心仓库”（即源服务器 Origin Server），无论这个仓库有多远，都可能导致访问延迟。而有了 CDN，您的请求会被智能地导向离您最近的“快递站点”（即边缘服务器），直接从这个站点获取内容，从而大大缩短了等待时间。</p>
+			<p>内容分发网络（Content Delivery Network,
+CDN）是一种构建在现有互联网基础之上的智能虚拟网络。它由分布在全球各地的大量边缘服务器（Edge
+Server）组成，旨在通过将网站内容缓存到离用户更近的服务器上，来更快速、更可靠地向用户交付内容。</p>
+<p>简单来说，CDN
+就像一个遍布全球的“快递网络”。当您访问一个网站时，如果没有
+CDN，您的请求需要直接发送到网站的“中心仓库”（即源服务器 Origin
+Server），无论这个仓库有多远，都可能导致访问延迟。而有了
+CDN，您的请求会被智能地导向离您最近的“快递站点”（即边缘服务器），直接从这个站点获取内容，从而大大缩短了等待时间。</p>
 <hr>
-<h2 id="CDN-的工作原理"><a href="#CDN-的工作原理" class="headerlink" title="CDN 的工作原理"></a>CDN 的工作原理</h2><p>CDN 的核心目标是缩短数据传输的物理距离，从而减少延迟。其工作流程通常涉及以下几个关键步骤：</p>
-<h3 id="1-用户发起请求"><a href="#1-用户发起请求" class="headerlink" title="1. 用户发起请求"></a>1. 用户发起请求</h3><p>当用户在浏览器中输入网址并发起访问请求时，这个请求首先会由本地的 DNS（域名系统）服务器处理。</p>
-<h3 id="2-智能-DNS-解析"><a href="#2-智能-DNS-解析" class="headerlink" title="2. 智能 DNS 解析"></a>2. 智能 DNS 解析</h3><p>配置了 CDN 服务的网站，其 DNS 解析过程会被 CDN 的全局负载均衡（GSLB）系统接管。该系统会根据用户的地理位置、网络状况以及各个边缘节点的负载情况，智能地选择一个最优化的边缘服务器，并将其 IP 地址返回给用户。</p>
+<h2 id="cdn-的工作原理">CDN 的工作原理</h2>
+<p>CDN
+的核心目标是缩短数据传输的物理距离，从而减少延迟。其工作流程通常涉及以下几个关键步骤：</p>
+<h3 id="用户发起请求">1. 用户发起请求</h3>
+<p>当用户在浏览器中输入网址并发起访问请求时，这个请求首先会由本地的
+DNS（域名系统）服务器处理。</p>
+<h3 id="智能-dns-解析">2. 智能 DNS 解析</h3>
+<p>配置了 CDN 服务的网站，其 DNS 解析过程会被 CDN
+的全局负载均衡（GSLB）系统接管。该系统会根据用户的地理位置、网络状况以及各个边缘节点的负载情况，智能地选择一个最优化的边缘服务器，并将其
+IP 地址返回给用户。</p>
 <blockquote>
 <p>这一步是实现“就近访问”的关键。通过智能调度，确保用户的请求被发送到响应速度最快的节点，而非地理位置绝对最近但可能拥堵的节点。</p>
 </blockquote>
-<h3 id="3-内容交付"><a href="#3-内容交付" class="headerlink" title="3. 内容交付"></a>3. 内容交付</h3><p>用户的浏览器在获取到最优边缘服务器的 IP 地址后，会直接向该服务器发起请求。</p>
+<h3 id="内容交付">3. 内容交付</h3>
+<p>用户的浏览器在获取到最优边缘服务器的 IP
+地址后，会直接向该服务器发起请求。</p>
 <ul>
-<li><strong>缓存命中（Cache Hit）</strong>：如果该边缘服务器上已经缓存了用户请求的内容（例如图片、CSS 文件或视频），并且缓存尚未过期，服务器会立即将内容响应给用户。这是最理想、最快速的情况。</li>
-<li><strong>缓存未命中（Cache Miss）</strong>：如果边缘服务器上没有缓存所需内容，或者缓存已过期，它会向源服务器发起请求，获取最新的内容。</li>
+<li><strong>缓存命中（Cache
+Hit）</strong>：如果该边缘服务器上已经缓存了用户请求的内容（例如图片、CSS
+文件或视频），并且缓存尚未过期，服务器会立即将内容响应给用户。这是最理想、最快速的情况。</li>
+<li><strong>缓存未命中（Cache
+Miss）</strong>：如果边缘服务器上没有缓存所需内容，或者缓存已过期，它会向源服务器发起请求，获取最新的内容。</li>
 </ul>
 <blockquote>
 <p>这个过程被称为“回源”。边缘服务器从源服务器获取内容后，会将其缓存在本地，以备后续相同请求使用，然后才将内容发送给用户。这样，下一个访问该内容的附近用户就能直接从缓存中获取，实现加速。</p>
 </blockquote>
 <hr>
-<h2 id="CDN-的主要优势"><a href="#CDN-的主要优势" class="headerlink" title="CDN 的主要优势"></a>CDN 的主要优势</h2><p>使用 CDN 可以为网站和应用带来多方面的显著优势：</p>
-<h3 id="1-提升网站性能和用户体验"><a href="#1-提升网站性能和用户体验" class="headerlink" title="1. 提升网站性能和用户体验"></a>1. 提升网站性能和用户体验</h3><ul>
+<h2 id="cdn-的主要优势">CDN 的主要优势</h2>
+<p>使用 CDN 可以为网站和应用带来多方面的显著优势：</p>
+<h3 id="提升网站性能和用户体验">1. 提升网站性能和用户体验</h3>
+<ul>
 <li><strong>降低延迟</strong>：通过从离用户最近的边缘服务器提供内容，显著减少了数据传输时间，加快了页面加载速度。研究表明，网站加载速度的提升能有效降低跳出率，提升用户留存和转化率。</li>
 </ul>
-<h3 id="2-提高可用性和可靠性"><a href="#2-提高可用性和可靠性" class="headerlink" title="2. 提高可用性和可靠性"></a>2. 提高可用性和可靠性</h3><ul>
-<li><strong>负载均衡</strong>：CDN 将访问流量分散到多个边缘服务器，避免了单一源服务器因流量过大而崩溃的风险。</li>
-<li><strong>冗余备份</strong>：当某个边缘节点或服务器发生故障时，CDN 的智能调度系统会自动将流量切换到其他健康的节点，保障服务的连续性，实现高可用性。</li>
+<h3 id="提高可用性和可靠性">2. 提高可用性和可靠性</h3>
+<ul>
+<li><strong>负载均衡</strong>：CDN
+将访问流量分散到多个边缘服务器，避免了单一源服务器因流量过大而崩溃的风险。</li>
+<li><strong>冗余备份</strong>：当某个边缘节点或服务器发生故障时，CDN
+的智能调度系统会自动将流量切换到其他健康的节点，保障服务的连续性，实现高可用性。</li>
 </ul>
-<h3 id="3-增强网站安全性"><a href="#3-增强网站安全性" class="headerlink" title="3. 增强网站安全性"></a>3. 增强网站安全性</h3><ul>
-<li><strong>DDoS 攻击缓解</strong>：CDN 的分布式架构天然能够分散和吸收大规模的分布式拒绝服务（DDoS）攻击流量，保护源服务器不被直接攻击而瘫痪。许多 CDN 服务商还提供 Web 应用程序防火墙（WAF）等增值安全服务。</li>
-<li><strong>隐藏源站 IP</strong>：由于所有流量都经过 CDN 节点，攻击者无法轻易获取源服务器的真实 IP 地址，从而增加了攻击难度。</li>
+<h3 id="增强网站安全性">3. 增强网站安全性</h3>
+<ul>
+<li><strong>DDoS 攻击缓解</strong>：CDN
+的分布式架构天然能够分散和吸收大规模的分布式拒绝服务（DDoS）攻击流量，保护源服务器不被直接攻击而瘫痪。许多
+CDN 服务商还提供 Web 应用程序防火墙（WAF）等增值安全服务。</li>
+<li><strong>隐藏源站 IP</strong>：由于所有流量都经过 CDN
+节点，攻击者无法轻易获取源服务器的真实 IP
+地址，从而增加了攻击难度。</li>
 </ul>
-<h3 id="4-降低带宽成本"><a href="#4-降低带宽成本" class="headerlink" title="4. 降低带宽成本"></a>4. 降低带宽成本</h3><ul>
-<li><strong>减少源站负载</strong>：大部分用户请求由 CDN 的边缘服务器处理，大大减少了回源的次数和数据量。这意味着源服务器所需的带宽显著降低，从而为网站所有者节省了大量的带宽成本。</li>
+<h3 id="降低带宽成本">4. 降低带宽成本</h3>
+<ul>
+<li><strong>减少源站负载</strong>：大部分用户请求由 CDN
+的边缘服务器处理，大大减少了回源的次数和数据量。这意味着源服务器所需的带宽显著降低，从而为网站所有者节省了大量的带宽成本。</li>
 </ul>
 <hr>
-<h2 id="CDN-的关键技术"><a href="#CDN-的关键技术" class="headerlink" title="CDN 的关键技术"></a>CDN 的关键技术</h2><p>CDN 的高效运作依赖于多种核心技术：</p>
-<h3 id="1-内容路由技术（负载均衡）"><a href="#1-内容路由技术（负载均衡）" class="headerlink" title="1. 内容路由技术（负载均衡）"></a>1. 内容路由技术（负载均衡）</h3><p>这是 CDN 的大脑。它通过全局负载均衡（GSLB）和本地负载均衡（SLB）技术，实时监测全网的流量和节点状态，将用户请求精准地导向最佳服务节点。</p>
-<h3 id="2-内容分发与存储技术"><a href="#2-内容分发与存储技术" class="headerlink" title="2. 内容分发与存储技术"></a>2. 内容分发与存储技术</h3><ul>
+<h2 id="cdn-的关键技术">CDN 的关键技术</h2>
+<p>CDN 的高效运作依赖于多种核心技术：</p>
+<h3 id="内容路由技术负载均衡">1. 内容路由技术（负载均衡）</h3>
+<p>这是 CDN
+的大脑。它通过全局负载均衡（GSLB）和本地负载均衡（SLB）技术，实时监测全网的流量和节点状态，将用户请求精准地导向最佳服务节点。</p>
+<h3 id="内容分发与存储技术">2. 内容分发与存储技术</h3>
+<ul>
 <li><strong>拉取模式（Pull）</strong>：由用户请求驱动，当边缘节点未命中缓存时主动回源拉取内容。这种模式部署简单，适用于内容更新不频繁的场景。</li>
 <li><strong>推送模式（Push）</strong>：由网站管理员主动将内容从源站推送到所有边缘节点。这种模式适用于需要提前分发的大文件或热门内容，确保用户首次访问即可命中缓存。</li>
 </ul>
-<h3 id="3-缓存技术（Caching）"><a href="#3-缓存技术（Caching）" class="headerlink" title="3. 缓存技术（Caching）"></a>3. 缓存技术（Caching）</h3><p>CDN 的核心功能。通过复杂的缓存策略（如设置缓存过期时间 TTL - Time To Live），决定哪些内容被缓存、缓存多久，以在加速效果和内容新鲜度之间取得平衡。</p>
+<h3 id="缓存技术caching">3. 缓存技术（Caching）</h3>
+<p>CDN 的核心功能。通过复杂的缓存策略（如设置缓存过期时间 TTL - Time To
+Live），决定哪些内容被缓存、缓存多久，以在加速效果和内容新鲜度之间取得平衡。</p>
 <hr>
-<h2 id="镜像站点与-CDN-的区别"><a href="#镜像站点与-CDN-的区别" class="headerlink" title="镜像站点与 CDN 的区别"></a>镜像站点与 CDN 的区别</h2><p>在一些游戏的官方网站上，您可能会看到类似这样的选项：</p>
+<h2 id="镜像站点与-cdn-的区别">镜像站点与 CDN 的区别</h2>
+<p>在一些游戏的官方网站上，您可能会看到类似这样的选项：</p>
 <ul>
 <li>下载点 1（亚洲服务器）</li>
 <li>下载点 2（欧洲服务器）</li>
 <li>下载点 3（北美服务器）</li>
 </ul>
-<p>这种方式被称为“镜像站点（Mirror Site）”。它确实是 CDN 的一种早期或简化形式，但与现代 CDN 存在关键区别。</p>
-<h3 id="核心区别：手动选择-vs-自动智能调度"><a href="#核心区别：手动选择-vs-自动智能调度" class="headerlink" title="核心区别：手动选择 vs 自动智能调度"></a>核心区别：手动选择 vs 自动智能调度</h3><p>CDN 和传统的下载镜像站，最核心的区别在于智能化和自动化程度。</p>
+<p>这种方式被称为“镜像站点（Mirror Site）”。它确实是 CDN
+的一种早期或简化形式，但与现代 CDN 存在关键区别。</p>
+<h3 id="核心区别手动选择-vs-自动智能调度">核心区别：手动选择 vs
+自动智能调度</h3>
+<p>CDN 和传统的下载镜像站，最核心的区别在于智能化和自动化程度。</p>
 <table>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 43%">
+<col style="width: 38%">
+</colgroup>
 <thead>
 <tr>
 <th>特性</th>
@@ -886,7 +931,8 @@ mjx-container[display="true"] + br {
 <th>内容分发网络（CDN）</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>工作模式</td>
 <td>手动</td>
 <td>自动</td>
@@ -899,7 +945,8 @@ mjx-container[display="true"] + br {
 <tr>
 <td>路由方式</td>
 <td>静态。链接固定指向某个服务器。</td>
-<td>动态、智能。CDN 系统会实时根据用户的地理位置、网络延迟、节点负载等因素，自动将用户请求路由到最优的边缘服务器。</td>
+<td>动态、智能。CDN
+系统会实时根据用户的地理位置、网络延迟、节点负载等因素，自动将用户请求路由到最优的边缘服务器。</td>
 </tr>
 <tr>
 <td>可靠性</td>
@@ -911,7 +958,8 @@ mjx-container[display="true"] + br {
 <td>依赖用户的个人判断，不一定能选到最优节点。</td>
 <td>通过全局负载均衡（GSLB）确保用户总是连接到当前最理想的服务器，效率最大化。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 
 		</div>
 
@@ -970,7 +1018,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">内容分发网络（CDN）</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CDN-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">CDN 的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%94%A8%E6%88%B7%E5%8F%91%E8%B5%B7%E8%AF%B7%E6%B1%82"><span class="nav-text">1. 用户发起请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%99%BA%E8%83%BD-DNS-%E8%A7%A3%E6%9E%90"><span class="nav-text">2. 智能 DNS 解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%86%85%E5%AE%B9%E4%BA%A4%E4%BB%98"><span class="nav-text">3. 内容交付</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CDN-%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E5%8A%BF"><span class="nav-text">CDN 的主要优势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8F%90%E5%8D%87%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%92%8C%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C"><span class="nav-text">1. 提升网站性能和用户体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8F%90%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">2. 提高可用性和可靠性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A2%9E%E5%BC%BA%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-text">3. 增强网站安全性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%99%8D%E4%BD%8E%E5%B8%A6%E5%AE%BD%E6%88%90%E6%9C%AC"><span class="nav-text">4. 降低带宽成本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CDN-%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="nav-text">CDN 的关键技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%86%85%E5%AE%B9%E8%B7%AF%E7%94%B1%E6%8A%80%E6%9C%AF%EF%BC%88%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%89"><span class="nav-text">1. 内容路由技术（负载均衡）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E4%B8%8E%E5%AD%98%E5%82%A8%E6%8A%80%E6%9C%AF"><span class="nav-text">2. 内容分发与存储技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BC%93%E5%AD%98%E6%8A%80%E6%9C%AF%EF%BC%88Caching%EF%BC%89"><span class="nav-text">3. 缓存技术（Caching）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E7%AB%99%E7%82%B9%E4%B8%8E-CDN-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">镜像站点与 CDN 的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB%EF%BC%9A%E6%89%8B%E5%8A%A8%E9%80%89%E6%8B%A9-vs-%E8%87%AA%E5%8A%A8%E6%99%BA%E8%83%BD%E8%B0%83%E5%BA%A6"><span class="nav-text">核心区别：手动选择 vs 自动智能调度</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cdn-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">CDN 的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%8F%91%E8%B5%B7%E8%AF%B7%E6%B1%82"><span class="nav-text">1. 用户发起请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%BA%E8%83%BD-dns-%E8%A7%A3%E6%9E%90"><span class="nav-text">2. 智能 DNS 解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E4%BA%A4%E4%BB%98"><span class="nav-text">3. 内容交付</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cdn-%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E5%8A%BF"><span class="nav-text">CDN 的主要优势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%8D%87%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E5%92%8C%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C"><span class="nav-text">1. 提升网站性能和用户体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">2. 提高可用性和可靠性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%BC%BA%E7%BD%91%E7%AB%99%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-text">3. 增强网站安全性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%8D%E4%BD%8E%E5%B8%A6%E5%AE%BD%E6%88%90%E6%9C%AC"><span class="nav-text">4. 降低带宽成本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cdn-%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="nav-text">CDN 的关键技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E8%B7%AF%E7%94%B1%E6%8A%80%E6%9C%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-text">1. 内容路由技术（负载均衡）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E4%B8%8E%E5%AD%98%E5%82%A8%E6%8A%80%E6%9C%AF"><span class="nav-text">2. 内容分发与存储技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%8A%80%E6%9C%AFcaching"><span class="nav-text">3. 缓存技术（Caching）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E7%AB%99%E7%82%B9%E4%B8%8E-cdn-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">镜像站点与 CDN 的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB%E6%89%8B%E5%8A%A8%E9%80%89%E6%8B%A9-vs-%E8%87%AA%E5%8A%A8%E6%99%BA%E8%83%BD%E8%B0%83%E5%BA%A6"><span class="nav-text">核心区别：手动选择 vs
+自动智能调度</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -999,11 +1048,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

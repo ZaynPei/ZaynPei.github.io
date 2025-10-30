@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,42 +833,59 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>该条款的核心是介绍 C++11 引入的“置入函数”（如 emplace_back, emplace 等），并将其与传统的“插入函数”（如 push_back, insert 等）进行比较。在许多情况下，置入函数比插入函数更高效。这是因为置入函数避免了不必要的复制或移动操作，<strong>直接在容器中构造对象</strong>，而插入函数则需要先构造对象，然后再将其复制或移动到容器中。</p>
+			<p>该条款的核心是介绍 C++11 引入的“置入函数”（如 emplace_back, emplace
+等），并将其与传统的“插入函数”（如 push_back, insert
+等）进行比较。在许多情况下，置入函数比插入函数更高效。这是因为置入函数避免了不必要的复制或移动操作，<strong>直接在容器中构造对象</strong>，而插入函数则需要先构造对象，然后再将其复制或移动到容器中。</p>
 <p>插入函数和置入函数的根本区别在于它们<strong>接受的参数类型</strong>：</p>
 <ul>
-<li>插入函数 (如 push_back, insert)：接受一个<strong>对象</strong>（<strong>容器所存储类型</strong>的对象）作为参数。</li>
-<li>置入函数 (如 emplace_back, emplace)：接受用于在容器中构造一个<strong>对象的构造函数实参</strong>。它使用<strong>完美转发</strong>将这些参数直接传递给对象的构造函数。</li>
+<li>插入函数 (如 push_back,
+insert)：接受一个<strong>对象</strong>（<strong>容器所存储类型</strong>的对象）作为参数。</li>
+<li>置入函数 (如 emplace_back,
+emplace)：接受用于在容器中构造一个<strong>对象的构造函数实参</strong>。它使用<strong>完美转发</strong>将这些参数直接传递给对象的构造函数。</li>
 </ul>
-<p>因此, 置入函数的主要性能优势在于，它可以避免创建和销毁临时对象。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::string&gt; vs;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入操作</span></span><br><span class="line">vs.<span class="built_in">push_back</span>(<span class="string">"xyzzy"</span>);</span><br><span class="line"><span class="comment">// 置入操作, 这里由于是字符串因此构造函数实参和对象一致</span></span><br><span class="line">vs.<span class="built_in">emplace_back</span>(<span class="string">"xyzzy"</span>);</span><br></pre></td></tr></table></figure></div>
-<p>push_back 的过程：</p>
-<ul>
-<li>编译器首先从字符串字面量 “xyzzy” 创建一个临时的 std::string 对象。</li>
-<li>然后，这个临时的 std::string 对象（一个右值）被移动构造到 vector 的内存空间中。</li>
-<li>最后，这个临时的 std::string 对象被析构。</li>
-<li>整个过程涉及一次临时对象的构造、一次移动构造和一次析构。</li>
-</ul>
-<p>emplace_back 的过程：</p>
-<ul>
-<li>emplace_back 将其参数 (“xyzzy”) <strong>完美转发</strong>到 std::string 的<strong>构造函数</strong>。</li>
-<li>std::string 对象直接在 vector 的内存空间中被构造出来。</li>
-<li>这个过程完全避免了创建和销毁临时对象，因此效率更高。</li>
-</ul>
-<p>理论上，置入函数应该永远不比插入函数慢。在实践中，当以下三个条件都成立时，置入几乎肯定会比插入更高效：</p>
-<ul>
-<li><strong>值是以构造而非赋值方式加入容器</strong>：这对于所有基于节点的容器（如 std::list, std::map）和在序列容器（如 std::vector）尾部 emplace_back 都成立。</li>
-<li>传递的实参类型与容器持有之物的类型不同：性能优势主要来自于避免创建临时对象。如果传递的实参类型与容器内元素的类型不同（如传递 const char* 给 std::vector<a class="link" href="std::string">std::string<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>），置入就能避免创建临时的 std::string。</li>
-<li>容器不太可能因为存在重复值而拒绝新值：对于 std::set 或 std::map 等不允许重复键的容器，emplace 的实现通常会先创建一个新节点，再将其与容器内现有节点比较。如果此时发现值已存在，这个新创建的节点就会被销毁，其构造和析构的开销就被浪费了。</li>
-</ul>
-<h3 id="置入的注意事项与陷阱"><a href="#置入的注意事项与陷阱" class="headerlink" title="置入的注意事项与陷阱"></a>置入的注意事项与陷阱</h3><p>尽管置入很高效，但在使用时也存在两个重要的陷阱。</p>
-<p>陷阱一：资源管理与异常安全<br>当容器持有资源管理类对象（如智能指针）时，使用置入函数可能会破坏异常安全。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::list&lt;std::shared_ptr&lt;Widget&gt;&gt; ptrs;</span><br><span class="line"></span><br><span class="line"><span class="comment">// push_back 版本（异常安全）</span></span><br><span class="line">ptrs.<span class="built_in">push_back</span>(std::<span class="built_in">shared_ptr</span>&lt;Widget&gt;(<span class="keyword">new</span> Widget, killWidget));</span><br><span class="line"></span><br><span class="line"><span class="comment">// emplace_back 版本（危险！）</span></span><br><span class="line">ptrs.<span class="built_in">emplace_back</span>(<span class="keyword">new</span> Widget, killWidget);</span><br></pre></td></tr></table></figure></div>
-<p>push_back 的情况：std::shared_ptr 的临时对象在 push_back 函数被调用前就已经创建了，它安全地接管了 new Widget 返回的裸指针。如果后续 push_back 在分配内存时抛出异常，这个临时 shared_ptr 的析构函数会确保 Widget 被正确删除，不会发生资源泄漏。</p>
-<p>emplace_back 的情况：new Widget 的结果（一个裸指针）被直接转发到 emplace_back 内部。如果在 emplace_back 内部、在为 std::shared_ptr 分配内存之前，发生了另一次内存分配失败（例如为 list 的节点分配内存），那么 new Widget 返回的裸指针就会丢失，导致资源泄漏。</p>
-<p>陷阱二：与 explicit 构造函数的交互<br>置入函数使用直接初始化，而插入函数使用复制初始化。这意味着置入函数可以调用 explicit 的构造函数，而插入函数不能。<br>因为 emplace_back 的内部行为相当于直接调用构造函数，这遵循的是直接初始化 (Direct-Initialization) 的规则</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::regex&gt; regexes;</span><br><span class="line"><span class="comment">// 已知std::regex 的构造函数 std::regex(const char*) 是 explicit 的。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译失败：push_back 使用复制初始化，不能调用 explicit 构造函数</span></span><br><span class="line">regexes.<span class="built_in">push_back</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译成功！emplace_back 使用直接初始化，可以调用 explicit 构造函数</span></span><br><span class="line">regexes.<span class="built_in">emplace_back</span>(<span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></div>
-<p>这里虽然 emplace_back(nullptr) 能通过编译，但将一个空指针传递给 std::regex 的构造函数会在运行时导致未定义行为。</p>
-<p>因此, 置入函数可能会调用那些会被插入函数拒绝的 explicit 构造函数，这可能会“隐藏”一些潜在的 bug，让本应在编译期发现的问题延迟到运行时。</p>
+<p>因此, 置入函数的主要性能优势在于，它可以避免创建和销毁临时对象。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::string&gt; vs;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入操作</span></span><br><span class="line">vs.<span class="built_in">push_back</span>(<span class="string">"xyzzy"</span>);</span><br><span class="line"><span class="comment">// 置入操作, 这里由于是字符串因此构造函数实参和对象一致</span></span><br><span class="line">vs.<span class="built_in">emplace_back</span>(<span class="string">"xyzzy"</span>);</span><br></pre></td></tr></table></figure></div> push_back 的过程： - 编译器首先从字符串字面量 “xyzzy”
+创建一个临时的 std::string 对象。 - 然后，这个临时的 std::string
+对象（一个右值）被移动构造到 vector 的内存空间中。 - 最后，这个临时的
+std::string 对象被析构。 -
+整个过程涉及一次临时对象的构造、一次移动构造和一次析构。</p>
+<p>emplace_back 的过程： - emplace_back 将其参数 (“xyzzy”)
+<strong>完美转发</strong>到 std::string 的<strong>构造函数</strong>。 -
+std::string 对象直接在 vector 的内存空间中被构造出来。 -
+这个过程完全避免了创建和销毁临时对象，因此效率更高。</p>
+<p>理论上，置入函数应该永远不比插入函数慢。在实践中，当以下三个条件都成立时，置入几乎肯定会比插入更高效：
+-
+<strong>值是以构造而非赋值方式加入容器</strong>：这对于所有基于节点的容器（如
+std::list, std::map）和在序列容器（如 std::vector）尾部 emplace_back
+都成立。 -
+传递的实参类型与容器持有之物的类型不同：性能优势主要来自于避免创建临时对象。如果传递的实参类型与容器内元素的类型不同（如传递
+const char* 给 std::vector<std::string>），置入就能避免创建临时的
+std::string。 - 容器不太可能因为存在重复值而拒绝新值：对于 std::set 或
+std::map 等不允许重复键的容器，emplace
+的实现通常会先创建一个新节点，再将其与容器内现有节点比较。如果此时发现值已存在，这个新创建的节点就会被销毁，其构造和析构的开销就被浪费了。</std::string></p>
+<h3 id="置入的注意事项与陷阱">置入的注意事项与陷阱</h3>
+<p>尽管置入很高效，但在使用时也存在两个重要的陷阱。</p>
+<p>陷阱一：资源管理与异常安全
+当容器持有资源管理类对象（如智能指针）时，使用置入函数可能会破坏异常安全。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::list&lt;std::shared_ptr&lt;Widget&gt;&gt; ptrs;</span><br><span class="line"></span><br><span class="line"><span class="comment">// push_back 版本（异常安全）</span></span><br><span class="line">ptrs.<span class="built_in">push_back</span>(std::<span class="built_in">shared_ptr</span>&lt;Widget&gt;(<span class="keyword">new</span> Widget, killWidget));</span><br><span class="line"></span><br><span class="line"><span class="comment">// emplace_back 版本（危险！）</span></span><br><span class="line">ptrs.<span class="built_in">emplace_back</span>(<span class="keyword">new</span> Widget, killWidget);</span><br></pre></td></tr></table></figure></div> push_back 的情况：std::shared_ptr 的临时对象在 push_back
+函数被调用前就已经创建了，它安全地接管了 new Widget
+返回的裸指针。如果后续 push_back 在分配内存时抛出异常，这个临时
+shared_ptr 的析构函数会确保 Widget 被正确删除，不会发生资源泄漏。</p>
+<p>emplace_back 的情况：new Widget 的结果（一个裸指针）被直接转发到
+emplace_back 内部。如果在 emplace_back 内部、在为 std::shared_ptr
+分配内存之前，发生了另一次内存分配失败（例如为 list
+的节点分配内存），那么 new Widget
+返回的裸指针就会丢失，导致资源泄漏。</p>
+<p>陷阱二：与 explicit 构造函数的交互
+置入函数使用直接初始化，而插入函数使用复制初始化。这意味着置入函数可以调用
+explicit 的构造函数，而插入函数不能。 因为 emplace_back
+的内部行为相当于直接调用构造函数，这遵循的是直接初始化
+(Direct-Initialization) 的规则 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::regex&gt; regexes;</span><br><span class="line"><span class="comment">// 已知std::regex 的构造函数 std::regex(const char*) 是 explicit 的。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译失败：push_back 使用复制初始化，不能调用 explicit 构造函数</span></span><br><span class="line">regexes.<span class="built_in">push_back</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译成功！emplace_back 使用直接初始化，可以调用 explicit 构造函数</span></span><br><span class="line">regexes.<span class="built_in">emplace_back</span>(<span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></div> 这里虽然
+emplace_back(nullptr) 能通过编译，但将一个空指针传递给 std::regex
+的构造函数会在运行时导致未定义行为。</p>
+<p>因此, 置入函数可能会调用那些会被插入函数拒绝的 explicit
+构造函数，这可能会“隐藏”一些潜在的
+bug，让本应在编译期发现的问题延迟到运行时。</p>
 
 		</div>
 
@@ -894,12 +911,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/24/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/makefile/">
+				<a class="prev" rel="prev" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE41%20-%20%E9%92%88%E5%AF%B9%E5%8F%AF%E5%A4%8D%E5%88%B6%E7%9A%84%E5%BD%A2%E5%8F%82%EF%BC%8C%E5%9C%A8%E7%A7%BB%E5%8A%A8%E6%88%90%E6%9C%AC%E4%BD%8E%E5%B9%B6%E4%B8%94%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%A2%AB%E5%A4%8D%E5%88%B6%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%EF%BC%8C%E8%80%83%E8%99%91%E5%B0%86%E5%85%B6%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">Makefile</span>
+						<span class="post-nav-title-item truncate max-w-48">条款41 ：针对可复制的形参，在移动成本低并且一定会被复制的前提下，考虑将其按值传递</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -907,9 +924,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE41%20-%20%E9%92%88%E5%AF%B9%E5%8F%AF%E5%A4%8D%E5%88%B6%E7%9A%84%E5%BD%A2%E5%8F%82%EF%BC%8C%E5%9C%A8%E7%A7%BB%E5%8A%A8%E6%88%90%E6%9C%AC%E4%BD%8E%E5%B9%B6%E4%B8%94%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%A2%AB%E5%A4%8D%E5%88%B6%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%EF%BC%8C%E8%80%83%E8%99%91%E5%B0%86%E5%85%B6%E6%8C%89%E5%80%BC%E4%BC%A0%E9%80%92/">
+				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE37%20-%20%E4%BD%BF%20std%20thread%20%E5%9E%8B%E5%88%AB%E5%AF%B9%E8%B1%A1%E5%9C%A8%E6%89%80%E6%9C%89%E8%B7%AF%E5%BE%84%E7%9A%86%E4%B8%8D%E5%8F%AF%E8%81%94%E7%BB%93/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款41 ：针对可复制的形参，在移动成本低并且一定会被复制的前提下，考虑将其按值传递</span>
+						<span class="post-nav-title-item truncate max-w-48">条款37 ：使 std::thread 型别对象在所有路径皆不可联结</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -960,11 +977,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

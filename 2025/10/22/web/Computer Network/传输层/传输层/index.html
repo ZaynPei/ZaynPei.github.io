@@ -1,0 +1,2513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/22/web/computer network/传输层/传输层/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="传输层">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/22/web/Computer%20Network/%E4%BC%A0%E8%BE%93%E5%B1%82/%E4%BC%A0%E8%BE%93%E5%B1%82/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-22T15:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-21T07:35:39.693Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="computer network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            传输层 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">传输层</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-22 23:00</span>
+        <span class="mobile">2025-10-22 23:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-21 15:35:39</span>
+            <span class="mobile">2025-10-21 15:35:39</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/web/">web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/web/">web</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/computer-network/">computer network</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>15.7k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>56 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>我们前面介绍的网络层提供的服务是<strong>主机到主机</strong>
+(Host-to-Host)，目标是克服网络互联的复杂性，确保数据包能够跨越各种异构网络（如
+LAN、WAN、路由器）找到正确的目标主机。其主要焦点在于<strong>路由</strong>和<strong>寻址</strong>（使用
+IP 地址）。</p>
+<p>在此基础上，传输层（Transport
+Layer）的核心任务是为运行在不同主机上的<strong>应用进程</strong>提供直接的<strong>逻辑通信</strong>服务。因此，传输层协议也被称为端到端协议。</p>
+<blockquote>
+<p>在计算机网络中，实际进行通信的实体并不是主机本身，而是主机上运行的应用进程。例如，主机A上的浏览器进程（AP1）可能正在与主机B上的
+Web 服务器进程（AP3）通信。</p>
+</blockquote>
+<p>为了区分同一主机上的不同应用进程，运输层引入了端口号（Port
+Number）作为应用进程的标识符。端口号是一个 16 位的整数，范围从 0 到
+65535。这里的“端口”是逻辑端口，而非物理端口。具体内容将在后续章节中详细介绍。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>同样的，传输层之间的通信看起来像是数据在通信双方的传输层实体之间沿着水平方向直接传输（端到端）。但实际上，数据是沿着垂直方向在各层之间传递，并通过网络层及其以下层次进行实际的物理传输。传输层屏蔽了底层网络核心的细节（如网络拓扑、路由协议等）。</p>
+<p>在TCP/IP体系结构中，运输层有两个核心协议，它们基于不同的设计哲学和应用需求，提供两种主要的运输服务。</p>
+<p><strong>用户数据报协议（UDP）</strong><br>
+-
+服务特性：无连接的、不可靠的数据传输服务。UDP在发送数据前不需要建立连接，收到数据后也不需要发送确认。它只在IP数据报的服务上增加了一些简单的复用和分用功能。<br>
+- 主要特点：<br>
+- 无连接：传输数据前无需建立连接，开销小。<br>
+- 不可靠：不保证数据可靠交付，不处理误码、丢失、重复、失序等问题。<br>
+-
+面向报文：对应用层传下来的报文，UDP不做拆分或合并，<strong>保留报文边界</strong>。<br>
+- 首部开销小：仅有8字节的固定首部。<br>
+- 适用场景：对实时性要求高，且能容忍少量丢包的应用，如
+IP电话、视频会议、DNS查询。</p>
+<p><strong>传输控制协议（TCP）</strong><br>
+-
+服务特性：面向连接的、可靠的数据传输服务。TCP通过复杂的机制（如连接管理、确认机制、超时重传等）来确保数据在网络中传输时不会出现误码、丢失、失序或重复。<br>
+- 主要特点：<br>
+-
+面向连接：数据传输前必须经过“三报文握手”建立连接，数据传输后要经过“四报文挥手”释放连接。<br>
+- 可靠传输：采用确认、重传等机制，保证数据正确、有序、完整地到达。<br>
+-
+面向<strong>字节流</strong>：认为应用层数据是<strong>一连串的无结构字节流</strong>，TCP可能会对应用层报文进行拆分或合并，不保留报文边界。<br>
+- 全双工通信：允许数据在两个方向上同时独立传输。<br>
+-
+适用场景：对数据可靠性要求高的应用，如文件传输（FTP）、电子邮件（SMTP）、网页浏览（HTTP）。<br>
+<img lazyload src="/images/loading.svg" data-src="image-1.png" alt="alt text"></p>
+<h3 id="传输层端口号复用与分用">传输层端口号、复用与分用</h3>
+<p>我们知道，在操作系统内部，唯一标识一个进程的是进程标识符
+(PID)。但是，PID 是由各个操作系统（Windows, Linux, Mac
+OS）独立管理的，格式并不统一。如果主机A上的进程想和主机B上的进程通信，它无法知道对方的
+PID。因此，TCP/IP
+体系结构需要一个统一的、独立于操作系统的标识符来标记应用进程，这就是端口号。</p>
+<p>端口号是一个 16 比特的数字，取值范围是 0 ~
+65535。它被分为三大类：</p>
+<p><strong>服务器端使用的端口号</strong><br>
+- <strong>熟知端口号</strong> (Well-known Ports): 0 ~ 1023<br>
+- 这是“全球通用”的号码，由 IANA (因特网号码分配管理局) 严格分配给 TCP/IP
+体系中最重要、最核心的应用层协议。<br>
+- HTTP (Web服务)：80<br>
+- HTTPS (安全Web服务)：443<br>
+- FTP (文件传输)：21 (控制) 和 20 (数据)<br>
+- SMTP (电子邮件)：25<br>
+- DNS (域名解析)：53<br>
+- <strong>登记端口号</strong> (Registered Ports): 1024 ~ 49151<br>
+- 这些端口是为那些没有熟知端口号的应用程序准备的。使用这类端口号必须在
+IANA 按规定手续登记，以防止重复。<br>
+- Microsoft RDP (远程桌面) 使用的 3389 端口。</p>
+<p><strong>客户端使用的短暂端口号 (Ephemeral Ports): 49152 ~
+65535</strong><br>
+-
+这类端口也称为临时端口号。当一个客户端进程（如你的浏览器）需要发起网络通信时，它会动态地从这个范围内选择一个当前未被占用的端口供自己使用。<br>
+-
+当服务器收到请求报文时，它会看到这个短暂端口号（作为源端口），并在<strong>响应时将其作为目的端口</strong>，这样数据就能准确返回给发起请求的那个浏览器进程了。通信结束后，这个端口号会被系统<strong>收回</strong>，供其他进程使用。</p>
+<p>需要注意的是，端口号只具有本地意义，且不同协议（如 TCP 和
+UDP）可以使用相同的端口号。要在网络中唯一标识一个应用进程，必须结合<strong>IP地址</strong>和<strong>传输层协议类型</strong>（TCP或UDP）一起使用。这三个要素共同构成了一个<strong>套接字</strong>
+(Socket)，它是网络通信中端到端连接的唯一标识符。</p>
+<h4 id="发送方的复用-multiplexing-和接收方的分用-demultiplexing">发送方的复用
+(Multiplexing) 和接收方的分用 (Demultiplexing)</h4>
+<p>首先，“复用”（Multiplexing）这个概念指的是允许多个<strong>不同的数据流</strong>共享使用<strong>同一个公共的资源或信道</strong>。这是传输层利用端口号实现其功能的动态过程，也是整个
+TCP/IP 体系协同工作的关键环节。</p>
+<p><strong>发送方的复用 (Multiplexing)</strong>: “多对一”
+的汇集过程。<br>
+-
+传输层复用：在发送方主机上，可能同时有<strong>多个应用进程</strong>（如浏览器、FTP客户端、邮件客户端）在发送数据。传输层（TCP或UDP）会接收来自这些<strong>不同进程的应用报文</strong>，为它们打上各自的<strong>端口号</strong>和协议（如浏览器用TCP、DNS查询用UDP），然后将这些封装好的
+TCP 报文段 或 UDP 用户数据报 向下统一交给 IP 层。<br>
+-
+这里的复用体现在：多个应用进程的数据通过传输层被汇集到一个传输层实体（TCP或UDP）中。<br>
+- IP 层复用：IP 层接收来自 TCP 和 UDP 的数据包，将它们再次封装成
+<strong>IP 数据报</strong>（IP 复用），然后发送到网络中。<br>
+- 这里的复用体现在：来自不同传输层协议（TCP和UDP）的数据通过 IP
+层被汇集到一个 IP 实体中。</p>
+<p><strong>接收方的分用 (Demultiplexing)</strong>: “一对多”
+的分发过程，是复用的逆过程<br>
+- IP 分用 (网络层)：接收方主机的 IP 层收到一个 IP 数据报。它会检查 IP
+首部中的 “协议”字段。<br>
+- 如果协议字段的值 = 17，IP 层就知道其数据载荷是一个 UDP
+用户数据报，于是将其向上交付给传输层的 UDP。<br>
+- 如果协议字段的值 = 6，IP 层就知道其数据载荷是一个 TCP
+报文段，于是将其向上交付给传输层的 TCP。<br>
+- 这里的分用体现在：IP
+层根据协议字段将数据分发给不同的传输层协议实体（TCP或UDP）。<br>
+- 传输层分用 (传输层)：传输层（UDP 或 TCP）收到数据后，会检查其首部中的
+“目的端口号” 字段。<br>
+- 例如：TCP 收到一个目的端口为 80 的报文段，它就会查找本地正在 80
+端口“监听”的进程（即 Web 服务器进程），并将数据交付给它。<br>
+- UDP 收到一个目的端口为 53 的用户数据报，它就会将数据交付给正在 53
+端口“监听”的 DNS 服务器进程。<br>
+- 这里的分用体现在：传输层根据目的端口号将数据分发给不同的应用进程。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-2.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>下面是一个实际场景：你的用户PC (192.168.0.1)，想访问 Web服务器
+(www.porttest.net)。Web 服务器的 IP 地址 (192.168.0.3) 记录在 DNS服务器
+(192.168.0.2) 中。</p>
+<p><img lazyload src="/images/loading.svg" data-src="image-3.png" alt="alt text"><br>
+<img lazyload src="/images/loading.svg" data-src="image-4.png" alt="alt text"></p>
+<p><strong>第一阶段：DNS 查询（使用 UDP）</strong><br>
+目的：PC 必须先获取 <code>www.porttest.net</code> 对应的 IP 地址。</p>
+<ol type="1">
+<li><strong>发送 DNS 查询请求（PC → DNS 服务器）</strong>
+<ul>
+<li>协议：UDP<br>
+</li>
+<li>源端口：49152（一个短暂端口号，由 PC 动态分配）<br>
+</li>
+<li>目的端口：53（DNS 的熟知端口号）</li>
+</ul></li>
+<li><strong>收到 DNS 响应（DNS 服务器 → PC）</strong>
+<ul>
+<li>协议：UDP<br>
+</li>
+<li>源端口：53（DNS 的熟知端口号）<br>
+</li>
+<li>目的端口：49152（PC 发起请求时使用的短暂端口）</li>
+</ul></li>
+</ol>
+<p>结果：PC 收到响应，得知 <code>www.porttest.net</code> 的 IP 地址为
+<code>192.168.0.3</code>。随后，PC 归还短暂端口 49152。</p>
+<hr>
+<p><strong>第二阶段：HTTP 请求（使用 TCP）</strong><br>
+目的：PC 已经知道 IP 地址，现在可以向 Web 服务器请求网页内容。</p>
+<ol start="3" type="1">
+<li><strong>发送 HTTP 请求（PC → Web 服务器）</strong>
+<ul>
+<li>协议：TCP<br>
+</li>
+<li>源端口：49152（一个短暂端口号，系统可能重新分配同一个端口）<br>
+</li>
+<li>目的端口：80（HTTP 的熟知端口号）</li>
+</ul></li>
+<li><strong>收到 HTTP 响应（Web 服务器 → PC）</strong>
+<ul>
+<li>协议：TCP<br>
+</li>
+<li>源端口：80（HTTP 的熟知端口号）<br>
+</li>
+<li>目的端口：49152（PC 发起请求时使用的短暂端口）</li>
+</ul></li>
+</ol>
+<p>结果：PC 收到网页内容，浏览器将其渲染显示。通信结束后，PC
+归还短暂端口 49152。</p>
+<h3 id="tcp-和-udp-对比">TCP 和 UDP 对比</h3>
+<ol type="1">
+<li><strong>无连接的 UDP 和面向连接的 TCP</strong>
+<ul>
+<li>UDP (用户数据报协议)：无连接 (Connectionless)
+<ul>
+<li>工作模式：UDP
+采取一种“随心所欲”的发送策略。它不需要在传输数据前与对方进行任何协商或“握手”。<br>
+</li>
+<li>应用程序可以随时将数据打包成 UDP 用户数据报并发送出去。<br>
+</li>
+</ul></li>
+<li>TCP (传输控制协议)：面向连接 (Connection-oriented)
+<ul>
+<li>工作模式：TCP
+采用一种严谨的、类似于“打电话”的模式。在传输数据之前，通信双方必须先进行协商，建立起一条逻辑连接。<br>
+</li>
+<li>过程：
+<ol type="1">
+<li>“三报文握手”建立连接：在传输数据之前，通信双方必须先进行协商，交换初始序号、窗口大小等参数，建立起一条逻辑连接。<br>
+</li>
+<li>数据传输：双方在已建立的连接上进行可靠的数据通信。<br>
+</li>
+<li>“四报文挥手”释放连接：数据传输结束后，双方通过协商来关闭这条逻辑连接，释放资源。<br>
+</li>
+</ol></li>
+<li>这里的“连接”是逻辑上的、虚拟的连接关系，并不是一条物理电路。它只是双方<strong>为了确保可靠通信而在内存中维护的一种状态</strong>。</li>
+</ul></li>
+</ul></li>
+<li><strong>UDP 和 TCP 对单播、多播和广播的支持情况</strong>
+<ul>
+<li>UDP：支持全部三种通信方式。由于 UDP
+是<strong>无连接</strong>的，它可以<strong>自由地向任何目标发送数据</strong>
+<ul>
+<li>单播 (Unicast)：一对一通信（最常见）。<br>
+</li>
+<li>多播 (Multicast)：一对多通信（发送给一个特定组）。<br>
+</li>
+<li>广播 (Broadcast)：一对全通信（发送给子网内的所有主机）。<br>
+</li>
+</ul></li>
+<li>TCP：仅支持单播。TCP
+的“面向连接”特性决定了它必须在<strong>两个确定的端点</strong>（<strong>一对一</strong>）之间建立连接。
+<ul>
+<li>“三报文握手”这个过程本身就是点对点的协商。你无法和一个“组”（多播）或“所有人”（广播）同时进行握手并建立一个统一的连接状态。</li>
+</ul></li>
+</ul></li>
+<li><strong>UDP 和 TCP 对应用层报文的处理</strong><br>
+这个区别决定了应用程序如何看待和处理发送及接收到的数据。
+<ul>
+<li>UDP：<strong>面向应用</strong>报文
+(Message-oriented)，对应用层交下来的报文，采取“原封不动”的策略。
+<ul>
+<li>过程：它既不合并（多个小报文合成一个），也不拆分（一个大报文拆成多个）。它只是简单地给应用报文添加一个
+<strong>8 字节的 UDP 首部</strong>，然后就向下交付给 IP 层。<br>
+</li>
+<li>发送方发送了几个报文，接收方就会收到几个报文。它保留了应用层报文的边界。<br>
+</li>
+</ul></li>
+<li>TCP：面向<strong>字节流</strong>
+(Byte-stream-oriented)，并不关心应用层交下来的是几个报文。
+<ul>
+<li>过程：TCP
+会将应用层数据视为<strong>一长串无结构的字节流</strong>，全部放入自己的“<strong>发送缓存</strong>”中。然后，TCP
+根据自己的<strong>发送策略</strong>（如网络拥塞情况、MSS
+大小等）从缓存中取出<strong>任意数量的字节</strong>，打包成 TCP
+报文段发送出去。<br>
+</li>
+<li>发送方应用进程可能调用了 10 次 send 发送了 10 个短报文，但 TCP
+可能将它们合并成 1 个 TCP 报文段发送。也可能发送方 1 次 send
+发送了一个很长的报文，TCP 会将其拆分成 4 个 TCP 报文段发送。<br>
+</li>
+<li>TCP 不保留应用层报文的边界。接收方的 TCP
+也是将收到的数据放入“<strong>接收缓存</strong>”，应用进程需要<strong>自己从这个字节流中“解析”出有意义的应用层报文</strong>。</li>
+</ul></li>
+</ul></li>
+<li><strong>UDP 和 TCP 对数据传输可靠性的支持</strong><br>
+这是基于它们的设计哲学的直接体现。
+<ul>
+<li>UDP：不可靠 (Unreliable)，只是在 IP
+层“尽最大努力交付”的基础上<strong>增加了端口</strong>功能，它自己不提供任何可靠性保证。
+<ul>
+<li>误码：UDP
+首部有<strong>检验和字段</strong>，能<strong>检查出误码</strong>。但如果发现误码，它唯一的动作就是<strong>丢弃该报文</strong>，并<strong>不会通知发送方</strong>。<br>
+</li>
+<li>丢失/失序：UDP 完全不关心报文是否丢失或是否按顺序到达。<br>
+</li>
+<li>适用：适用于实时应用，如 IP
+电话、视频会议。这些应用能容忍少量丢包，但对延迟非常敏感。<br>
+</li>
+</ul></li>
+<li>TCP：可靠 (Reliable)。TCP 的核心价值在于，它在不可靠的 IP
+层之上，构建了一个面向连接的可靠数据传输服务。
+<ul>
+<li>应用程序使用 TCP
+时，可以将其想象成一条“可靠信道”，数据在上面传输不会出现误码、丢失、失序和重复。<br>
+</li>
+<li>这是通过 TCP
+<strong>复杂的首部</strong>和<strong>机制</strong>（如序号、确认、重传、流量控制、拥塞控制）实现的。<br>
+</li>
+<li>适用：适用于可靠性要求极高的应用，如文件传输、电子邮件。</li>
+</ul></li>
+</ul></li>
+<li><strong>UDP 首部和 TCP 首部的对比</strong><br>
+首部的复杂度直接反映了协议功能的复杂度。
+<ul>
+<li>UDP 首部：极其简单 (Simple)
+<ul>
+<li>结构：只有 <strong>4
+个字段</strong>：<strong>源端口</strong>、<strong>目的端口</strong>、<strong>长度</strong>、<strong>检验和</strong>。<br>
+</li>
+<li>大小：每个字段 2 字节，总共<strong>固定的 8 字节</strong>。<br>
+</li>
+<li>原因：因为 UDP
+功能简单（只管分用和差错检测），所以首部开销极小。<br>
+<img lazyload src="/images/loading.svg" data-src="image-6.png" alt="alt text"><br>
+</li>
+</ul></li>
+<li>TCP 首部：非常复杂 (Complex)
+<ul>
+<li>结构：包含源端口、目的端口、序号、确认号、数据偏移、6
+个控制标志位（SYN, ACK, FIN
+等）、窗口大小、检验和、紧急指针，以及一个可变的选项字段。<br>
+</li>
+<li>大小：<strong>固定的首部就有 20
+字节</strong>，加上选项字段，<strong>最大可达 60 字节</strong>。<br>
+</li>
+<li>原因：TCP
+所有复杂的可靠传输、流量控制和拥塞控制功能，都依赖于首部中这些字段来承载信息。<br>
+<img lazyload src="/images/loading.svg" data-src="image-7.png" alt="alt text"><br>
+</li>
+</ul></li>
+<li>一个共同点：伪首部 (Pseudo-header)，无论是 UDP 还是
+TCP，在计算检验和时，都需要在数据报首部和数据载荷前，额外添加一个 12
+字节的“伪首部”。
+<ul>
+<li>伪首部内容：包含<strong>源 IP 地址</strong>、<strong>目的 IP
+地址</strong>、<strong>协议号</strong>（UDP=17,
+TCP=6）、<strong>数据报长度</strong>等。<br>
+</li>
+<li>目的：这样做的目的是为了再次确认 IP 数据报是否传错了主机（IP
+地址错误）以及 IP 层是否交付错了协议（协议号错误）。</li>
+</ul></li>
+</ul></li>
+</ol>
+<h3 id="传输控制协议tcp">传输控制协议（TCP）</h3>
+<p>传输控制协议（Transmission Control Protocol,
+TCP）是互联网协议族中的核心协议之一。它提供了一种面向连接的、可靠的数据传输服务，确保数据在不可靠的
+IP 网络上能够正确、有序地传输到目标主机的应用进程。</p>
+<h4 id="tcp-的首部">TCP 的首部</h4>
+<p>TCP 报文段的首部是 TCP 协议的灵魂所在，TCP
+的所有功能（可靠性、流量控制、拥塞控制等）都是通过其首部中的各个字段来实现的。</p>
+<p>与 UDP 固定的 8 字节首部不同，TCP 首部要复杂得多。它由两部分组成：20
+字节的固定首部和最大 40 字节的扩展首部（选项）。</p>
+<ol type="1">
+<li><strong>源端口 (Source Port) 和 目的端口 (Destination Port)</strong>
+<ul>
+<li>大小：各 16 比特（2 字节）。<br>
+</li>
+<li>作用：这两个字段与 UDP
+的端口字段作用完全相同，用于实现进程到进程的通信。<br>
+</li>
+<li>源端口：标识发送方主机的应用进程。<br>
+</li>
+<li>目的端口：标识接收方主机的应用进程。</li>
+</ul></li>
+<li><strong>序号 (Sequence Number)</strong>
+<ul>
+<li>大小：32 比特（4 字节）。<br>
+</li>
+<li>作用：这是 TCP 可靠传输和字节流服务的基石。<br>
+</li>
+<li>核心理解：TCP
+是面向字节流的，它将整个<strong>数据流中每一个字节</strong>都进行了编号。本字段（序号）的值，并不是报文段的编号（如第1个、第2个包），而是指<strong>本报文段数据载荷
+(Payload) 中第一个字节在整个数据流中的序号</strong>。<br>
+</li>
+<li>举例：如果一个 TCP 报文段的数据载荷是 “Hello”，而 “H”
+是整个数据流中的第 166 个字节，那么这个报文段的序号字段的值就是
+166。<br>
+</li>
+<li>范围：序号从 0 到 <span class="math inline">2<sup>32</sup> − 1</span>，溢出后会再从 0
+开始。</li>
+</ul></li>
+<li><strong>确认号 (Acknowledgement Number)</strong>
+<ul>
+<li>大小：32 比特（4 字节）。<br>
+</li>
+<li>作用：这是 TCP 实现可靠传输的确认机制的核心。<br>
+</li>
+<li>核心理解：确认号字段的值，代表<strong>期望收到对方下一个报文段的数据载荷的第一个字节的序号</strong>。<br>
+</li>
+<li>重要引申义：确认号为 <span class="math inline"><em>n</em></span>，意味着“<strong>到序号 <span class="math inline"><em>n</em> − 1</span>
+为止的所有数据</strong>，我都已经正确接收了，请你下次从序号 <span class="math inline"><em>n</em></span>
+开始发送”。这是一个<strong>累积确认</strong>。</li>
+</ul></li>
+<li><strong>数据偏移 (Data Offset)</strong>
+<ul>
+<li>大小：4 比特。<br>
+</li>
+<li>作用：指出 TCP 报文段的首部长度。<br>
+</li>
+<li>核心理解：这个字段的名字有些误导，它不表示数据的位置，而是表示“<strong>数据载荷部分距离
+TCP 报文段起始处有多远</strong>”。它的<strong>单位是 4 字节</strong>（32
+位字）。<br>
+</li>
+<li>举例：如果该字段值为 5（二进制 0101），则首部长度 = <span class="math inline">5 × 4 = 20</span> 字节（这是最小的 TCP
+首部长度）。如果该字段值为 15（二进制 1111），则首部长度 = <span class="math inline">15 × 4 = 60</span> 字节（这是最大的 TCP
+首部长度）。</li>
+</ul></li>
+<li><strong>保留 (Reserved)</strong>
+<ul>
+<li>大小：6 比特。<br>
+</li>
+<li>作用：为今后使用而保留，目前必须<strong>全部置为 0</strong>。</li>
+</ul></li>
+<li><strong>六个控制标志位 (Control Flags)</strong>
+<ul>
+<li>这 6 个比特位是 TCP
+的“开关”，用来<strong>控制连接状态和数据传输的行为</strong>。<br>
+</li>
+<li>URG (紧急标志位)：当 URG = 1
+时，表明紧急指针字段有效。它告诉接收方本报文段中有“<strong>紧急数据</strong>”（如
+Ctrl+C 中断信号），应<strong>优先处理</strong>。<br>
+</li>
+<li>ACK (确认标志位)：只有当 ACK = 1 时，上面的确认号字段才有效。TCP
+规定，在<strong>连接建立后</strong>（即“三报文握手”的第二个报文之后），<strong>所有传送的
+TCP 报文段都必须把 ACK 置 1</strong>。<br>
+</li>
+<li>PSH (推送标志位)：提示接收方 TCP
+应尽快将数据<strong>推送（Push）</strong>给应用进程，而<strong>不要等待填满内部缓存</strong>。主要用于<strong>交互式应用</strong>（如
+SSH），发送方也会立即发送，不等待缓存。<br>
+</li>
+<li>RST (复位标志位)：当 RST = 1 时，表明 <strong>TCP
+连接中出现严重差错</strong>（如主机崩溃），必须<strong>释放连接</strong>，然后再重新建立。它也用来拒绝一个非法的连接请求。<br>
+</li>
+<li>SYN (同步标志位)：用于<strong>建立连接</strong>。SYN = 1, ACK =
+0：表示这是一个<strong>连接请求</strong>报文段。SYN = 1, ACK =
+1：表示这是一个<strong>连接接受</strong>（响应）报文段。SYN
+报文段即使不携带数据，也要<strong>消耗掉一个序号</strong>。<br>
+</li>
+<li>FIN (终止标志位)：用于<strong>释放连接</strong>。当 FIN = 1
+时，表明发送方的数据已经全部发送完毕，要求释放连接。FIN 报文段和 SYN
+一样，即使不带数据，也要<strong>消耗一个序号</strong>。</li>
+</ul></li>
+<li><strong>窗口 (Window)</strong>
+<ul>
+<li>大小：16 比特（2 字节）。<br>
+</li>
+<li>作用：实现 TCP <strong>流量控制</strong>。<br>
+</li>
+<li>核心理解：这个字段的值（<span class="math inline">0 ∼ 2<sup>16</sup> − 1</span>）指出的是<strong>发送本报文段一方的接收窗口</strong>
+(rwnd) 大小。它告诉对方：“我现在还有 <span class="math inline"><em>N</em></span>
+字节的接收缓存可用空间，你最多只能再给我发 <span class="math inline"><em>N</em></span> 字节的数据”。<br>
+</li>
+<li>举例：如果一方发送 ack=800 且窗口=1000，它是在告诉对方：“序号
+<strong>799 之前的数据我已收到</strong>。我的接收缓存还能装 1000
+字节，所以你接下来可以发送序号从 800 到 1799 的数据”。</li>
+</ul></li>
+<li><strong>检验和 (Checksum)</strong>
+<ul>
+<li>大小：16 比特（2 字节）。<br>
+</li>
+<li>作用：检查整个 TCP
+报文段（包括首部和数据载荷）在传输过程中是否出现了<strong>误码</strong>。<br>
+</li>
+<li>计算方式：与 UDP 类似，计算时也要在 TCP 报文段前面加上 12
+字节的伪首部（包含源/目的 IP 地址、协议号等信息）。</li>
+</ul></li>
+<li><strong>紧急指针 (Urgent Pointer)</strong>
+<ul>
+<li>大小：16 比特（2 字节）。<br>
+</li>
+<li>作用：仅在 URG = 1 时有效。<br>
+</li>
+<li>核心理解：它是一个偏移量，指出本报文段中<strong>紧急数据的长度</strong>。它指向紧急数据末尾的下一个字节。<br>
+</li>
+<li>处理：接收方收到 URG=1
+的报文段，会根据紧急指针字段的值，从数据载荷中“插队”取出紧急数据，并直接上交给应用进程。</li>
+</ul></li>
+<li><strong>选项 (Options)</strong>
+<ul>
+<li>大小：长度可变，最大 40 字节。<br>
+</li>
+<li>作用：增加 TCP 的功能。<br>
+</li>
+<li>主要选项：
+<ul>
+<li>MSS
+(<strong>最大报文段长度</strong>)：这是最重要的选项之一。它指的是 TCP
+报文段中<strong>数据载荷 (Payload) 部分的最大长度</strong>，不包括 TCP
+首部。双方在建立连接时协商 MSS。目的是尽量让 TCP 报文段封装成 IP
+数据报后，不需要在网络层进行分片。如果主机不设置，默认 MSS 值为 536
+字节。<br>
+</li>
+<li>窗口扩大选项：用于扩大 16 位的窗口字段（在高速网络中 65535
+字节的窗口太小）。<br>
+</li>
+<li>时间戳选项：用于更精确地计算往返时间 (RTT)，以及防止序号绕回
+(PAWS)。<br>
+</li>
+<li>选择确认选项
+(SACK)：允许接收方确认“非连续”的数据块，提高重传效率。</li>
+</ul></li>
+</ul></li>
+<li><strong>填充 (Padding)</strong>
+<ul>
+<li>作用：由于选项字段的长度是可变的，填充字段（用 0
+填充）的目的是<strong>确保整个 TCP 首部（固定+选项）的长度是 4
+字节的整数倍</strong>。<br>
+</li>
+<li>原因：这是为了匹配数据偏移字段（以 4 字节为单位）的定义。</li>
+</ul></li>
+</ol>
+<h4 id="tcp-的连接管理">TCP 的连接管理</h4>
+<p>TCP 协议最核心的机制之一：连接管理。这是 TCP “面向连接”
+特性的具体体现，确保了数据传输的有序和可靠。</p>
+<p>这个管理过程主要分为三个阶段 ： - 建立 TCP 连接（通过“三报文握手”） -
+数据传送（在已建立的连接上进行） - 释放 TCP 连接（通过“四报文挥手”）</p>
+<h5 id="三报文握手建立-tcp-连接">三报文握手建立 TCP 连接</h5>
+<p>TCP
+客户端和服务器在传输应用数据前，必须通过“三报文握手”建立逻辑连接。握手的目的有三点：</p>
+<ol type="1">
+<li><strong>确知对方存在</strong>：双方确认彼此“在线”且“可达”。</li>
+<li><strong>协商参数</strong>：包括
+MSS（最大报文段长度）、窗口大小、时间戳选项、SACK、窗口扩大等高级功能。</li>
+<li><strong>分配和初始化资源</strong>：双方在操作系统内核中分配缓存空间、连接状态变量等资源。</li>
+</ol>
+<p><strong>详细过程如下：</strong></p>
+<ol type="1">
+<li><strong>初始状态</strong><br>
+</li>
+</ol>
+<ul>
+<li>服务器进程创建传输控制块（TCB），进入
+LISTEN（监听）状态，等待连接请求。<br>
+</li>
+<li>客户端进程也创建 TCB，准备发起连接。</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>第一次握手（客户端 → 服务器）</strong><br>
+</li>
+</ol>
+<ul>
+<li>客户端发送 TCP <strong>连接请求</strong>报文段。<br>
+</li>
+<li>标志位：SYN=1, ACK=0<br>
+</li>
+<li>序号：seq=x（x
+为<strong>客户端</strong>随机选择的<strong>初始序号</strong>）<br>
+</li>
+<li>客户端进入 SYN-SENT 状态。<br>
+</li>
+<li>注意：SYN 报文段即使不携带数据，也要消耗一个序号。</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>第二次握手（服务器 → 客户端）</strong><br>
+</li>
+</ol>
+<ul>
+<li>服务器收到请求后，发回<strong>连接确认</strong>报文段。<br>
+</li>
+<li>标志位：SYN=1, <strong>ACK=1</strong><br>
+</li>
+<li>序号：seq=y（y
+为<strong>服务器</strong>随机选择的<strong>初始序号</strong>）<br>
+</li>
+<li>确认号：<strong>ack=x+1</strong>（确认客户端的 SYN）<br>
+</li>
+<li>服务器进入 SYN-RCVD 状态。<br>
+</li>
+<li>注意：此报文段同样消耗一个序号。</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>第三次握手（客户端 → 服务器）</strong><br>
+</li>
+</ol>
+<ul>
+<li>客户端收到确认后，发送<strong>普通 TCP 确认</strong>报文段。<br>
+</li>
+<li>标志位：ACK=1<br>
+</li>
+<li>序号：<strong>seq=x+1</strong><br>
+</li>
+<li>确认号：<strong>ack=y+1</strong>（确认服务器的 SYN）<br>
+</li>
+<li>客户端进入 ESTABLISHED 状态。<br>
+</li>
+<li>注意：此报文段可携带数据，不携带数据则不消耗序号。</li>
+</ul>
+<ol start="5" type="1">
+<li><strong>握手完成</strong><br>
+</li>
+</ol>
+<ul>
+<li>服务器收到第三次握手的 ACK 后，也进入 ESTABLISHED 状态。<br>
+</li>
+<li>双方确认收发能力，连接建立成功，可以开始数据传输。</li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-8.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>为什么必须是“三报文握手”，而不是“两报文”？</p>
+<p>这是 TCP
+连接管理中一个经典问题。答案是为了<strong>防止已失效的连接请求报文段突然又传送到了服务器，因而导致错误</strong>。</p>
+<p>设想一个“两报文握手”的场景：</p>
+<ul>
+<li><p>客户发送一个 SYN 请求 (seq=x)，但这个包在网络中长时间滞留了
+。</p></li>
+<li><p>客户超时重传了一个新的 SYN 请求 (seq=x’)，这次成功了。</p></li>
+<li><p>服务器用 SYN/ACK 响应
+(ack=x’+1)，客户收到后（在两报文握手模型中）就认为连接已建立，开始传数据
+。</p></li>
+<li><p>数据传输完毕，双方关闭连接 。</p></li>
+<li><p>此时，那个滞留的旧 SYN 请求 (seq=x) 突然到达了服务器 。</p></li>
+<li><p>服务器误认为这是客户发起的一个全新的连接请求 。</p></li>
+<li><p>服务器发送 SYN/ACK 响应 (ack=x+1)，并立即进入 ESTABLISHED
+状态（因为是两报文握手）。</p></li>
+<li><p>客户早已处于 CLOSED 状态，收到这个 SYN/ACK 后会不予理睬
+。</p></li>
+</ul>
+<p>结果： 服务器单方面进入了 ESTABLISHED
+状态，并一直等待客户发来数据，白白浪费了主机的资源 。</p>
+<p>“三报文握手”如何解决这个问题：如果采用三报文握手，服务器发送 SYN/ACK
+后会进入 SYN-RCVD 状态，等待客户的第三次握手 (ACK)。由于客户不会发送这个
+ACK，服务器在 SYN-RCVD
+状态超时后就会关闭这个（虚假的）连接，从而避免了资源浪费。</p>
+<h5 id="四报文挥手释放-tcp-连接">四报文挥手释放 TCP 连接</h5>
+<p>数据传输结束后，通信双方都可以发起释放连接的请求。这个过程需要交换四个报文段。</p>
+<p>为什么是“四报文”而不是“三报文”？</p>
+<p>核心在于 TCP 的<strong>半关闭 (Half-Close)
+状态</strong>(TCP是全双工的)。当一方（如客户）表示不再发送数据时（<strong>发送
+FIN</strong>），它只是关闭了<strong>自己到服务器的数据发送通道</strong>,
+但是自己还可以接收数据；但此时服务器可能还有数据没发完，服务器到客户的数据通道不应立即关闭。因此，必须等服务器也发送
+FIN，双方各自确认对方的 FIN 后，连接才真正关闭。</p>
+<p>假设客户（主动关闭方）发起释放请求：</p>
+<ol type="1">
+<li><strong>初始状态</strong><br>
+</li>
+</ol>
+<ul>
+<li>双方都处于 ESTABLISHED 状态。</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>第一次挥手（报文 1：客户 → 服务器）</strong><br>
+</li>
+</ol>
+<ul>
+<li>客户进程通知 TCP 主动关闭连接，TCP
+发送<strong>连接释放</strong>报文段。<br>
+</li>
+<li>标志位：<code>FIN = 1, ACK = 1</code>（ACK=1
+因为连接期间所有报文都要置 1）。<br>
+</li>
+<li>序号：<code>seq = u</code>（u 等于客户已传送数据的最后一个字节序号 +
+1）。<br>
+</li>
+<li>状态：客户发送后，进入 FIN-WAIT-1（终止等待 1）状态。<br>
+</li>
+<li>注意：FIN
+报文段即使不携带数据，也要<strong>消耗一个序号</strong>。</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>第二次挥手（报文 2：服务器 → 客户）</strong><br>
+</li>
+</ol>
+<ul>
+<li>服务器收到 FIN 后，发送一个<strong>普通的 TCP
+确认</strong>报文段。<br>
+</li>
+<li>标志位：<code>ACK = 1</code><br>
+</li>
+<li>序号：<code>seq = v</code>（v 等于服务器已传送数据的最后一个字节序号
++ 1）。<br>
+</li>
+<li>确认号：<code>ack = u + 1</code>（这是对客户 FIN 的确认）。<br>
+</li>
+<li>状态：服务器发送后，进入 CLOSE-WAIT（关闭等待）状态。<br>
+</li>
+<li>服务器动作：服务器 TCP
+应立即通知高层应用进程：“客户要断开连接了”。<br>
+</li>
+<li>进入“半关闭”状态：客户收到第二次挥手的 ACK 后，进入
+FIN-WAIT-2（终止等待 2）状态。<br>
+</li>
+<li>此时：客户 → 服务器方向的连接已释放（客户不能再发数据），但服务器 →
+客户方向的连接仍未关闭。服务器如果还有数据要发，可以继续发送；客户仍需接收。</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>第三次挥手（报文 3：服务器 → 客户）</strong><br>
+</li>
+</ol>
+<ul>
+<li>当服务器的应用进程也处理完数据，通知 TCP 被动关闭连接时，TCP
+发送<strong>连接释放</strong>报文段。<br>
+</li>
+<li>标志位：<code>FIN = 1, ACK = 1</code><br>
+</li>
+<li>序号：<code>seq = w</code>（w 可能等于
+v，也可能因为半关闭期间又发了数据而大于 v）。<br>
+</li>
+<li>确认号：<code>ack = u + 1</code>（重复确认第一次挥手）。<br>
+</li>
+<li>状态：服务器发送后，进入
+LAST-ACK（最后确认）状态，等待客户的最后确认。</li>
+</ul>
+<ol start="5" type="1">
+<li><strong>第四次挥手（报文 4：客户 → 服务器）</strong><br>
+</li>
+</ol>
+<ul>
+<li>客户收到服务器的 FIN 后，必须发送一个<strong>普通的 TCP
+确认</strong>报文段。<br>
+</li>
+<li>标志位：<code>ACK = 1</code><br>
+</li>
+<li>序号：<code>seq = u + 1</code>（因为客户的 FIN
+消耗了一个序号）。<br>
+</li>
+<li>确认号：<code>ack = w + 1</code>（这是对服务器 FIN 的确认）。<br>
+</li>
+<li>状态：客户发送后，进入 TIME-WAIT（时间等待）状态。</li>
+</ul>
+<ol start="6" type="1">
+<li><strong>挥手完成</strong><br>
+</li>
+</ol>
+<ul>
+<li>服务器：收到第四次挥手的 ACK 后，立即进入
+<strong>CLOSED</strong>（关闭）状态，撤销 TCB。<br>
+</li>
+<li>客户：必须在 TIME-WAIT 状态<strong>等待
+2MSL</strong>（最长报文段寿命，例如 4 分钟）后，才能进入 CLOSED
+状态，撤销 TCB。 <img lazyload src="/images/loading.svg" data-src="image-9.png" alt="alt text"></li>
+</ul>
+<p><strong>为什么客户最后要等待 2MSL（TIME-WAIT 状态）？</strong></p>
+<p>TCP 在连接释放时，客户进入 TIME-WAIT 状态并等待 2MSL（Maximum Segment
+Lifetime，报文段最大生存时间），主要有两个目的：</p>
+<ol type="1">
+<li><strong>确保服务器能收到最后一个 ACK（可靠性）</strong><br>
+</li>
+</ol>
+<ul>
+<li>在四次挥手的最后，客户向服务器发送 ACK 报文段。如果这个 ACK
+丢失，服务器（处于 LAST-ACK 状态）会超时重传 FIN 报文段。<br>
+</li>
+<li>如果客户立即关闭连接（进入 CLOSED 状态），就无法响应服务器重传的
+FIN，导致服务器无法正常关闭。<br>
+</li>
+<li>保持 TIME-WAIT 状态，客户可以接收重传的 FIN，并再次发送
+ACK，确保服务器顺利关闭连接。</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>确保本次连接的所有报文段都从网络中消失（健壮性）</strong><br>
+</li>
+</ol>
+<ul>
+<li>2MSL
+的等待时间足以让本次连接中的所有“迷路”报文段（包括迟到的数据包或
+ACK）从网络中彻底消失。<br>
+</li>
+<li>这样可以防止这些旧连接的报文段干扰到后续可能建立的、使用相同四元组（源
+IP、源端口、目的 IP、目的端口）的新连接。</li>
+</ul>
+<h5 id="tcp-保活计时器-keepalive-timer">TCP 保活计时器 (Keepalive
+Timer)</h5>
+<p>如果 TCP
+双方建立了连接，但客户主机突然出现故障（如宕机或网线断开），服务器怎么办？服务器会一直处于
+ESTABLISHED 状态，白白等待下去 。</p>
+<p>解决方案是： TCP 设有一个<strong>保活计时器</strong> (Keepalive
+Timer) 。</p>
+<ol type="1">
+<li><p>服务器<strong>每收到一次客户的数据</strong>，就<strong>重置</strong>计时器（通常为
+2 小时）。</p></li>
+<li><p>如果 2 小时内未收到客户的任何数据，计时器超时,
+服务器发送一个探测报文段。</p></li>
+<li><p>若无响应，则每隔 75 秒发送一次。</p></li>
+<li><p>若连续发送 10
+个探测报文段后仍无响应，服务器就认为客户主机出了故障，于是关闭这个连接。</p></li>
+</ol>
+<h4 id="tcp-的流量控制">TCP 的流量控制</h4>
+<p>首先, 建立 TCP 连接的双方（例如 A 和
+B）都会在内核中为该连接分配一个<strong>接收缓存</strong>（Receiver
+Buffer） 。</p>
+<p>A 作为发送方，B 作为接收方。如果 A 发送数据的速率过快，导致 B
+的应用程序（如浏览器）来不及从 B 的接收缓存中读取数据，那么 B
+的接收缓存最终会被填满 。</p>
+<p>一旦<strong>缓存溢出</strong>，B
+将不得不<strong>丢弃后续到达的数据包</strong>，从而导致数据丢失 。</p>
+<p>为了解决这个问题，TCP 引入了<strong>流量控制</strong> (Flow Control)
+机制，用于防止发送方发送数据太快，导致接收方来不及接收。</p>
+<p>核心思想是,
+让接收方根据<strong>自己的接收能力</strong>（即接收缓存的可用空间大小），来<strong>反向控制发送方的发送速率</strong>。</p>
+<blockquote>
+<p>与“拥塞控制”的区别： 流量控制：
+是一个端到端的问题。它只关心“我（发送方）”和“你（接收方）”之间的速度匹配，防止“我”把“你”的缓存撑爆。
+拥塞控制：
+是一个<strong>全局性</strong>的问题。它关心的是<strong>整个网络的健康状况</strong>，防止过多的数据注入网络导致<strong>路由器瘫痪</strong>，是“我（发送方）”与“整个网络”之间的协调。我们稍后会详细讨论拥塞控制。</p>
+</blockquote>
+<h5 id="tcp-的流量控制方法滑动窗口">TCP 的流量控制方法：滑动窗口</h5>
+<p>TCP 使用<strong>滑动窗口</strong> (Sliding Window)
+机制来巧妙地实现流量控制, 使用到了 <strong>TCP 首部</strong>中的
+“<strong>窗口</strong>”字段。</p>
+<p>该字段的值由<strong>接收方</strong>设置，用来通告<strong>自己的接收窗口</strong>
+(Receiver Window, rwnd) 大小。rwnd
+的值等于接收方<strong>当前接收缓存的可用空间</strong>大小。</p>
+<blockquote>
+<p>接收方 B 通过这个字段告诉发送方 A：“我的仓库（接收缓存）现在还剩下
+rwnd 字节的空位，你接下来最多只能再发给我 rwnd 字节的数据。”</p>
+</blockquote>
+<p>发送方 A 收到 B 发来的 rwnd
+值后，会<strong>调整自己的发送窗口</strong> (Sender Window,
+swnd)，确保其<strong>小于或等于 B 通告的 rwnd</strong>。</p>
+<p>这样，发送方 A 就被限制住了，其发送速率自动地受到了接收方 B
+接收能力的制约。</p>
+<p>让我们通过一个实例来理解这个动态过程。假设 A 给 B 发送数据，B 对 A
+进行流量控制 。</p>
+<ol type="1">
+<li><p>初始状态： 建立连接时，B 告诉 A：“我的 rwnd=400” 。A 将自己的
+swnd 也设置为 400 。</p></li>
+<li><p>A 开始发送： A 连续发送了 4 个报文段（1-100, 101-200,
+201-300(丢失), 301-400） 。</p></li>
+<li><p>B 第一次流量控制： B 收到了 1-100 和 101-200。但此时 B
+的应用进程只取走了 100 字节的数据，导致接收缓存只空出了 300 字节。B
+发送确认：ack=201（期望 201 号字节），rwnd=300（我只剩 300 字节空间了）
+。</p></li>
+<li><p>A 调整速率： A 收到 rwnd=300 的通知，立即将自己的 swnd 调整为 300
+。</p></li>
+<li><p>A 超时重传： A 发现 201-300 的报文段超时，于是重传 201-300
+。</p></li>
+<li><p>B 第二次流量控制： B 收到了重传的 201-300，以及之前收到的
+301-400, 401-500。此时 B 的缓存被占满，只剩 100 字节。B
+发送确认：ack=501，rwnd=100 。</p></li>
+<li><p>A 再次调整： A 收到 rwnd=100，将 swnd 调整为 100 。</p></li>
+<li><p>A 发送最后数据： A 发送 501-600 。</p></li>
+<li><p>B 第三次流量控制 (零窗口通知)： B 收到 501-600，此时 B
+的接收缓存彻底满了，可用空间为 0。B 发送确认：ack=601，rwnd=0
+。</p></li>
+<li><p>A 停止发送： A 收到 rwnd=0，将 swnd 调整为 0 。此时，A
+不能再发送任何普通的 TCP 数据报文段 。</p></li>
+</ol>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-10.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>但是, 上述第 10 步带来了一个严重问题：A 正在等待 B
+发送一个<strong>非零的 rwnd 通知</strong>，才能继续发送数据 。</p>
+<p>假设 B 的应用进程终于读取了数据，缓存空出来了（例如 rwnd 变为
+300）。B 很高兴地向 A 发送了一个 rwnd=300 的“非零窗口通知”报文段
+。但是，这个 ACK 报文段在网络传输中丢失了！</p>
+<p>结果是：A 永远在等待 B 的窗口更新通知（它不知道那个通知丢失了） 。B
+永远在等待 A 发送更多数据（它不知道 A 的 swnd 还是 0）
+。双方陷入了永久的互相等待，连接死锁</p>
+<p>为了打破这种由“非零窗口通知丢失”引起的死锁，TCP
+设计了<strong>持续计时器</strong> 。</p>
+<ul>
+<li><p>启动：当发送方 A 收到对方 B 发来的零窗口通知 (rwnd=0) 时，A
+就启动持续计时器 。</p></li>
+<li><p>超时： 当持续计时器超时后，A
+会主动发送一个“<strong>零窗口探测报文段</strong>” (Zero-Window Probe)
+。</p></li>
+<li><p>探测报文： 这个探测报文段通常只携带 1 字节的数据 。</p></li>
+<li><p>B 的响应： 接收方 B 在收到这个探测报文段时，必须<strong>回复一个
+ACK 报文</strong>，并在 ACK 中通告自己当前最新的 rwnd 值 。 &gt;
+TCP协议规定, 即使 rwnd=0, 接收方也必须接收零窗口确认报文,
+确认报文以及携带紧急数据的报文</p>
+<ul>
+<li><p>情况 1： 如果 B 的 rwnd 仍然是 0。A 收到 rwnd=0 的 ACK
+后，重置持续计时器，等待下一个超时再继续探测 。</p></li>
+<li><p>情况 2： 如果 B 的 rwnd 已经恢复为 300（那个丢失的 ACK
+就是想通知这个）。A 收到 rwnd=300 的 ACK 后，就知道可以继续发送数据了
+。死锁被打破 。</p></li>
+</ul></li>
+</ul>
+<blockquote>
+<p>鲁棒性： 如果 A 发送的“零窗口探测报文段”自己也丢失了怎么办？
+没关系，探测报文段本身也受<strong>超时重传</strong>机制保护
+。如果探测报文丢失，A
+会在<strong>另一个计时器</strong>（<strong>重传计时器</strong>）超时后，重传这个探测报文，确保探测动作一定能被
+B 收到。</p>
+</blockquote>
+<h4 id="tcp-的拥塞控制">TCP 的拥塞控制</h4>
+<p>TCP 拥塞控制是 TCP 协议中最为复杂、也最为关键的机制之一。它决定了 TCP
+如何在保证可靠性的同时，最大限度地利用网络带宽，而又不会导致网络崩溃。</p>
+<p>什么是拥塞
+(Congestion)？简而言之，就是“僧多粥少”。当网络中某一<strong>资源</strong>（如链路带宽、路由器缓存、处理机）的<strong>需求</strong>超过了<strong>该资源所能提供的可用部分</strong>时，网络性能就会变坏，这种情况就叫作拥塞
+。</p>
+<p>如果没有拥塞控制，所有主机都试图以最快速度发送数据，很快就会超出网络（尤其是路由器）的<strong>处理极限</strong>
+。这会导致<strong>路由器缓存溢出</strong>、<strong>大量数据包被丢弃</strong>，发送方因收不到确认而<strong>集体超时重传</strong>，这又进一步加剧了网络拥塞，最终可能导致网络吞吐量急剧下降甚至为
+0，即“<strong>拥塞崩溃</strong>” (Congestion Collapse)。</p>
+<p>目前, TCP 的拥塞控制方法是<strong>隐式闭环控制</strong> -
+<strong>闭环</strong>控制 (Closed-Loop)： TCP
+采用<strong>基于反馈</strong>的控制方法
+。它包含<strong>监测</strong>、<strong>通知</strong>和<strong>调整</strong>三个步骤
+。 - <strong>隐式</strong>反馈 (Implicit Feedback)：
+网络中的路由器不会显式地告诉 TCP“我快不行了”。TCP
+必须推断网络是否发生了拥塞. 而TCP
+判断拥塞的依据就是<strong>超时重传</strong>（Timeout） 。TCP
+发送方认为，数据包在网络中丢失（导致超时）的主要原因就是网络拥塞（路由器繁忙而丢弃了分组）
+。</p>
+<h5 id="tcp-的四种拥塞控制方法">TCP 的四种拥塞控制方法</h5>
+<p>TCP 的发送方需要额外维护两个非常重要的状态变量：</p>
+<ul>
+<li><p>拥塞窗口 (Congestion Window,
+<strong>cwnd</strong>)：是发送方<strong>根据网络拥塞程度估算出的一个窗口值</strong>。它代表了在收到确认前，发送方最多可以发送多少数据。</p>
+<ul>
+<li>注意： 发送方真正的发送窗口 swnd，是取拥塞窗口 cwnd 和流量控制窗口
+rwnd 中的较小值 ，即：swnd = min(cwnd, rwnd)</li>
+<li>(在接下来的讨论中，我们假设接收方总是有足够大的缓存，即 rwnd
+很大，因此 swnd = cwnd )。</li>
+</ul></li>
+<li><p>慢开始门限 (Slow Start Threshold,
+<strong>ssthresh</strong>)：这是一个边界值，用于区分何时使用“慢开始”算法，何时使用“拥塞避免”算法
+。</p>
+<ul>
+<li>cwnd &lt; ssthresh 时： 使用慢开始算法 。</li>
+<li>cwnd &gt; ssthresh 时： 使用拥塞避免算法 。</li>
+<li>cwnd = ssthresh 时： 两者皆可 。</li>
+</ul></li>
+</ul>
+<p>这四种算法是一个协同工作的完整流程</p>
+<h6 id="慢开始-slow-start">慢开始 (Slow-Start)</h6>
+<p><strong>目的</strong>：在连接刚建立或超时重传后，采用<strong>指数增长</strong>的方式快速探测网络的可用带宽。这里的“慢”指的是<strong>初始拥塞窗口</strong>（cwnd）很小（通常为
+1 MSS），而不是增长速度慢。</p>
+<p><strong>算法流程</strong>： - 连接建立时，cwnd = 1 MSS（假设初始
+ssthresh = 16 MSS）。 - 每收到一个对新报文段的确认（ACK），cwnd 增加 1
+MSS。</p>
+<p><strong>效果（指数增长）</strong>：假设往返时延（RTT）固定。 - 第 1
+轮：发送 1 个报文段，收到 1 个 ACK，cwnd 变为 2 MSS。 - 第 2 轮：发送 2
+个报文段，收到 2 个 ACK，cwnd 变为 4 MSS。 - 第 3 轮：发送 4
+个报文段，收到 4 个 ACK，cwnd 变为 8 MSS。 - 以此类推，cwnd 每经过一个
+RTT 就会翻倍。</p>
+<p><strong>结论</strong>：慢开始阶段，cwnd 以指数速度增长，直到达到
+ssthresh 阈值或发生丢包事件。</p>
+<h6 id="拥塞避免-congestion-avoidance">拥塞避免 (Congestion
+Avoidance)</h6>
+<p>目的：当 cwnd 增长到 ssthresh
+门限后，说明已经接近网络容量，此时需要减缓增长速度，转为<strong>线性增长</strong>，小心地探测可用带宽。</p>
+<p>算法：当 cwnd ≥ ssthresh 时，进入拥塞避免阶段。此时，每经过一个
+RTT（即收到了上一轮发出的所有报文段的 ACK），cwnd 的值只增加 1 MSS。</p>
+<p>效果（线性增长）：cwnd = 16 → 17 → 18 → …</p>
+<p>到此为止，TCP
+窗口一直在增长，但什么时候停止？答案是：直到出现拥塞。TCP
+感知拥塞有两种方式：</p>
+<ul>
+<li><strong>A. 发生“超时重传”（严重拥塞）</strong>
+<ul>
+<li><p>判断： 发送方等待了很久（<strong>RTO 超时</strong>）也没收到
+ACK，认为网络发生了严重拥塞（数据包和 ACK 都可能丢了）。</p></li>
+<li><p>动作 (TCP Tahoe/Reno 共同点)：</p>
+<ul>
+<li>更新门限： ssthresh = 当前 cwnd / 2 。</li>
+<li>重置窗口： cwnd = 1 。</li>
+<li>重新开始： 立即退回到慢开始阶段 。</li>
+</ul></li>
+<li><p>如图, cwnd 增长到 24 时超时。ssthresh = 24 / 2 = 12。cwnd =
+1。重新从 1 开始慢开始，直到 cwnd 增长到 12
+时，再切换到拥塞避免。</p></li>
+<li><p>这是 TCP 拥塞控制中最保守的反应方式, 1988 年提出的 TCP Tahoe
+就采取了这种方法。到了 1990 年, TCP Reno
+引入了更为激进的“快重传”和“快恢复”机制, 以提高网络利用率。 <img lazyload src="/images/loading.svg" data-src="image-11.png" alt="alt text"></p></li>
+</ul></li>
+<li><strong>B. 轻微拥塞（3 个重复 ACK）</strong>
+<ul>
+<li><p>有时网络并未发生严重拥塞，只是个别报文段丢失（如 M3 丢失） 。但
+M4, M5, M6 仍然按时到达了接收方。</p></li>
+<li><p>接收方动作： 接收方收到 M4、M5、M6（失序报文）时，会立即发送对 M2
+的重复确认（M2 是最后一个按序收到的） 。</p></li>
+<li><p>发送方动作： 当发送方连续收到 3 个对 M2
+的重复确认（Dup-ACKs）时，它不等超时，立即触发<strong>快速重传</strong>
+(Fast Retransmit) 机制，重传丢失的 M3 。</p></li>
+<li><p>这种机制基于一个假设：如果网络发生了严重拥塞，导致大量报文段丢失，那么发送方<strong>不会收到这么多重复
+ACKs</strong>，因为 ACKs 也会丢失。因此，收到 3 个重复 ACKs
+通常意味着只是个别报文段丢失，网络状况还不错。因此, 为了提高效率,
+发送方可以<strong>立即重传丢失的报文段</strong>，而不必等到超时。 ######
+快重传 (Fast Retransmit)</p></li>
+</ul></li>
+</ul>
+<p>动作： 发送方立即重传它认为丢失的那个报文段（即
+M3），而不必等待超时计时器到期, 从而极大地提高了重传效率 。</p>
+<h6 id="快恢复-fast-recovery">快恢复 (Fast Recovery)</h6>
+<p>既然发送方能收到 3 个重复
+ACK，说明网络只是丢了个别包，信道并没有瘫痪。如果此时像超时一样把 cwnd
+降为 1（慢开始），就太保守了。</p>
+<p>算法（与快重传配合使用）：</p>
+<ul>
+<li>更新门限： ssthresh = 当前 cwnd / 2 。</li>
+<li>设置窗口： cwnd = ssthresh （而不是降为 1）。</li>
+<li>进入阶段： 立即跳过慢开始，直接进入拥塞避免阶段（cwnd 线性增长）
+。</li>
+</ul>
+<p>如图, cwnd 增长到 16 时收到 3 个重复 ACK。ssthresh = 16 / 2 = 8。cwnd
+= 8。立即从 8 开始执行拥塞避免（线性增长到 9, 10…） 。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-12.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h6 id="总结">总结</h6>
+<p>TCP 的拥塞控制就是在这四种算法之间，根据收到的 ACK
+情况（正常、超时、3 个重复 ACK）不断切换的动态过程：</p>
+<ul>
+<li><strong>启动</strong>：慢开始（cwnd=1）。</li>
+<li><strong>慢开始阶段</strong>：cwnd 指数增长。
+<ul>
+<li>如果发生<strong>超时</strong>：
+<ul>
+<li>ssthresh = cwnd / 2</li>
+<li>cwnd = 1</li>
+<li>返回慢开始阶段。</li>
+</ul></li>
+<li>如果收到<strong>3 个重复 ACK</strong>：
+<ul>
+<li>进入快恢复：
+<ul>
+<li>ssthresh = cwnd / 2</li>
+<li>cwnd = ssthresh</li>
+<li>进入拥塞避免阶段。</li>
+</ul></li>
+</ul></li>
+<li>如果 cwnd ≥ ssthresh：
+<ul>
+<li>进入拥塞避免阶段。</li>
+</ul></li>
+</ul></li>
+<li><strong>拥塞避免阶段</strong>：cwnd 线性增长。
+<ul>
+<li>如果发生<strong>超时</strong>：
+<ul>
+<li>ssthresh = cwnd / 2</li>
+<li>cwnd = 1</li>
+<li>返回慢开始阶段。</li>
+</ul></li>
+<li>如果收到<strong>3 个重复 ACK</strong>：
+<ul>
+<li>进入快恢复：
+<ul>
+<li>ssthresh = cwnd / 2</li>
+<li>cwnd = ssthresh</li>
+<li>保持在拥塞避免阶段。</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>这种机制保证了 TCP
+能根据网络状况动态调整发送速率，实现高效且可靠的数据传输。</p>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-13.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h6 id="tcp-拥塞控制与网际层拥塞控制的关系">TCP
+拥塞控制与网际层拥塞控制的关系</h6>
+<p>TCP
+的拥塞控制（发送方根据网络状况调整发送速率）是一种隐式反馈机制。它依赖于猜测网络是否拥塞（通过超时或重复
+ACK）。</p>
+<p>然而，网络中的路由器（工作在网际层）是真正处理拥塞的地方。因此，路由器如何处理（或丢弃）IP
+数据报的策略，将极大地影响 TCP 的行为 。</p>
+<p>传统的丢弃策略：<strong>尾部丢弃</strong> (Tail-drop Policy),
+这是最简单、最被动的一种路由器队列管理策略。</p>
+<p>路由器的输入缓存（队列）通常按照“先进先出”（FIFO）的规则处理 IP
+数据报。由于队列长度有限，当队列已满时，之后所有新到达的 IP
+数据报都将被丢弃 。</p>
+<p>然而,
+这种策略非常“被动”，它要等到问题（<strong>队列已满</strong>）发生后才开始丢包,
+在网络拥塞时会引发一个灾难性的连锁反应，称为<strong>全局同步</strong>。发生过程（多米诺骨牌效应）：</p>
+<ul>
+<li><p>路由器拥塞： 大量 TCP
+连接的数据流涌入某个路由器，导致其队列被填满。</p></li>
+<li><p>尾部丢弃：
+路由器开始丢弃所有后续到达的报文段，这可能同时来自多个不同的 TCP
+连接。</p></li>
+<li><p>集体超时： 这些 TCP
+连接的发送方会（大约在同一时间）因收不到确认而<strong>集体发生超时重传</strong>。</p></li>
+<li><p>集体慢开始： 根据 TCP 拥塞控制算法（5.3.4
+节），发生超时重传被视为严重拥塞。因此，所有这些 TCP
+连接会同时将自己的拥塞窗口 cwnd 降为
+1，并<strong>集体进入慢开始阶段</strong>。</p></li>
+</ul>
+<p>后果是<strong>网络通信量骤降</strong>,
+整个网络的通信量突然大幅下降。而<strong>网络恢复后通信量又激增</strong>：
+在网络恢复正常后，这些连接又会（大约在同一时间）一起开始“慢开始”的指数增长，导致通信量突然激增，很可能再次引发拥塞和另一次全局同步
+。</p>
+<p>也就是说, 网络吞吐量会在高位和低位之间产生剧烈振荡，效率极低。</p>
+<p>为了解决“尾部丢弃”和“全局同步”问题，IETF 在 1998
+年提出了<strong>主动队列管理</strong> (<strong>Active Queue Management,
+AQM</strong>) 的思想: “未雨绸缪”，而不是“亡羊补牢”。</p>
+<p>路由器不应该等到队列已满（被动）才开始丢包，而应在队列长度达到<strong>某个“值得警惕”的阈值</strong>时（即出现拥塞征兆时），就主动地开始丢弃
+IP 数据报 。</p>
+<p>通过“主动”丢包，AQM 故意让<strong>个别 TCP</strong>
+连接的发送方提前（早于其他连接）感知到拥塞（通过超时或快重传），从而提前降低发送速率
+。</p>
+<p>这就避免了所有 TCP 连接在同一时刻集体超时，从而避免了全局同步。</p>
+<p><strong>RED</strong>（也称<strong>随机早期丢弃</strong>）是 AQM
+中最著名的一种实现算法. 工作机制为：</p>
+<ul>
+<li>路由器维护两个队列长度门限：<strong>最小门限</strong>和<strong>最大门限</strong>。</li>
+<li>路由器会持续计算<strong>平均队列长度</strong>（注意：是“平均”长度，不是瞬时长度，这可以平缓突发流量）。</li>
+<li>当一个新数据报到达时，RED 按以下规则处理：
+<ul>
+<li>若平均队列长度 &lt; 最小门限：存入队列（网络良好）。</li>
+<li>若平均队列长度 &gt;
+最大门限：丢弃数据报（拥塞严重，退化为尾部丢弃）。</li>
+<li>若平均队列长度 在 最小门限 和 最大门限 之间：按一个概率 <span class="math inline"><em>p</em></span> 丢弃该数据报。</li>
+</ul></li>
+</ul>
+<p>这里的早期 (Early)指的是在队列未满时，就开始丢包（平均队列长度 &gt;
+最小门限）。</p>
+<p>随机(Random)则是在警告阶段（两门限之间），按概率 <span class="math inline"><em>p</em></span>
+随机丢包。这个“随机性”是关键，它确保了丢包被分散到不同的 TCP
+连接上，而不是像“尾部丢弃”那样惩罚同一时刻到达的所有连接。</p>
+<p>通过随机地让个别 TCP 连接减速，RED 有效地避免了全局同步问题。</p>
+<h4 id="tcp-可靠传输的实现">TCP 可靠传输的实现</h4>
+<p>TCP
+可靠传输基于字节流模型和动态滑动窗口机制。为便于理解，假设数据单向传输（发送方
+<span class="math inline">→</span> 接收方），暂不考虑拥塞控制（即 <span class="math inline"><em>s</em><em>w</em><em>n</em><em>d</em> = <em>r</em><em>w</em><em>n</em><em>d</em></span>）。</p>
+<h5 id="发送窗口-swnd-与接收窗口-rwnd">1. 发送窗口 (swnd) 与接收窗口
+(rwnd)</h5>
+<ul>
+<li><strong>接收窗口
+(rwnd)</strong>：由接收方通告，反映其接收缓存的可用空间，是流量控制的依据。</li>
+<li><strong>发送窗口
+(swnd)</strong>：由发送方维护，任意时刻必须小于等于接收方通告的
+rwnd。</li>
+</ul>
+<h5 id="发送方的工作机制">2. 发送方的工作机制</h5>
+<p>发送方维护一个发送缓存，并用三个指针标记数据状态：</p>
+<ul>
+<li><strong>P1</strong>：指向“已发送且收到确认”的下一个字节（窗口后沿）。</li>
+<li><strong>P2</strong>：指向“已发送但未收到确认”的下一个字节。</li>
+<li><strong>P3</strong>：指向“允许发送但尚未发送”的下一个字节（窗口前沿）。</li>
+</ul>
+<p>缓存区域划分如下：</p>
+<ul>
+<li><strong>灰色区域
+(&lt;P1)</strong>：已发送且收到确认的数据，可从缓存删除。</li>
+<li><strong>蓝色区域
+([P1…P2-1])</strong>：已发送但未确认的数据，需保留以便重传。</li>
+<li><strong>绿色区域
+([P2…P3-1])</strong>：允许发送但尚未发送的数据，可随时发送。</li>
+<li><strong>白色区域 (≥P3)</strong>：超出窗口的数据，暂不可发送。</li>
+</ul>
+<p>窗口滑动机制：</p>
+<ul>
+<li><strong>窗口后沿 (P1) 前移</strong>：收到新的累积确认（如
+ack=34），P1 前移到 34，表示 34 之前的数据已被确认。</li>
+<li><strong>窗口前沿 (P3) 前移</strong>：P3 = P1 + rwnd。P1 前移或 rwnd
+增大时，P3 前移；rwnd 减小时，P3
+后移（但标准不建议后移，避免已发送数据变为“非法”）。</li>
+</ul>
+<h5 id="接收方的工作机制">3. 接收方的工作机制</h5>
+<p>接收方维护接收缓存，大小等于 rwnd，处理按序和失序数据：</p>
+<ul>
+<li><strong>按序到达</strong>：若收到期望的下一个字节（如
+31），接收方将其及后续连续数据（如 32,
+33）交付应用层，窗口滑动，发送累积确认（ack=34）。</li>
+<li><strong>失序到达</strong>：若收到非期望字节（如 32, 33，期望
+31），接收方通常缓存失序数据，但不能确认，只能发送重复确认（ack=31），提示发送方缺失数据。</li>
+</ul>
+<h5 id="可靠传输的补充说明">4. 可靠传输的补充说明</h5>
+<ul>
+<li><strong>累积确认 (Cumulative ACK)</strong>：ack=N 表示 <span class="math inline"><em>N</em> − 1</span>
+之前所有字节已收到。优点是简单、ACK
+报文少；缺点是丢包时无法告知后续数据已收到（可用 SACK 选项优化）。</li>
+<li><strong>推迟确认 (Delayed ACK)</strong>：接收方可延迟发送
+ACK（如最多 0.5 秒），以减少纯 ACK
+报文数量，但延迟过久可能导致发送方误判超时。</li>
+<li><strong>失序数据处理</strong>：标准未强制要求缓存失序数据，但现代实现通常缓存失序数据，待缺失部分补齐后再交付应用层，提高效率。</li>
+<li><strong>全双工通信</strong>：上述机制在通信双方均独立运行，每方既管理自己的
+swnd，也处理对方的 rwnd。</li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-14.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<h4 id="tcp-超时重传时间-rto-的选择">TCP 超时重传时间 (RTO) 的选择</h4>
+<p>超时重传时间 (Retransmission Timeout, RTO) 的选择是 TCP
+最复杂的问题之一 。这个时间设置得是长是短，会产生截然不同的后果：</p>
+<ul>
+<li><p>RTO 设置得太短:
+报文段可能并没有丢失，只是在网络中传输得慢了一点。但 RTO
+已经超时，导致发送方不必要地重传了报文段,
+增大了网络负荷，可能导致网络更加拥塞 。</p></li>
+<li><p>RTO 设置得太长 (见图
+5-43)：报文段确实丢失了，但发送方需要等待很长一段时间（RTO）后才能发现并重传。这会使重传推迟的时间太长，导致网络空闲时间增大，降低了数据传输效率
+。</p></li>
+</ul>
+<p>显而易见，理想的 RTO
+的值应该设置为<strong>略大于</strong>报文段的往返时间
+(<strong>RTT</strong>) 。</p>
+<p>理想很美好，但现实是 RTT 并不是一个固定值。TCP
+下层是复杂的因特网，数据包可能经过<strong>高速率</strong>的局域网，也可能经过<strong>低速率、高拥塞</strong>的广域网，<strong>路由</strong>还可能随时变化.
+第一次测得的 <span class="math inline"><em>R</em><em>T</em><em>T</em><sub>0</sub></span>
+可能很短，但第二次测得的 <span class="math inline"><em>R</em><em>T</em><em>T</em><sub>1</sub></span>
+可能非常长</p>
+<p>因此, RTO
+必须是一个<strong>动态的、自适应的</strong>值，不能基于某一次的 RTT
+样本来“写死”。</p>
+<p><strong>加权平均往返时间</strong> (RTTs): 为了平缓 RTT
+的瞬时波动，TCP 不使用单个 RTT 样本，而是计算一个加权平均往返时间
+(Smoothed RTT, <span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>S</em></sub></span>)。该值综合了<strong>历史
+RTT 样本</strong>和<strong>最新 RTT
+样本的信息</strong>，反映了当前的网络状况。</p>
+<p>计算公式： - 首次测量： <span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>S</em></sub></span>
+直接取第一个 RTT 样本的值 - 后续测量： <span class="math inline">新的
+<em>R</em><em>T</em><em>T</em><sub><em>S</em></sub> = (1 − <em>α</em>) × 旧的
+<em>R</em><em>T</em><em>T</em><sub><em>S</em></sub> + <em>α</em> × 新的
+<em>R</em><em>T</em><em>T</em>样本</span> . - [RFC 6298] 推荐 <span class="math inline"><em>α</em></span> 的值为 1/8 (即 0.125) ,
+这意味着新的 <span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>S</em></sub></span>
+87.5% 取决于历史平均值，12.5% 取决于刚测到的新样本。这使得 <span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>S</em></sub></span>
+的变化非常平滑。</p>
+<p>根据计算, <span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>S</em></sub></span>
+是一个平滑的平均值，但 RTO 必须比它大，而且要大到足以覆盖 RTT 的正常抖动
+(Jitter)。因此，TCP 引入了 <strong>RTT 偏差的加权平均值</strong>
+<strong><span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>D</em></sub></span></strong>。
+- 计算 <span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>D</em></sub></span>
+(RTT 偏差的加权平均值)： - 目的： 测量 RTT 的抖动程度。 - 公式： <span class="math inline">新的
+<em>R</em><em>T</em><em>T</em><sub><em>D</em></sub> = (1 − <em>β</em>) × 旧的
+<em>R</em><em>T</em><em>T</em><sub><em>D</em></sub> + <em>β</em> × |<em>R</em><em>T</em><em>T</em><sub><em>S</em></sub> − 新的
+<em>R</em><em>T</em><em>T</em>样本|</span> - 计算 RTO (超时重传时间)：
+<span class="math inline"><em>R</em><em>T</em><em>O</em> = <em>R</em><em>T</em><em>T</em><sub><em>S</em></sub> + 4 × <em>R</em><em>T</em><em>T</em><sub><em>D</em></sub></span>
+- 理解： RTO 等于“平均往返时间”加上一个“4 倍的安全抖动余量”。
+这个余量确保即使 RTT 有较大波动，RTO 仍然足够大，不会频繁超时。</p>
+<p>不过, 上述讨论还面临一个最大的难题：<strong>ACK 的歧义性</strong>
+(ACK Ambiguity)</p>
+<p>所有公式都依赖一个前提：我们能准确测量 RTT
+样本。但在发生超时重传时，RTT 的测量会变得极其困难 。</p>
+<p>场景 1：<strong>报文丢失</strong></p>
+<ul>
+<li>A 发送“原报文段”，计时开始。</li>
+<li>报文丢失 。</li>
+<li>A 超时，重传“重传报文段”。</li>
+<li>A 收到 B 对“重传报文段”的 ACK。</li>
+</ul>
+<p>此时 A 无法判断这个 ACK
+是对“原报文段”的（迟到的）确认，还是对“重传报文段”的确认 。</p>
+<p>如果 A 误以为这是对“原报文段”的确认，它计算出的 RTT 样本会极大，导致
+RTO 变得过大，降低传输效率 。</p>
+<p>场景 2：<strong>ACK 迟到</strong></p>
+<ul>
+<li>A 发送“原报文段”，计时开始。</li>
+<li>B 收到并发送 ACK，但 ACK 在网络中长时间滞留 。</li>
+<li>A 超时，重传“重传报文段”。</li>
+<li>A 收到 B（迟到的）对“原报文段”的 ACK。</li>
+</ul>
+<p>同样, A 无法判断这个 ACK
+是对“原报文段”的确认，还是对“重传报文段”的确认 。</p>
+<p>如果 A 误以为这是对“重传报文段”的确认，它计算出的 RTT
+样本会极小，导致 RTO 变得过小，引发未来不必要的重传。</p>
+<p>目前的解决方案是 <strong>Karn 算法</strong>及其修正Karn
+算法：为了解决上述的歧义性问题，Karn
+提出了一个简单的算法：只要一个报文段重传了，就不采用它返回的 ACK
+所计算出的 RTT 样本。</p>
+<p>换句话说，发生重传时，不更新 <span class="math inline"><em>R</em><em>T</em><em>T</em><sub><em>S</em></sub></span>
+和 RTO 。</p>
+<p>Karn 算法的问题：设想网络时延突然永久性增大（例如路由变更）。A
+会发现原 RTO 太短，导致超时重传。根据 Karn 算法，A 会忽略这个重传报文的
+RTT 样本（这个样本本可以反映新的网络时延）。RTO 永远得不到更新，导致 A
+不断地重传，网络效率极低。</p>
+<p>Karn 算法修正 (指数退避)：为了解决这个问题，Karn
+算法增加了修正条款：报文段每重传一次，就把 RTO
+增大一些。典型的做法是将新的 RTO 值取为旧 RTO 值的 2 倍。</p>
+<h4 id="tcp-的选择确认-selective-ack-sack">TCP 的选择确认 (Selective
+ACK, SACK)</h4>
+<p>TCP 默认使用累积确认（Cumulative ACK），即 ack=N 表示“到 <span class="math inline"><em>N</em> − 1</span>
+为止的所有字节我都收到了”。但在如下场景下效率很低：</p>
+<ul>
+<li>发送方依次发送 1-1000、1001-1500、1501-3000、3001-3500、3501-4500
+等数据块。</li>
+<li>接收方正确收到 1-1000，但 1001-1500 丢失，后续的 1501-3000 和
+3501-4500 却已收到。</li>
+<li>由于 1001-1500 未到，接收方只能不断发送 ack=1001（期望收到
+1001），无法告知发送方后续数据已收到。</li>
+<li>发送方收到重复的 ack=1001，只能重传 1001-1500，却不知道 1501-3000 和
+3501-4500 已经安全抵达，可能会不必要地重传这些块，浪费带宽。</li>
+</ul>
+<p>为解决上述问题，TCP 引入了<strong>选择确认</strong>（SACK）选项。SACK
+允许接收方在<strong>发送累积确认</strong>（ack=1001）的同时，<strong>额外报告已收到的非连续数据块</strong>。</p>
+<p>SACK 的工作机制：</p>
+<ul>
+<li>协商：SACK 是可选项，需在三报文握手阶段双方协商支持。</li>
+<li>原 ACK 字段不变：确认号字段仍为累积确认。</li>
+<li><strong>SACK 选项</strong>格式：每个 SACK 块由两个 32
+位序号组成，分别表示该块的<strong>左边界</strong>（第一个字节序号）和<strong>右边界</strong>（最后一个字节序号
++ 1）。</li>
+</ul>
+<p>回到上述场景，接收方会发送一个 TCP 报文段：</p>
+<ul>
+<li>确认号字段：ack=1001（累积确认）</li>
+<li>SACK 选项：报告块 1：L1=1501, R1=3001（表示 1501-3000
+已收到）；报告块 2：L2=3501, R2=4501（表示 3501-4500 已收到）</li>
+</ul>
+<p>发送方收到 SACK 后，明确知道只需重传 1001-1500 和
+3001-3500，无需重传已收到的数据块，从而显著提高效率。</p>
+<p>SACK 的限制：</p>
+<ul>
+<li>TCP 首部选项字段最大为 40 字节</li>
+<li>每个 SACK 块需 8 字节（4 字节左边界 + 4 字节右边界）</li>
+<li>SACK 选项本身还需 2 字节（类型和长度）</li>
+<li>因此，一个 TCP 报文最多可报告 4 个 SACK 块（<span class="math inline">8 × 4 + 2 = 34 ≤ 40</span>）</li>
+</ul>
+<h4 id="tcp-窗口和缓存的关系">TCP 窗口和缓存的关系</h4>
+<p>在之前的讨论中，我们经常交替使用“窗口”和“缓存”这两个词，但它们在物理上是不同的概念
+。理解它们的区别对于深入掌握 TCP 流量控制至关重要。</p>
+<p><strong>发送缓存</strong> (Sending Buffer)：</p>
+<ul>
+<li><p>定义：这是 TCP
+在内存中为一条连接分配的<strong>物理</strong>存储区域 。</p></li>
+<li><p>作用：它用来存放所有“待处理”的数据，具体包括:</p>
+<ul>
+<li>发送方应用进程已经写入、但 <strong>TCP 尚未发送</strong>的数据
+。</li>
+<li>TCP 已发送、但<strong>尚未收到确认</strong> (ACK)
+的数据（这些数据必须保留，以便超时重传） 。</li>
+</ul></li>
+</ul>
+<p><strong>发送窗口</strong> (Sending Window, swnd)：</p>
+<ul>
+<li><p>定义：这是一个<strong>逻辑上</strong>的概念，它代表“当前允许发送的数据范围”。</p></li>
+<li><p>关系：发送窗口通常只是发送缓存的一部分 。</p></li>
+<li><p>发送缓存的左边界（起始点）与发送窗口的左边界（即“已发送但未收到确认”的第一个字节）重合
+。当 TCP 收到新的 ACK，窗口和缓存的左边界一起前移，ACK
+之前的数据被从缓存中删除 。</p></li>
+<li><p>发送缓存的右边界则由应用进程决定（应用进程写入了多少数据）。</p></li>
+<li><p>制约： 应用进程写入缓存的速率必须受到控制，不能超过 TCP
+发送和确认的速率，否则发送缓存会溢出 。</p></li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-15.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p><strong>接收缓存</strong> (Receiving Buffer)：</p>
+<ul>
+<li>定义： 接收方 TCP 在内存中分配的物理存储区域 。</li>
+<li>作用： 它用来存放所有已收到但尚未被应用进程读取的数据，具体包括：
+<ul>
+<li>按序到达的、但尚未被应用进程读取的数据 。</li>
+<li>未按序到达的、暂时无法交付给应用进程的数据（如 SACK
+机制中提到的那些不连续块） 。</li>
+</ul></li>
+</ul>
+<p><strong>接收窗口</strong> (Receiving Window, rwnd)：</p>
+<ul>
+<li><p>定义：这是一个逻辑概念，代表接收缓存中当前的可用空间 。</p></li>
+<li><p>关系：rwnd 的大小 = 接收缓存总大小 - (已按序到达未读数据 +
+已未按序到达数据)。</p></li>
+<li><p>接收缓存的<strong>总大小是固定的</strong>。</p></li>
+<li><p>随着数据（无论是按序还是失序）的到达，缓存被占用，rwnd（可用空间）减小
+。</p></li>
+<li><p>随着接收方应用进程从缓存中读取数据（只能读取按序的数据），缓存被释放，rwnd
+增大 。</p></li>
+</ul>
+<figure>
+<img lazyload src="/images/loading.svg" data-src="image-16.png" alt="alt text">
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>流量控制的实现就在于接收方将这个动态变化的 <strong>rwnd</strong>
+值，填入它所发送的 ACK 报文首部的“窗口”字段中，通告给发送方 。</p>
+<p>如果应用进程停止读取，缓存会被填满，rwnd 变为 0 。</p>
+<p>发送方收到 rwnd=0
+后，就会停止发送数据（触发持续计时器），从而实现了流量控制 。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/web/">#web</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/computer-network/">#computer network</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/22/web/Computer%20Network/%E5%BA%94%E7%94%A8%E5%B1%82/%E5%BA%94%E7%94%A8%E5%B1%82/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">应用层</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/8.%20std%20jthread/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">std jthread</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">传输层</div>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82%E7%AB%AF%E5%8F%A3%E5%8F%B7%E5%A4%8D%E7%94%A8%E4%B8%8E%E5%88%86%E7%94%A8"><span class="nav-text">传输层端口号、复用与分用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%96%B9%E7%9A%84%E5%A4%8D%E7%94%A8-multiplexing-%E5%92%8C%E6%8E%A5%E6%94%B6%E6%96%B9%E7%9A%84%E5%88%86%E7%94%A8-demultiplexing"><span class="nav-text">发送方的复用
+(Multiplexing) 和接收方的分用 (Demultiplexing)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp-%E5%92%8C-udp-%E5%AF%B9%E6%AF%94"><span class="nav-text">TCP 和 UDP 对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AEtcp"><span class="nav-text">传输控制协议（TCP）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E7%9A%84%E9%A6%96%E9%83%A8"><span class="nav-text">TCP 的首部</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E7%9A%84%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86"><span class="nav-text">TCP 的连接管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%89%E6%8A%A5%E6%96%87%E6%8F%A1%E6%89%8B%E5%BB%BA%E7%AB%8B-tcp-%E8%BF%9E%E6%8E%A5"><span class="nav-text">三报文握手建立 TCP 连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%9B%E6%8A%A5%E6%96%87%E6%8C%A5%E6%89%8B%E9%87%8A%E6%94%BE-tcp-%E8%BF%9E%E6%8E%A5"><span class="nav-text">四报文挥手释放 TCP 连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#tcp-%E4%BF%9D%E6%B4%BB%E8%AE%A1%E6%97%B6%E5%99%A8-keepalive-timer"><span class="nav-text">TCP 保活计时器 (Keepalive
+Timer)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-text">TCP 的流量控制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#tcp-%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E6%96%B9%E6%B3%95%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-text">TCP 的流量控制方法：滑动窗口</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E7%9A%84%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-text">TCP 的拥塞控制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#tcp-%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E6%96%B9%E6%B3%95"><span class="nav-text">TCP 的四种拥塞控制方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%85%A2%E5%BC%80%E5%A7%8B-slow-start"><span class="nav-text">慢开始 (Slow-Start)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E9%81%BF%E5%85%8D-congestion-avoidance"><span class="nav-text">拥塞避免 (Congestion
+Avoidance)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BF%AB%E6%81%A2%E5%A4%8D-fast-recovery"><span class="nav-text">快恢复 (Fast Recovery)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#tcp-%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E4%B8%8E%E7%BD%91%E9%99%85%E5%B1%82%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-text">TCP
+拥塞控制与网际层拥塞控制的关系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">TCP 可靠传输的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E7%AA%97%E5%8F%A3-swnd-%E4%B8%8E%E6%8E%A5%E6%94%B6%E7%AA%97%E5%8F%A3-rwnd"><span class="nav-text">1. 发送窗口 (swnd) 与接收窗口
+(rwnd)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%96%B9%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">2. 发送方的工作机制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E6%96%B9%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">3. 接收方的工作机制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93%E7%9A%84%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="nav-text">4. 可靠传输的补充说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E8%B6%85%E6%97%B6%E9%87%8D%E4%BC%A0%E6%97%B6%E9%97%B4-rto-%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-text">TCP 超时重传时间 (RTO) 的选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E7%9A%84%E9%80%89%E6%8B%A9%E7%A1%AE%E8%AE%A4-selective-ack-sack"><span class="nav-text">TCP 的选择确认 (Selective
+ACK, SACK)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcp-%E7%AA%97%E5%8F%A3%E5%92%8C%E7%BC%93%E5%AD%98%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-text">TCP 窗口和缓存的关系</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

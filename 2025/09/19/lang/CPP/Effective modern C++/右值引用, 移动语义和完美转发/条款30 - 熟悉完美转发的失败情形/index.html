@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,50 +833,69 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>“完美转发”是 C++11 中一个极其强大的特性，但它并非在所有情况下都“完美”。该条款的核心是揭示几种完美转发会失败或产生非预期行为的边界情况，并提供相应的解决方案。</p>
-<h3 id="什么是完美转发失败"><a href="#什么是完美转发失败" class="headerlink" title="什么是完美转发失败"></a>什么是完美转发失败</h3><p>完美转发的理想目标是：一个转发函数 fwd 在接收某个表达式 expr 时，其行为应与将 expr 直接传递给目标函数 f 的行为完全相同。</p>
+			<p>“完美转发”是 C++11
+中一个极其强大的特性，但它并非在所有情况下都“完美”。该条款的核心是揭示几种完美转发会失败或产生非预期行为的边界情况，并提供相应的解决方案。</p>
+<h3 id="什么是完美转发失败">什么是完美转发失败</h3>
+<p>完美转发的理想目标是：一个转发函数 fwd 在接收某个表达式 expr
+时，其行为应与将 expr 直接传递给目标函数 f 的行为完全相同。
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">f</span>(expression);      <span class="comment">// 直接调用</span></span><br><span class="line"><span class="built_in">fwd</span>(expression);    <span class="comment">// 通过转发函数间接调用</span></span><br></pre></td></tr></table></figure></div>
-<p>当直接调用成功，而间接调用却失败（例如，无法通过编译，或调用了错误的重载版本）时，就称完美转发失败。</p>
+当直接调用成功，而间接调用却失败（例如，无法通过编译，或调用了错误的重载版本）时，就称完美转发失败。</p>
 <p>失败的根本原因在于，编译器在处理fwd(expression)时，必须先推导fwd的模板参数类型，而这个推导过程不考虑最终目标函数f的形参类型。而在直接调用f(expression)时，编译器会同时看到实参和形参，并可以进行必要的隐式类型转换。当类型推导失败或推导出“错误”的类型时，完美转发就会失败。</p>
-<h3 id="五种导致完美转发失败的实参"><a href="#五种导致完美转发失败的实参" class="headerlink" title="五种导致完美转发失败的实参"></a>五种导致完美转发失败的实参</h3><ol>
-<li>大括号初始化物 (Braced Initializers): 直接将 {} 初始化列表传递给目标函数通常是合法的，但通过转发函数传递则会失败。</li>
+<h3 id="五种导致完美转发失败的实参">五种导致完美转发失败的实参</h3>
+<ol type="1">
+<li>大括号初始化物 (Braced Initializers): 直接将 {}
+初始化列表传递给目标函数通常是合法的，但通过转发函数传递则会失败。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> std::vector&lt;<span class="type">int</span>&gt;&amp; v)</span></span>;</span><br><span class="line"><span class="built_in">f</span>({<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}); <span class="comment">// 成功："{1,2,3}"被隐式转换为 std::vector&lt;int&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fwd</span><span class="params">(T&amp;&amp; param)</span> </span>{ <span class="built_in">f</span>(std::forward&lt;T&gt;(param)); }</span><br><span class="line"><span class="built_in">fwd</span>({<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}); <span class="comment">// 错误！</span></span><br></pre></td></tr></table></figure></div> 原因在于, 将 {…} 传递给一个未声明为 std::initializer_list
+的函数模板参数，属于C++标准中的非推导语境 (non-deduced
+context)。编译器被禁止从 {1, 2, 3} 中为 fwd 的模板参数 T
+推导出类型。由于类型推导失败，代码无法通过编译。</li>
 </ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">const</span> std::vector&lt;<span class="type">int</span>&gt;&amp; v)</span></span>;</span><br><span class="line"><span class="built_in">f</span>({<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}); <span class="comment">// 成功："{1,2,3}"被隐式转换为 std::vector&lt;int&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fwd</span><span class="params">(T&amp;&amp; param)</span> </span>{ <span class="built_in">f</span>(std::forward&lt;T&gt;(param)); }</span><br><span class="line"><span class="built_in">fwd</span>({<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}); <span class="comment">// 错误！</span></span><br></pre></td></tr></table></figure></div>
-<p>原因在于, 将 {…} 传递给一个未声明为 std::initializer_list 的函数模板参数，属于C++标准中的非推导语境 (non-deduced context)。编译器被禁止从 {1, 2, 3} 中为 fwd 的模板参数 T 推导出类型。由于类型推导失败，代码无法通过编译。</p>
-<p>解决方案也很简单, 先使用 auto 将大括号初始化物创建为一个 std::initializer_list 对象，再将该对象传递给转发函数。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> il = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};</span><br><span class="line"><span class="built_in">fwd</span>(il); <span class="comment">// 成功：il 被推导为 std::initializer_list&lt;int&gt;</span></span><br></pre></td></tr></table></figure></div>
+<p>解决方案也很简单, 先使用 auto 将大括号初始化物创建为一个
+std::initializer_list 对象，再将该对象传递给转发函数。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> il = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};</span><br><span class="line"><span class="built_in">fwd</span>(il); <span class="comment">// 成功：il 被推导为 std::initializer_list&lt;int&gt;</span></span><br></pre></td></tr></table></figure></div></p>
+<ol start="2" type="1">
+<li>以 0 或 NULL 表示的空指针 直接调用时，0 或 NULL
+可能会被正确解释为空指针，但转发时则不行。</li>
+</ol>
+<p>原因是, 如条款8所述，0 和 NULL 的真实类型是整型（int 或
+long）。模板类型推导会忠实地将其推导为整型，而不是指针类型。当这个错误的整型被转发给期望指针的目标函数时，就会发生类型不匹配的错误。</p>
+<p>解决方案是使用 nullptr 代替 0 或 NULL。nullptr 的类型是
+std::nullptr_t，它可以被正确地推导并转发。</p>
+<ol start="3" type="1">
+<li>仅有声明的整型 static const 成员变量
+<strong>在类中声明但未在实现文件中定义</strong>的整型 static const
+成员，可以直接作为值使用，但不能通过完美转发传递。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> std::<span class="type">size_t</span> MinVals = <span class="number">28</span>; <span class="comment">// 仅有声明</span></span><br><span class="line">};</span><br><span class="line"><span class="built_in">f</span>(Widget::MinVals); <span class="comment">// 成功：编译器直接替换为值 28</span></span><br><span class="line"><span class="built_in">fwd</span>(Widget::MinVals); <span class="comment">// 错误：通常会导致链接失败</span></span><br></pre></td></tr></table></figure></div>
+完美转发是通过引用（万能引用
+T&amp;&amp;）来接受参数的。传递引用在底层实现上通常等同于传递指针，这意味着被引用的对象必须有明确的内存地址。<strong>仅有声明的
+static const
+成员变量</strong>，编译器通常会通过“<strong>常数传播”优化直接使用其值</strong>，而不会为其分配内存地址。因此，当
+fwd 尝试获取其引用时，链接器会因为找不到该变量的定义而报错。</li>
+</ol>
+<p>解决方案是在实现文件中为该成员变量提供定义即可 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 Widget 的 .cpp 文件中</span></span><br><span class="line"><span class="type">const</span> std::<span class="type">size_t</span> Widget::MinVals; <span class="comment">// 无需再次指定值</span></span><br></pre></td></tr></table></figure></div></p>
+<ol start="4" type="1">
+<li>重载的函数名字和模板名字
+直接将一个重载函数的名字传递给目标函数是合法的，但通过转发函数传递则会失败。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">int</span> (*pf)(<span class="type">int</span>))</span></span>; <span class="comment">// f 接受一个函数指针</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">processVal</span><span class="params">(<span class="type">int</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">processVal</span><span class="params">(<span class="type">int</span>, <span class="type">int</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(processVal); <span class="comment">// 成功：编译器根据f的签名选择了 int(int) 版本</span></span><br><span class="line"><span class="built_in">fwd</span>(processVal); <span class="comment">// 错误！</span></span><br></pre></td></tr></table></figure></div> 原因是, processVal
+这个名字本身代表一个<strong>函数重载集</strong>，它<strong>没有一个确定的类型</strong>。在直接调用
+f 时，编译器可以根据 f 的参数类型（int
+(*)(int)）来确定应该选用哪个重载版本。但在调用 fwd
+时，编译器只看到了实参 processVal，由于其类型不确定，模板类型推导 T
+失败。函数模板的名字也存在同样的问题。</li>
+</ol>
+<p>解决方案：手动指定<strong>需要转发的是哪一个重载版本或模板实例</strong>(确定类型)，例如通过创建一个函数指针来消除歧义。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> ProcessFuncType = <span class="built_in">int</span> (*)(<span class="type">int</span>);</span><br><span class="line">ProcessFuncType processValPtr = processVal;</span><br><span class="line"><span class="built_in">fwd</span>(processValPtr); <span class="comment">// 成功</span></span><br></pre></td></tr></table></figure></div></p>
+<ol start="5" type="1">
+<li>位域 (Bitfields)
+可以直接将位域作为值传递给函数，但不能通过完美转发传递。 &gt;
+什么是位域: 位域是 C/C++
+中的一种数据结构特性，它允许我们在一个结构体（struct）或联合体（union）中，为一个成员变量指定其占用的二进制位数（bit）。它是一种空间优化技术，主要用于将多个小的、通常是标志位或状态值的变量打包到单个机器字（如一个字节或一个整数）中，从而极大地节省内存空间。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">IPv4Header</span> { std::<span class="type">uint32_t</span> totalLength:<span class="number">16</span>; };</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(std::<span class="type">size_t</span> s)</span></span>;</span><br><span class="line"></span><br><span class="line">IPv4Header h;</span><br><span class="line"><span class="built_in">f</span>(h.totalLength); <span class="comment">// 成功</span></span><br><span class="line"><span class="built_in">fwd</span>(h.totalLength); <span class="comment">// 错误！</span></span><br></pre></td></tr></table></figure></div> 原因：C++标准<strong>禁止将非 const
+引用绑定到位域</strong>。因为位域可能只占一个字节中的几个比特，它<strong>没有自己独立的内存地址</strong>，而引用在底层通常是作为指针实现的。既然无法获取一个比特位的地址，自然也无法将其绑定到非
+const 引用上。完美转发函数 fwd 的参数 T&amp;&amp;
+是一个引用，因此该调用失败。</li>
+</ol>
+<p>解决方案：传递位域值的副本。任何接受位域的函数实际上接收的都是其值的副本，因此可以手动创建这个副本再传递。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> length = <span class="built_in">static_cast</span>&lt;std::<span class="type">uint16_t</span>&gt;(h.totalLength);</span><br><span class="line"><span class="built_in">fwd</span>(length); <span class="comment">// 成功</span></span><br></pre></td></tr></table></figure></div></p>
 
-<ol start="2">
-<li>以 0 或 NULL 表示的空指针<br>直接调用时，0 或 NULL 可能会被正确解释为空指针，但转发时则不行。</li>
-</ol>
-<p>原因是, 如条款8所述，0 和 NULL 的真实类型是整型（int 或 long）。模板类型推导会忠实地将其推导为整型，而不是指针类型。当这个错误的整型被转发给期望指针的目标函数时，就会发生类型不匹配的错误。</p>
-<p>解决方案是使用 nullptr 代替 0 或 NULL。nullptr 的类型是 std::nullptr_t，它可以被正确地推导并转发。</p>
-<ol start="3">
-<li>仅有声明的整型 static const 成员变量<br><strong>在类中声明但未在实现文件中定义</strong>的整型 static const 成员，可以直接作为值使用，但不能通过完美转发传递。</li>
-</ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> std::<span class="type">size_t</span> MinVals = <span class="number">28</span>; <span class="comment">// 仅有声明</span></span><br><span class="line">};</span><br><span class="line"><span class="built_in">f</span>(Widget::MinVals); <span class="comment">// 成功：编译器直接替换为值 28</span></span><br><span class="line"><span class="built_in">fwd</span>(Widget::MinVals); <span class="comment">// 错误：通常会导致链接失败</span></span><br></pre></td></tr></table></figure></div>
-<p>完美转发是通过引用（万能引用 T&amp;&amp;）来接受参数的。传递引用在底层实现上通常等同于传递指针，这意味着被引用的对象必须有明确的内存地址。<strong>仅有声明的 static const 成员变量</strong>，编译器通常会通过“<strong>常数传播”优化直接使用其值</strong>，而不会为其分配内存地址。因此，当 fwd 尝试获取其引用时，链接器会因为找不到该变量的定义而报错。</p>
-<p>解决方案是在实现文件中为该成员变量提供定义即可</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 Widget 的 .cpp 文件中</span></span><br><span class="line"><span class="type">const</span> std::<span class="type">size_t</span> Widget::MinVals; <span class="comment">// 无需再次指定值</span></span><br></pre></td></tr></table></figure></div>
-
-<ol start="4">
-<li>重载的函数名字和模板名字<br>直接将一个重载函数的名字传递给目标函数是合法的，但通过转发函数传递则会失败。</li>
-</ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">int</span> (*pf)(<span class="type">int</span>))</span></span>; <span class="comment">// f 接受一个函数指针</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">processVal</span><span class="params">(<span class="type">int</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">processVal</span><span class="params">(<span class="type">int</span>, <span class="type">int</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">f</span>(processVal); <span class="comment">// 成功：编译器根据f的签名选择了 int(int) 版本</span></span><br><span class="line"><span class="built_in">fwd</span>(processVal); <span class="comment">// 错误！</span></span><br></pre></td></tr></table></figure></div>
-<p>原因是, processVal 这个名字本身代表一个<strong>函数重载集</strong>，它<strong>没有一个确定的类型</strong>。在直接调用 f 时，编译器可以根据 f 的参数类型（int (*)(int)）来确定应该选用哪个重载版本。但在调用 fwd 时，编译器只看到了实参 processVal，由于其类型不确定，模板类型推导 T 失败。函数模板的名字也存在同样的问题。</p>
-<p>解决方案：手动指定<strong>需要转发的是哪一个重载版本或模板实例</strong>(确定类型)，例如通过创建一个函数指针来消除歧义。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> ProcessFuncType = <span class="built_in">int</span> (*)(<span class="type">int</span>);</span><br><span class="line">ProcessFuncType processValPtr = processVal;</span><br><span class="line"><span class="built_in">fwd</span>(processValPtr); <span class="comment">// 成功</span></span><br></pre></td></tr></table></figure></div>
-
-<ol start="5">
-<li>位域 (Bitfields)<br>可以直接将位域作为值传递给函数，但不能通过完美转发传递。<blockquote>
-<p>什么是位域: 位域是 C/C++ 中的一种数据结构特性，它允许我们在一个结构体（struct）或联合体（union）中，为一个成员变量指定其占用的二进制位数（bit）。它是一种空间优化技术，主要用于将多个小的、通常是标志位或状态值的变量打包到单个机器字（如一个字节或一个整数）中，从而极大地节省内存空间。</p>
-</blockquote>
-</li>
-</ol>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">IPv4Header</span> { std::<span class="type">uint32_t</span> totalLength:<span class="number">16</span>; };</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(std::<span class="type">size_t</span> s)</span></span>;</span><br><span class="line"></span><br><span class="line">IPv4Header h;</span><br><span class="line"><span class="built_in">f</span>(h.totalLength); <span class="comment">// 成功</span></span><br><span class="line"><span class="built_in">fwd</span>(h.totalLength); <span class="comment">// 错误！</span></span><br></pre></td></tr></table></figure></div>
-<p>原因：C++标准<strong>禁止将非 const 引用绑定到位域</strong>。因为位域可能只占一个字节中的几个比特，它<strong>没有自己独立的内存地址</strong>，而引用在底层通常是作为指针实现的。既然无法获取一个比特位的地址，自然也无法将其绑定到非 const 引用上。完美转发函数 fwd 的参数 T&amp;&amp; 是一个引用，因此该调用失败。</p>
-<p>解决方案：传递位域值的副本。任何接受位域的函数实际上接收的都是其值的副本，因此可以手动创建这个副本再传递。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> length = <span class="built_in">static_cast</span>&lt;std::<span class="type">uint16_t</span>&gt;(h.totalLength);</span><br><span class="line"><span class="built_in">fwd</span>(length); <span class="comment">// 成功</span></span><br></pre></td></tr></table></figure></div>
 		</div>
 
 		
@@ -901,12 +920,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE26%20-%20%E9%81%BF%E5%85%8D%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD/">
+				<a class="prev" rel="prev" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE25%20-%20%E9%92%88%E5%AF%B9%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20move,%20%E9%92%88%E5%AF%B9%E4%B8%87%20%E8%83%BD%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20forward/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 26 - 避免依万能引用型别进行重载</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 25 - 针对右值引用实施 std move, 针对万能引用实施 std forward</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -914,9 +933,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE25%20-%20%E9%92%88%E5%AF%B9%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20move,%20%E9%92%88%E5%AF%B9%E4%B8%87%20%E8%83%BD%E5%BC%95%E7%94%A8%E5%AE%9E%E6%96%BD%20std%20forward/">
+				<a class="next" rel="next" href="/2025/09/18/lang/CPP/Effective%20modern%20C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E6%9D%A1%E6%AC%BE21%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20std%20make_unique%E5%92%8Cstd%20make_shared,%20%E8%80%8C%E9%9D%9E%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%20new/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 25 - 针对右值引用实施 std move, 针对万能引用实施 std forward</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 21 - 优先选用 std::make_unique 和 std::make_shared, 而非直接使用 new</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -967,11 +986,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

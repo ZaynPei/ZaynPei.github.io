@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,36 +833,74 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>不同于std::unique_ptr，std::shared_ptr 是一种用于管理共享所有权资源的智能指针。当多个代码块需要共同拥有和管理同一个对象的生命周期，并且希望在该对象的<strong>最后一个使用者结束使用时自动销毁它</strong>，std::shared_ptr 就是理想的选择。它实现了类似垃圾回收的自动内存管理，但其析构是确定性的。</p>
-<h3 id="工作原理：引用计数"><a href="#工作原理：引用计数" class="headerlink" title="工作原理：引用计数"></a>工作原理：引用计数</h3><p>std::shared_ptr 的核心机制是引用计数 (reference counting)。而引用计数的关键在于控制块 (Control Block)：每一个由 std::shared_ptr 管理的资源都有一个与之关联的、<strong>在堆上分配</strong>的“控制块”。这个控制块中包含一个引用计数值，用来跟踪有多少个 std::shared_ptr 正指向该资源 。</p>
-<p>当一个新的 std::shared_ptr 通过直接构造, 拷贝构造或拷贝赋值指向一个资源时，其引用计数值会递增（原子操作）。当一个 std::shared_ptr 被析构或被赋值为指向另一个资源时，其原指向资源的引用计数值会递减（原子操作）。</p>
-<p>当引用计数值减至 0 时，意味着不再有 std::shared_ptr 指向该资源，最后一个递减计数的 std::shared_ptr 会负责销毁该资源 。</p>
-<p>注意, 不能说 std::shared_ptr 的构造函数一定会增加引用计数, 因为从一个已有 std: :shared_ptr <strong>移动构造</strong>一个新的std::shared ptr 会将源 std: shared ptr 置空, 结果是不需要进行任何引用计数操作。从这里也可以看出来移动操作要比拷贝操作快不少</p>
-<h3 id="性能与内存开销"><a href="#性能与内存开销" class="headerlink" title="性能与内存开销"></a>性能与内存开销</h3><p>std::shared_ptr 并非零开销，其成本主要体现在：</p>
+			<p>不同于std::unique_ptr，std::shared_ptr
+是一种用于管理共享所有权资源的智能指针。当多个代码块需要共同拥有和管理同一个对象的生命周期，并且希望在该对象的<strong>最后一个使用者结束使用时自动销毁它</strong>，std::shared_ptr
+就是理想的选择。它实现了类似垃圾回收的自动内存管理，但其析构是确定性的。</p>
+<h3 id="工作原理引用计数">工作原理：引用计数</h3>
+<p>std::shared_ptr 的核心机制是引用计数 (reference
+counting)。而引用计数的关键在于控制块 (Control Block)：每一个由
+std::shared_ptr
+管理的资源都有一个与之关联的、<strong>在堆上分配</strong>的“控制块”。这个控制块中包含一个引用计数值，用来跟踪有多少个
+std::shared_ptr 正指向该资源 。</p>
+<p>当一个新的 std::shared_ptr 通过直接构造,
+拷贝构造或拷贝赋值指向一个资源时，其引用计数值会递增（原子操作）。当一个
+std::shared_ptr
+被析构或被赋值为指向另一个资源时，其原指向资源的引用计数值会递减（原子操作）。</p>
+<p>当引用计数值减至 0 时，意味着不再有 std::shared_ptr
+指向该资源，最后一个递减计数的 std::shared_ptr 会负责销毁该资源 。</p>
+<p>注意, 不能说 std::shared_ptr 的构造函数一定会增加引用计数,
+因为从一个已有 std: :shared_ptr
+<strong>移动构造</strong>一个新的std::shared ptr 会将源 std: shared ptr
+置空,
+结果是不需要进行任何引用计数操作。从这里也可以看出来移动操作要比拷贝操作快不少</p>
+<h3 id="性能与内存开销">性能与内存开销</h3>
+<p>std::shared_ptr 并非零开销，其成本主要体现在：</p>
 <ul>
-<li><p>尺寸：一个 std::shared_ptr 对象的大小是裸指针的两倍 。一个指针用于指向资源，另一个指针用于指向控制块 。</p>
-</li>
-<li><p>控制块分配：控制块本身需要在堆上动态分配内存。不过，条款21中介绍的 std::make_shared 可以避免这次额外的分配。</p>
-</li>
-<li><p>原子操作：<strong>引用计数的增减必须是原子操作</strong>，因为不同线程可能同时对指向同一资源的 std::shared_ptr 进行操作。原子操作通常比非原子操作要慢 。</p>
-</li>
+<li><p>尺寸：一个 std::shared_ptr 对象的大小是裸指针的两倍
+。一个指针用于指向资源，另一个指针用于指向控制块 。</p></li>
+<li><p>控制块分配：控制块本身需要在堆上动态分配内存。不过，条款21中介绍的
+std::make_shared 可以避免这次额外的分配。</p></li>
+<li><p>原子操作：<strong>引用计数的增减必须是原子操作</strong>，因为不同线程可能同时对指向同一资源的
+std::shared_ptr 进行操作。原子操作通常比非原子操作要慢 。</p></li>
 </ul>
-<h3 id="自定义删除器"><a href="#自定义删除器" class="headerlink" title="自定义删除器"></a>自定义删除器</h3><p>与 std::unique_ptr 类似，std::shared_ptr 也支持自定义删除器。但两者之间存在一个关键区别：std::shared_ptr 的删除器类型不是其类型的一部分 。</p>
-<p>这意味着不同删除器的 std::shared_ptr<widget> 具有完全相同的类型。这使得它们可以被存储在同一个容器中（例如 std::vector&lt;std::shared_ptr<widget>&gt;），提供了比 std::unique_ptr 更高的灵活性 。</widget></widget></p>
-<p>另一点不同，是自定义析构器不会改变 std::shared_ptr 的尺寸。无论析构器是怎样的型别，std::shared_ptr 对象的尺寸都相当于裸指针的两倍. 这是因为自定义删除器被存储在堆上的<strong>控制块</strong>中，而不是 std::shared_ptr 对象本身内部。更进一步, std::shared_ptr 的第二个指针所指的控制块包含下列许多信息:<br><img lazyload src="/images/loading.svg" data-src="/2025/06/28/misc/GNU-LINUX/ive%20modern%20C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E6%9D%A1%E6%AC%BE19%20-%20%E4%BD%BF%E7%94%A8%20std%20shared_ptr%20%E7%AE%A1%E7%90%86%E5%85%B7%E5%A4%87%E5%85%B1%E4%BA%AB%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E8%B5%84%E6%BA%90/20250918202827.png"></p>
-<p>一个对象的控制块由创建首个指涉到该对象的 std::shared_ptr 来确定。此外, 控制块的基本规则如下:</p>
+<h3 id="自定义删除器">自定义删除器</h3>
+<p>与 std::unique_ptr 类似，std::shared_ptr
+也支持自定义删除器。但两者之间存在一个关键区别：std::shared_ptr
+的删除器类型不是其类型的一部分 。</p>
+<p>这意味着不同删除器的 std::shared_ptr<widget>
+具有完全相同的类型。这使得它们可以被存储在同一个容器中（例如
+std::vector&lt;std::shared_ptr<widget>&gt;），提供了比 std::unique_ptr
+更高的灵活性 。</widget></widget></p>
+<p>另一点不同，是自定义析构器不会改变 std::shared_ptr
+的尺寸。无论析构器是怎样的型别，std::shared_ptr
+对象的尺寸都相当于裸指针的两倍.
+这是因为自定义删除器被存储在堆上的<strong>控制块</strong>中，而不是
+std::shared_ptr 对象本身内部。更进一步, std::shared_ptr
+的第二个指针所指的控制块包含下列许多信息: <img lazyload src="/images/loading.svg" data-src="20250918202827.png"></p>
+<p>一个对象的控制块由创建首个指涉到该对象的 std::shared_ptr
+来确定。此外, 控制块的基本规则如下: - std::make_shared（参见条款
+21）总是创建一个控制块。std::make_shared
+会生成一个用于管理所涉及<strong>新对象</strong>的控制块，因为在调用
+std::make_shared 的时刻，显然不会有针对该对象的控制块存在。</p>
 <ul>
-<li><p>std::make_shared（参见条款 21）总是创建一个控制块。std::make_shared 会生成一个用于管理所涉及<strong>新对象</strong>的控制块，因为在调用 std::make_shared 的时刻，显然不会有针对该对象的控制块存在。</p>
-</li>
-<li><p>从具备专属所有权的指针（即 std::unique_ptr 或 std::auto_ptr 指针）出发构造一个 std::shared_ptr 会创建一个控制块。专属所有权指针不使用控制块，因此对于其所指涉的对象来说，不应存在控制块。作为构造过程的一部分，std::shared_ptr 被指定了其所指涉对象的所有权，因此那个专属所有权的智能指针会被置空。</p>
-</li>
-<li><p>当 std::shared_ptr 的构造函数使用<strong>裸指针作为实参调用</strong>时，它会创建一个控制块。这个看起来平平无奇的点会造成一种致命的错误。例如:</p>
-</li>
+<li><p>从具备专属所有权的指针（即 std::unique_ptr 或 std::auto_ptr
+指针）出发构造一个 std::shared_ptr
+会创建一个控制块。专属所有权指针不使用控制块，因此对于其所指涉的对象来说，不应存在控制块。作为构造过程的一部分，std::shared_ptr
+被指定了其所指涉对象的所有权，因此那个专属所有权的智能指针会被置空。</p></li>
+<li><p>当 std::shared_ptr
+的构造函数使用<strong>裸指针作为实参调用</strong>时，它会创建一个控制块。这个看起来平平无奇的点会造成一种致命的错误。例如:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> pw = <span class="keyword">new</span> Widget; <span class="comment">// pw 是一个裸指针</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误！为同一个裸指针创建了两个控制块</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw1</span><span class="params">(pw)</span></span>; <span class="comment">// 为 *pw 创建一个控制块，引用计数为 1</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw2</span><span class="params">(pw)</span></span>; <span class="comment">// 也为 *pw 创建一个控制块，引用计数为 1</span></span><br></pre></td></tr></table></figure></div> spw1 和 spw2 各自创建了一个独立的控制块。它们都认为自己是
+*pw 的唯一所有者群体。当 spw1
+被销毁时，它会发现其引用计数变为0，于是它会 delete pw。之后，当 spw2
+被销毁时，它也会发现其引用计数变为0，于是它会再次 delete
+pw。对同一个指针进行两次删除会导致未定义行为。</p></li>
 </ul>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> pw = <span class="keyword">new</span> Widget; <span class="comment">// pw 是一个裸指针</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误！为同一个裸指针创建了两个控制块</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw1</span><span class="params">(pw)</span></span>; <span class="comment">// 为 *pw 创建一个控制块，引用计数为 1</span></span><br><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">spw2</span><span class="params">(pw)</span></span>; <span class="comment">// 也为 *pw 创建一个控制块，引用计数为 1</span></span><br></pre></td></tr></table></figure></div>
-<p>spw1 和 spw2 各自创建了一个独立的控制块。它们都认为自己是 *pw 的唯一所有者群体。当 spw1 被销毁时，它会发现其引用计数变为0，于是它会 delete pw。之后，当 spw2 被销毁时，它也会发现其引用计数变为0，于是它会再次 delete pw。对同一个指针进行两次删除会导致未定义行为。</p>
-<p>因此, 永远不要用同一个裸指针来初始化多个 std::shared_ptr, 而是应该通过复制一个已存在的 std::shared_ptr 来创建新的 std::shared_ptr，以确保它们共享同一个控制块。</p>
-<h3 id="this-指针问题与-std-enable-shared-from-this"><a href="#this-指针问题与-std-enable-shared-from-this" class="headerlink" title="this 指针问题与 std::enable_shared_from_this"></a>this 指针问题与 std::enable_shared_from_this</h3>
+<p>因此, 永远不要用同一个裸指针来初始化多个 std::shared_ptr,
+而是应该通过复制一个已存在的 std::shared_ptr 来创建新的
+std::shared_ptr，以确保它们共享同一个控制块。</p>
+<h3 id="this-指针问题与-stdenable_shared_from_this">this 指针问题与
+std::enable_shared_from_this</h3>
+
 		</div>
 
 		
@@ -887,12 +925,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/18/lang/CPP/Effective%20modern%20C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E6%9D%A1%E6%AC%BE21%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20std%20make_unique%E5%92%8Cstd%20make_shared,%20%E8%80%8C%E9%9D%9E%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%20new/">
+				<a class="prev" rel="prev" href="/2025/09/18/lang/CPP/Effective%20modern%20C++/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E6%9D%A1%E6%AC%BE20%20-%20%E5%AF%B9%E7%B1%BB%E4%BC%BC%20std%20shared_ptr%20%E4%BD%86%E6%9C%89%E5%8F%AF%E8%83%BD%E7%A9%BA%20%E6%82%AC%E7%9A%84%E6%8C%87%E9%92%88%E4%BD%BF%E7%94%A8%20std%20weak_ptr/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款 21 - 优先选用 std::make_unique 和 std::make_shared, 而非直接使用 new</span>
+						<span class="post-nav-title-item truncate max-w-48">条款 20 - 对类似 std::shared_ptr 但有可能空悬的指针使用 std::weak_ptr</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -924,7 +962,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款 19 - 使用 std::shared_ptr 管理具备共享所有权的资源</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%9A%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-text">工作原理：引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%B8%8E%E5%86%85%E5%AD%98%E5%BC%80%E9%94%80"><span class="nav-text">性能与内存开销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%A0%E9%99%A4%E5%99%A8"><span class="nav-text">自定义删除器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#this-%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98%E4%B8%8E-std-enable-shared-from-this"><span class="nav-text">this 指针问题与 std::enable_shared_from_this</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-text">工作原理：引用计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%B8%8E%E5%86%85%E5%AD%98%E5%BC%80%E9%94%80"><span class="nav-text">性能与内存开销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%A0%E9%99%A4%E5%99%A8"><span class="nav-text">自定义删除器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#this-%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98%E4%B8%8E-stdenable_shared_from_this"><span class="nav-text">this 指针问题与
+std::enable_shared_from_this</span></a></li></ol>
 
 	</div>
 </div>
@@ -953,11 +992,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

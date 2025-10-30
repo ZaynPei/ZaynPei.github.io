@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-28T02:20:15.000Z">
-<meta property="article:modified_time" content="2025-09-28T02:28:02.611Z">
+<meta property="article:modified_time" content="2025-10-22T12:24:57.837Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -768,8 +768,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-09-28 10:28:02</span>
-            <span class="mobile">2025-09-28 10:28:02</span>
+            <span class="desktop">2025-10-22 20:24:57</span>
+            <span class="mobile">2025-10-22 20:24:57</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -780,7 +780,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.4k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.5k Words</span>
         </span>
     
     
@@ -800,8 +800,13 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>std::list 是一个<strong>序列容器</strong>，它的底层实现是<strong>双向链表</strong>（Doubly-Linked List）。理解了“双向链表”这个数据结构，就理解了 std::list 的所有优缺点和行为特性。</p>
-<h2 id="std-list-的核心特性"><a href="#std-list-的核心特性" class="headerlink" title="std::list 的核心特性"></a>std::list 的核心特性</h2><p>与 std::vector（动态数组）的连续内存布局截然不同，std::list 的元素在<strong>内存中</strong>是<strong>非连续存储</strong>的。每个元素（节点）都包含三部分信息：</p>
+			<p>std::list
+是一个<strong>序列容器</strong>，它的底层实现是<strong>双向链表</strong>（Doubly-Linked
+List）。理解了“双向链表”这个数据结构，就理解了 std::list
+的所有优缺点和行为特性。</p>
+<h2 id="stdlist-的核心特性">std::list 的核心特性</h2>
+<p>与 std::vector（动态数组）的连续内存布局截然不同，std::list
+的元素在<strong>内存中</strong>是<strong>非连续存储</strong>的。每个元素（节点）都包含三部分信息：</p>
 <ul>
 <li>存储的<strong>数据</strong>本身。</li>
 <li>一个指向前一个元素节点的指针 (<strong>prev</strong>)。</li>
@@ -809,55 +814,80 @@ mjx-container[display="true"] + br {
 </ul>
 <p>这种结构赋予了 std::list 一系列独特的特性：</p>
 <ul>
-<li><p>快速的插入和删除: 这是 std::list 最主要的优点。在链表的任何位置（开头、中间、结尾）插入或删除一个元素，时间复杂度都是常数时间 O(1)（前提是你已经<strong>有了指向该位置的迭代器</strong>）。</p>
+<li><strong>快速的插入和删除</strong>: 这是 std::list
+最主要的优点。在链表的任何位置（开头、中间、结尾）插入或删除一个元素，时间复杂度都是常数时间
+O(1)（前提是你已经<strong>有了指向该位置的迭代器</strong>）。
 <ul>
-<li>原因：插入/删除操作只需要修改相邻节点的 next 和 prev 指针，将新节点“链接”进去或将旧节点“断开链接”，而不需要像 std::vector 那样移动大量后续元素。</li>
-</ul>
+<li>原因：插入/删除操作只需要修改相邻节点的 next 和 prev
+指针，将新节点“链接”进去或将旧节点“断开链接”，而不需要像 std::vector
+那样移动大量后续元素。</li>
+</ul></li>
+<li>慢速的随机访问: 这是 std::list
+最主要的缺点。它不支持快速的随机访问。
+<ul>
+<li>由于内存不连续，你无法像数组那样通过计算偏移量来直接定位到第 n
+个元素。要访问第 n
+个元素，必须从头节点（或尾节点）开始，沿着指针逐个遍历 n
+次。因此，访问操作的时间复杂度是线性时间 O(n)。<br>
 </li>
-<li><p>慢速的随机访问: 这是 std::list 最主要的缺点。它不支持快速的随机访问。</p>
-<ul>
-<li>由于内存不连续，你无法像数组那样通过计算偏移量来直接定位到第 n 个元素。要访问第 n 个元素，必须从头节点（或尾节点）开始，沿着指针逐个遍历 n 次。因此，访问操作的时间复杂度是线性时间 O(n)。    </li>
 <li>正因如此，std::list 没有提供 operator[] 访问符。</li>
-</ul>
-</li>
-<li><p>迭代器稳定性: 这是一个非常重要的优点。向 std::list 中插入或删除元素，不会导致指向其他元素的迭代器失效。</p>
+</ul></li>
+<li>迭代器稳定性: 这是一个非常重要的优点。向 std::list
+中插入或删除元素，不会导致指向其他元素的迭代器失效。
 <ul>
-<li>插入或删除只影响被操作节点及其邻居的指针，其他节点在内存中的位置和它们之间的链接关系保持不变。而在 std::vector 中，一次插入或删除就可能导致所有或部分迭代器失效。</li>
+<li>插入或删除只影响被操作节点及其邻居的指针，其他节点在内存中的位置和它们之间的链接关系保持不变。而在
+std::vector 中，一次插入或删除就可能导致所有或部分迭代器失效。</li>
+</ul></li>
+<li>更高的内存开销: 相比 std::vector，std::list
+的每个元素都需要额外的空间来存储前向和后向指针，因此总的内存占用会更大。</li>
 </ul>
-</li>
-<li><p>更高的内存开销: 相比 std::vector，std::list 的每个元素都需要额外的空间来存储前向和后向指针，因此总的内存占用会更大。</p>
-</li>
-</ul>
-<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><p>使用 std::list 需要包含头文件 <list>。</list></p>
-<h3 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h3><p>std::list 提供了在头部和尾部快速添加元素的方法。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::list&lt;<span class="type">int</span>&gt; myList;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在尾部添加元素</span></span><br><span class="line">myList.<span class="built_in">push_back</span>(<span class="number">10</span>); <span class="comment">// {10}</span></span><br><span class="line">myList.<span class="built_in">push_back</span>(<span class="number">20</span>); <span class="comment">// {10, 20}</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在头部添加元素 (vector 没有这个方法)</span></span><br><span class="line">myList.<span class="built_in">push_front</span>(<span class="number">5</span>); <span class="comment">// {5, 10, 20}</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h3><p>同样，std::list 也能在头部和尾部快速删除元素</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myList.<span class="built_in">pop_back</span>();  <span class="comment">// 删除尾部元素 {5, 10}</span></span><br><span class="line">myList.<span class="built_in">pop_front</span>(); <span class="comment">// 删除头部元素 {10}</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h3><p>遍历 std::list 通常使用迭代器或范围 for 循环。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; numbers = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> num : numbers) {</span><br><span class="line">    std::cout &lt;&lt; num &lt;&lt; <span class="string">" "</span>; <span class="comment">// 输出: 1 2 3 4 5</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="在中间插入和删除"><a href="#在中间插入和删除" class="headerlink" title="在中间插入和删除"></a>在中间插入和删除</h3><p>使用 <strong>insert()</strong> 和 <strong>erase()</strong> 方法，需要一个<strong>指向特定位置的迭代器</strong>。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> it = numbers.<span class="built_in">begin</span>(); <span class="comment">// it 指向 1</span></span><br><span class="line">++it; <span class="comment">// it 指向 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 it 指向的位置(2)之前插入 99</span></span><br><span class="line">numbers.<span class="built_in">insert</span>(it, <span class="number">99</span>); <span class="comment">// {1, 99, 2, 3, 4, 5}</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除 it 指向的元素(2)</span></span><br><span class="line"><span class="comment">// erase 会返回指向被删除元素下一个元素的迭代器</span></span><br><span class="line">it = numbers.<span class="built_in">erase</span>(it); <span class="comment">// {1, 99, 3, 4, 5}</span></span><br></pre></td></tr></table></figure></div>
-<p>同样, erase()成功后迭代器会自动前进一位, 需要额外考虑</p>
-<h2 id="std-list-特有的高效操作"><a href="#std-list-特有的高效操作" class="headerlink" title="std::list 特有的高效操作"></a>std::list 特有的高效操作</h2><p>std::list 提供了一些 std::vector 所没有的高效成员函数，这些函数充分利用了其链表结构的优势，通过直接操纵节点指针来完成，避免了元素的拷贝。</p>
+<h2 id="常用操作">常用操作</h2>
+<p>使用 std::list 需要包含头文件 <list>。</list></p>
+<h3 id="初始化">初始化</h3>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line">std::list&lt;<span class="type">int</span>&gt; myList; <span class="comment">// 创建一个空的整数列表</span></span><br><span class="line">std::list&lt;<span class="type">int</span>&gt; myList2 = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>}; <span class="comment">// 使用初始化列表创建</span></span><br><span class="line"><span class="function">std::list&lt;<span class="type">int</span>&gt; <span class="title">myList3</span><span class="params">(myList2)</span></span>; <span class="comment">// 通过拷贝另一个列表创建</span></span><br><span class="line"><span class="function">std::list&lt;<span class="type">int</span>&gt; <span class="title">myList4</span><span class="params">(<span class="number">10</span>, <span class="number">42</span>)</span></span>; <span class="comment">// 指定个数和初始化内容创建, 创建一个包含10个42的列表</span></span><br></pre></td></tr></table></figure></div>
+<h3 id="添加元素">添加元素</h3>
+<p>std::list 提供了在头部和尾部快速添加元素的方法。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::list&lt;<span class="type">int</span>&gt; myList;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在尾部添加元素</span></span><br><span class="line">myList.<span class="built_in">push_back</span>(<span class="number">10</span>); <span class="comment">// {10}</span></span><br><span class="line">myList.<span class="built_in">push_back</span>(<span class="number">20</span>); <span class="comment">// {10, 20}</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在头部添加元素 (vector 没有这个方法)</span></span><br><span class="line">myList.<span class="built_in">push_front</span>(<span class="number">5</span>); <span class="comment">// {5, 10, 20}</span></span><br></pre></td></tr></table></figure></div></p>
+<h3 id="删除元素">删除元素</h3>
+<p>同样，std::list 也能在头部和尾部快速删除元素 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myList.<span class="built_in">pop_back</span>();  <span class="comment">// 删除尾部元素 {5, 10}</span></span><br><span class="line">myList.<span class="built_in">pop_front</span>(); <span class="comment">// 删除头部元素 {10}</span></span><br></pre></td></tr></table></figure></div></p>
+<h3 id="遍历">遍历</h3>
+<p>遍历 std::list 通常使用迭代器或范围 for 循环。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; numbers = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> num : numbers) {</span><br><span class="line">    std::cout &lt;&lt; num &lt;&lt; <span class="string">" "</span>; <span class="comment">// 输出: 1 2 3 4 5</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> it = numbers.<span class="built_in">begin</span>(); it != numbers.<span class="built_in">end</span>(); ++it) {</span><br><span class="line">    std::cout &lt;&lt; *it &lt;&lt; <span class="string">" "</span>; <span class="comment">// 输出: 1 2 3 4 5</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="在中间插入和删除">在中间插入和删除</h3>
+<p>使用 <strong>insert()</strong> 和 <strong>erase()</strong>
+方法，需要一个<strong>指向特定位置的迭代器</strong>。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> it = numbers.<span class="built_in">begin</span>(); <span class="comment">// it 指向 1</span></span><br><span class="line">++it; <span class="comment">// it 指向 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 it 指向的位置(2)之前插入 99</span></span><br><span class="line">numbers.<span class="built_in">insert</span>(it, <span class="number">99</span>); <span class="comment">// {1, 99, 2, 3, 4, 5}</span></span><br><span class="line">numbers.<span class="built_in">insert</span>(it<span class="number">+2</span>, <span class="number">100</span>); <span class="comment">// 注意这是错误的用法, list 迭代器不支持随机访问</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除 it 指向的元素(2)</span></span><br><span class="line"><span class="comment">// erase 会返回指向被删除元素下一个元素的迭代器</span></span><br><span class="line">it = numbers.<span class="built_in">erase</span>(it); <span class="comment">// {1, 99, 3, 4, 5}</span></span><br></pre></td></tr></table></figure></div>
+同样, erase()成功后迭代器会自动前进一位, 需要额外考虑</p>
+<h2 id="stdlist-特有的高效操作">std::list 特有的高效操作</h2>
+<p>std::list 提供了一些 std::vector
+所没有的高效成员函数，这些函数充分利用了其链表结构的优势，通过直接操纵节点指针来完成，避免了元素的拷贝。</p>
 <ul>
-<li>splice()：将一个 list 的全部或部分元素“剪切”并“粘贴”到另一个 list 中。这是一个 O(1) 的操作，非常高效。</li>
-<li>merge()：将一个已排序的 list 合并到另一个已排序的 list 中，并保持排序。</li>
-<li>sort()：std::list <strong>拥有自己的 sort() 成员函数</strong>。不能使用全局的 std::sort()，因为 <strong>std::sort 要求随机访问迭代器</strong>，而 list 的迭代器是双向的。</li>
+<li>splice()：将一个 list 的全部或部分元素“剪切”并“粘贴”到另一个 list
+中。这是一个 O(1) 的操作，非常高效。</li>
+<li>merge()：将一个已排序的 list 合并到另一个已排序的 list
+中，并保持排序。</li>
+<li>sort()：std::list <strong>拥有自己的 sort()
+成员函数</strong>。不能使用全局的 std::sort()，因为 <strong>std::sort
+要求随机访问迭代器</strong>，而 list 的迭代器是双向的。</li>
 <li>reverse()：反转链表中元素的顺序。</li>
 <li>unique()：移除连续的重复元素。</li>
 </ul>
-<h2 id="什么时候应该使用-std-list"><a href="#什么时候应该使用-std-list" class="headerlink" title="什么时候应该使用 std::list"></a>什么时候应该使用 std::list</h2><p>根据以上对比，我们可以得出结论, 你应该在以下情况考虑使用 std::list：</p>
+<h2 id="什么时候应该使用-stdlist">什么时候应该使用 std::list</h2>
+<p>根据以上对比，我们可以得出结论, 你应该在以下情况考虑使用
+std::list：</p>
 <ul>
 <li>需要频繁地在序列的任意位置（尤其是中间）进行插入和删除操作。</li>
 <li>对迭代器的稳定性有很高的要求，不希望因为插入/删除操作而需要频繁更新迭代器。</li>
 <li>不需要进行频繁的随机访问操作。</li>
 </ul>
-<p>现代 C++ 的观点和建议是, 尽管 std::list 在特定场景下有其理论上的优势，但在现代 C++ 编程中，std::vector 仍然是绝大多数场景下的首选默认容器。</p>
-<p>原因是现代计算机的 CPU 拥有<strong>多级缓存（Cache）</strong>。<strong>std::vector 的连续内存布局</strong>具有极佳的缓存友好性，CPU 可以预取数据，从而大大加快遍历速度。而 std::list 的节点分散在内存各处，遍历时会导致频繁的缓存未命中（Cache Miss），这带来的性能损失往往会抵消其 O(1) 插入/删除的理论优势。</p>
-<p>除非你的程序经过性能分析（Profiling），明确显示出瓶颈在于 std::vector 的中间插入/删除，否则请优先使用 std::vector。</p>
+<p>现代 C++ 的观点和建议是, 尽管 std::list
+在特定场景下有其理论上的优势，但在现代 C++ 编程中，std::vector
+仍然是绝大多数场景下的首选默认容器。</p>
+<p>原因是现代计算机的 CPU
+拥有<strong>多级缓存（Cache）</strong>。<strong>std::vector
+的连续内存布局</strong>具有极佳的缓存友好性，CPU
+可以预取数据，从而大大加快遍历速度。而 std::list
+的节点分散在内存各处，遍历时会导致频繁的缓存未命中（Cache
+Miss），这带来的性能损失往往会抵消其 O(1) 插入/删除的理论优势。</p>
+<p>除非你的程序经过性能分析（Profiling），明确显示出瓶颈在于 std::vector
+的中间插入/删除，否则请优先使用 std::vector。</p>
 
 		</div>
 
@@ -908,7 +938,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">List</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#std-list-%E7%9A%84%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="nav-text">std::list 的核心特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-text">常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0"><span class="nav-text">添加元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="nav-text">删除元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86"><span class="nav-text">遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E4%B8%AD%E9%97%B4%E6%8F%92%E5%85%A5%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-text">在中间插入和删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-list-%E7%89%B9%E6%9C%89%E7%9A%84%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9C"><span class="nav-text">std::list 特有的高效操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8-std-list"><span class="nav-text">什么时候应该使用 std::list</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#stdlist-%E7%9A%84%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="nav-text">std::list 的核心特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-text">常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0"><span class="nav-text">添加元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="nav-text">删除元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86"><span class="nav-text">遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E4%B8%AD%E9%97%B4%E6%8F%92%E5%85%A5%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-text">在中间插入和删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stdlist-%E7%89%B9%E6%9C%89%E7%9A%84%E9%AB%98%E6%95%88%E6%93%8D%E4%BD%9C"><span class="nav-text">std::list 特有的高效操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8-stdlist"><span class="nav-text">什么时候应该使用 std::list</span></a></li></ol>
 
 	</div>
 </div>
@@ -937,11 +967,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

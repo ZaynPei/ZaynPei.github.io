@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -843,29 +843,36 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="知识图谱"><a href="#知识图谱" class="headerlink" title="知识图谱"></a>知识图谱</h2><p>知识图谱是一种用图（Graph）结构来建模和存储现实世界中实体（Entity）、概念（Concept）及其之间复杂关系的知识库。它的核心目标是将互联网上非结构化的海量信息（如文本、图片）转化为结构化的知识，从而让机器能够像人类一样去理解和运用这些知识。</p>
+			<h2 id="知识图谱">知识图谱</h2>
+<p>知识图谱是一种用图（Graph）结构来建模和存储现实世界中实体（Entity）、概念（Concept）及其之间复杂关系的知识库。它的核心目标是将互联网上非结构化的海量信息（如文本、图片）转化为结构化的知识，从而让机器能够像人类一样去理解和运用这些知识。</p>
 <p>这个概念在2012年被谷歌（Google）正式提出并应用于其搜索引擎，极大地优化了搜索结果的质量和用户的体验，使得搜索不再是简单的关键词匹配，而是能够理解问题的意图并直接给出答案。</p>
 <p>简单来说，知识图谱就是一张巨大的“知识之网”，网中的每个节点代表一个实体（比如一个人、一个地方、一部电影），而连接节点的边则代表它们之间的关系（比如“出生于”、“导演是”）。</p>
-<h3 id="核心构成"><a href="#核心构成" class="headerlink" title="核心构成"></a>核心构成</h3><p>知识图谱的基本组成单位是“三元组（Triple）”，即“实体-关系-实体”或“实体-属性-属性值”的结构。</p>
+<h3 id="核心构成">核心构成</h3>
+<p>知识图谱的基本组成单位是“三元组（Triple）”，即“实体-关系-实体”或“实体-属性-属性值”的结构。</p>
 <ul>
 <li><p>实体（Entity）：指代现实世界中可识别、可区分的独立事物。在图中，实体表现为节点（Node）。</p>
 <ul>
 <li>例如：“爱因斯坦”、“《相对论》”、“德国”都是实体。</li>
-</ul>
-</li>
+</ul></li>
 <li><p>关系（Relation）：描述不同实体之间存在的某种联系。在图中，关系表现为连接节点的边（Edge）。</p>
 <ul>
 <li>例如：“爱因斯坦”与“德国”之间的关系是“出生地”。“爱因斯坦”与“《相对论》”之间的关系是“提出者”。</li>
-</ul>
-</li>
+</ul></li>
 <li><p>属性（Attribute）：描述单个实体所具有的内在特征。它是一种特殊的关系，其连接的不是另一个实体，而是一个具体的字面值（Literal）。</p>
 <ul>
 <li>例如：“爱因斯坦”的“出生日期”属性是“1879年3月14日”。</li>
-<li>属性也可以基于关系, 例如在 Neo4j 这样的图数据库中允许直接在边（Edge）上附加键值对（Key-Value）属性。这种方式称为属性图模型 (Property Graph)</li>
+<li>属性也可以基于关系, 例如在 Neo4j
+这样的图数据库中允许直接在边（Edge）上附加键值对（Key-Value）属性。这种方式称为属性图模型
+(Property Graph)</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="知识图谱与传统数据库的区别"><a href="#知识图谱与传统数据库的区别" class="headerlink" title="知识图谱与传统数据库的区别"></a>知识图谱与传统数据库的区别</h3><table>
+<h3 id="知识图谱与传统数据库的区别">知识图谱与传统数据库的区别</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 38%">
+<col style="width: 46%">
+</colgroup>
 <thead>
 <tr>
 <th>特性</th>
@@ -873,7 +880,8 @@ mjx-container[display="true"] + br {
 <th>知识图谱（通常使用图数据库）</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>数据模型</td>
 <td>基于预先定义的、严格的表格（Table）结构</td>
 <td>基于灵活的、无固定模式的图（Graph）结构</td>
@@ -898,13 +906,19 @@ mjx-container[display="true"] + br {
 <td>适合处理结构化、事务性强的数据，如ERP、财务报表</td>
 <td>适合处理高度互联、关系复杂的数据，如社交网络、金融风控</td>
 </tr>
-</tbody></table>
-<h3 id="Neo4j-图数据库"><a href="#Neo4j-图数据库" class="headerlink" title="Neo4j 图数据库"></a>Neo4j 图数据库</h3><p>Neo4j 是一个用 Java 开发的、开源的、高性能的原生<strong>图数据库管理系统</strong>（Graph Database Management System, <strong>GDBMS</strong>）。它秉承知识图谱的思想, 将数据以“图”的形式进行存储，而不是传统的表格（如MySQL）或键值对（如Redis）形式。</p>
+</tbody>
+</table>
+<h3 id="neo4j-图数据库">Neo4j 图数据库</h3>
+<p>Neo4j 是一个用 Java
+开发的、开源的、高性能的原生<strong>图数据库管理系统</strong>（Graph
+Database Management System,
+<strong>GDBMS</strong>）。它秉承知识图谱的思想,
+将数据以“图”的形式进行存储，而不是传统的表格（如MySQL）或键值对（如Redis）形式。</p>
 <ul>
-<li><p>原生图数据库： Neo4j 从底层设计就是为了高效地存储和处理图结构。它的<strong>存储引擎直接面向节点和关系</strong>，使得在查询深度<strong>关联</strong>数据（例如“朋友的朋友的朋友”）时，性能远超传统数据库。</p>
-</li>
-<li><p>ACID兼容：Neo4j 是一个完全事务性的数据库，支持ACID（原子性、一致性、隔离性、持久性）特性，保证了数据的可靠性和业务的一致性，可以用于企业级的生产环境。</p>
-</li>
+<li><p>原生图数据库： Neo4j
+从底层设计就是为了高效地存储和处理图结构。它的<strong>存储引擎直接面向节点和关系</strong>，使得在查询深度<strong>关联</strong>数据（例如“朋友的朋友的朋友”）时，性能远超传统数据库。</p></li>
+<li><p>ACID兼容：Neo4j
+是一个完全事务性的数据库，支持ACID（原子性、一致性、隔离性、持久性）特性，保证了数据的可靠性和业务的一致性，可以用于企业级的生产环境。</p></li>
 </ul>
 <p>Neo4j 特别擅长处理数据之间存在复杂、多层、多变关系的应用场景。</p>
 <ul>
@@ -914,9 +928,10 @@ mjx-container[display="true"] + br {
 <li>知识图谱：构建和查询各领域（如医疗、电商、企业管理）的知识网络。</li>
 <li>网络与IT运维：分析网络拓扑、依赖关系和故障影响。</li>
 </ul>
-<h4 id="Cypher：为图而生的查询语言"><a href="#Cypher：为图而生的查询语言" class="headerlink" title="Cypher：为图而生的查询语言"></a>Cypher：为图而生的查询语言</h4><p>Cypher 是类SQL的用于 Neo4j 的声明式图查询语言，其设计哲学是让查询语句本身看起来就像一个图。它使用一种被称为“ASCII-Art”的语法，非常直观。<br>例如</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 查找所有在《黑客帝国》中出演的演员</span><br><span class="line">MATCH (actor:Person)-[:ACTED_IN]-&gt;(movie:Movie {title: '黑客帝国'})</span><br><span class="line">RETURN actor.name, movie.title</span><br></pre></td></tr></table></figure></div>
-
+<h4 id="cypher为图而生的查询语言">Cypher：为图而生的查询语言</h4>
+<p>Cypher 是类SQL的用于 Neo4j
+的声明式图查询语言，其设计哲学是让查询语句本身看起来就像一个图。它使用一种被称为“ASCII-Art”的语法，非常直观。
+例如 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 查找所有在《黑客帝国》中出演的演员</span><br><span class="line">MATCH (actor:Person)-[:ACTED_IN]-&gt;(movie:Movie {title: '黑客帝国'})</span><br><span class="line">RETURN actor.name, movie.title</span><br></pre></td></tr></table></figure></div></p>
 <ul>
 <li>() 用圆括号表示一个节点。</li>
 <li>[] 用方括号表示一个关系。</li>
@@ -926,22 +941,26 @@ mjx-container[display="true"] + br {
 <li>MATCH 是匹配图模式的关键字。</li>
 <li>RETURN 是指定返回结果的关键字。</li>
 </ul>
-<h5 id="py2neo：连接-Python-与-Neo4j-的桥梁"><a href="#py2neo：连接-Python-与-Neo4j-的桥梁" class="headerlink" title="py2neo：连接 Python 与 Neo4j 的桥梁"></a>py2neo：连接 Python 与 Neo4j 的桥梁</h5><p>py2neo 是一个功能强大且维护活跃的 Python 客户端库（或称为“驱动”），专门用于与 Neo4j 数据库进行交互。它为 Python 开发者提供了一套简洁、优雅的API，使得在 Python 程序中操作 Neo4j 变得非常方便。</p>
+<h5 id="py2neo连接-python-与-neo4j-的桥梁">py2neo：连接 Python 与 Neo4j
+的桥梁</h5>
+<p>py2neo 是一个功能强大且维护活跃的 Python
+客户端库（或称为“驱动”），专门用于与 Neo4j 数据库进行交互。它为 Python
+开发者提供了一套简洁、优雅的API，使得在 Python 程序中操作 Neo4j
+变得非常方便。</p>
 <ul>
 <li>数据库连接管理：轻松建立、管理与 Neo4j 数据库的连接。</li>
-<li>执行 Cypher 查询：可以直接在 Python 中执行原生的 Cypher 语句，并方便地处理返回的结果。</li>
-<li>图数据操作：提供了丰富的 API 来以编程方式创建、更新、删除节点和关系。</li>
-<li>对象图映射（Object-Graph Mapping, OGM）：类似于传统数据库的 ORM（Object-Relational Mapping）。它允许你将图中的节点定义为 Python 的类（Class），将节点属性映射为类的属性，从而可以用更面向对象的方式来操作图数据，而不仅仅是写 Cypher 字符串。</li>
-<li>与 Pandas, Jupyter 等数据科学生态集成：可以方便地将查询结果转换为 Pandas DataFrame，非常适合进行数据分析和可视化。</li>
+<li>执行 Cypher 查询：可以直接在 Python 中执行原生的 Cypher
+语句，并方便地处理返回的结果。</li>
+<li>图数据操作：提供了丰富的 API
+来以编程方式创建、更新、删除节点和关系。</li>
+<li>对象图映射（Object-Graph Mapping, OGM）：类似于传统数据库的
+ORM（Object-Relational Mapping）。它允许你将图中的节点定义为 Python
+的类（Class），将节点属性映射为类的属性，从而可以用更面向对象的方式来操作图数据，而不仅仅是写
+Cypher 字符串。</li>
+<li>与 Pandas, Jupyter 等数据科学生态集成：可以方便地将查询结果转换为
+Pandas DataFrame，非常适合进行数据分析和可视化。</li>
 </ul>
-<p>示例如下:</p>
-<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> py2neo <span class="keyword">import</span> Graph, Node, Relationship</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 连接到 Neo4j 数据库</span></span><br><span class="line"><span class="comment"># 默认情况下，Neo4j 启动在 bolt://localhost:7687，用户名为 neo4j</span></span><br><span class="line"><span class="comment"># 请将 "your_password" 替换为你的 Neo4j 密码</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    graph = Graph(<span class="string">"bolt://localhost:7687"</span>, auth=(<span class="string">"neo4j"</span>, <span class="string">"your_password"</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"成功连接到 Neo4j 数据库！"</span>)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"连接失败: <span class="subst">{e}</span>"</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 清理数据库（可选，用于演示）</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"清理数据库..."</span>)</span><br><span class="line">graph.delete_all()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 创建节点 (Node)</span></span><br><span class="line"><span class="comment"># 创建两个 Person 节点</span></span><br><span class="line">alice = Node(<span class="string">"Person"</span>, name=<span class="string">"Alice"</span>, age=<span class="number">30</span>)</span><br><span class="line">bob = Node(<span class="string">"Person"</span>, name=<span class="string">"Bob"</span>, age=<span class="number">32</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个 Company 节点</span></span><br><span class="line">google = Node(<span class="string">"Company"</span>, name=<span class="string">"Google"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 创建关系 (Relationship)</span></span><br><span class="line"><span class="comment"># 关系可以有自己的属性</span></span><br><span class="line">alice_knows_bob = Relationship(alice, <span class="string">"KNOWS"</span>, bob, since=<span class="number">2015</span>)</span><br><span class="line">bob_works_for_google = Relationship(bob, <span class="string">"WORKS_FOR"</span>, google, position=<span class="string">"Engineer"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 将创建的节点和关系写入数据库</span></span><br><span class="line"><span class="comment"># graph.create() 是原子操作，会一次性创建所有内容</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"正在创建节点和关系..."</span>)</span><br><span class="line">graph.create(alice_knows_bob)</span><br><span class="line">graph.create(bob_works_for_google)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"创建完成！"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 执行 Cypher 查询</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"\n--- 开始查询 ---"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询1: 找到所有年龄大于 31 岁的人</span></span><br><span class="line">query1 = <span class="string">"MATCH (p:Person) WHERE p.age &gt; 31 RETURN p.name, p.age"</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f"执行查询: <span class="subst">{query1}</span>"</span>)</span><br><span class="line">results1 = graph.run(query1)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> record <span class="keyword">in</span> results1:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"  找到的人: <span class="subst">{record[<span class="string">'p.name'</span>]}</span>, 年龄: <span class="subst">{record[<span class="string">'p.age'</span>]}</span>"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询2: 找到所有为 Google 工作的人</span></span><br><span class="line">query2 = <span class="string">"MATCH (p:Person)-[:WORKS_FOR]-&gt;(c:Company {name: 'Google'}) RETURN p.name, c.name"</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f"\n执行查询: <span class="subst">{query2}</span>"</span>)</span><br><span class="line">results2 = graph.run(query2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> record <span class="keyword">in</span> results2:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"  <span class="subst">{record[<span class="string">'p.name'</span>]}</span> 在 <span class="subst">{record[<span class="string">'c.name'</span>]}</span> 工作。"</span>)</span><br></pre></td></tr></table></figure></div>
-
-
-
-
-
-
+<p>示例如下: <div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> py2neo <span class="keyword">import</span> Graph, Node, Relationship</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 连接到 Neo4j 数据库</span></span><br><span class="line"><span class="comment"># 默认情况下，Neo4j 启动在 bolt://localhost:7687，用户名为 neo4j</span></span><br><span class="line"><span class="comment"># 请将 "your_password" 替换为你的 Neo4j 密码</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    graph = Graph(<span class="string">"bolt://localhost:7687"</span>, auth=(<span class="string">"neo4j"</span>, <span class="string">"your_password"</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"成功连接到 Neo4j 数据库！"</span>)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"连接失败: <span class="subst">{e}</span>"</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 清理数据库（可选，用于演示）</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"清理数据库..."</span>)</span><br><span class="line">graph.delete_all()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 创建节点 (Node)</span></span><br><span class="line"><span class="comment"># 创建两个 Person 节点</span></span><br><span class="line">alice = Node(<span class="string">"Person"</span>, name=<span class="string">"Alice"</span>, age=<span class="number">30</span>)</span><br><span class="line">bob = Node(<span class="string">"Person"</span>, name=<span class="string">"Bob"</span>, age=<span class="number">32</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个 Company 节点</span></span><br><span class="line">google = Node(<span class="string">"Company"</span>, name=<span class="string">"Google"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 创建关系 (Relationship)</span></span><br><span class="line"><span class="comment"># 关系可以有自己的属性</span></span><br><span class="line">alice_knows_bob = Relationship(alice, <span class="string">"KNOWS"</span>, bob, since=<span class="number">2015</span>)</span><br><span class="line">bob_works_for_google = Relationship(bob, <span class="string">"WORKS_FOR"</span>, google, position=<span class="string">"Engineer"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 将创建的节点和关系写入数据库</span></span><br><span class="line"><span class="comment"># graph.create() 是原子操作，会一次性创建所有内容</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"正在创建节点和关系..."</span>)</span><br><span class="line">graph.create(alice_knows_bob)</span><br><span class="line">graph.create(bob_works_for_google)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"创建完成！"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 执行 Cypher 查询</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"\n--- 开始查询 ---"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询1: 找到所有年龄大于 31 岁的人</span></span><br><span class="line">query1 = <span class="string">"MATCH (p:Person) WHERE p.age &gt; 31 RETURN p.name, p.age"</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f"执行查询: <span class="subst">{query1}</span>"</span>)</span><br><span class="line">results1 = graph.run(query1)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> record <span class="keyword">in</span> results1:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"  找到的人: <span class="subst">{record[<span class="string">'p.name'</span>]}</span>, 年龄: <span class="subst">{record[<span class="string">'p.age'</span>]}</span>"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查询2: 找到所有为 Google 工作的人</span></span><br><span class="line">query2 = <span class="string">"MATCH (p:Person)-[:WORKS_FOR]-&gt;(c:Company {name: 'Google'}) RETURN p.name, c.name"</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f"\n执行查询: <span class="subst">{query2}</span>"</span>)</span><br><span class="line">results2 = graph.run(query2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> record <span class="keyword">in</span> results2:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"  <span class="subst">{record[<span class="string">'p.name'</span>]}</span> 在 <span class="subst">{record[<span class="string">'c.name'</span>]}</span> 工作。"</span>)</span><br></pre></td></tr></table></figure></div></p>
 
 		</div>
 
@@ -1004,7 +1023,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">知识图谱</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-text">知识图谱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%84%E6%88%90"><span class="nav-text">核心构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E4%B8%8E%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">知识图谱与传统数据库的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Neo4j-%E5%9B%BE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">Neo4j 图数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cypher%EF%BC%9A%E4%B8%BA%E5%9B%BE%E8%80%8C%E7%94%9F%E7%9A%84%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="nav-text">Cypher：为图而生的查询语言</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#py2neo%EF%BC%9A%E8%BF%9E%E6%8E%A5-Python-%E4%B8%8E-Neo4j-%E7%9A%84%E6%A1%A5%E6%A2%81"><span class="nav-text">py2neo：连接 Python 与 Neo4j 的桥梁</span></a></li></ol></li></ol></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-text">知识图谱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%84%E6%88%90"><span class="nav-text">核心构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E4%B8%8E%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">知识图谱与传统数据库的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#neo4j-%E5%9B%BE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">Neo4j 图数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cypher%E4%B8%BA%E5%9B%BE%E8%80%8C%E7%94%9F%E7%9A%84%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80"><span class="nav-text">Cypher：为图而生的查询语言</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#py2neo%E8%BF%9E%E6%8E%A5-python-%E4%B8%8E-neo4j-%E7%9A%84%E6%A1%A5%E6%A2%81"><span class="nav-text">py2neo：连接 Python 与 Neo4j
+的桥梁</span></a></li></ol></li></ol></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1033,11 +1053,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

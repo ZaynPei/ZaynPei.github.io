@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,8 +833,11 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>可迭代对象 (Iterable) 是指那些能够<strong>逐一返回其内部成员</strong>的对象(<strong>返回迭代器</strong>)。换句话说，任何你可以用 <strong>for 循环进行遍历</strong>的对象，都是可迭代对象。</p>
-<h2 id="常见的可迭代对象"><a href="#常见的可迭代对象" class="headerlink" title="常见的可迭代对象"></a>常见的可迭代对象</h2><p>常见的可迭代对象包括：</p>
+			<p>可迭代对象 (Iterable)
+是指那些能够<strong>逐一返回其内部成员</strong>的对象(<strong>返回迭代器</strong>)。换句话说，任何你可以用
+<strong>for 循环进行遍历</strong>的对象，都是可迭代对象。</p>
+<h2 id="常见的可迭代对象">常见的可迭代对象</h2>
+<p>常见的可迭代对象包括：</p>
 <ul>
 <li>序列 (Sequence)：如列表 (list)、元组 (tuple)、字符串 (str)。</li>
 <li>集合 (Set)：如 set、frozenset。</li>
@@ -843,42 +846,56 @@ mjx-container[display="true"] + br {
 <li>通过 yield 关键字创建的生成器 (Generator)。</li>
 </ul>
 <div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列表是可迭代的</span></span><br><span class="line">my_list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> my_list:</span><br><span class="line">    <span class="built_in">print</span>(item)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 字符串是可迭代的</span></span><br><span class="line">my_string = <span class="string">"hello"</span></span><br><span class="line"><span class="keyword">for</span> char <span class="keyword">in</span> my_string:</span><br><span class="line">    <span class="built_in">print</span>(char)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 字典是可迭代的（默认遍历键）</span></span><br><span class="line">my_dict = {<span class="string">'a'</span>: <span class="number">1</span>, <span class="string">'b'</span>: <span class="number">2</span>}</span><br><span class="line"><span class="keyword">for</span> key <span class="keyword">in</span> my_dict:</span><br><span class="line">    <span class="built_in">print</span>(key)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果要迭代value，可以用for value in d.values()，如果要同时迭代key和value，可以用for k, v in d.items()。</span></span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> my_dict.values():</span><br><span class="line">    <span class="built_in">print</span>(value)</span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> my_dict.items():</span><br><span class="line">    <span class="built_in">print</span>(k, v)</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="如何判断一个对象是可迭代对象"><a href="#如何判断一个对象是可迭代对象" class="headerlink" title="如何判断一个对象是可迭代对象"></a>如何判断一个对象是可迭代对象</h3><p>你可以使用 <code>collections.abc.Iterable</code> 和<code>isinstance</code>来检查一个对象是否是可迭代的：</p>
+<h3 id="如何判断一个对象是可迭代对象">如何判断一个对象是可迭代对象</h3>
+<p>你可以使用 <code>collections.abc.Iterable</code>
+和<code>isinstance</code>来检查一个对象是否是可迭代的：</p>
 <div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections.abc <span class="keyword">import</span> Iterable</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], Iterable))  <span class="comment"># True，列表是可迭代的</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(<span class="string">"hello"</span>, Iterable))    <span class="comment"># True，字符串是可迭代的</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(<span class="number">42</span>, Iterable))         <span class="comment"># False，整数不是可迭代的</span></span><br></pre></td></tr></table></figure></div>
-
-<h2 id="迭代器协议-Iterator-Protocol"><a href="#迭代器协议-Iterator-Protocol" class="headerlink" title="迭代器协议 (Iterator Protocol)"></a>迭代器协议 (Iterator Protocol)</h2><p>一个对象之所以“可迭代”，是因为它遵守了 Python 的<strong>迭代器协议</strong>。这个协议规定了对象如何支持迭代。我们可以从两个角度来理解这个协议：</p>
+<h2 id="迭代器协议-iterator-protocol">迭代器协议 (Iterator
+Protocol)</h2>
+<p>一个对象之所以“可迭代”，是因为它遵守了 Python
+的<strong>迭代器协议</strong>。这个协议规定了对象如何支持迭代。我们可以从两个角度来理解这个协议：</p>
 <ul>
-<li><p><strong>可迭代对象</strong> (Iterable)</p>
+<li><strong>可迭代对象</strong> (Iterable)
 <ul>
-<li>定义：一个对象如果实现了 <strong><strong>iter</strong></strong>() 方法，那么它就是可迭代对象。</li>
-<li>作用：<strong>iter</strong>() 方法的职责是返回一个<strong>迭代器 (Iterator)</strong> 对象。</li>
-<li>List、Tuple、String、Dict、Set 等内置类型都实现了 <strong>iter</strong>() 方法，因此它们都是可迭代对象。</li>
-</ul>
-</li>
-<li><p><strong>迭代器</strong> (Iterator)</p>
+<li>定义：一个对象如果实现了 <strong><strong>iter</strong></strong>()
+方法，那么它就是可迭代对象。</li>
+<li>作用：<strong>iter</strong>() 方法的职责是返回一个<strong>迭代器
+(Iterator)</strong> 对象。</li>
+<li>List、Tuple、String、Dict、Set 等内置类型都实现了
+<strong>iter</strong>() 方法，因此它们都是可迭代对象。</li>
+</ul></li>
+<li><strong>迭代器</strong> (Iterator)
 <ul>
-<li>定义：一个对象如果同时实现了 <strong>iter</strong>() 和 <strong><strong>next</strong></strong>() 方法，那么它就是迭代器。</li>
-<li><strong>iter</strong>() 的作用：对于迭代器本身，其 <strong>iter</strong>() 方法通常只是返回它自己 (self)。</li>
-<li><strong>next</strong>() 的作用：这是迭代器的核心。每次调用该方法时，它会<strong>返回序列中的下一个元素</strong>。当所有元素都返回完毕后，再次调用 <strong>next</strong>() 会抛出 StopIteration 异常，以告知外部调用者迭代已经结束。</li>
-<li>Generator 对象就是一种特殊的迭代器，它们是通过生成器函数创建的。</li>
+<li>定义：一个对象如果同时实现了 <strong>iter</strong>() 和
+<strong><strong>next</strong></strong>() 方法，那么它就是迭代器。</li>
+<li><strong>iter</strong>() 的作用：对于迭代器本身，其
+<strong>iter</strong>() 方法通常只是返回它自己 (self)。</li>
+<li><strong>next</strong>()
+的作用：这是迭代器的核心。每次调用该方法时，它会<strong>返回序列中的下一个元素</strong>。当所有元素都返回完毕后，再次调用
+<strong>next</strong>() 会抛出 StopIteration
+异常，以告知外部调用者迭代已经结束。</li>
+<li>Generator
+对象就是一种特殊的迭代器，它们是通过生成器函数创建的。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p>需要注意的是, List、Tuple、String、Dict、Set等内置类型不是迭代器，因为它们没有实现 <strong>next</strong>() 方法, 也就意味着他们不能通过next()逐个访问下一元素(因为他们本身就是有限的集合, 没有必要逐个生成逐个next()访问).</p>
+<p>需要注意的是,
+List、Tuple、String、Dict、Set等内置类型不是迭代器，因为它们没有实现
+<strong>next</strong>() 方法,
+也就意味着他们不能通过next()逐个访问下一元素(因为他们本身就是有限的集合,
+没有必要逐个生成逐个next()访问).</p>
 <p>可以使用<code>isinstance()</code>判断一个对象是否是Iterator对象：</p>
 <div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> collections.abc <span class="keyword">import</span> Iterator</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>((x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)), Iterator)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>([], Iterator)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>({}, Iterator)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">isinstance</span>(<span class="string">'abc'</span>, Iterator)</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure></div>
-
-<h2 id="for-循环的幕后工作原理"><a href="#for-循环的幕后工作原理" class="headerlink" title="for 循环的幕后工作原理"></a>for 循环的幕后工作原理</h2><p>当我们使用 for 循环时，Python 解释器在背后实际上执行了以下步骤：</p>
-<ol>
-<li><p>获取迭代器：调用可迭代对象的 <strong>iter</strong>() 方法来获取一个迭代器。</p>
-</li>
-<li><p>循环取值：在一个循环中，不断地调用迭代器的 <strong>next</strong>() 方法来获取下一个元素。</p>
-</li>
-<li><p>处理异常：当 <strong>next</strong>() 方法抛出 StopIteration 异常时，for 循环会捕获这个异常并优雅地结束循环。</p>
-</li>
+<h2 id="for-循环的幕后工作原理">for 循环的幕后工作原理</h2>
+<p>当我们使用 for 循环时，Python 解释器在背后实际上执行了以下步骤：</p>
+<ol type="1">
+<li><p>获取迭代器：调用可迭代对象的 <strong>iter</strong>()
+方法来获取一个迭代器。</p></li>
+<li><p>循环取值：在一个循环中，不断地调用迭代器的
+<strong>next</strong>() 方法来获取下一个元素。</p></li>
+<li><p>处理异常：当 <strong>next</strong>() 方法抛出 StopIteration
+异常时，for 循环会捕获这个异常并优雅地结束循环。 <div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">my_list = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 获取迭代器</span></span><br><span class="line"><span class="comment">#    这相当于调用了 my_list.__iter__()</span></span><br><span class="line">my_iterator = <span class="built_in">iter</span>(my_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 循环取值和处理异常</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 相当于调用了 my_iterator.__next__()</span></span><br><span class="line">        item = <span class="built_in">next</span>(my_iterator)</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    <span class="keyword">except</span> StopIteration:</span><br><span class="line">        <span class="comment"># 3. 迭代结束，跳出循环</span></span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure></div></p></li>
 </ol>
-<div class="code-container" data-rel="Py"><figure class="iseeu highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">my_list = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 获取迭代器</span></span><br><span class="line"><span class="comment">#    这相当于调用了 my_list.__iter__()</span></span><br><span class="line">my_iterator = <span class="built_in">iter</span>(my_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 循环取值和处理异常</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 相当于调用了 my_iterator.__next__()</span></span><br><span class="line">        item = <span class="built_in">next</span>(my_iterator)</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    <span class="keyword">except</span> StopIteration:</span><br><span class="line">        <span class="comment"># 3. 迭代结束，跳出循环</span></span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure></div>
+
 		</div>
 
 		
@@ -903,12 +920,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%88%97%E8%A1%A8/">
+				<a class="prev" rel="prev" href="/2025/09/29/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">列表与元组</span>
+						<span class="post-nav-title-item truncate max-w-48">排序算法</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -916,9 +933,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/29/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/">
+				<a class="next" rel="next" href="/2025/09/29/lang/python/%E5%9F%BA%E6%9C%AC%E6%95%99%E7%A8%8B/%E5%88%97%E8%A1%A8/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">栈和队列</span>
+						<span class="post-nav-title-item truncate max-w-48">列表与元组</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -940,7 +957,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">可迭代对象和迭代器</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1"><span class="nav-text">常见的可迭代对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1"><span class="nav-text">如何判断一个对象是可迭代对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%8D%8F%E8%AE%AE-Iterator-Protocol"><span class="nav-text">迭代器协议 (Iterator Protocol)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for-%E5%BE%AA%E7%8E%AF%E7%9A%84%E5%B9%95%E5%90%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">for 循环的幕后工作原理</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1"><span class="nav-text">常见的可迭代对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1"><span class="nav-text">如何判断一个对象是可迭代对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%8D%8F%E8%AE%AE-iterator-protocol"><span class="nav-text">迭代器协议 (Iterator
+Protocol)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for-%E5%BE%AA%E7%8E%AF%E7%9A%84%E5%B9%95%E5%90%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">for 循环的幕后工作原理</span></a></li></ol>
 
 	</div>
 </div>
@@ -969,11 +987,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

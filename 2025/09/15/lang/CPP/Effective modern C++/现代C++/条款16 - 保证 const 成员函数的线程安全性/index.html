@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,57 +833,118 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h3 id="mutable关键字"><a href="#mutable关键字" class="headerlink" title="mutable关键字"></a>mutable关键字</h3><p>mutable（意为“可变的”）是一个存储说明符关键字，它的唯一目的就是“突破 const 限制”。</p>
-<p>我们知道，一个被 const 修饰的成员函数（例如 void myFunction() const;）向调用者承诺：“这个函数不会修改对象的任何成员变量。”. 然而, 因为 mutable 用于修饰类的非静态数据成员, 一旦一个成员变量被声明为 mutable，那么即使在一个 const 成员函数中，这个变量也可以被修改。</p>
-<p>也就是说, mutable 是 const 这个规则的一个“例外条款”。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> regularValue;</span><br><span class="line">    <span class="keyword">mutable</span> <span class="type">int</span> mutableValue; <span class="comment">// 被 mutable 修饰</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyClass</span>(<span class="type">int</span> v1, <span class="type">int</span> v2) : <span class="built_in">regularValue</span>(v1), <span class="built_in">mutableValue</span>(v2) {}</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">regularFunc</span><span class="params">()</span> </span>{</span><br><span class="line">        regularValue = <span class="number">100</span>;   <span class="comment">// OK：普通函数可以修改普通成员</span></span><br><span class="line">        mutableValue = <span class="number">200</span>;   <span class="comment">// OK：普通函数当然也可以修改 mutable 成员</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">constFunc</span><span class="params">()</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="comment">// regularValue = 100; // 编译错误！const 函数不能修改非 mutable 成员</span></span><br><span class="line">        mutableValue = <span class="number">200</span>;   <span class="comment">// 正确！mutable 成员可以在 const 函数中被修改</span></span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<h4 id="为什么需要-mutable？"><a href="#为什么需要-mutable？" class="headerlink" title="为什么需要 mutable？"></a>为什么需要 mutable？</h4><p>你可能会问：const 函数的意义不就是“不修改”吗？允许修改岂不是违背了初衷？这里引出了 C++ 中关于 “const” 的两个重要概念：</p>
+			<h3 id="mutable关键字">mutable关键字</h3>
+<p>mutable（意为“可变的”）是一个存储说明符关键字，它的唯一目的就是“突破
+const 限制”。</p>
+<p>我们知道，一个被 const 修饰的成员函数（例如 void myFunction()
+const;）向调用者承诺：“这个函数不会修改对象的任何成员变量。”. 然而, 因为
+mutable 用于修饰类的非静态数据成员, 一旦一个成员变量被声明为
+mutable，那么即使在一个 const 成员函数中，这个变量也可以被修改。</p>
+<p>也就是说, mutable 是 const 这个规则的一个“例外条款”。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> regularValue;</span><br><span class="line">    <span class="keyword">mutable</span> <span class="type">int</span> mutableValue; <span class="comment">// 被 mutable 修饰</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyClass</span>(<span class="type">int</span> v1, <span class="type">int</span> v2) : <span class="built_in">regularValue</span>(v1), <span class="built_in">mutableValue</span>(v2) {}</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">regularFunc</span><span class="params">()</span> </span>{</span><br><span class="line">        regularValue = <span class="number">100</span>;   <span class="comment">// OK：普通函数可以修改普通成员</span></span><br><span class="line">        mutableValue = <span class="number">200</span>;   <span class="comment">// OK：普通函数当然也可以修改 mutable 成员</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">constFunc</span><span class="params">()</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="comment">// regularValue = 100; // 编译错误！const 函数不能修改非 mutable 成员</span></span><br><span class="line">        mutableValue = <span class="number">200</span>;   <span class="comment">// 正确！mutable 成员可以在 const 函数中被修改</span></span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+#### 为什么需要 mutable？</p>
+<p>你可能会问：const
+函数的意义不就是“不修改”吗？允许修改岂不是违背了初衷？这里引出了 C++
+中关于 “const” 的两个重要概念：</p>
 <ul>
-<li>按位 Const (Bitwise Constness)：这是编译器默认的实现方式。只要一个成员函数没有修改对象内存布局中的任何一个 bit（位），它就是 const 的。</li>
-<li>逻辑 Const (Logical Constness)：这是开发者和调用者所期望的。只要一个成员函数没有修改对象的“外部可见的逻辑状态”，它就应该是 const 的。</li>
+<li>按位 Const (Bitwise
+Constness)：这是编译器默认的实现方式。只要一个成员函数没有修改对象内存布局中的任何一个
+bit（位），它就是 const 的。</li>
+<li>逻辑 Const (Logical
+Constness)：这是开发者和调用者所期望的。只要一个成员函数没有修改对象的“外部可见的逻辑状态”，它就应该是
+const 的。</li>
 </ul>
-<p>在大多数情况下，两者是一致的。但有时，为了维持“逻辑上的不变”，我们可能需要修改一些“内部实现上的细节”。mutable 就是用来实现“<strong>逻辑 Const</strong>”的工具。</p>
-<h4 id="mutable用例"><a href="#mutable用例" class="headerlink" title="mutable用例"></a>mutable用例</h4><p>用例 1：缓存 (Caching) / 延迟计算 (Memoization)<br>假设你有一个类，它有个函数需要执行非常昂贵的计算，但这个计算结果在对象生命周期内是固定的。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ExpensiveCalculator</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    SomeInputData data;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 用于缓存计算结果</span></span><br><span class="line">    <span class="keyword">mutable</span> <span class="type">double</span> cachedResult; </span><br><span class="line">    <span class="keyword">mutable</span> <span class="type">bool</span> cacheValid = <span class="literal">false</span>; <span class="comment">// 跟踪缓存是否有效</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">expensiveCalculation</span><span class="params">()</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="comment">// ... 执行非常复杂和耗时的计算 ...</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">42.0</span>; </span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">getValue</span><span class="params">()</span> <span class="type">const</span> </span>{ <span class="comment">// 这是一个 const 函数，因为它逻辑上不改变计算器的状态</span></span><br><span class="line">        <span class="keyword">if</span> (!cacheValid) {</span><br><span class="line">            <span class="comment">// 这是修改操作，但它只发生在 const 函数内部</span></span><br><span class="line">            cachedResult = <span class="built_in">expensiveCalculation</span>(); <span class="comment">// 必须是 mutable</span></span><br><span class="line">            cacheValid = <span class="literal">true</span>;                     <span class="comment">// 必须是 mutable</span></span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> cachedResult;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>getValue() 承诺自己是 const 的，因为它返回的值（逻辑状态）始终是相同的。但是为了提高性能，它在内部使用了 mutable 变量来缓存结果。从外部调用者看来，这个对象没有发生任何逻辑上的改变, 尽管内部的确发生了一些无关紧要的优化类型的变量改变.</p>
-<p>用例 2：用于 Mutex<br>假设我们有一个类，它的大多数成员函数都是 const（因为它们只是读取数据），但我们希望这些读取操作在多线程环境下是安全的。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ThreadSafeReader</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string sharedData = <span class="string">"Data"</span>;</span><br><span class="line">    <span class="keyword">mutable</span> std::mutex dataMutex; <span class="comment">// 关键！Mutex 必须是 mutable 的</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">std::string <span class="title">getData</span><span class="params">()</span> <span class="type">const</span> </span>{ <span class="comment">// 这是一个 const 成员函数</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 我们需要锁，因为可能有其他线程（通过非 const 函数）正在写入 sharedData</span></span><br><span class="line">        <span class="comment">// 但是 lock() 是一个“非 const”操作（它会修改 mutex 内部的状态）</span></span><br><span class="line">        <span class="comment">// 为了能在 const 函数 getData() 内部调用 dataMutex.lock()，</span></span><br><span class="line">        <span class="comment">// dataMutex 必须被声明为 mutable。</span></span><br><span class="line">        </span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(dataMutex)</span></span>; <span class="comment">// 这在编译上是合法的</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> sharedData;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setData</span><span class="params">(<span class="type">const</span> std::string&amp; s)</span> </span>{</span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(dataMutex)</span></span>;</span><br><span class="line">        sharedData = s;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>在这个例子中，getData() 从逻辑上看是 const 的（它只是返回数据，不改变类的逻辑状态）。但是为了保证线程安全，它必须对内部的 dataMutex 进行 lock() 操作。lock() 操作会修改 mutex 对象本身的状态。因此，为了让编译器允许 const 函数修改 mutex 成员，这个 mutex 必须被声明为 mutable。</p>
-<p>这是 mutable 最常见、最标准的用途之一：允许 const 成员函数获取锁以实现线程安全。</p>
-<h3 id="mutex-互斥量"><a href="#mutex-互斥量" class="headerlink" title="mutex 互斥量"></a>mutex 互斥量</h3><p>mutex 不是关键字，它是 C++11 在 <mutex> 头文件中提供的一个类，全称为 Mutual Exclusion（互斥）。</mutex></p>
-<p>它是多线程编程中的一种同步原语（Synchronization Primitive）, 其核心作用是<strong>保护共享资源</strong>，以防止多个线程同时访问和修改该资源时引发的竞态条件 (Race Condition)。</p>
-<h4 id="为什么需要-mutex？"><a href="#为什么需要-mutex？" class="headerlink" title="为什么需要 mutex？"></a>为什么需要 mutex？</h4><p>在多线程程序中，如果多个线程同时尝试修改同一个变量（例如一个全局计数器 counter），就会发生问题。</p>
-<p>一个简单的 counter++ 操作在底层汇编中通常至少包含三个步骤：</p>
+<p>在大多数情况下，两者是一致的。但有时，为了维持“逻辑上的不变”，我们可能需要修改一些“内部实现上的细节”。mutable
+就是用来实现“<strong>逻辑 Const</strong>”的工具。</p>
+<h4 id="mutable用例">mutable用例</h4>
+<p>用例 1：缓存 (Caching) / 延迟计算 (Memoization)
+假设你有一个类，它有个函数需要执行非常昂贵的计算，但这个计算结果在对象生命周期内是固定的。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ExpensiveCalculator</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    SomeInputData data;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 用于缓存计算结果</span></span><br><span class="line">    <span class="keyword">mutable</span> <span class="type">double</span> cachedResult; </span><br><span class="line">    <span class="keyword">mutable</span> <span class="type">bool</span> cacheValid = <span class="literal">false</span>; <span class="comment">// 跟踪缓存是否有效</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">expensiveCalculation</span><span class="params">()</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="comment">// ... 执行非常复杂和耗时的计算 ...</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">42.0</span>; </span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">getValue</span><span class="params">()</span> <span class="type">const</span> </span>{ <span class="comment">// 这是一个 const 函数，因为它逻辑上不改变计算器的状态</span></span><br><span class="line">        <span class="keyword">if</span> (!cacheValid) {</span><br><span class="line">            <span class="comment">// 这是修改操作，但它只发生在 const 函数内部</span></span><br><span class="line">            cachedResult = <span class="built_in">expensiveCalculation</span>(); <span class="comment">// 必须是 mutable</span></span><br><span class="line">            cacheValid = <span class="literal">true</span>;                     <span class="comment">// 必须是 mutable</span></span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> cachedResult;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> getValue() 承诺自己是 const
+的，因为它返回的值（逻辑状态）始终是相同的。但是为了提高性能，它在内部使用了
+mutable
+变量来缓存结果。从外部调用者看来，这个对象没有发生任何逻辑上的改变,
+尽管内部的确发生了一些无关紧要的优化类型的变量改变.</p>
+<p>用例 2：用于 Mutex 假设我们有一个类，它的大多数成员函数都是
+const（因为它们只是读取数据），但我们希望这些读取操作在多线程环境下是安全的。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ThreadSafeReader</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string sharedData = <span class="string">"Data"</span>;</span><br><span class="line">    <span class="keyword">mutable</span> std::mutex dataMutex; <span class="comment">// 关键！Mutex 必须是 mutable 的</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">std::string <span class="title">getData</span><span class="params">()</span> <span class="type">const</span> </span>{ <span class="comment">// 这是一个 const 成员函数</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 我们需要锁，因为可能有其他线程（通过非 const 函数）正在写入 sharedData</span></span><br><span class="line">        <span class="comment">// 但是 lock() 是一个“非 const”操作（它会修改 mutex 内部的状态）</span></span><br><span class="line">        <span class="comment">// 为了能在 const 函数 getData() 内部调用 dataMutex.lock()，</span></span><br><span class="line">        <span class="comment">// dataMutex 必须被声明为 mutable。</span></span><br><span class="line">        </span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(dataMutex)</span></span>; <span class="comment">// 这在编译上是合法的</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> sharedData;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setData</span><span class="params">(<span class="type">const</span> std::string&amp; s)</span> </span>{</span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(dataMutex)</span></span>;</span><br><span class="line">        sharedData = s;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 在这个例子中，getData() 从逻辑上看是 const
+的（它只是返回数据，不改变类的逻辑状态）。但是为了保证线程安全，它必须对内部的
+dataMutex 进行 lock() 操作。lock() 操作会修改 mutex
+对象本身的状态。因此，为了让编译器允许 const 函数修改 mutex 成员，这个
+mutex 必须被声明为 mutable。</p>
+<p>这是 mutable 最常见、最标准的用途之一：允许 const
+成员函数获取锁以实现线程安全。</p>
+<h3 id="mutex-互斥量">mutex 互斥量</h3>
+<p>mutex 不是关键字，它是 C++11 在 <mutex> 头文件中提供的一个类，全称为
+Mutual Exclusion（互斥）。</mutex></p>
+<p>它是多线程编程中的一种同步原语（Synchronization Primitive）,
+其核心作用是<strong>保护共享资源</strong>，以防止多个线程同时访问和修改该资源时引发的竞态条件
+(Race Condition)。</p>
+<h4 id="为什么需要-mutex">为什么需要 mutex？</h4>
+<p>在多线程程序中，如果多个线程同时尝试修改同一个变量（例如一个全局计数器
+counter），就会发生问题。</p>
+<p>一个简单的 counter++ 操作在底层汇编中通常至少包含三个步骤： - 读取
+(Read)：将 counter 的当前值从内存加载到 CPU 寄存器。 - 修改
+(Modify)：在寄存器中将该值加 1。 - 写回
+(Write)：将寄存器中的新值写回到内存中的 counter 位置。</p>
+<p><strong>竞态条件</strong>示例：假设 counter 当前为 10, 首先线程 A
+读取 counter得到 10（此时发生上下文切换）, 线程 B 读取 counter (也得到
+10); 接着线程 B 修改寄存器变为 11并写回 11 到 counter; 然后再切回线程
+A(不同线程执行时间有差异), 线程 A 仍然拿着旧值 10修改寄存器变为 11并写回
+11 到 counter。</p>
+<p>最后的结果是两个线程都执行了 ++ 操作，但 counter 的最终结果是
+11，而不是预期的 12。数据损坏了。</p>
+<h4 id="mutex-如何工作">Mutex 如何工作？</h4>
+<p>mutex 通过提供两个核心操作 lock() 和 unlock() 来解决这个问题。</p>
+<p>我们可以把共享资源（如 counter）想象成一个“秘密会议室”，而 mutex
+就是挂在门上的“唯一的锁”。</p>
 <ul>
-<li>读取 (Read)：将 counter 的当前值从内存加载到 CPU 寄存器。</li>
-<li>修改 (Modify)：在寄存器中将该值加 1。</li>
-<li>写回 (Write)：将寄存器中的新值写回到内存中的 counter 位置。</li>
+<li>临界区 (Critical
+Section)：那段必须被保护起来、<strong>不允许并发执行</strong>的代码（如
+counter++）被称为“临界区”。</li>
+<li>lock()：当一个线程想要进入临界区时，它必须先尝试获取锁，即调用
+my_mutex.lock()。如果锁可用，该线程获取锁，然后进入临界区;
+如果锁已被其他线程持有，该线程将阻塞 (Block)，直到那个线程释放锁。</li>
+<li>unlock()：当线程完成临界区的工作后，它必须释放锁，即调用
+my_mutex.unlock()，以便其他正在等待的线程可以获取它。</li>
 </ul>
-<p><strong>竞态条件</strong>示例：假设 counter 当前为 10, 首先线程 A 读取 counter得到 10（此时发生上下文切换）, 线程 B 读取 counter (也得到 10); 接着线程 B 修改寄存器变为 11并写回 11 到 counter; 然后再切回线程 A(不同线程执行时间有差异), 线程 A 仍然拿着旧值 10修改寄存器变为 11并写回 11 到 counter。</p>
-<p>最后的结果是两个线程都执行了 ++ 操作，但 counter 的最终结果是 11，而不是预期的 12。数据损坏了。</p>
-<h4 id="Mutex-如何工作？"><a href="#Mutex-如何工作？" class="headerlink" title="Mutex 如何工作？"></a>Mutex 如何工作？</h4><p>mutex 通过提供两个核心操作 lock() 和 unlock() 来解决这个问题。</p>
-<p>我们可以把共享资源（如 counter）想象成一个“秘密会议室”，而 mutex 就是挂在门上的“唯一的锁”。</p>
-<ul>
-<li>临界区 (Critical Section)：那段必须被保护起来、<strong>不允许并发执行</strong>的代码（如 counter++）被称为“临界区”。</li>
-<li>lock()：当一个线程想要进入临界区时，它必须先尝试获取锁，即调用 my_mutex.lock()。如果锁可用，该线程获取锁，然后进入临界区; 如果锁已被其他线程持有，该线程将阻塞 (Block)，直到那个线程释放锁。</li>
-<li>unlock()：当线程完成临界区的工作后，它必须释放锁，即调用 my_mutex.unlock()，以便其他正在等待的线程可以获取它。</li>
-</ul>
-<p>通过这种机制，mutex 确保了在任何时刻，只有一个线程能够进入临界区，从而保证了操作的原子性 (Atomicity)。</p>
-<h4 id="现代-C-中的安全用法：RAII-与-std-lock-guard"><a href="#现代-C-中的安全用法：RAII-与-std-lock-guard" class="headerlink" title="现代 C++ 中的安全用法：RAII 与 std::lock_guard"></a>现代 C++ 中的安全用法：RAII 与 std::lock_guard</h4><p>手动调用 lock() 和 unlock() 是非常危险的。如果在 lock() 之后、unlock() 之前，代码抛出了一个异常，那么 unlock() 将永远不会被调用，这个锁将永久锁定，所有其他等待该锁的线程将无限期阻塞（称为死锁 Deadlock）。</p>
-<p>为了解决这个问题，C++ 提供了 RAII（资源获取即初始化）模式的封装类：std::lock_guard。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> counter = <span class="number">0</span>;</span><br><span class="line">std::mutex mtx; <span class="comment">// 全局互斥量，用于保护 counter</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread_task</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; ++i) {</span><br><span class="line">        <span class="comment">// 安全的做法：使用 lock_guard</span></span><br><span class="line">        <span class="comment">// 1. 当 guard 对象被创建时（构造函数），它自动调用 mtx.lock()</span></span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        </span><br><span class="line">        counter++; <span class="comment">// 这里是临界区，现在是线程安全的</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 2. 当 guard 离开作用域时（在 '}' 处），其析构函数被自动调用，</span></span><br><span class="line">        <span class="comment">//    析构函数会自动调用 mtx.unlock()。</span></span><br><span class="line">        <span class="comment">//    即使 counter++ 抛出异常（虽然 int++ 不会），析构函数也会被调用，保证解锁。</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>std::lock_guard 利用了 C++ 的构造函数和析构函数机制。在构造时自动加锁，在析构时（无论函数是正常返回还是因异常退出）自动解锁，从而完美地保证了锁的释放。</p>
-<h4 id="std-atomic"><a href="#std-atomic" class="headerlink" title="std::atomic"></a>std::atomic</h4><p>我们之前讨论了 mutex（互斥锁）。mutex 采用阻塞 (Blocking), 是解决多线程数据竞争的一种重量级的同步机制。而 std::atomic 提供了一种非阻塞 (Non-Blocking) 的同步方式。下面我们先了解一下 std::atomic </p>
+<p>通过这种机制，mutex
+确保了在任何时刻，只有一个线程能够进入临界区，从而保证了操作的原子性
+(Atomicity)。</p>
+<h4 id="现代-c-中的安全用法raii-与-stdlock_guard">现代 C++
+中的安全用法：RAII 与 std::lock_guard</h4>
+<p>手动调用 lock() 和 unlock() 是非常危险的。如果在 lock()
+之后、unlock() 之前，代码抛出了一个异常，那么 unlock()
+将永远不会被调用，这个锁将永久锁定，所有其他等待该锁的线程将无限期阻塞（称为死锁
+Deadlock）。</p>
+<p>为了解决这个问题，C++ 提供了
+RAII（资源获取即初始化）模式的封装类：std::lock_guard。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> counter = <span class="number">0</span>;</span><br><span class="line">std::mutex mtx; <span class="comment">// 全局互斥量，用于保护 counter</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread_task</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; ++i) {</span><br><span class="line">        <span class="comment">// 安全的做法：使用 lock_guard</span></span><br><span class="line">        <span class="comment">// 1. 当 guard 对象被创建时（构造函数），它自动调用 mtx.lock()</span></span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        </span><br><span class="line">        counter++; <span class="comment">// 这里是临界区，现在是线程安全的</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 2. 当 guard 离开作用域时（在 '}' 处），其析构函数被自动调用，</span></span><br><span class="line">        <span class="comment">//    析构函数会自动调用 mtx.unlock()。</span></span><br><span class="line">        <span class="comment">//    即使 counter++ 抛出异常（虽然 int++ 不会），析构函数也会被调用，保证解锁。</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+std::lock_guard 利用了 C++
+的构造函数和析构函数机制。在构造时自动加锁，在析构时（无论函数是正常返回还是因异常退出）自动解锁，从而完美地保证了锁的释放。</p>
+<h4 id="stdatomic">std::atomic</h4>
+<p>我们之前讨论了 mutex（互斥锁）。mutex 采用阻塞 (Blocking),
+是解决多线程数据竞争的一种重量级的同步机制。而 std::atomic
+提供了一种非阻塞 (Non-Blocking) 的同步方式。下面我们先了解一下
+std::atomic</p>
 <blockquote>
-<p>多线程阻塞这种“挂起”和“唤醒”操作涉及到了操作系统内核态与用户态的切换，这是一个非常昂贵（高延迟）的操作。对于那些需要频繁更新、但冲突并不严重的共享变量（例如一个全局访问计数器），使用 mutex 就像“杀鸡用牛刀”，开销太大了。</p>
+<p>多线程阻塞这种“挂起”和“唤醒”操作涉及到了操作系统内核态与用户态的切换，这是一个非常昂贵（高延迟）的操作。对于那些需要频繁更新、但冲突并不严重的共享变量（例如一个全局访问计数器），使用
+mutex 就像“杀鸡用牛刀”，开销太大了。</p>
 </blockquote>
-<p>std::atomic 是 C++11 引入的一个极其重要的特性，它位于 <atomic> 头文件中。它是 C++ 底层内存模型和原子操作的基石，也是实现无锁编程 (Lock-Free Programming) 的核心工具。</atomic></p>
-<p>std::atomic 提供了一种能力，使得对某个变量的简单操作（如读、写、增、减、交换等）可以<strong>原子性</strong> (Atomically) 地完成。它依赖于 CPU 硬件层面提供的原子指令 (Atomic Instructions)（例如 x86 上的 LOCK CMPXCHG）。这些特殊的 CPU 指令可以在硬件层面保证一个“读-改-写”的操作序列在执行的中途不会被任何其他线程打断（即它是原子的）。</p>
-<p>当一个变量被声明为 std::atomic 时，编译器会确保对这个变量的所有操作都转化为这些特殊的原子 CPU 指令，而不是我们之前担心的普通的“读、改、写”三部曲。</p>
-<p>上述示例中采用std::atomic的同款代码如下:</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">atomic_counter</span><span class="params">(<span class="number">0</span>)</span></span>; <span class="comment">// 将 counter 封装为 atomic 类型</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">task</span><span class="params">()</span> </span>{</span><br><span class="line">    atomic_counter++; <span class="comment">// 这一行代码会被编译成一条单一的、原子的 CPU 指令</span></span><br><span class="line">                       <span class="comment">// (例如在 x86 上是 "LOCK XADD")</span></span><br><span class="line">                       </span><br><span class="line">    <span class="comment">// 或者使用等效的 fetch_add，语义更清晰：</span></span><br><span class="line">    atomic_counter.<span class="built_in">fetch_add</span>(<span class="number">1</span>); <span class="comment">// 以原子的方式“取回当前值并加1”</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>在 atomic 版本中，当多个线程同时执行 atomic_counter.fetch_add(1) 时，CPU 硬件会保证这些指令依次排队执行，一个完成了下一个才能开始（在极小的 CPU 指令时间尺度上），它们不会像普通 ++ 那样发生“读-改-写”步骤的交错。</p>
-<p>最重要的是，这个过程完全在用户态完成，没有线程会被操作系统挂起（阻塞）。如果发生冲突，线程通常只会进行几次“自旋 (Spin)”（即 CPU 空转几个周期再试一次），这比内核调度的开销小得多。</p>
+<p>std::atomic 是 C++11 引入的一个极其重要的特性，它位于 <atomic>
+头文件中。它是 C++ 底层内存模型和原子操作的基石，也是实现无锁编程
+(Lock-Free Programming) 的核心工具。</atomic></p>
+<p>std::atomic
+提供了一种能力，使得对某个变量的简单操作（如读、写、增、减、交换等）可以<strong>原子性</strong>
+(Atomically) 地完成。它依赖于 CPU 硬件层面提供的原子指令 (Atomic
+Instructions)（例如 x86 上的 LOCK CMPXCHG）。这些特殊的 CPU
+指令可以在硬件层面保证一个“读-改-写”的操作序列在执行的中途不会被任何其他线程打断（即它是原子的）。</p>
+<p>当一个变量被声明为 std::atomic
+时，编译器会确保对这个变量的所有操作都转化为这些特殊的原子 CPU
+指令，而不是我们之前担心的普通的“读、改、写”三部曲。</p>
+<p>上述示例中采用std::atomic的同款代码如下: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">atomic_counter</span><span class="params">(<span class="number">0</span>)</span></span>; <span class="comment">// 将 counter 封装为 atomic 类型</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">task</span><span class="params">()</span> </span>{</span><br><span class="line">    atomic_counter++; <span class="comment">// 这一行代码会被编译成一条单一的、原子的 CPU 指令</span></span><br><span class="line">                       <span class="comment">// (例如在 x86 上是 "LOCK XADD")</span></span><br><span class="line">                       </span><br><span class="line">    <span class="comment">// 或者使用等效的 fetch_add，语义更清晰：</span></span><br><span class="line">    atomic_counter.<span class="built_in">fetch_add</span>(<span class="number">1</span>); <span class="comment">// 以原子的方式“取回当前值并加1”</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 在 atomic
+版本中，当多个线程同时执行 atomic_counter.fetch_add(1) 时，CPU
+硬件会保证这些指令依次排队执行，一个完成了下一个才能开始（在极小的 CPU
+指令时间尺度上），它们不会像普通 ++ 那样发生“读-改-写”步骤的交错。</p>
+<p>最重要的是，这个过程完全在用户态完成，没有线程会被操作系统挂起（阻塞）。如果发生冲突，线程通常只会进行几次“自旋
+(Spin)”（即 CPU 空转几个周期再试一次），这比内核调度的开销小得多。</p>
 
 		</div>
 
@@ -946,7 +1007,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款16：保证 const 成员函数的线程安全性</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#mutable%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">mutable关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-mutable%EF%BC%9F"><span class="nav-text">为什么需要 mutable？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mutable%E7%94%A8%E4%BE%8B"><span class="nav-text">mutable用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mutex-%E4%BA%92%E6%96%A5%E9%87%8F"><span class="nav-text">mutex 互斥量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-mutex%EF%BC%9F"><span class="nav-text">为什么需要 mutex？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mutex-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%EF%BC%9F"><span class="nav-text">Mutex 如何工作？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3-C-%E4%B8%AD%E7%9A%84%E5%AE%89%E5%85%A8%E7%94%A8%E6%B3%95%EF%BC%9ARAII-%E4%B8%8E-std-lock-guard"><span class="nav-text">现代 C++ 中的安全用法：RAII 与 std::lock_guard</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#std-atomic"><span class="nav-text">std::atomic</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#mutable%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">mutable关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mutable%E7%94%A8%E4%BE%8B"><span class="nav-text">mutable用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mutex-%E4%BA%92%E6%96%A5%E9%87%8F"><span class="nav-text">mutex 互斥量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-mutex"><span class="nav-text">为什么需要 mutex？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mutex-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C"><span class="nav-text">Mutex 如何工作？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3-c-%E4%B8%AD%E7%9A%84%E5%AE%89%E5%85%A8%E7%94%A8%E6%B3%95raii-%E4%B8%8E-stdlock_guard"><span class="nav-text">现代 C++
+中的安全用法：RAII 与 std::lock_guard</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stdatomic"><span class="nav-text">std::atomic</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -975,11 +1037,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

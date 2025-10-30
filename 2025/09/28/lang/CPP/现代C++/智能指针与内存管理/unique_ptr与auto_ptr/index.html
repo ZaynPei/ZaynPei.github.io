@@ -709,15 +709,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -800,56 +800,97 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>std::unique_ptr 同样是 C++11 中引入的，用于表示对<strong>动态分配对象</strong>的<strong>独占所有权</strong>（Exclusive Ownership）。</p>
-<h2 id="std-unique-ptr：独占所有权的轻量级管理者"><a href="#std-unique-ptr：独占所有权的轻量级管理者" class="headerlink" title="std::unique_ptr：独占所有权的轻量级管理者"></a>std::unique_ptr：独占所有权的轻量级管理者</h2><p>与 shared_ptr 的“共享”理念完全相反，unique_ptr 遵循“独裁”模式：在任何时刻，只能有一个 unique_ptr 指向并拥有一个给定的对象。当这个 unique_ptr 被销毁或重置时，它所拥有的对象也会被立即销毁。</p>
-<p><strong>独占所有权</strong> (Exclusive Ownership): 一个资源（内存、文件句柄等）的生命周期由<strong>唯一</strong>的 unique_ptr 控制。这从根本上杜绝了“谁该删除指针”的混乱问题，所有权模型非常清晰。</p>
-<p><strong>轻量级与高性能</strong> (Lightweight &amp; High-Performance): unique_ptr 是一个<strong>零成本抽象</strong>（Zero-cost Abstraction）。它内部<strong>没有引用计数</strong>，也<strong>没有控制块</strong>。在大多数情况下，一个 unique_ptr 的<strong>大小与一个原始指针完全相同</strong>。且它的操作（如访问成员）与操作原始指针一样快，<strong>没有任何额外的性能开销</strong>。</p>
-<p><strong>不可拷贝，但可移动</strong> (Non-copyable, but Movable): 为了保证所有权的“独占性”，unique_ptr <strong>删除了拷贝构造函数</strong>和<strong>拷贝赋值运算符</strong>。你不能像 shared_ptr 那样简单地复制它。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;MyClass&gt; ptr1 = std::<span class="built_in">make_unique</span>&lt;MyClass&gt;();</span><br><span class="line"><span class="comment">// std::unique_ptr&lt;MyClass&gt; ptr2 = ptr1; // 紧张拷贝构造, 编译错误！</span></span><br></pre></td></tr></table></figure></div>
-<p>不过它拥有<strong>移动构造</strong>函数和<strong>移动赋值</strong>运算符。这意味着<strong>所有权可以被转移</strong>（Transfer）。一旦所有权被转移，原来的 unique_ptr 将变为<strong>空指针</strong> (nullptr)。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;MyClass&gt; ptr1 = std::<span class="built_in">make_unique</span>&lt;MyClass&gt;();</span><br><span class="line">std::unique_ptr&lt;MyClass&gt; ptr2 = std::<span class="built_in">move</span>(ptr1); <span class="comment">// 正确，所有权从 ptr1 转移到 ptr2</span></span><br><span class="line"><span class="comment">// 此后，ptr1 等于 nullptr，ptr2 拥有对象</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><p>首先是创建 unique_ptr (推荐使用 std::make_unique, C++14 中引入)</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> { <span class="comment">/* ... */</span> };</span><br><span class="line"></span><br><span class="line"><span class="comment">// 推荐方式 (C++14 及以后)</span></span><br><span class="line"><span class="comment">// 优点：代码简洁、异常安全</span></span><br><span class="line">std::unique_ptr&lt;MyClass&gt; ptr1 = std::<span class="built_in">make_unique</span>&lt;MyClass&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++11 的方式</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;MyClass&gt; <span class="title">ptr2</span><span class="params">(<span class="keyword">new</span> MyClass())</span></span>;</span><br></pre></td></tr></table></figure></div>
-
-<p><strong>所有权的转移</strong>是 unique_ptr 的核心操作模式，最常见的场景是从函数返回。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::unique_ptr&lt;MyClass&gt; <span class="title">create_widget</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 在函数内部创建对象, 对象在堆上</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 直接返回 unique_ptr，所有权被自动“移动”给调用者</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">make_unique</span>&lt;MyClass&gt;(); </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_widget</span><span class="params">(std::unique_ptr&lt;MyClass&gt; widget)</span> </span>{</span><br><span class="line">    <span class="comment">// 这个函数通过移动接收了 widget 的所有权</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">} <span class="comment">// 函数结束，widget 在此被销毁，其管理的对象也被销毁</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    std::unique_ptr&lt;MyClass&gt; my_widget = <span class="built_in">create_widget</span>(); <span class="comment">// 从工厂函数接收所有权, 因为unique_ptr不可拷贝且移动更高效, 所以直接移动给了my_widget</span></span><br><span class="line">    </span><br><span class="line">    my_widget-&gt;<span class="built_in">do_something</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">process_widget</span>(std::<span class="built_in">move</span>(my_widget)); <span class="comment">// 将所有权转移给 process_widget 函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 此后，main 函数中的 my_widget 变为 nullptr</span></span><br><span class="line">    <span class="comment">// if (my_widget == nullptr) { /* ... */ } </span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-<p>这里在create_widget()函数中, return 语句返回一个<strong>临时创建的对象</strong>（在例子中是 std::make_unique 的结果）时，这个临时对象被视为一个<strong>右值</strong>（rvalue）。当<strong>用一个右值来初始化一个新的对象</strong>时（例如 my_widget = create_widget()），<strong>编译器会优先选择使用移动构造函数</strong>，而不是拷贝构造函数。</p>
-<p>通过返回值和 std::move，unique_ptr 实现了清晰、安全的所有权在不同作用域之间的传递</p>
+			<p>std::unique_ptr 同样是 C++11
+中引入的，用于表示对<strong>动态分配对象</strong>的<strong>独占所有权</strong>（Exclusive
+Ownership）。</p>
+<h2 id="stdunique_ptr独占所有权的轻量级管理者">std::unique_ptr：独占所有权的轻量级管理者</h2>
+<p>与 shared_ptr 的“共享”理念完全相反，unique_ptr
+遵循“独裁”模式：在任何时刻，只能有一个 unique_ptr
+指向并拥有一个给定的对象。当这个 unique_ptr
+被销毁或重置时，它所拥有的对象也会被立即销毁。</p>
+<p><strong>独占所有权</strong> (Exclusive Ownership):
+一个资源（内存、文件句柄等）的生命周期由<strong>唯一</strong>的
+unique_ptr
+控制。这从根本上杜绝了“谁该删除指针”的混乱问题，所有权模型非常清晰。</p>
+<p><strong>轻量级与高性能</strong> (Lightweight &amp; High-Performance):
+unique_ptr 是一个<strong>零成本抽象</strong>（Zero-cost
+Abstraction）。它内部<strong>没有引用计数</strong>，也<strong>没有控制块</strong>。在大多数情况下，一个
+unique_ptr
+的<strong>大小与一个原始指针完全相同</strong>。且它的操作（如访问成员）与操作原始指针一样快，<strong>没有任何额外的性能开销</strong>。</p>
+<p><strong>不可拷贝，但可移动</strong> (Non-copyable, but Movable):
+为了保证所有权的“独占性”，unique_ptr
+<strong>删除了拷贝构造函数</strong>和<strong>拷贝赋值运算符</strong>。你不能像
+shared_ptr 那样简单地复制它。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;MyClass&gt; ptr1 = std::<span class="built_in">make_unique</span>&lt;MyClass&gt;();</span><br><span class="line"><span class="comment">// std::unique_ptr&lt;MyClass&gt; ptr2 = ptr1; // 紧张拷贝构造, 编译错误！</span></span><br></pre></td></tr></table></figure></div>
+不过它拥有<strong>移动构造</strong>函数和<strong>移动赋值</strong>运算符。这意味着<strong>所有权可以被转移</strong>（Transfer）。一旦所有权被转移，原来的
+unique_ptr 将变为<strong>空指针</strong> (nullptr)。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;MyClass&gt; ptr1 = std::<span class="built_in">make_unique</span>&lt;MyClass&gt;();</span><br><span class="line">std::unique_ptr&lt;MyClass&gt; ptr2 = std::<span class="built_in">move</span>(ptr1); <span class="comment">// 正确，所有权从 ptr1 转移到 ptr2</span></span><br><span class="line"><span class="comment">// 此后，ptr1 等于 nullptr，ptr2 拥有对象</span></span><br></pre></td></tr></table></figure></div></p>
+<h3 id="如何使用">如何使用</h3>
+<p>首先是创建 unique_ptr (推荐使用 std::make_unique, C++14 中引入)
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> { <span class="comment">/* ... */</span> };</span><br><span class="line"></span><br><span class="line"><span class="comment">// 推荐方式 (C++14 及以后)</span></span><br><span class="line"><span class="comment">// 优点：代码简洁、异常安全</span></span><br><span class="line">std::unique_ptr&lt;MyClass&gt; ptr1 = std::<span class="built_in">make_unique</span>&lt;MyClass&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++11 的方式</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;MyClass&gt; <span class="title">ptr2</span><span class="params">(<span class="keyword">new</span> MyClass())</span></span>;</span><br></pre></td></tr></table></figure></div></p>
+<p><strong>所有权的转移</strong>是 unique_ptr
+的核心操作模式，最常见的场景是从函数返回。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::unique_ptr&lt;MyClass&gt; <span class="title">create_widget</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 在函数内部创建对象, 对象在堆上</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 直接返回 unique_ptr，所有权被自动“移动”给调用者</span></span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">make_unique</span>&lt;MyClass&gt;(); </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_widget</span><span class="params">(std::unique_ptr&lt;MyClass&gt; widget)</span> </span>{</span><br><span class="line">    <span class="comment">// 这个函数通过移动接收了 widget 的所有权</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">} <span class="comment">// 函数结束，widget 在此被销毁，其管理的对象也被销毁</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    std::unique_ptr&lt;MyClass&gt; my_widget = <span class="built_in">create_widget</span>(); <span class="comment">// 从工厂函数接收所有权, 因为unique_ptr不可拷贝且移动更高效, 所以直接移动给了my_widget</span></span><br><span class="line">    </span><br><span class="line">    my_widget-&gt;<span class="built_in">do_something</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">process_widget</span>(std::<span class="built_in">move</span>(my_widget)); <span class="comment">// 将所有权转移给 process_widget 函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 此后，main 函数中的 my_widget 变为 nullptr</span></span><br><span class="line">    <span class="comment">// if (my_widget == nullptr) { /* ... */ } </span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+这里在create_widget()函数中, return
+语句返回一个<strong>临时创建的对象</strong>（在例子中是 std::make_unique
+的结果）时，这个临时对象被视为一个<strong>右值</strong>（rvalue）。当<strong>用一个右值来初始化一个新的对象</strong>时（例如
+my_widget =
+create_widget()），<strong>编译器会优先选择使用移动构造函数</strong>，而不是拷贝构造函数。</p>
+<p>通过返回值和 std::move，unique_ptr
+实现了清晰、安全的所有权在不同作用域之间的传递</p>
 <blockquote>
-<p>现代 C++ 编译器通常会做得更极致。它们会使用一种叫做“<strong>返回值优化</strong>”的技术。在这种情况下，编译器会发现 create_widget 内部创建的指针最终会进入 main 函数的 my_widget 中，于是它会省略掉中间的“移动”步骤，直接在 my_widget 的内存位置上构造那个 unique_ptr。从外部看，就好像 create_widget 函数直接把对象变到了 main 函数里一样。</p>
+<p>现代 C++
+编译器通常会做得更极致。它们会使用一种叫做“<strong>返回值优化</strong>”的技术。在这种情况下，编译器会发现
+create_widget 内部创建的指针最终会进入 main 函数的 my_widget
+中，于是它会省略掉中间的“移动”步骤，直接在 my_widget
+的内存位置上构造那个 unique_ptr。从外部看，就好像 create_widget
+函数直接把对象变到了 main 函数里一样。</p>
 </blockquote>
 <p>此外, 还有一些其他函数:</p>
 <ul>
 <li>访问：像普通指针一样使用 * 和 -&gt;。</li>
-<li>获取原始指针：使用 get() 方法，规则和风险与 shared_ptr 的 get() 类似。</li>
-<li>释放所有权：调用 release() 方法。它会放弃所有权并返回原始指针，但不会删除对象。调用者需要手动管理返回的指针。</li>
-<li>重置：调用 reset() 方法。它会销毁当前拥有的对象，并可以选择性地接管一个新的对象。</li>
+<li>获取原始指针：使用 get() 方法，规则和风险与 shared_ptr 的 get()
+类似。</li>
+<li>释放所有权：调用 release()
+方法。它会放弃所有权并返回原始指针，但不会删除对象。调用者需要手动管理返回的指针。</li>
+<li>重置：调用 reset()
+方法。它会销毁当前拥有的对象，并可以选择性地接管一个新的对象。</li>
 </ul>
-<h3 id="高级特性"><a href="#高级特性" class="headerlink" title="高级特性"></a>高级特性</h3><p>unique_ptr 比看起来更灵活，它支持两个强大的高级特性: </p>
+<h3 id="高级特性">高级特性</h3>
+<p>unique_ptr 比看起来更灵活，它支持两个强大的高级特性:</p>
 <p><strong>自定义删除器</strong> (Custom Deleters)</p>
-<p>与 shared_ptr 不同，unique_ptr 的<strong>删除器类型是其自身类型的一部分</strong>。这使得它仍然是零开销的，但<strong>不同删除器类型的 unique_ptr 是不同的类型</strong>。这使得 unique_ptr 非常适合用于管理任何需要配对操作的资源，完美实践 RAII（资源获取即初始化）。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>管理C风格的文件句柄</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义删除器结构体, 也可以是其他可调用对象如函数, lambda表达式, 封装的std::function</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FileCloser</span> {</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(FILE* file)</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (file) {</span><br><span class="line">            <span class="built_in">fclose</span>(file);</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"文件已关闭。"</span> &lt;&lt; std::endl;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 using 让类型名更简洁</span></span><br><span class="line"><span class="keyword">using</span> UniqueFilePtr = std::unique_ptr&lt;FILE, FileCloser&gt;;   <span class="comment">// 将删除器这个可调用对象也传入</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// fopen 返回 FILE*，我们立即将其所有权交给 unique_ptr</span></span><br><span class="line">    <span class="function">UniqueFilePtr <span class="title">file_ptr</span><span class="params">(fopen(<span class="string">"test.txt"</span>, <span class="string">"w"</span>))</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (file_ptr) {</span><br><span class="line">        <span class="built_in">fputs</span>(<span class="string">"Hello, unique_ptr!"</span>, file_ptr.<span class="built_in">get</span>());</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">} <span class="comment">// main 结束，file_ptr 被销毁，它的自定义删除器 FileCloser::operator() 会被自动调用，fclose(file) 得以执行</span></span><br></pre></td></tr></table></figure></div>
-
+<p>与 shared_ptr 不同，unique_ptr
+的<strong>删除器类型是其自身类型的一部分</strong>。这使得它仍然是零开销的，但<strong>不同删除器类型的
+unique_ptr 是不同的类型</strong>。这使得 unique_ptr
+非常适合用于管理任何需要配对操作的资源，完美实践
+RAII（资源获取即初始化）。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>管理C风格的文件句柄</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义删除器结构体, 也可以是其他可调用对象如函数, lambda表达式, 封装的std::function</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FileCloser</span> {</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(FILE* file)</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (file) {</span><br><span class="line">            <span class="built_in">fclose</span>(file);</span><br><span class="line">            std::cout &lt;&lt; <span class="string">"文件已关闭。"</span> &lt;&lt; std::endl;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 using 让类型名更简洁</span></span><br><span class="line"><span class="keyword">using</span> UniqueFilePtr = std::unique_ptr&lt;FILE, FileCloser&gt;;   <span class="comment">// 将删除器这个可调用对象也传入</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// fopen 返回 FILE*，我们立即将其所有权交给 unique_ptr</span></span><br><span class="line">    <span class="function">UniqueFilePtr <span class="title">file_ptr</span><span class="params">(fopen(<span class="string">"test.txt"</span>, <span class="string">"w"</span>))</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (file_ptr) {</span><br><span class="line">        <span class="built_in">fputs</span>(<span class="string">"Hello, unique_ptr!"</span>, file_ptr.<span class="built_in">get</span>());</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">} <span class="comment">// main 结束，file_ptr 被销毁，它的自定义删除器 FileCloser::operator() 会被自动调用，fclose(file) 得以执行</span></span><br></pre></td></tr></table></figure></div></p>
 <p><strong>数组支持</strong></p>
-<p>unique_ptr 对<strong>动态分配的数组</strong>有特殊的重载版本，使用时需要加上 <strong>[]</strong>。</p>
+<p>unique_ptr
+对<strong>动态分配的数组</strong>有特殊的重载版本，使用时需要加上
+<strong>[]</strong>。</p>
 <ul>
 <li>创建：std::make_unique&lt;T[]&gt;(size)</li>
-<li>析构：它会自动调用 delete[] 而不是 delete，这是正确的数组内存释放方式。</li>
-<li>访问：它重载了 <strong>operator[]</strong> 来访问数组元素，但<strong>没有 * 和 -&gt;</strong>。</li>
+<li>析构：它会自动调用 delete[] 而不是
+delete，这是正确的数组内存释放方式。</li>
+<li>访问：它重载了 <strong>operator[]</strong>
+来访问数组元素，但<strong>没有 * 和 -&gt;</strong>。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个包含 10 个整数的动态数组</span></span><br><span class="line">std::unique_ptr&lt;<span class="type">int</span>[]&gt; arr_ptr = std::<span class="built_in">make_unique</span>&lt;<span class="type">int</span>[]&gt;(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过 operator[] 访问元素</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i) {</span><br><span class="line">    arr_ptr[i] = i * i;</span><br><span class="line">}</span><br><span class="line"><span class="comment">// arr_ptr 离开作用域时，会自动调用 delete[] arr_ptr.get();</span></span><br></pre></td></tr></table></figure></div></li>
 </ul>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个包含 10 个整数的动态数组</span></span><br><span class="line">std::unique_ptr&lt;<span class="type">int</span>[]&gt; arr_ptr = std::<span class="built_in">make_unique</span>&lt;<span class="type">int</span>[]&gt;(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过 operator[] 访问元素</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i) {</span><br><span class="line">    arr_ptr[i] = i * i;</span><br><span class="line">}</span><br><span class="line"><span class="comment">// arr_ptr 离开作用域时，会自动调用 delete[] arr_ptr.get();</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="黄金法则：默认使用-std-unique-ptr。"><a href="#黄金法则：默认使用-std-unique-ptr。" class="headerlink" title="黄金法则：默认使用 std::unique_ptr。"></a>黄金法则：默认使用 std::unique_ptr。</h3><p>在现代 C++ 中，当你需要动态分配内存时，unique_ptr 应该是你的第一选择。它的所有权模型清晰，性能无损，完全符合 RAII 思想。何时使用 unique_ptr？</p>
+<h3 id="黄金法则默认使用-stdunique_ptr">黄金法则：默认使用
+std::unique_ptr。</h3>
+<p>在现代 C++ 中，当你需要动态分配内存时，unique_ptr
+应该是你的第一选择。它的所有权模型清晰，性能无损，完全符合 RAII
+思想。何时使用 unique_ptr？</p>
 <ul>
 <li>当你需要一个指向动态对象的指针，并且该对象的生命周期应该与这个指针的作用域绑定时。</li>
 <li>作为工厂函数的返回值，安全地将新创建对象的所有权转移出去。</li>
-<li>在类中作为成员，管理一个只属于该类实例的资源（例如，PIMPL 模式的实现）。</li>
+<li>在类中作为成员，管理一个只属于该类实例的资源（例如，PIMPL
+模式的实现）。</li>
 </ul>
-<p>只有当你<strong>明确需要共享一个资源的所有权</strong>，即多个独立的观察者都需要延长该资源的生命周期时，才应该“升级”到使用 <strong>std::shared_ptr</strong>。</p>
-<h2 id="std-auto-ptr"><a href="#std-auto-ptr" class="headerlink" title="std::auto_ptr"></a>std::auto_ptr</h2><p>什么是auto_ptr? 真不熟</p>
+<p>只有当你<strong>明确需要共享一个资源的所有权</strong>，即多个独立的观察者都需要延长该资源的生命周期时，才应该“升级”到使用
+<strong>std::shared_ptr</strong>。</p>
+<h2 id="stdauto_ptr">std::auto_ptr</h2>
+<p>什么是auto_ptr? 真不熟</p>
 <blockquote>
-<p>std::auto_ptr 是 std::unique_ptr 的祖先, 它在 C++11 中被不推荐使用（deprecated），并在 C++17 中被<strong>彻底移除</strong>, 完全被std::unique_ptr代替。</p>
+<p>std::auto_ptr 是 std::unique_ptr 的祖先, 它在 C++11
+中被不推荐使用（deprecated），并在 C++17 中被<strong>彻底移除</strong>,
+完全被std::unique_ptr代替。</p>
 </blockquote>
 
 		</div>
@@ -901,7 +942,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">unique_ptr与auto_ptr</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#std-unique-ptr%EF%BC%9A%E7%8B%AC%E5%8D%A0%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%AE%A1%E7%90%86%E8%80%85"><span class="nav-text">std::unique_ptr：独占所有权的轻量级管理者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="nav-text">如何使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7"><span class="nav-text">高级特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%84%E9%87%91%E6%B3%95%E5%88%99%EF%BC%9A%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8-std-unique-ptr%E3%80%82"><span class="nav-text">黄金法则：默认使用 std::unique_ptr。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-auto-ptr"><span class="nav-text">std::auto_ptr</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#stdunique_ptr%E7%8B%AC%E5%8D%A0%E6%89%80%E6%9C%89%E6%9D%83%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%AE%A1%E7%90%86%E8%80%85"><span class="nav-text">std::unique_ptr：独占所有权的轻量级管理者</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="nav-text">如何使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7"><span class="nav-text">高级特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%84%E9%87%91%E6%B3%95%E5%88%99%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8-stdunique_ptr"><span class="nav-text">黄金法则：默认使用
+std::unique_ptr。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stdauto_ptr"><span class="nav-text">std::auto_ptr</span></a></li></ol>
 
 	</div>
 </div>
@@ -930,11 +972,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

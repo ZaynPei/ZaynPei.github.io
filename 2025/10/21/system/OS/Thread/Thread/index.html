@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/21/system/os/thread/thread/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Thread">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/21/system/OS/Thread/Thread/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-21T14:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-21T10:58:00.233Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="system">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Thread | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Thread</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-21 22:00</span>
+        <span class="mobile">2025-10-21 22:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-21 18:58</span>
+            <span class="mobile">2025-10-21 18:58</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/system/OS/">OS</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/system/">system</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>4.1k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>14 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h3 id="多线程模型">多线程模型</h3>
+<p>首先, 我们需要了解两种基本的线程类型：</p>
+<ul>
+<li>用户线程 (User
+Threads)：由<strong>用户空间的线程库</strong>（比如一个语言的运行时）来管理（例如
+Pthreads, Java
+threads）。操作系统内核对这些线程一无所知，它只看到了一个单线程进程。
+<ul>
+<li>核心意义：轻量级与高效切换
+<ul>
+<li>创建与销毁快：创建线程不需要经过操作系统，只是在<strong>用户空间分配一些数据结构</strong>。</li>
+<li>切换（上下文切换）极快：线程A切换到线程B，只是<strong>库函数的一次调用</strong>，<strong>保存一下CPU寄存器</strong>，然后跳转到线程B的执行点。这个过程<strong>不需要陷入内核</strong>
+(System Call)，开销非常小。</li>
+</ul></li>
+<li>重大局限：
+<ul>
+<li>阻塞问题：由于内核“看”不到这些用户线程，它只“看”到这一个进程（或者说，承载这些用户线程的那个内核线程）。如果其中任何一个用户线程发起了一个阻塞式的系统调用（例如
+read
+等待磁盘I/O），内核会把整个进程（或承载线程）挂起。这意味着，该进程内的所有其他用户线程，即使它们是就绪的，也无法运行。</li>
+<li>无法利用多核：<strong>内核只知道一个执行实体</strong>，它只会把这个进程<strong>调度到一个CPU核心上</strong>。你无法通过纯粹的用户线程实现真正的并行（Parallelism），只能实现并发（Concurrency）。</li>
+</ul></li>
+</ul></li>
+<li>内核线程 (Kernel
+Threads)：由<strong>操作系统内核</strong>直接支持和管理。几乎所有现代操作系统（Windows,
+Solaris, Linux, macOS）都实现了内核线程。
+<ul>
+<li>核心意义：真正的并发与健壮性
+<ul>
+<li>内核调度：内核“看得到”每一个线程。如果线程A因为I/O阻塞了，内核知道它被阻塞了，会立刻调度同一个进程中的线程B（如果B是就绪态）去运行。</li>
+<li>多核并行：内核调度器可以将<strong>同一个进程的多个内核线程</strong>，同时调度到不同的CPU核心上运行，实现真正的并行计算。</li>
+</ul></li>
+<li>相应代价: <strong>开销更高</strong>.
+线程的创建、销毁和切换（上下文切换）都必须陷入内核来完成。这个模式切换（User
+Mode &lt;-&gt; Kernel Mode）的开销远大于用户空间的函数调用。</li>
+</ul></li>
+</ul>
+<p>而多线程模型就是描述如何将<strong>用户线程映射到内核线程</strong>的三种不同方式。</p>
+<h4 id="多对一-many-to-one-模型">多对一 (Many-to-One) 模型</h4>
+<p>将许多用户级线程映射到一个内核级线程上 。</p>
+<ul>
+<li>线程管理（创建、销毁、调度）完全在用户空间由线程库完成。</li>
+<li>操作系统内核根本不知道这些用户线程的存在，它只认为这是一个普通的单线程进程
+。</li>
+</ul>
+<p>优点： -
+高效：由于线程管理不需要进入内核，没有系统调用的开销，因此速度非常快
+。</p>
+<p>缺点： -
+阻塞问题：最大的问题是，如果任何一个用户线程执行了阻塞的系统调用（例如读取文件），那么整个进程（包括所有其他用户线程）都会被阻塞
+。 -
+无法并行：由于在任何时刻只有一个内核线程在运行，因此即使在多核处理器上，该进程也无法实现真正的并行。</p>
+<h4 id="一对一-one-to-one-模型">一对一 (One-to-One) 模型</h4>
+<p>将每一个用户级线程都映射到一个单独的内核级线程 。</p>
+<ul>
+<li>每当创建一个用户线程，线程库就会相应地请求内核创建一个内核线程。</li>
+<li>线程的调度和管理主要由内核完成。</li>
+</ul>
+<p>优点： - 高并发性：一个线程的阻塞不会影响其他线程 。 -
+支持并行：由于有多个内核线程，该进程可以在多核处理器上实现真正的并行执行。</p>
+<p>缺点： -
+开销大：每创建一个用户线程都需要创建一个对应的内核线程，这会带来显著的开销和资源占用
+。系统能支持的内核线程数量是有限的。</p>
+<p>主流应用：这是目前最主流的模型，被 Windows、Linux 和现代 Solaris
+等操作系统采用 。</p>
+<h4 id="多对多-many-to-many-模型">多对多 (Many-to-Many) 模型</h4>
+<p>将多个用户级线程复用到多个内核级线程上 。</p>
+<ul>
+<li>这是一种混合模型。内核线程的数量可以少于或等于用户线程的数量。</li>
+<li>用户空间的线程库负责将“准备就绪”的用户线程调度到可用的内核线程上去执行
+。</li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>灵活性高：结合了前两种模型的优点 。</li>
+<li>解决阻塞问题：一个用户线程阻塞时，内核可以调度同一个进程中的另一个用户线程（通过另一个内核线程）来执行。</li>
+<li>开销适中：允许程序创建任意多的用户线程，而内核线程的数量则可以由操作系统根据负载动态调整
+。</li>
+</ul>
+<p>缺点：实现起来非常复杂。</p>
+<h4 id="变体二级-two-level-模型">变体：二级 (Two-level) 模型</h4>
+<p>定义：这本质上是“多对多”模型的一个变体，它额外允许一个用户线程<strong>绑定</strong>
+(bound)到某一个特定的<strong>内核线程</strong>上 。</p>
+<p>工作方式：大部分用户线程在多个内核线程池中灵活调度（多对多），而个别需要高优先级或实时响应的线程则可以“霸占”一个内核线程（一对一）。</p>
+<p>优点：提供了极高的灵活性，兼顾了高效调度和实时响应的需求。</p>
+<h4 id="实际应用">实际应用</h4>
+<p>在现代主流操作系统中（如 Linux, Windows,
+macOS），我们平时使用的线程模型绝大多数是 1:1 模型。</p>
+<p>它意味着你（用户）在<strong>代码中每创建一个线程</strong>，操作系统内核就会为你创建一个<strong>对应的内核线程</strong>。</p>
+<p>你用来<strong>创建线程的库</strong>（如 C++ 的 std::thread，C 的
+pthread，Python 的 threading.Thread，Java 的
+Thread）实际上只是一个“<strong>包装器</strong>”（Wrapper）。</p>
+<p>当你调用 std::thread myThread(func) 时，std::thread
+的构造函数<strong>内部会调用系统API</strong>（例如 Linux 上的 clone()
+系统调用）来<strong>请求内核创建一个内核线程</strong>。</p>
+<p>我们享受着内核线程的所有好处：一个线程阻塞I/O，<strong>不影响其他线程</strong>；多线程可以被自动<strong>调度到多核上并行</strong>运行。</p>
+<p>我们也承受着它的代价：<strong>创建和切换线程是有固定开销</strong>的。因此，我们不能无限制地创建成千上万个线程（这会导致资源耗尽和调度开销过大）。</p>
+<p>不过,
+“用户线程”的核心思想（即<strong>在用户空间实现极轻量级的切换</strong>）并没有消失，它以一种新的形式回归了，这就是我们常说的<strong>协程</strong>
+(Coroutines)。</p>
+<p>协程是一种 M:N 模型, 它结合了用户线程和内核线程的优点。</p>
+<ul>
+<li>系统创建 N 个内核线程（通常等于CPU核心数，组成一个线程池）。</li>
+<li>语言运行时（Runtime，如 Go 的调度器、Python 的 asyncio
+事件循环）在用户空间创建 M 个协程（<span class="math inline"><em>M</em></span> 可以非常大，如成千上万个，M
+&gt;&gt; N）。</li>
+<li>运行时负责将这 <strong>M 个协程“投放”到 N
+个内核线程</strong>上执行。</li>
+</ul>
+<p>这就是现代版的“用户线程”：Go 语言的 <strong>Goroutine</strong>
+是最典型的例子。你可以轻松创建几十万个 Goroutine。Go
+的调度器会在用户态管理它们，并将它们<strong>调度到少量的OS线程</strong>（内核线程）上。</p>
+<p>当一个 Goroutine
+遇到I/O（Go的运行时会使用非阻塞I/O），Go调度器会自动将其“挂起”，并让这个OS线程去执行另一个就绪的
+Goroutine。</p>
+<p>Python 的 <strong>asyncio</strong>、C# 的
+<strong>async/await</strong>、Rust 的 <strong>tokio</strong>
+也是同理。它们都在<strong>一个（或少数几个）内核线程</strong>上，通过事件循环在<strong>用户态管理着大量的“任务</strong>”（Tasks）或“协程”。</p>
+<h3 id="一些多线程问题">一些多线程问题</h3>
+<h4 id="fork-和-exec-系统调用的语义">fork() 和 exec()
+系统调用的语义</h4>
+<p>当一个多线程进程中的某个线程调用 fork()
+来创建新进程时，会产生一个歧义：新的子进程是应该复制父进程的所有线程，还是只复制那个调用
+fork() 的线程？</p>
+<ul>
+<li><p>如果子进程复制了所有线程，那么它也必须复制所有线程的锁、状态等，这非常复杂且容易出错。</p></li>
+<li><p>如果子进程只复制了调用 fork()
+的线程，那么其他线程（例如可能持有锁的线程）就消失了，这可能导致子进程立即陷入死锁。</p></li>
+</ul>
+<p>解决方案是：一些 UNIX 系统提供了两个不同版本的 fork()
+，一个只复制调用者线程，另一个复制所有线程，让程序员根据需求选择。</p>
+<p>不过 POSIX 标准倒是规定：fork()
+会创建一个新的子进程，这个子进程的内存空间是父进程的完整副本，<strong>但它的执行实体（线程）只有一个</strong>，即那个<strong>调用了
+fork() 的线程</strong>的副本。</p>
+<blockquote>
+<p>但是在大部分情况下，fork()与exec()会配合使用,
+因此带来的锁问题根本不重要。因为子进程在有机会再次使用那个有问题的锁之前，它的整个内存就被
+<strong>exec()</strong> 覆盖了。</p>
+</blockquote>
+<p>不过与 fork() 不同，exec() 的语义是清晰的 。当任何线程调用
+<strong>exec()</strong>
+时，它会用一个新程序替换整个进程，包括<strong>该进程中的所有线程和资源</strong>。</p>
+<h4 id="线程取消-thread-cancellation">线程取消 (Thread
+Cancellation)</h4>
+<p>线程取消是指一个线程请求终止另一个线程的执行。这在多线程编程中是一个复杂的问题，因为强制终止一个线程可能会导致资源泄漏、不一致状态等问题。</p>
+<p>两种取消方式 ：</p>
+<ul>
+<li>异步取消 (Asynchronous
+cancellation)：一个线程<strong>立即终止</strong>另一个目标线程 。
+<ul>
+<li>这种方式非常危险，因为目标线程可能正处于更新共享数据或持有锁的中间状态。强行终止它会导致数据不一致或资源无法释放。</li>
+</ul></li>
+<li>延迟取消 (<strong>Deferred
+cancellation</strong>)：目标线程会<strong>周期性地检查一个标志位</strong>，看自己是否应该被取消
+。
+<ul>
+<li>这是更安全的方式。线程只会在代码中预设的“<strong>安全点</strong>”（称为<strong>取消点</strong>）检查标志位。如果发现需要被取消，它可以<strong>先执行必要的清理工作</strong>（如释放锁、关闭文件），然后再安全地自行终止。</li>
+</ul></li>
+</ul>
+<h4 id="信号处理-signal-handling">信号处理 (Signal Handling)</h4>
+<p>信号 (Signals) 是 UNIX
+系统中用于通知进程发生某个事件（如非法内存访问或 Ctrl+C）的机制
+。在一个多线程进程中，当一个信号到达时，应该由哪个线程来接收和处理它？</p>
+<p>POSIX
+标准规定：信号可以被传递给进程中的<strong>任何一个线程</strong>，具体取决于<strong>线程的信号掩码</strong>
+(Signal Mask)
+。如果一个线程没有屏蔽某个信号，那么该信号可以被传递给它。</p>
+<p>可能的传递情况 ：</p>
+<ul>
+<li>将信号传递给该信号所适用的特定线程 。</li>
+<li>将信号传递给进程中的每一个线程 。</li>
+<li>将信号传递给进程中的某些特定线程 。</li>
+<li>指派一个特定的线程来接收该进程的所有信号 。</li>
+</ul>
+<p>为了简化信号处理，程序员通常会<strong>创建一个专门的线程</strong>来处理信号。这个线程会<strong>阻塞所有其他信号</strong>，只等待和处理特定的信号事件
+。这样可以避免多个线程同时处理同一个信号导致的竞态条件和复杂性。</p>
+<h4 id="线程私有数据-thread-specific-data">线程私有数据 (Thread-Specific
+Data)</h4>
+<p>虽然线程的主要优点是共享数据，但有时我们希望每个线程拥有自己的私有数据副本
+。例如，每个线程可能需要一个唯一的错误码变量（errno）或事务ID。</p>
+<p>为此，许多线程库（如 Pthreads）提供了<strong>线程局部存储</strong>
+(Thread-Local Storage, TLS) 机制
+。程序员可以为每个线程定义私有数据，这些数据对其他线程不可见。</p>
+<p>实现方式 ： - 使用特殊的<strong>关键字</strong>（如 C++11 的
+<strong>thread_local</strong>）来声明线程局部变量。 - 使用线程库提供的
+API（如 pthread_key_create, pthread_setspecific,
+pthread_getspecific）来管理线程私有数据。</p>
+<p>这样，每个线程都可以安全地访问和修改自己的私有数据，而不会干扰其他线程。</p>
+<h3 id="具体实现">具体实现</h3>
+<p>线程的实现通常涉及以下几个关键组件： - 线程控制块 (Thread Control
+Block, <strong>TCB</strong>)：每个线程都有一个
+TCB，包含线程的状态、寄存器上下文、堆栈指针、优先级等信息。 -
+<strong>线程调度器</strong> (Thread
+Scheduler)：负责管理线程的创建、销毁和调度。它决定哪个线程获得 CPU
+时间片。 - <strong>同步机制</strong> (Synchronization
+Mechanisms)：如互斥锁 (Mutexes)、条件变量 (Condition Variables)
+等，用于协调线程之间的访问共享资源。 - <strong>上下文切换</strong>
+(Context
+Switching)：当线程被调度时，操作系统需要保存当前线程的状态并加载下一个线程的状态。这涉及保存和恢复寄存器、堆栈指针等信息。
+- <strong>信号处理</strong> (Signal
+Handling)：线程需要能够处理异步事件，如信号。线程库通常提供机制来注册信号处理程序。
+- <strong>线程库</strong> (Thread Libraries)：提供创建、管理和同步线程的
+API，如 Pthreads、Windows 线程 API 等。</p>
+<p>这些组件协同工作，实现了多线程的高效管理和调度，使得程序能够充分利用多核处理器的计算能力，同时保持数据的一致性和完整性。</p>
+<h4 id="pthreads">Pthreads</h4>
+<p>Pthreads
+是一个标准，而不是一个具体的实现。它为多线程编程提供了一套统一的“规则”或“接口”。</p>
+<p>它是 POSIX 标准 (IEEE 1003.1c)
+的一部分，它定义了一套用于线程创建和同步的 C 语言 API。</p>
+<p>不过该标准只规定了 API 的行为（例如，pthread_create()
+函数应该如何被调用，它会做什么），但并不规定它在操作系统内部的具体实现
+。这意味着不同的操作系统可以有不同的方式来实现这套标准。</p>
+<p>目前, Pthreads 是 UNIX 类操作系统（如 Solaris, Linux, Mac OS
+X）上通用的线程标准 。</p>
+<blockquote>
+<p>Pthreads API 可以被实现为用户级库，也可以被实现为内核级库 。
+在早期的某些系统中，Pthreads
+可能是作为用户级库实现的（遵循“多对一”模型）。但在现代操作系统中（尤其是
+Linux），Pthreads
+通常是作为内核级库实现的，与“一对一”模型紧密配合，性能更高。</p>
+</blockquote>
+<h4 id="linux-线程">Linux 线程</h4>
+<p>Linux
+在内核层面实现线程的方式非常独特，它并没有严格区分“进程”和“线程”。相反,
+Linux 有这样一个统一的核心概念：<strong>任务</strong> (Tasks)</p>
+<p>因此, 线程（或任务）的创建是通过 clone() 系统调用完成的。</p>
+<p>clone()
+系统调用非常灵活，它允许新创建的子任务<strong>选择性地共享</strong>其父任务的资源，例如地址空间（内存）。</p>
+<ul>
+<li><p>当调用 clone()
+时，如果设置了标志位要求共享地址空间、文件描述符等资源，那么创建出的新“任务”在行为上就等同于一个线程。</p></li>
+<li><p>如果调用 clone()
+时没有设置这些共享标志位（即复制所有资源），那么创建出的新“任务”在行为上就等同于一个进程（类似于
+fork() 的效果）。</p></li>
+</ul>
+<p>这种设计使得 Linux 能够非常高效地实现“一对一”线程模型
+，因为在内核看来，创建一个“线程”和一个“进程”的<strong>底层机制是统一的</strong>，只是共享的资源程度不同而已。</p>
+<blockquote>
+<p>在 Linux 系统上，Pthreads 是程序员在应用层使用的标准
+API，而内核提供的 clone() 系统调用和“任务”机制，则是实现该 API
+的底层基础。</p>
+</blockquote>
+<h3 id="线程调度">线程调度</h3>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/system/">#system</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/8.%20std%20jthread/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">std jthread</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/20/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">算法</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">Thread</div>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-text">多线程模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%AF%B9%E4%B8%80-many-to-one-%E6%A8%A1%E5%9E%8B"><span class="nav-text">多对一 (Many-to-One) 模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%AF%B9%E4%B8%80-one-to-one-%E6%A8%A1%E5%9E%8B"><span class="nav-text">一对一 (One-to-One) 模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%AF%B9%E5%A4%9A-many-to-many-%E6%A8%A1%E5%9E%8B"><span class="nav-text">多对多 (Many-to-Many) 模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E4%BD%93%E4%BA%8C%E7%BA%A7-two-level-%E6%A8%A1%E5%9E%8B"><span class="nav-text">变体：二级 (Two-level) 模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-text">实际应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98"><span class="nav-text">一些多线程问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#fork-%E5%92%8C-exec-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%AF%AD%E4%B9%89"><span class="nav-text">fork() 和 exec()
+系统调用的语义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88-thread-cancellation"><span class="nav-text">线程取消 (Thread
+Cancellation)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86-signal-handling"><span class="nav-text">信号处理 (Signal Handling)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE-thread-specific-data"><span class="nav-text">线程私有数据 (Thread-Specific
+Data)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pthreads"><span class="nav-text">Pthreads</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux-%E7%BA%BF%E7%A8%8B"><span class="nav-text">Linux 线程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-text">线程调度</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

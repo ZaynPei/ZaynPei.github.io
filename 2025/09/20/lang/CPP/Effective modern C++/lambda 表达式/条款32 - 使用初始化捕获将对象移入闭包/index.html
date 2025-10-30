@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,26 +833,40 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>在 C++11 中，lambda 的捕获列表 [] 只能捕获在 lambda 所在作用域内可见的变量，捕获方式只有两种：<strong>按值复制</strong>或<strong>按引用</strong>。这导致了一个问题：C++11 无法直接将对象“移动”到闭包中。</p>
+			<p>在 C++11 中，lambda 的捕获列表 [] 只能捕获在 lambda
+所在作用域内可见的变量，捕获方式只有两种：<strong>按值复制</strong>或<strong>按引用</strong>。这导致了一个问题：C++11
+无法直接将对象“移动”到闭包中。</p>
 <p>这个局限对两类对象影响很大：</p>
 <ul>
-<li><p><strong>只移类型</strong> (Move-only Types)：像 std::unique_ptr、std::future 或 std::thread 这样的类型，它们是不能被复制的。因此，在 C++11 中，你无法将它们捕获到 lambda 闭包中。</p>
-</li>
-<li><p><strong>复制成本高昂的类型</strong>：像 std::vector 或 std::string 这样的大多数标准库容器，复制它们的成本可能很高，但移动它们的成本却很低。在 C++11 中，如果你想在闭包中拥有一份容器的副本，你只能付出高昂的复制代价。</p>
-</li>
+<li><p><strong>只移类型</strong> (Move-only Types)：像
+std::unique_ptr、std::future 或 std::thread
+这样的类型，它们是不能被复制的。因此，在 C++11 中，你无法将它们捕获到
+lambda 闭包中。</p></li>
+<li><p><strong>复制成本高昂的类型</strong>：像 std::vector 或
+std::string
+这样的大多数标准库容器，复制它们的成本可能很高，但移动它们的成本却很低。在
+C++11
+中，如果你想在闭包中拥有一份容器的副本，你只能付出高昂的复制代价。</p></li>
 </ul>
 <p>这个问题就是下面介绍的<strong>初始化捕获</strong>所要解决的</p>
-<h3 id="C-14-解决方案：初始化捕获-Init-Capture"><a href="#C-14-解决方案：初始化捕获-Init-Capture" class="headerlink" title="C++14 解决方案：初始化捕获 (Init Capture)"></a>C++14 解决方案：初始化捕获 (Init Capture)</h3><p>C++14 引入了一种全新的、更强大的捕获机制，被称为初始化捕获，也叫广义 lambda 捕获 (generalized lambda capture)。它彻底解决了 C++11 的局限。</p>
-<p>初始化捕获允许你做两件事：在 lambda 生成的闭包类中，指定一个新成员变量的名字; 提供一个表达式，用于初始化该成员变量。</p>
+<h3 id="c14-解决方案初始化捕获-init-capture">C++14 解决方案：初始化捕获
+(Init Capture)</h3>
+<p>C++14 引入了一种全新的、更强大的捕获机制，被称为初始化捕获，也叫广义
+lambda 捕获 (generalized lambda capture)。它彻底解决了 C++11
+的局限。</p>
+<p>初始化捕获允许你做两件事：在 lambda
+生成的闭包类中，指定一个新成员变量的名字;
+提供一个表达式，用于初始化该成员变量。</p>
 <p>语法为：[新变量名 = 初始化表达式]</p>
-<p>下面是利用初始化捕获实现移动捕获的一个例子：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> pw = std::<span class="built_in">make_unique</span>&lt;Widget&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++14: 使用初始化捕获，将 pw 移动到闭包的新成员 pw 中</span></span><br><span class="line"><span class="keyword">auto</span> func = [pw = std::<span class="built_in">move</span>(pw)] { </span><br><span class="line">    <span class="keyword">return</span> pw-&gt;<span class="built_in">isValidated</span>() &amp;&amp; pw-&gt;<span class="built_in">isArchived</span>(); </span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>pw = std::move(pw) 的含义是：在闭包中创建一个名为 pw 的新成员，并用 std::move(pw) 的结果来初始化它。等号左侧的 pw 是闭包的成员，而右侧的 pw 是外部作用域的局部变量。</p>
-<p>此外, 初始化捕获甚至能“捕获”一个表达式的结果，这是 C++11 捕获完全做不到的：</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++14: 直接用表达式的结果初始化闭包成员</span></span><br><span class="line"><span class="keyword">auto</span> func = [pw = std::<span class="built_in">make_unique</span>&lt;Widget&gt;()] {</span><br><span class="line">    <span class="keyword">return</span> pw-&gt;<span class="built_in">isValidated</span>() &amp;&amp; pw-&gt;<span class="built_in">isArchived</span>();</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>下面是利用初始化捕获实现移动捕获的一个例子： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> pw = std::<span class="built_in">make_unique</span>&lt;Widget&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++14: 使用初始化捕获，将 pw 移动到闭包的新成员 pw 中</span></span><br><span class="line"><span class="keyword">auto</span> func = [pw = std::<span class="built_in">move</span>(pw)] { </span><br><span class="line">    <span class="keyword">return</span> pw-&gt;<span class="built_in">isValidated</span>() &amp;&amp; pw-&gt;<span class="built_in">isArchived</span>(); </span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> pw =
+std::move(pw) 的含义是：在闭包中创建一个名为 pw 的新成员，并用
+std::move(pw) 的结果来初始化它。等号左侧的 pw 是闭包的成员，而右侧的 pw
+是外部作用域的局部变量。</p>
+<p>此外, 初始化捕获甚至能“捕获”一个表达式的结果，这是 C++11
+捕获完全做不到的： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++14: 直接用表达式的结果初始化闭包成员</span></span><br><span class="line"><span class="keyword">auto</span> func = [pw = std::<span class="built_in">make_unique</span>&lt;Widget&gt;()] {</span><br><span class="line">    <span class="keyword">return</span> pw-&gt;<span class="built_in">isValidated</span>() &amp;&amp; pw-&gt;<span class="built_in">isArchived</span>();</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="c11-的变通方案使用-stdbind-模拟">C++11 的变通方案：使用
+std::bind 模拟</h3>
 
-
-<h3 id="C-11-的变通方案：使用-std-bind-模拟"><a href="#C-11-的变通方案：使用-std-bind-模拟" class="headerlink" title="C++11 的变通方案：使用 std::bind 模拟"></a>C++11 的变通方案：使用 std::bind 模拟</h3>
 		</div>
 
 		
@@ -914,7 +928,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款32：使用初始化捕获将对象移入闭包</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#C-14-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E6%8D%95%E8%8E%B7-Init-Capture"><span class="nav-text">C++14 解决方案：初始化捕获 (Init Capture)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-11-%E7%9A%84%E5%8F%98%E9%80%9A%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8-std-bind-%E6%A8%A1%E6%8B%9F"><span class="nav-text">C++11 的变通方案：使用 std::bind 模拟</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#c14-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E5%88%9D%E5%A7%8B%E5%8C%96%E6%8D%95%E8%8E%B7-init-capture"><span class="nav-text">C++14 解决方案：初始化捕获
+(Init Capture)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c11-%E7%9A%84%E5%8F%98%E9%80%9A%E6%96%B9%E6%A1%88%E4%BD%BF%E7%94%A8-stdbind-%E6%A8%A1%E6%8B%9F"><span class="nav-text">C++11 的变通方案：使用
+std::bind 模拟</span></a></li></ol>
 
 	</div>
 </div>
@@ -943,11 +959,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

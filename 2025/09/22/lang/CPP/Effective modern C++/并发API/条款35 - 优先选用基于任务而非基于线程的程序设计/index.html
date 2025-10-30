@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -813,7 +813,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>184 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>186 Words</span>
         </span>
     
     
@@ -833,9 +833,19 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>该条款的核心观点是，当需要<strong>异步运行</strong>一个函数时，使用 <strong>std::async</strong> 的<strong>基于任务</strong> (task-based) 的方法，通常优于直接使用 <strong>std::thread</strong> 的<strong>基于线程</strong> (thread-based) 的方法。</p>
-<h3 id="基于线程-Thread-based-与-std-thread"><a href="#基于线程-Thread-based-与-std-thread" class="headerlink" title="基于线程 (Thread-based) 与 std::thread"></a>基于线程 (Thread-based) 与 std::thread</h3><p>std::thread 是 C++ 标准库中对操作系统线程 (Thread) 的直接封装。线程可以看作是 CPU 上一个独立的执行流。</p>
-<h3 id="std-async"><a href="#std-async" class="headerlink" title="std::async"></a>std::async</h3><p>std::async 是一个函数模板，用于以异步方式（可能在一个单独的线程中）启动一个任务。相比于直接使用 std::thread，std::async 提供了一种更高层次、更方便的抽象，特别适用于那些需要从异步任务中获取返回值的场景。</p>
+			<p>该条款的核心观点是，当需要<strong>异步运行</strong>一个函数时，使用
+<strong>std::async</strong> 的<strong>基于任务</strong> (task-based)
+的方法，通常优于直接使用 <strong>std::thread</strong>
+的<strong>基于线程</strong> (thread-based) 的方法。</p>
+<h3 id="基于线程-thread-based-与-stdthread">基于线程 (Thread-based) 与
+std::thread</h3>
+<p>std::thread 是 C++ 标准库中对操作系统线程 (Thread)
+的直接封装。线程可以看作是 CPU 上一个独立的执行流。</p>
+<h3 id="stdasync">std::async</h3>
+<p>std::async
+是一个函数模板，用于以异步方式（可能在一个单独的线程中）启动一个任务。相比于直接使用
+std::thread，std::async
+提供了一种更高层次、更方便的抽象，特别适用于那些需要从异步任务中获取返回值的场景。</p>
 
 		</div>
 
@@ -861,12 +871,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
+				<a class="prev" rel="prev" href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">Thread线程库的基本使用</span>
+						<span class="post-nav-title-item truncate max-w-48">条款36 ：如果异步是必要的，则指定 std::launch::async</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -874,9 +884,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">
+				<a class="next" rel="next" href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款36 ：如果异步是必要的，则指定 std::launch::async</span>
+						<span class="post-nav-title-item truncate max-w-48">GDB</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -898,7 +908,8 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款35 ：优先选用基于任务而非基于线程的程序设计</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B-Thread-based-%E4%B8%8E-std-thread"><span class="nav-text">基于线程 (Thread-based) 与 std::thread</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-async"><span class="nav-text">std::async</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B-thread-based-%E4%B8%8E-stdthread"><span class="nav-text">基于线程 (Thread-based) 与
+std::thread</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stdasync"><span class="nav-text">std::async</span></a></li></ol>
 
 	</div>
 </div>
@@ -927,11 +938,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

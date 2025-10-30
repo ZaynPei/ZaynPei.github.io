@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,21 +833,40 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>该条款的核心论点是，std::thread 和期值（std::future / std::shared_future）虽然都可以看作是系统线程的句柄，但它们的析构函数行为却截然不同，这种差异对于编写健壮的并发代码至关重要。</p>
-<p>对于std::thread, 正如前面所说, 其析构函数的行为非常严格和明确：如果 std::thread 对象是可联结的 (joinable)，其析构函数的调用将导致程序终止 </p>
-<p>与 std::thread 不同，期值(std::future)析构函数的行为要复杂得多。为了理解它，首先需要了解共享状态 (shared state) 的概念: 共享状态是期值通信机制的核心。它通常是在<strong>堆上分配的一个对象</strong>，用于存储由异步任务（被调方）计算出的结果或抛出的异常，并将其传递给期值（调用方） 。</p>
+			<p>该条款的核心论点是，std::thread 和期值（std::future /
+std::shared_future）虽然都可以看作是系统线程的句柄，但它们的析构函数行为却截然不同，这种差异对于编写健壮的并发代码至关重要。</p>
+<p>对于std::thread, 正如前面所说, 其析构函数的行为非常严格和明确：如果
+std::thread 对象是可联结的
+(joinable)，其析构函数的调用将导致程序终止</p>
+<p>与 std::thread
+不同，期值(std::future)析构函数的行为要复杂得多。为了理解它，首先需要了解共享状态
+(shared state) 的概念:
+共享状态是期值通信机制的核心。它通常是在<strong>堆上分配的一个对象</strong>，用于存储由异步任务（被调方）计算出的结果或抛出的异常，并将其传递给期值（调用方）
+。</p>
 <p>期值析构函数的行为完全取决于其所引用的共享状态。具体来说，有两种截然不同的行为模式。</p>
 <p><strong>常规行为</strong>：仅析构期值对象</p>
-<p>对于绝大多数期值，其析构函数只会做一件事：销毁期值对象本身。这意味着它不会 join，也不会 detach，不会阻塞，也不会运行任何东西。它仅仅是销毁期值的成员变量，并递减共享状态的引用计数。这种常规行为适用于所有通过 std::promise 或 std::packaged_task 创建的期值。</p>
+<p>对于绝大多数期值，其析构函数只会做一件事：销毁期值对象本身。这意味着它不会
+join，也不会
+detach，不会阻塞，也不会运行任何东西。它仅仅是销毁期值的成员变量，并递减共享状态的引用计数。这种常规行为适用于所有通过
+std::promise 或 std::packaged_task 创建的期值。</p>
 <p><strong>特殊行为</strong>：阻塞并等待</p>
-<p>存在一个非常重要的例外情况。当且仅当一个期值同时满足以下所有条件时，其析构函数会阻塞，直到异步任务完成（效果等同于隐式的 join）：该期值所引用的共享状态是由 std::async 的调用所创建的。该任务的启动策略是 std::launch::async （无论是显式指定还是由默认策略选择的）。该期值是最后一个引用该共享状态的期值。</p>
+<p>存在一个非常重要的例外情况。当且仅当一个期值同时满足以下所有条件时，其析构函数会阻塞，直到异步任务完成（效果等同于隐式的
+join）：该期值所引用的共享状态是由 std::async
+的调用所创建的。该任务的启动策略是 std::launch::async
+（无论是显式指定还是由默认策略选择的）。该期值是最后一个引用该共享状态的期值。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 析构函数可能会阻塞</span></span><br><span class="line">std::vector&lt;std::future&lt;<span class="type">void</span>&gt;&gt; futs; </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// Widget 对象的析构函数可能会阻塞</span></span><br><span class="line">    std::shared_future&lt;<span class="type">double</span>&gt; fut;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>如果这些容器或对象中持有的期值恰好是最后一个引用由 std::async 启动的异步任务的期值，那么在容器或对象析构时，程序就会在此处阻塞，直到任务完成。</p>
+<p>如果这些容器或对象中持有的期值恰好是最后一个引用由 std::async
+启动的异步任务的期值，那么在容器或对象析构时，程序就会在此处阻塞，直到任务完成。</p>
 <p>特殊行为的成因与后果</p>
-<p>成因：标准委员会为了避免隐式 detach 可能导致的未定义行为（参见条款37），但又不希望像 std::thread 那样直接终止程序，最终妥协设计了这种针对 std::async 任务的隐式 join 行为。</p>
+<p>成因：标准委员会为了避免隐式 detach
+可能导致的未定义行为（参见条款37），但又不希望像 std::thread
+那样直接终止程序，最终妥协设计了这种针对 std::async 任务的隐式 join
+行为。</p>
 <p>后果：开发者无法仅通过期值的类型来判断其析构函数是否会阻塞。这可能会在不经意间引入性能问题，尤其是在关键路径上或GUI线程中，意外的阻塞可能是致命的。</p>
-<p>因此，在处理期值时，了解其来源至关重要。如果一个期值来自 std::async，你就必须警惕其析构函数可能导致的阻塞行为。</p>
-<h3 id><a href="#" class="headerlink" title></a></h3>
+<p>因此，在处理期值时，了解其来源至关重要。如果一个期值来自
+std::async，你就必须警惕其析构函数可能导致的阻塞行为。</p>
+<h3 id="section"></h3>
+
 		</div>
 
 		
@@ -872,12 +891,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE37%20-%20%E4%BD%BF%20std%20thread%20%E5%9E%8B%E5%88%AB%E5%AF%B9%E8%B1%A1%E5%9C%A8%E6%89%80%E6%9C%89%E8%B7%AF%E5%BE%84%E7%9A%86%E4%B8%8D%E5%8F%AF%E8%81%94%E7%BB%93/">
+				<a class="prev" rel="prev" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE40%20-%20%E5%AF%B9%E5%B9%B6%E5%8F%91%E4%BD%BF%E7%94%A8%20std%20atomic%EF%BC%8C%E5%AF%B9%E7%89%B9%E7%A7%8D%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%20volatile/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款37 ：使 std::thread 型别对象在所有路径皆不可联结</span>
+						<span class="post-nav-title-item truncate max-w-48">条款40 ：对并发使用 std atomic，对特种内存使用 volatile</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -909,7 +928,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">条款38 ：对变化多端的线程句柄析构函数行为保持关注</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"></span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#section"><span class="nav-text"></span></a></li></ol>
 
 	</div>
 </div>
@@ -938,11 +957,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

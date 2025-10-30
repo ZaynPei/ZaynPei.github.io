@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/01/lang/cpp/现代c++/c++并发编程实战/6. 无锁并发数据结构设计/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6. 无锁并发数据结构设计">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/6.%20%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-01T03:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-29T15:43:23.947Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="language">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            6. 无锁并发数据结构设计 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">6. 无锁并发数据结构设计</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-01 11:00</span>
+        <span class="mobile">2025-10-01 11:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-29 23:43:23</span>
+            <span class="mobile">2025-10-29 23:43:23</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/language/">language</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>13.8k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>53 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="无锁并发数据结构的定义">无锁并发数据结构的定义</h2>
+<p>首先, 在探讨无锁和有锁之前, 我们先回顾一下阻塞 (Blocking) vs. 非阻塞
+(Non-blocking)</p>
+<p><strong>阻塞</strong> (Blocking)
+数据结构/算法：这是我们前面章节（特别是第3、4、6章）主要讨论的方式。它们依赖于<strong>阻塞式的同步原语</strong>，如：
+- 互斥量 (std::mutex)：调用 lock() 可能导致<strong>线程被挂起</strong>。
+- 条件变量 (std::condition_variable)：调用 wait()
+会<strong>挂起线程</strong>。 - 期望 (std::future)：调用 get() 或 wait()
+可能<strong>挂起线程</strong>。</p>
+<p>当一个线程因为等待某个条件（如锁被释放、通知到达、结果就绪）而被阻塞时，操作系统通常会完全挂起该线程，<strong>剥夺它的CPU时间片</strong>，并将其<strong>交给其他可运行的线程</strong>。只有当<strong>等待的条件满足</strong>时，操作系统才会将其<strong>唤醒</strong>并<strong>重新调度</strong>。</p>
+<p>这种方式的优点是CPU资源不会在等待时被浪费。
+缺点是线程挂起和唤醒本身有<strong>上下文切换开销</strong>；可能导致死锁、优先级反转等问题。</p>
+<p><strong>非阻塞</strong> (Non-blocking)
+数据结构/算法：<strong>不使用</strong>任何可能导致线程被操作系统长期挂起的<strong>阻塞式库函数</strong>。线程即使在<strong>等待</strong>，通常也是在<strong>执行指令</strong>（例如，在一个<strong>循环中检查某个条件</strong>）。</p>
+<p>例如之前介绍的<strong>自旋锁</strong> (Spinlock),
+优点是避免了线程挂起和唤醒的开销, 但缺点是如果等待时间较长,
+会浪费CPU资源.</p>
+<h3 id="非阻塞数据结构-non-blocking-lock-free">非阻塞数据结构
+(Non-blocking ≠ Lock-Free)</h3>
+<p>我们回顾一下之前实现的自旋锁 (Spinlock):</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">spinlock_mutex</span> {</span><br><span class="line">  std::atomic_flag flag = ATOMIC_FLAG_INIT;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">lock</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">while</span>(flag.<span class="built_in">test_and_set</span>(std::memory_order_acquire)); <span class="comment">// 循环直到成功设置 flag</span></span><br><span class="line">  }</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">unlock</span><span class="params">()</span> </span>{</span><br><span class="line">    flag.<span class="built_in">clear</span>(std::memory_order_release);</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>显然, 它是非阻塞的. lock()
+函数<strong>没有调用任何会让操作系统挂起线程的函数</strong>。它只是在一个
+<strong>while 循环</strong>中不断地执行 test_and_set
+原子操作，<strong>消耗CPU时间片</strong>，直到成功获取锁（test_and_set
+返回 false）。</p>
+<p>然而，它仍然是一个<strong>锁</strong>。在任何时刻，<strong>只有一个线程能够成功退出
+lock() 循环并进入临界区</strong>。</p>
+<p>如果持有锁的线程被操作系统意外挂起（例如，时间片用完），所有其他正在自旋等待锁的线程将无法取得任何进展，它们只能继续空转，直到持有锁的线程被唤醒并释放锁。这违反了无锁的定义。</p>
+<p>因此, 非阻塞数据结构/算法 (Non-blocking Data Structures/Algorithms)
+并不等同于无锁数据结构/算法 (Lock-Free Data Structures/Algorithms)。</p>
+<h3 id="无锁数据结构-lock-free">无锁数据结构 (Lock-Free)</h3>
+<p>这是<strong>比“非阻塞”更强</strong>的保证:
+如果一个数据结构的操作是无锁的，它保证<strong>系统整体</strong>（即所有正在操作该数据结构的线程中，至少有一个）总能<strong>在有限步骤内完成其操作</strong>，而不管其他线程的速度如何，或者是否有线程被挂起。</p>
+<p>换句话说,
+<strong>系统作为一个整体总是在前进</strong>，<strong>不会因为某个线程被挂起而导致所有线程都卡住</strong>。</p>
+<p>实现特征：通常严重依赖<strong>原子操作</strong>，特别是比较并交换
+(Compare-and-Swap, <strong>CAS</strong>)，并且经常包含循环。 &gt; CAS
+循环失败的原因必须是因为其他线程修改了数据（即其他线程取得了进展），而不是因为持有锁的线程被挂起。</p>
+<p>可能的缺点：<strong>线程饥饿</strong> (Starvation).
+无锁不保证每个线程都能在有限时间内完成操作。
+可能存在一个“运气不好”的线程，它每次尝试 CAS
+操作时，都正好被其他线程抢先修改了数据，导致它永远在循环重试，无法完成自己的任务。</p>
+<h3 id="无等待数据结构-wait-free">无等待数据结构 (Wait-Free)</h3>
+<p>这是<strong>最强的非阻塞保证</strong>:
+如果一个数据结构的操作是无等待的，它保证<strong>每一个线程都能在有限步骤内完成其操作</strong>，而<strong>不管其他线程的速度如何</strong>、<strong>是否被挂起</strong>、或者<strong>是否存在争用</strong>。</p>
+<p>换句话说：每个线程都有自己取得进展的保证，没<strong>有饥饿问题</strong>。</p>
+<p>实现难度：无等待算法通常比无锁算法复杂得多。它们需要保证即使在最坏的争用情况下，每个线程的操作也能在固定的步数内完成。这往往需要非常精巧的设计，有时甚至在没有争用的情况下也需要执行更多的步骤。</p>
+<p>这种算法在实际应用中较少见，因为它们的复杂性和开销通常超过了它们所提供的好处。因此,
+本章后续内容将主要关注无锁数据结构/算法的设计与实现。</p>
+<h3 id="无锁数据结构的利与弊-why-pursue-lock-free">无锁数据结构的利与弊
+(Why pursue Lock-Free?)</h3>
+<p><strong>优点</strong> (Pros)：</p>
+<ul>
+<li><p><strong>最大化并发</strong> (Maximize
+Concurrency)：理论上，无锁允许线程在大部分时间里并行执行，<strong>避免了锁带来的序列化瓶颈</strong>。无等待则提供了更强的并发保证。</p></li>
+<li><p><strong>鲁棒性</strong>
+(Robustness)：如果一个线程在操作无锁结构的中途崩溃或被杀死，它<strong>不会破坏数据结构的整体可用性</strong>（只可能丢失该线程正在进行的操作）。其他线程仍然可以继续安全地访问和修改数据结构。这对于<strong>高可用系统</strong>很重要。（相比之下，持有锁的线程崩溃会导致锁永远无法释放）。</p></li>
+<li><p><strong>无死锁</strong> (No
+Deadlock)：因为没有锁，所以不会发生因锁依赖关系导致的死锁。</p></li>
+</ul>
+<p><strong>缺点</strong> (Cons)：</p>
+<ul>
+<li><p><strong>设计极其复杂</strong>
+(Complexity)：正确实现无锁（尤其是无等待）算法非常困难。需要深刻理解原子操作、内存模型、指令重排以及各种微妙的竞争条件。</p></li>
+<li><p><strong>ABA 问题</strong> (ABA Problem)：CAS
+操作可能因为一个值被修改（A-&gt;B）然后又被改回（B-&gt;A）而错误地成功，它完全不知道这种情况的发生，尽管底层数据的状态可能已经完全不同。</p></li>
+<li><p><strong>性能开销</strong> (Performance Overhead)：</p>
+<ul>
+<li><p>原子操作本身：<strong>原子操作通常比非原子操作慢</strong>。</p></li>
+<li><p><strong>缓存一致性开销</strong> (Cache
+Ping-Pong)：在高争用下，<strong>多个 CPU
+核心</strong>频繁地通过原子操作修改<strong>同一个内存位置</strong>（例如，无锁栈的
+head
+指针），会导致<strong>缓存行在不同核心之间不断失效和同步</strong>（“乒乓”），这会成为严重的性能瓶颈，甚至可能比基于锁的实现更慢。</p>
+<ul>
+<li>例如, A 线程修改了 head 指针, 导致 B 线程的缓存行失效, B
+线程再次修改 head 指针, 导致 A 线程的缓存行失效, 如此反复.</li>
+</ul></li>
+<li><p><strong>活锁</strong>
+(Livelock)：在无锁（非无等待）算法中，多个线程可能陷入<strong>不断重试但都无法成功</strong>的状态，互相干扰，导致虽然
+CPU
+在忙碌但系统整体没有进展。（类似两个人过独木桥，互相谦让但都过不去）。活锁通常是暂时的，取决于线程调度，但会影响性能。</p></li>
+</ul></li>
+<li><p><strong>内存管理困难</strong> (Memory
+Management)：如何安全地回收（删除）无锁结构中的节点是一个巨大的挑战，因为你无法确定何时没有其他线程再持有指向该节点的指针。</p></li>
+</ul>
+<p><strong>结论</strong>：无锁设计并非总是更好。它是一种权衡。只有在锁成为明显瓶颈，并且你有能力正确、高效地实现并充分测试无锁算法时，才值得考虑。在许多情况下，精心设计的基于锁的方案（如第6章的细粒度锁）可能已经足够好，甚至性能更优。<strong>性能测量</strong>
+(Profiling) 是做出最终决定的关键。</p>
+<h2 id="无锁数据结构示例">无锁数据结构示例</h2>
+<p>在本节中，我们将通过几个经典的无锁数据结构示例，来说明无锁设计的基本思路和实现方法。这些示例将涵盖无锁栈、无锁队列等常见数据结构。</p>
+<h3 id="无锁栈-lock-free-stack">无锁栈 (Lock-Free Stack)</h3>
+<p>这一节的目标是展示如何使用第5章介绍的原子操作（特别是
+compare_exchange_weak）来构建一个无锁的线程安全栈。这个过程将揭示无锁设计的核心思想以及它所带来的主要挑战之一——内存管理。</p>
+<p>基本思路：<strong>链表</strong>与<strong>原子头指针</strong> -
+数据结构：和许多栈实现一样，我们选择单向链表作为底层结构。栈顶元素位于链表的头部。
+- 核心指针：只需要一个<strong>指向链表头节点的指针 head</strong>。 -
+原子性要求：因为多个线程可能同时尝试修改 head（push 新节点或 pop
+移除节点），所以 head
+指针必须是原子的：<code>std::atomic&lt;node*&gt; head;</code></p>
+<h4 id="无锁-push-操作">无锁 push 操作</h4>
+<p>push
+操作的目标是将一个新节点原子性地添加到链表的头部。单线程步骤回顾：</p>
+<ul>
+<li>创建新节点 new_node。</li>
+<li>new_node-&gt;next = head;</li>
+<li>head = new_node;</li>
+</ul>
+<p>并发挑战：步骤 2 和 3 之间存在竞争。如果线程 A 读取了 head
+(H1)，然后线程 B 快速完成了 push (将 head 改为 H2)，接着线程 A 执行步骤
+3 将 head 设为 new_node_A（其 next 仍然指向 H1），那么线程 B 的 push
+操作就丢失了！(此时的新head是 new_node_A, 而不是 new_node_B) &gt;
+本质上还是读-改-写的竞争。</p>
+<p>无锁解决方案 (CAS)：使用 <strong>compare_exchange_weak</strong>
+原子地执行步骤 2 和 3。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_free_stack</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span></span><br><span class="line">  {</span><br><span class="line">    T data;</span><br><span class="line">    node* next;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">node</span>(T <span class="type">const</span>&amp; data_): <span class="comment">// 1. 构造函数直接存数据</span></span><br><span class="line">     <span class="built_in">data</span>(data_) <span class="comment">// (这里假设 T 的拷贝构造是安全的)</span></span><br><span class="line">    {}</span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  std::atomic&lt;node*&gt; head; <span class="comment">// 原子头指针</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T <span class="type">const</span>&amp; data)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="comment">// 2. 创建新节点 (注意：这里在锁外完成耗时操作)</span></span><br><span class="line">    node* <span class="type">const</span> new_node = <span class="keyword">new</span> <span class="built_in">node</span>(data); </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 读取当前的 head，并设置 new_node 的 next</span></span><br><span class="line">    <span class="comment">//    这里的 load 可以是 relaxed，因为 CAS 会重新检查</span></span><br><span class="line">    new_node-&gt;next = head.<span class="built_in">load</span>(); </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 关键：CAS 循环</span></span><br><span class="line">    <span class="comment">//    尝试原子地将 head 从 "new_node-&gt;next"(期望值) 更新为 "new_node"(新值)</span></span><br><span class="line">    <span class="keyword">while</span>(!head.<span class="built_in">compare_exchange_weak</span>(new_node-&gt;next, new_node)); </span><br><span class="line">  }</span><br><span class="line">  <span class="comment">// ... pop() 待实现 ...</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> - 节点构造：新节点 new_node
+在进入原子操作循环之前就完全构造好了，包括其数据
+data。这一点至关重要：一旦 head 指向 new_node，它就可能被其他线程
+pop，所以它必须是“完整的”。 - 设置 next：读取当前的 head
+指针，并将其设置为新节点的 next 指针。 - CAS
+循环：<strong>head.compare_exchange_weak(expected, desired)</strong>
+是核心。 - expected: new_node-&gt;next (即上一步读取到的 head 值)。 -
+desired: new_node (我们想要设置的新 head)。 - 原子操作： - 如果 head
+的当前值 仍然等于 expected（意味着从上一步读取后没有其他线程修改过
+head），那么就将 head 更新为 desired
+(new_node)，操作成功，compare_exchange_weak 返回 true，while 循环结束。
+- 如果 head 的当前值 不等于
+expected（意味着在上一步读取后，有<strong>其他线程已经修改了
+head</strong>，比如另一个 push 或
+pop），那么操作失败，compare_exchange_weak 返回
+false。并且，compare_exchange_weak 会自动将 <strong>expected</strong>
+(即 new_node-&gt;next) <strong>更新为 head 当前的值</strong>。</p>
+<ul>
+<li>循环重试：当 CAS 失败时，new_node-&gt;next 已经被自动更新为最新的
+head 值，while 循环条件为 true，因此会再次尝试
+compare_exchange_weak，使用更新后的 expected
+值。这个循环会一直进行，直到 CAS 成功为止。</li>
+</ul>
+<blockquote>
+<p>为何使用 weak? 因为操作已经在 while 循环中，即使
+compare_exchange_weak 发生“伪失败”（即值匹配但仍然返回
+false），循环也会自动重试，不会影响正确性。在某些平台上，weak
+在循环中可能比 strong 更高效。</p>
+</blockquote>
+<h4 id="无锁-pop-操作">无锁 pop 操作</h4>
+<p>pop 操作的目标是原子性地移除并返回头节点的数据。单线程步骤回顾：</p>
+<ul>
+<li>old_head = head;</li>
+<li>head = old_head-&gt;next;</li>
+<li>result = old_head-&gt;data;</li>
+<li>delete old_head;</li>
+<li>return result;</li>
+</ul>
+<p>并发挑战：</p>
+<ul>
+<li>Use-After-Free：如果线程 A 和 B 同时读取 head (H1)，然后 A 成功将
+head 更新为 H1-&gt;next 并 delete H1，此时 B 仍然持有指向 H1
+的指针，如果 B 尝试访问 H1-&gt;next，就会访问已删除内存（未定义行为）。
+<ul>
+<li>例如B先读取head为H1, 然后<strong>被操作系统挂起</strong>
+(这是操作系统调度层面的, 无法避免); A完成pop并delete H1;
+B恢复后尝试访问H1-&gt;next, 导致错误.</li>
+</ul></li>
+<li>Double Pop：如果未使用原子操作，两个线程可能都认为自己成功 pop
+了同一个节点。</li>
+</ul>
+<p>无锁解决方案 (CAS + 暂时忽略删除)：使用 CAS 来原子地更新
+head，确保只有一个线程能成功“声明”对头节点的所有权。暂时不处理删除节点的问题（即故意造成内存泄露），以避免
+Use-After-Free。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_free_stack</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span></span><br><span class="line">  {</span><br><span class="line">    std::shared_ptr&lt;T&gt; data; <span class="comment">// 1. 使用 shared_ptr 管理数据 (为了异常安全和方便返回)</span></span><br><span class="line">    node* next;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">node</span>(T <span class="type">const</span>&amp; data_):</span><br><span class="line">      <span class="built_in">data</span>(std::<span class="built_in">make_shared</span>&lt;T&gt;(data_)) <span class="comment">// 2. 在 push 时就创建 shared_ptr</span></span><br><span class="line">    {}</span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  std::atomic&lt;node*&gt; head;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T <span class="type">const</span>&amp; data)</span> </span>{ <span class="comment">/* ... 如上 ... */</span> }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    node* old_head = head.<span class="built_in">load</span>();</span><br><span class="line">    <span class="comment">// 3. 循环直到成功将 head 从 old_head 更新为 old_head-&gt;next</span></span><br><span class="line">    <span class="comment">//    必须检查 old_head 是否为 null (空栈)</span></span><br><span class="line">    <span class="keyword">while</span>(old_head &amp;&amp; </span><br><span class="line">          !head.<span class="built_in">compare_exchange_weak</span>(old_head, old_head-&gt;next));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 如果 old_head 非空 (pop 成功)，返回其数据；否则返回空 shared_ptr</span></span><br><span class="line">    <span class="keyword">return</span> old_head ? old_head-&gt;data : std::<span class="built_in">shared_ptr</span>&lt;T&gt;(); </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// !!! 警告：这里没有 delete old_head，存在内存泄露 !!!</span></span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><p>shared_ptr<t> 数据 (①, ②)：为了解决第3章讨论过的 <strong>pop
+返回值时的异常安全</strong>问题，我们在 push 时就将数据存储在 shared_ptr
+中。这样 pop 操作只需要返回（或
+swap）shared_ptr，这个操作本身是安全的，不会因为拷贝 T
+而抛异常导致数据丢失。</t></p></li>
+<li><p>CAS 循环：</p>
+<ul>
+<li>old_head = head.load() 读取当前头。</li>
+<li>while 循环条件首先检查 old_head 是否为
+nullptr（空栈）。如果是，循环不会执行，函数直接返回空
+shared_ptr。如果非空，尝试
+<strong>compare_exchange_weak</strong>(old_head, old_head-&gt;next)。
+<ul>
+<li>成功：head 被原子地更新为下一个节点，compare_exchange_weak 返回
+true，使 while 条件为 false，循环终止。当前线程成功“拥有”了
+old_head。</li>
+<li>失败：意味着 head 在 load 后被其他线程修改了。CAS 会将 old_head
+更新为当前的 head 值。循环继续，用新的 old_head 重试。</li>
+</ul></li>
+</ul></li>
+<li><p>返回数据：如果 old_head 不是 nullptr（意味着 CAS
+最终成功了或者一开始栈就不空），就返回存储在 old_head 中的
+shared_ptr<t>。</t></p></li>
+</ul>
+<p>内存泄露：最关键的问题是，成功<strong>弹出的 old_head
+节点</strong>从未被 delete！我们暂时牺牲了内存来换取避免 Use-After-Free
+导致的未定义行为。</p>
+<h4 id="安全性分析与总结">安全性分析与总结</h4>
+<p>在异常安全方面： - push：new node(data) 可能抛异常（内存分配或
+make_shared），但此时栈未被修改，安全。</p>
+<ul>
+<li><p>pop：主要操作是原子操作和 shared_ptr
+操作，通常不抛异常。空栈情况已处理。安全。</p></li>
+<li><p>数据竞争：head 指针通过原子操作和 CAS 保护，没有数据竞争。对
+node-&gt;data 的访问通过返回 shared_ptr 保证安全。对 node-&gt;next
+的访问发生在 CAS 成功“拥有”节点之后（暂时安全，因为没
+delete）。暂时没有数据竞争（但有内存泄露）。</p></li>
+<li><p>死锁：没有使用锁，无死锁。</p></li>
+</ul>
+<p>在并发进展方面：push 和 pop 都使用了 while 循环 + CAS。</p>
+<p>这是无锁 (Lock-Free) 的：如果多个线程竞争，CAS
+保证了至少有一个线程的操作会成功（修改了
+head），从而使系统整体取得进展。</p>
+<p>但它不是无等待 (Wait-Free) 的：一个线程可能运气不好，每次 CAS
+都失败，导致饥饿 (Starvation)。</p>
+<p>总之, 本节成功地使用<strong>原子 head 指针</strong>和 <strong>CAS
+循环</strong>实现了无锁的 push 和 pop 操作，解决了 head
+指针上的竞争问题，并保证了基本的线程安全（在忽略内存泄露的前提下）。</p>
+<p>然而，内存泄露是不可接受的。pop
+操作无法安全删除节点的问题，是无锁数据结构设计中面临的核心挑战之一。如何安全地回收这些节点，同时避免
+Use-After-Free，将是后续小节要解决的关键问题，涉及更复杂的内存管理技术（如基于计数的回收、风险指针、引用计数）。</p>
+<h3 id="停止内存泄露使用无锁数据结构管理内存">停止内存泄露：使用无锁数据结构管理内存</h3>
+<p>在上一节中，我们实现了一个无锁栈，但留下了一个严重的内存泄露问题：pop
+操作只是将节点从链表中移除，但从未 delete
+它。这样做是为了避免使用后释放(Use-After-Free)
+的未定义行为——即一个线程删除了节点 N，而另一个线程仍然持有指向 N
+的指针并试图访问 N-&gt;next。</p>
+<p>本节的目标就是解决这个内存泄露问题，探讨如何在无锁环境中安全地回收不再使用的节点内存。</p>
+<h4 id="核心问题何时可以安全删除">核心问题：何时可以安全删除</h4>
+<p>根源：pop 操作的核心在于 compare_exchange_weak(old_head,
+old_head-&gt;next) 循环。在这个循环中，线程会先 load 一个 head 指针
+(old_head)，然后在尝试 CAS 之前，可能会需要读取 old_head-&gt;next。</p>
+<p>危险：如果在线程 T1 读取了 old_head (指向节点 N) 之后、读取
+old_head-&gt;next 之前，另一个线程 T2 成功地 pop 了节点 N 并将其
+delete，那么 T1 对 old_head-&gt;next 的访问就是 Use-After-Free。</p>
+<p>安全删除条件：一个节点 N
+只有在确定<strong>没有任何线程</strong>（无论是正在 pop
+循环中，还是将来可能访问它）会<strong>再持有指向它并试图解引用的指针时</strong>，才能被安全地
+delete。</p>
+<h4 id="一个草率的尝试-基于全局计数的回收">一个草率的尝试:
+基于全局计数的回收</h4>
+<p>这是一种尝试性的、简单但有缺陷的解决方案。</p>
+<p>核心思想：用一个<strong>原子计数器</strong> threads_in_pop
+来追踪<strong>当前有多少个线程正在执行 pop 函数</strong>。</p>
+<p>当一个线程成功 pop 出一个节点 old_head 后，它暂时不删除该节点。</p>
+<p>它检查 threads_in_pop 的值。如果只有它自己在 pop (threads_in_pop ==
+1)，那么似乎可以安全删除。</p>
+<p>如果还有其他线程在 pop（它们可能仍持有指向 old_head
+或其他待删除节点的指针），则将 old_head
+添加到一个全局的“<strong>待删除</strong>”链表 (to_be_deleted)
+中，推迟删除。</p>
+<p>当一个线程发现自己是最后一个离开 pop 函数的线程时（即<strong>它将
+threads_in_pop 减为 0</strong>），它负责清空并删除整个“待删除”链表。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_free_stack</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="comment">// ... node 结构体和 head 原子指针同上 ...</span></span><br><span class="line">  std::atomic&lt;<span class="type">unsigned</span>&gt; threads_in_pop;  <span class="comment">//  原子变量计数器, 是全局的</span></span><br><span class="line">  std::atomic&lt;node*&gt; to_be_deleted;  <span class="comment">// 待删除链表头指针</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">delete_nodes</span><span class="params">(node* nodes)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="keyword">while</span>(nodes)  <span class="comment">// 删除整个链表</span></span><br><span class="line">    {</span><br><span class="line">      node* next = nodes-&gt;next;  <span class="comment">// 先保存下一个节点</span></span><br><span class="line">      <span class="keyword">delete</span> nodes;  <span class="comment">// 删除当前节点</span></span><br><span class="line">      nodes = next;  <span class="comment">// 继续下一个节点</span></span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">try_reclaim</span><span class="params">(node* old_head)</span> <span class="comment">// 尝试回收节点内存</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="keyword">if</span>(threads_in_pop==<span class="number">1</span>)  <span class="comment">// 如果只有当前线程在 pop</span></span><br><span class="line">    {</span><br><span class="line">      node* nodes_to_delete = to_be_deleted.<span class="built_in">exchange</span>(<span class="literal">nullptr</span>);  <span class="comment">// 取走全局待删除链表</span></span><br><span class="line">      <span class="keyword">if</span>(!--threads_in_pop)  <span class="comment">// 再次检查是否只有一个线程调用pop()</span></span><br><span class="line">      {</span><br><span class="line">        <span class="built_in">delete_nodes</span>(nodes_to_delete);  <span class="comment">// 删除待删除链表  </span></span><br><span class="line">      }</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span>(nodes_to_delete)  <span class="comment">// 在此期间有其他线程在 pop, 这些新线程可能已经看到了 nodes_to_delete 中的某些节点, 删除它们不安全, 因此需要再将取走的节点放回待删除链表</span></span><br><span class="line">      {</span><br><span class="line">         <span class="built_in">chain_pending_nodes</span>(nodes_to_delete);  <span class="comment">// 放回待删除链表</span></span><br><span class="line">      }</span><br><span class="line">      <span class="keyword">delete</span> old_head;  <span class="comment">// 删除自己刚刚 pop 出来的节点。注意这里仍然是安全的，因为只有本线程成功通过 CAS 获取了它。</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span>  <span class="comment">// 多个线程在 pop</span></span><br><span class="line">    {</span><br><span class="line">      <span class="built_in">chain_pending_node</span>(old_head);  <span class="comment">// 把 old_head 加入待删除链表 8</span></span><br><span class="line">      --threads_in_pop;</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">chain_pending_nodes</span><span class="params">(node* nodes)</span>  <span class="comment">// 将多个节点加入待删除链表</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    node* last = nodes;</span><br><span class="line">    <span class="keyword">while</span> (node* <span class="type">const</span> next = last-&gt;next)  <span class="comment">// 让next指针指向链表的末尾</span></span><br><span class="line">    {</span><br><span class="line">      last = next;</span><br><span class="line">    }</span><br><span class="line">    <span class="built_in">chain_pending_nodes</span>(nodes, last);  <span class="comment">// 此时的last是链表的最后一个节点</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">chain_pending_nodes</span><span class="params">(node* first,node* last)</span>  <span class="comment">// 将[first,last]区间的节点加入待删除链表</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    last-&gt;next = to_be_deleted;  <span class="comment">// 将待删除链表接在last后面</span></span><br><span class="line">    <span class="keyword">while</span>(!to_be_deleted.<span class="built_in">compare_exchange_weak</span>(  <span class="comment">// 用循环来保证last-&gt;next的正确性</span></span><br><span class="line">      last-&gt;next,first));</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">chain_pending_node</span><span class="params">(node* n)</span>  <span class="comment">// 将单个节点加入待删除链表</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="built_in">chain_pending_nodes</span>(n,n);  <span class="comment">// 调用上面的函数, 传入相同的节点作为first和last</span></span><br><span class="line">  }</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    ++threads_in_pop;  <span class="comment">// 2 在做事之前，计数值加1</span></span><br><span class="line">    node* old_head=head.<span class="built_in">load</span>();</span><br><span class="line">    <span class="keyword">while</span>(old_head &amp;&amp;</span><br><span class="line">      !head.<span class="built_in">compare_exchange_weak</span>(old_head,old_head-&gt;next));</span><br><span class="line">    std::shared_ptr&lt;T&gt; res;</span><br><span class="line">    <span class="keyword">if</span>(old_head)</span><br><span class="line">    { </span><br><span class="line">      res.<span class="built_in">swap</span>(old_head-&gt;data);  <span class="comment">// 从节点中直接提取数据，而非拷贝指针</span></span><br><span class="line">    }</span><br><span class="line">    <span class="built_in">try_reclaim</span>(old_head);  </span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<h5 id="该方案的致命缺陷高争用下的内存泄露">该方案的致命缺陷：高争用下的内存泄露</h5>
+<p>这个方案依赖于存在一个“<strong>静止</strong>” (quiescent) 状态，即
+<strong>threads_in_pop 能够降到 1 或 0 的时刻</strong>。</p>
+<p>然而, 在一个繁忙的高争用系统中，可能永远都有多个线程在同时执行 pop
+操作。threads_in_pop 可能永远不会降到 1 以下。</p>
+<p>后果是：try_reclaim 函数中的检查 1 (threads_in_pop == 1) 永远为
+false。所有被 pop 的节点都会被不断地添加到 to_be_deleted 链表，但检查 2
+(!–threads_in_pop) 永远不会满足，因此
+delete_nodes永远不会被调用。<strong>to_be_deleted
+链表无限增长</strong>，导致严重的内存泄露。</p>
+<p>因此,
+基于<strong>全局线程计数</strong>的内存回收方案虽然想法简单，但在实际的高并发（高争用）场景下是不可靠的，会因无法找到安全的回收时机而导致内存泄露。</p>
+<p>这表明我们需要更健壮的内存管理技术，这些技术不依赖于全局的“静止”状态，而是能够<strong>精确地追踪</strong>哪些节点确实<strong>不再被任何线程引用</strong>。</p>
+<p>这直接引出了后续两种更高级（也更复杂）的解决方案：</p>
+<ul>
+<li><p>风险指针 (Hazard
+Pointers)：<strong>线程</strong>显式地“<strong>声明</strong>”它们<strong>正在使用的指针</strong>。</p></li>
+<li><p>引用计数 (Reference
+Counting)：为<strong>每个节点</strong>维护<strong>引用计数</strong>。</p></li>
+</ul>
+<h3 id="解决方案-1风险指针-hazard-pointers">解决方案 1：风险指针 (Hazard
+Pointers)</h3>
+<p>之所以存在内存泄漏,
+根本问题在于，一个线程（回收者）无法知道是否有其他线程（读取者）仍然持有指向它想要
+delete 的节点的指针，并且可能在稍后解引用该指针。</p>
+<p>风险指针的思路：<strong>反转责任</strong>。不再让回收者猜测，而是要求<strong>读取者</strong>在即将<strong>访问一个可能被回收的指针之前</strong>，先<strong>显式地声明</strong>：“我现在正在使用这个指针
+P，请暂时不要删除它！”。这个声明就是“风险指针”。</p>
+<p>具体机制为:</p>
+<ul>
+<li><p><strong>风险指针列表</strong>：存在一个<strong>全局</strong>可见的列表（通常是固定大小的数组），其中每个活跃的<strong>读取线程</strong>都“拥有”一个或多个<strong>风险指针槽位</strong>
+(Hazard Pointer Slots)。每个槽位可以存储<strong>一个</strong>
+void*（或原子化的
+<code>std::atomic&lt;void*&gt;</code>）。(在后续的示例代码中，我们假设每个线程只有一个风险指针槽位)。</p>
+<ul>
+<li>虽然这里是void*，但实际存储的通常是指向数据结构节点（如
+stack::node）的指针。</li>
+</ul></li>
+<li><p><strong>读取者设置风险指针</strong>：当一个读取线程（例如在 pop
+中）从共享结构（如 head 指针）读取了一个节点指针
+ptr，并且在解引用它（例如访问 ptr-&gt;next）之前，它必须将 ptr
+的值写入它自己的风险指针槽位。</p></li>
+<li><p><strong>读取者清除风险指针</strong>：当读取线程不再需要访问 ptr
+时（例如，它成功地将 head CAS
+到了下一个节点，或者它决定放弃当前操作），它必须将自己的风险指针槽位清除（例如，设置为
+nullptr）。</p></li>
+<li><p><strong>回收者检查风险指针</strong>：当一个线程（回收者）成功地将一个节点
+N 从数据结构中移除（例如 pop 成功）并想要 delete N
+时，它不能立即删除。它必须遍历<strong>所有线程的所有风险指针槽位</strong>。</p>
+<ul>
+<li>如果节点 N
+的地址出现在任何一个风险指针槽位中，说明有其他线程正在（或即将）使用它。回收者不能删除
+N，必须将其放入一个“<strong>待回收</strong>”列表 (reclaim_later)。</li>
+<li>如果节点 N
+的地址没有出现在任何风险指针槽位中，说明此刻没有线程声明正在使用它，回收者可以安全地
+delete N。</li>
+</ul></li>
+<li><p><strong>处理“待回收”列表</strong>：回收者需要定期地（或者在每次
+pop 成功后）尝试处理“待回收”列表。对于列表中的每个节点，它再次执行步骤 4
+和 5（检查所有风险指针）。如果检查通过，就将其从列表中移除并
+delete。</p></li>
+</ul>
+<p>下面是使用风险指针技术实现的 pop 函数。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="comment">// 假设在 lock_free_stack 类中</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_free_stack</span> {</span><br><span class="line">  <span class="comment">// ... node, head ...</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 假设这些辅助函数已存在:</span></span><br><span class="line">  <span class="function">std::atomic&lt;<span class="type">void</span>*&gt;&amp; <span class="title">get_hazard_pointer_for_current_thread</span><span class="params">()</span></span>;  <span class="comment">// 获取当前线程的风险指针槽位引用</span></span><br><span class="line">  <span class="function"><span class="type">bool</span> <span class="title">outstanding_hazard_pointers_for</span><span class="params">(node* p)</span></span>;  <span class="comment">// 检查是否有任何线程的风险指针指向节点 p</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">reclaim_later</span><span class="params">(node* p)</span></span>;  <span class="comment">// 将节点 p 添加到待回收列表</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">delete_nodes_with_no_hazards</span><span class="params">()</span></span>;  <span class="comment">// 处理待回收列表，删除没有风险指针指向的节点</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 先获取当前线程自己的风险指针槽位的引用</span></span><br><span class="line">    std::atomic&lt;<span class="type">void</span>*&gt;&amp; hp = <span class="built_in">get_hazard_pointer_for_current_thread</span>(); <span class="comment">// 风险指针槽位</span></span><br><span class="line">    node* old_head = head.<span class="built_in">load</span>(); <span class="comment">// 初始读取 head</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 外层循环：处理 CAS 失败重试</span></span><br><span class="line">    <span class="keyword">do</span> {</span><br><span class="line">      node* temp;</span><br><span class="line">      <span class="comment">// 1. 内层循环：安全地设置风险指针</span></span><br><span class="line">      <span class="keyword">do</span> {</span><br><span class="line">        temp = old_head; <span class="comment">// 保存读取到的 head</span></span><br><span class="line">        hp.<span class="built_in">store</span>(old_head); <span class="comment">// 设置风险指针！</span></span><br><span class="line">        old_head = head.<span class="built_in">load</span>(); <span class="comment">// 重新读取 head</span></span><br><span class="line">      } <span class="keyword">while</span> (old_head != temp); <span class="comment">// 如果 head 在设置 HP 期间改变了，重试内层循环</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// 到这里，HP 已安全设置为 old_head (head 在期间未变)</span></span><br><span class="line">      <span class="comment">// 现在可以尝试 CAS 更新 head</span></span><br><span class="line">    } <span class="keyword">while</span> (old_head &amp;&amp; <span class="comment">// 检查 old_head 非空 (处理空栈)</span></span><br><span class="line">             !head.<span class="built_in">compare_exchange_strong</span>(old_head, old_head-&gt;next)); <span class="comment">// CAS 操作</span></span><br><span class="line"></span><br><span class="line">    hp.<span class="built_in">store</span>(<span class="literal">nullptr</span>); <span class="comment">// 2. CAS 成功或栈空，清除风险指针</span></span><br><span class="line"></span><br><span class="line">    std::shared_ptr&lt;T&gt; res;</span><br><span class="line">    <span class="keyword">if</span> (old_head) { <span class="comment">// 如果成功 pop 了一个节点</span></span><br><span class="line">      res.<span class="built_in">swap</span>(old_head-&gt;data); <span class="comment">// 移出数据</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// 3. 检查是否有其他线程的 HP 指向 old_head</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">outstanding_hazard_pointers_for</span>(old_head)) {</span><br><span class="line">        <span class="built_in">reclaim_later</span>(old_head); <span class="comment">// 4. 如果有，推迟删除</span></span><br><span class="line">      } <span class="keyword">else</span> {</span><br><span class="line">        <span class="keyword">delete</span> old_head; <span class="comment">// 5. 如果没有，立即删除</span></span><br><span class="line">      }</span><br><span class="line">      <span class="built_in">delete_nodes_with_no_hazards</span>(); <span class="comment">// 6. 尝试清理待回收列表</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> - 内层循环
+(标记 ①)：这是关键的安全保障。从 head.load() 读取 old_head 到
+hp.store(old_head) 之间存在时间窗口。如果在此期间 head 被改变（其他线程
+pop 了 old_head 并可能删除了它），那么 hp.store
+就会设置一个指向无效内存的风险指针。 - 解决方案：在设置 HP
+后立即重新读取 head，并与设置 HP 前读取的值 (temp)
+进行比较。如果两者不同，说明 head 在此期间被修改了，设置的 HP
+可能无效，必须重试内层循环，直到成功设置 HP 且 head
+在此期间保持不变。</p>
+<ul>
+<li><p>外层循环：这是标准的 CAS 循环，用于原子地更新 head 指针。如果 CAS
+失败（compare_exchange_strong 返回 false），它会自动将 old_head
+更新为当前 head
+的值，然后外层循环会继续，重新执行内层循环以安全地设置新的风险指针。</p></li>
+<li><p>清除 HP (标记 ②)：一旦 CAS 成功（当前线程“拥有”了
+old_head）或者发现栈为空 (old_head 为 nullptr)，就不再需要保护对
+old_head 的访问了，必须清除风险指针，允许其他线程回收它（如果是其他线程
+pop 的）。</p></li>
+<li><p>回收决策 (标记 ③, ④, ⑤)：在成功 pop 后，调用
+outstanding_hazard_pointers_for 检查所有其他线程的
+HP。根据结果决定是立即 delete 还是调用 reclaim_later。</p></li>
+<li><p>清理 (标记 ⑥)：调用 delete_nodes_with_no_hazards
+尝试清理全局的“待回收”列表。</p></li>
+</ul>
+<h5 id="辅助函数">辅助函数</h5>
+<p>get_hazard_pointer_for_current_thread() (获取当前线程的风险指针槽位):
+这个函数的目标是为<strong>调用它的线程</strong>分配并返回一个<strong>专属的风险指针槽位</strong>（类型为
+<code>std::atomic&lt;void*&gt;&amp;</code>），该线程可以用这个槽位来声明它正在使用的指针。实现的关键在于线程本地存储
+(thread_local) 和槽位分配。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局风险指针数组 (固定大小)</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">const</span> max_hazard_pointers = <span class="number">100</span>;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">hazard_pointer</span> {</span><br><span class="line">  std::atomic&lt;std::thread::id&gt; id;    <span class="comment">// 槽位所有者的线程ID</span></span><br><span class="line">  std::atomic&lt;<span class="type">void</span>*&gt; pointer; <span class="comment">// 存储的风险指针</span></span><br><span class="line">};</span><br><span class="line">hazard_pointer hazard_pointers[max_hazard_pointers]; <span class="comment">// 全局数组, 存储所有线程的风险指针槽位</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// RAII 类，用于管理线程对 HP 槽位的所有权</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">hp_owner</span> {</span><br><span class="line">  hazard_pointer* hp; <span class="comment">// 指向该线程拥有的槽位</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">hp_owner</span>(hp_owner <span class="type">const</span>&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  hp_owner <span class="keyword">operator</span>=(hp_owner <span class="type">const</span>&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">hp_owner</span>() : <span class="built_in">hp</span>(<span class="literal">nullptr</span>) {</span><br><span class="line">    <span class="comment">// 构造时：遍历全局数组，尝试获取一个空闲槽位</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">unsigned</span> i = <span class="number">0</span>; i &lt; max_hazard_pointers; ++i) {</span><br><span class="line">      std::thread::id old_id; <span class="comment">// 期望 ID 是空的 (默认构造)</span></span><br><span class="line">      <span class="comment">// 6. 原子地尝试将槽位 i 的 id 从空改为当前线程 id</span></span><br><span class="line">      <span class="keyword">if</span> (hazard_pointers[i].id.<span class="built_in">compare_exchange_strong</span>(</span><br><span class="line">            old_id, std::this_thread::<span class="built_in">get_id</span>()))</span><br><span class="line">      {</span><br><span class="line">        hp = &amp;hazard_pointers[i]; <span class="comment">// 获取成功，保存槽位指针</span></span><br><span class="line">        <span class="keyword">break</span>; <span class="comment">// 7. 停止搜索</span></span><br><span class="line">      }</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 1. 如果找不到空闲槽位，抛异常 (资源耗尽)</span></span><br><span class="line">    <span class="keyword">if</span> (!hp) {</span><br><span class="line">      <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">"No hazard pointers available"</span>);</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回该线程拥有的风险指针槽位的引用</span></span><br><span class="line">  <span class="function">std::atomic&lt;<span class="type">void</span>*&gt;&amp; <span class="title">get_pointer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> hp-&gt;pointer;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2. 析构时：释放槽位所有权</span></span><br><span class="line">  ~<span class="built_in">hp_owner</span>() {</span><br><span class="line">    hp-&gt;pointer.<span class="built_in">store</span>(<span class="literal">nullptr</span>); <span class="comment">// 8. 清空指针</span></span><br><span class="line">    hp-&gt;id.<span class="built_in">store</span>(std::thread::<span class="built_in">id</span>()); <span class="comment">// 9. 清空所有者 ID</span></span><br><span class="line">  }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 获取风险指针的接口函数</span></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">void</span>*&gt;&amp; <span class="title">get_hazard_pointer_for_current_thread</span><span class="params">()</span> </span>{</span><br><span class="line">  <span class="comment">// 4. 每个线程第一次调用时会创建一个 hp_owner 实例</span></span><br><span class="line">  <span class="keyword">thread_local</span> <span class="type">static</span> hp_owner hazard;</span><br><span class="line">  <span class="comment">// 5. 返回该线程专属的风险指针槽位</span></span><br><span class="line">  <span class="keyword">return</span> hazard.<span class="built_in">get_pointer</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> - thread_local static hp_owner
+hazard (④): 这是核心。thread_local 确保每个线程都有自己独立的 hazard
+对象。static 确保它只被构造一次（在该线程首次调用此函数时）。</p>
+<ul>
+<li><p>hp_owner 构造函数 (⑥, ⑦, ①): 当线程首次调用
+get_hazard_pointer_for_current_thread() 时，hazard
+对象被构造。构造函数会遍历全局 hazard_pointers 数组，使用
+compare_exchange_strong 原子地尝试“认领”一个 id
+为空的槽位。一旦成功，它就保存指向该槽位的指针 hp
+并退出。如果遍历完都找不到空槽位（说明活跃线程数超过了
+max_hazard_pointers），则抛出异常。</p></li>
+<li><p>hp_owner 析构函数 (②, ⑧, ⑨): 当线程退出时，其 thread_local 的
+hazard 对象会被析构。析构函数负责将风险指针清空 (⑧)，并将槽位的 id
+设回空 (⑨)，以便其他新线程可以复用这个槽位。</p></li>
+<li><p>返回值 (⑤): 函数最终返回
+hazard.get_pointer()，这是对该线程已成功认领的那个
+std::atomic&lt;void*&gt; 槽位的引用。</p></li>
+</ul>
+<p><strong>outstanding_hazard_pointers_for(void* p)</strong>
+(检查指定指针是否危险):
+这个函数由<strong>回收者</strong>调用，用于判断一个它想要删除的节点指针
+p 当前是否被任何其他线程的风险指针所引用。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">outstanding_hazard_pointers_for</span><span class="params">(<span class="type">void</span>* p)</span> </span>{</span><br><span class="line">  <span class="comment">// 遍历全局风险指针数组</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">unsigned</span> i = <span class="number">0</span>; i &lt; max_hazard_pointers; ++i) {</span><br><span class="line">    <span class="comment">// 原子地读取槽位 i 的指针值，并与 p 比较</span></span><br><span class="line">    <span class="keyword">if</span> (hazard_pointers[i].pointer.<span class="built_in">load</span>() == p) {</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 找到了匹配，说明指针 p 当前是危险的</span></span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 遍历完没有找到匹配，指针 p 当前是安全的</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> - 逻辑:
+非常直接。它线性扫描 hazard_pointers
+数组中的每一个槽位。对每个槽位，它原子地 (load())
+读取当前存储的指针值，并与传入的、想要删除的节点指针 p 进行比较。 -
+效率: 这是一个 O(N) 操作，其中 N 是
+max_hazard_pointers。这是风险指针机制的主要性能开销点之一，尤其是在 N
+很大时。</p>
+<p><strong>reclaim_later(T* data)</strong> (将节点加入待回收列表): 当
+pop 操作成功移除一个节点 old_head，并且
+outstanding_hazard_pointers_for(old_head) 返回 true
+时，回收者不能立即删除 old_head，必须调用此函数将其放入“待回收”列表。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通用删除函数模板</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">do_delete</span><span class="params">(<span class="type">void</span>* p)</span> </span>{</span><br><span class="line">  <span class="keyword">delete</span> <span class="built_in">static_cast</span>&lt;T*&gt;(p);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 待回收链表的节点结构</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">data_to_reclaim</span> {</span><br><span class="line">  <span class="type">void</span>* data;                         <span class="comment">// 指向要删除的原始节点</span></span><br><span class="line">  std::function&lt;<span class="type">void</span>(<span class="type">void</span>*)&gt; deleter; <span class="comment">// 正确的删除器 (类型擦除)</span></span><br><span class="line">  data_to_reclaim* next;              <span class="comment">// 指向链表下一个节点</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 1. 构造函数：保存指针和对应的删除器</span></span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">  <span class="title">data_to_reclaim</span><span class="params">(T* p)</span> :</span></span><br><span class="line"><span class="function">    data(p),</span></span><br><span class="line"><span class="function">    deleter(&amp;do_delete&lt;T&gt;), // 使用函数指针指向正确的删除函数</span></span><br><span class="line"><span class="function">    next(nullptr)</span></span><br><span class="line"><span class="function">  {</span>}</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2. 析构函数：调用正确的删除器</span></span><br><span class="line">  ~<span class="built_in">data_to_reclaim</span>() {</span><br><span class="line">    <span class="built_in">deleter</span>(data);</span><br><span class="line">  }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局待回收链表的头指针 (原子)</span></span><br><span class="line">std::atomic&lt;data_to_reclaim*&gt; nodes_to_reclaim;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 将节点原子地添加到待回收链表头部</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add_to_reclaim_list</span><span class="params">(data_to_reclaim* node)</span> </span>{</span><br><span class="line">  node-&gt;next = nodes_to_reclaim.<span class="built_in">load</span>(); <span class="comment">// 读取当前头</span></span><br><span class="line">  <span class="comment">// 使用 CAS 循环尝试更新头指针</span></span><br><span class="line">  <span class="keyword">while</span> (!nodes_to_reclaim.<span class="built_in">compare_exchange_weak</span>(node-&gt;next, node));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. reclaim_later 接口函数 (模板)</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">reclaim_later</span><span class="params">(T* data)</span> </span>{</span><br><span class="line">  <span class="comment">// 5. 创建 data_to_reclaim 节点 (包含指针和删除器)，并添加到链表</span></span><br><span class="line">  <span class="built_in">add_to_reclaim_list</span>(<span class="keyword">new</span> <span class="built_in">data_to_reclaim</span>(data));</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> - data_to_reclaim 结构: 这是待回收链表的节点。 - data:
+存储指向原始待删除节点（例如 lock_free_stack::node）的 void<em>。 -
+deleter (①): 关键。因为回收机制是通用的
+(void</em>)，我们需要一种方法在最终删除时调用正确类型的
+delete。这里使用了 std::function (或函数指针)
+来存储一个<strong>类型擦除的删除器</strong>。构造函数 (①) 会根据传入的
+T* 自动设置正确的 do_delete<t>。 - next: 指向链表中的下一个
+data_to_reclaim 节点。</t></p>
+<ul>
+<li><p>析构函数 (②): 当 data_to_reclaim 对象本身被 delete 时（在
+delete_nodes_with_no_hazards 中），它的析构函数会调用存储的 deleter
+来真正释放原始节点 data 的内存。</p></li>
+<li><p>nodes_to_reclaim:
+一个原子指针，指向待回收链表的头节点。必须是原子的，因为多个线程可能同时调用
+reclaim_later。</p></li>
+<li><p>add_to_reclaim_list (③):
+实现了一个无锁的链表头插法。它读取当前的头，设置新节点的 next
+指向它，然后使用 CAS 循环尝试原子地更新 nodes_to_reclaim 指针。</p></li>
+<li><p>reclaim_later (④, ⑤): 模板函数，负责创建 data_to_reclaim
+节点（分配内存并设置好数据指针和删除器），然后调用 add_to_reclaim_list
+将其加入全局链表。</p></li>
+</ul>
+<p><strong>delete_nodes_with_no_hazards()</strong> (尝试清理待回收列表):
+这个函数由回收者线程（通常是在 pop
+成功后）调用，尝试遍历待回收列表，并删除那些当前不再被任何风险指针引用的节点。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">delete_nodes_with_no_hazards</span><span class="params">()</span> </span>{</span><br><span class="line">  <span class="comment">// 6. 原子地取走整个待回收链表，并将全局头设为 nullptr</span></span><br><span class="line">  data_to_reclaim* current = nodes_to_reclaim.<span class="built_in">exchange</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (current) { <span class="comment">// 遍历取走的链表</span></span><br><span class="line">    data_to_reclaim* <span class="type">const</span> next = current-&gt;next; <span class="comment">// 先保存下一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 7. 检查当前节点的数据指针是否还在任何 HP 槽位中</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">outstanding_hazard_pointers_for</span>(current-&gt;data)) {</span><br><span class="line">      <span class="comment">// 8. 如果不在，安全删除 data_to_reclaim 节点</span></span><br><span class="line">      <span class="comment">//    (其析构函数会调用 deleter 删除原始数据)</span></span><br><span class="line">      <span class="keyword">delete</span> current;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">      <span class="comment">// 9. 如果还在，不能删除，将其重新添加回全局待回收链表</span></span><br><span class="line">      <span class="built_in">add_to_reclaim_list</span>(current);</span><br><span class="line">    }</span><br><span class="line">    current = next; <span class="comment">// 处理下一个节点</span></span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> - 原子夺取链表 (⑥): nodes_to_reclaim.exchange(nullptr)
+是关键的第一步。它原子地将全局链表头设为
+nullptr，并返回之前的头指针。这确保了只有一个线程在处理这一批待回收节点，避免了对链表本身的并发修改（除了
+add_to_reclaim_list 的头插）。</p>
+<ul>
+<li><p>遍历与检查 (⑦): 对取下的链表进行遍历。对于每个 data_to_reclaim
+节点 current，调用 outstanding_hazard_pointers_for(current-&gt;data)
+检查其存储的原始数据指针是否危险。</p></li>
+<li><p>安全删除 (⑧): 如果检查结果为 false（不危险），就 delete
+current。这会触发 data_to_reclaim 的析构函数，进而调用正确的 deleter
+删除原始节点。</p></li>
+<li><p>重新添加 (⑨): 如果检查结果为 true（危险），就调用
+add_to_reclaim_list(current) 将这个 data_to_reclaim
+节点重新放回全局待回收链表，等待下一次清理。</p></li>
+</ul>
+<h5 id="性能问题与优化">性能问题与优化</h5>
+<p>主要瓶颈：outstanding_hazard_pointers_for
+需要<strong>遍历所有可能的风险指针槽位</strong>（max_hazard_pointers
+个），并且 delete_nodes_with_no_hazards
+对待回收链表中的每个节点都要执行一次这个遍历。在高线程数和高回收压力下，这会非常慢。</p>
+<p>优化策略：</p>
+<ul>
+<li>批量回收 (Batching)：delete_nodes_with_no_hazards 不在每次 pop
+后都调用，而是等到“待回收”链表的长度达到某个阈值（例如 R *
+max_hazard_pointers，R &gt; 1）时才触发一次。这可以摊销扫描 HP
+列表的成本。</li>
+<li>线程本地回收列表 (Thread-local Reclaim Lists)：每个线程将自己 pop
+的节点放入自己的待回收列表。只有当本地列表达到阈值时，才执行 HP
+检查并尝试回收。这避免了对全局回收列表头部的争用。线程退出时需要将本地列表合并到全局列表或其他机制处理。</li>
+</ul>
+<p>总结:
+风险指针是一种有效的无锁内存回收机制。它通过让<strong>读取线程显式声明正在使用的指针</strong>，使得回收线程能够安全地判断何时可以删除节点。</p>
+<p>优点：解决了 Use-After-Free
+问题，使得无锁数据结构可行。相比某些计数方法，对读取路径的性能影响相对可控（主要是设置/清除
+HP 的原子操作）。</p>
+<p>缺点：实现复杂，回收操作（扫描 HP 列表）开销较大，存在固定大小（HP
+列表）的限制，需要合理配置 max_hazard_pointers。</p>
+<h3 id="解决方案2-引用计数-reference-counting">解决方案2: 引用计数
+(Reference Counting)</h3>
+<p>继风险指针之后，本节介绍了另一种解决无锁内存管理问题的主流技术——引用计数
+(Reference Counting)。</p>
+<p>核心思想：为每一个<strong>可能被共享的节点</strong>维护一个引用计数器。这个计数器追踪当前有多少“引用”（<strong>指针</strong>）指向该节点。当引用计数降为
+0 时，表明没有任何指针再指向该节点，因此可以安全地将其删除。</p>
+<p>与风险指针的区别在于,
+风险指针是读取者主动声明“我正在用这个”节点，回收者被动检查所有声明。而引用计数是每个<strong>节点</strong>被动<strong>记录有多少引用指向它</strong>，回收者（通常是最后一个释放引用的线程）根据<strong>计数值</strong>主动决定是否删除。</p>
+<p>挑战：如何原子性地、无锁地管理这个引用计数？简单的 ++count 和 –count
+本身就需要同步。</p>
+<h4 id="方案-1使用-stdshared_ptr">方案 1：使用 std::shared_ptr</h4>
+<p>最直接的想法是利用 C++ 内置的、<strong>自带原子引用计数</strong>的
+<strong>std::shared_ptr</strong>。</p>
+<p>实现思路：将链表的 head 指针和每个节点的 next 指针都改为
+<code>std::shared_ptr&lt;node&gt;</code> 类型。同时，head
+本身需要是原子的，即
+<code>std::atomic&lt;std::shared_ptr&lt;node&gt;&gt; head;</code>（或者使用之前介绍的
+<strong>shared_ptr 原子自由函数</strong>）。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_free_stack</span> <span class="comment">// 基于 shared_ptr 的理想化版本</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span> {</span><br><span class="line">    std::shared_ptr&lt;T&gt; data;</span><br><span class="line">    std::shared_ptr&lt;node&gt; next; <span class="comment">// next 也是 shared_ptr</span></span><br><span class="line">    <span class="built_in">node</span>(T <span class="type">const</span>&amp; data_) : <span class="built_in">data</span>(std::<span class="built_in">make_shared</span>&lt;T&gt;(data_)) {}</span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  std::shared_ptr&lt;node&gt; head; <span class="comment">// head 也是 shared_ptr (假设其原子操作无锁)</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T <span class="type">const</span>&amp; data)</span> </span>{</span><br><span class="line">    std::shared_ptr&lt;node&gt; <span class="type">const</span> new_node = std::<span class="built_in">make_shared</span>&lt;node&gt;(data);</span><br><span class="line">    new_node-&gt;next = std::<span class="built_in">atomic_load</span>(&amp;head); <span class="comment">// 原子加载 head</span></span><br><span class="line">    <span class="comment">// 原子 CAS 更新 head</span></span><br><span class="line">    <span class="keyword">while</span> (!std::<span class="built_in">atomic_compare_exchange_weak</span>(&amp;head,</span><br><span class="line">                                              &amp;new_node-&gt;next, new_node));</span><br><span class="line">  }</span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span> </span>{</span><br><span class="line">    std::shared_ptr&lt;node&gt; old_head = std::<span class="built_in">atomic_load</span>(&amp;head);</span><br><span class="line">    <span class="comment">// 原子 CAS 更新 head</span></span><br><span class="line">    <span class="keyword">while</span> (old_head &amp;&amp; !std::<span class="built_in">atomic_compare_exchange_weak</span>(&amp;head,</span><br><span class="line">                                                        &amp;old_head, old_head-&gt;next));</span><br><span class="line">    <span class="comment">// 如果 pop 成功 (old_head 非空)，返回其 data</span></span><br><span class="line">    <span class="comment">// 内存管理完全由 shared_ptr 自动处理！</span></span><br><span class="line">    <span class="keyword">return</span> old_head ? old_head-&gt;data : std::<span class="built_in">shared_ptr</span>&lt;T&gt;();</span><br><span class="line">  }</span><br><span class="line">  <span class="comment">// ... 析构函数不再需要手动清理 ...</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+优点：代码极其简洁！<strong>内存管理</strong>（节点的分配和回收）完全由
+<strong>shared_ptr 自动处理</strong>。当最后一个指向某节点的 shared_ptr
+被销毁（无论是 head 更新还是 pop 返回的 shared_ptr
+最终被销毁），该节点会被自动 delete。</p>
+<p>致命缺点：此方案依赖于 std::atomic_is_lock_free(&amp;some_shared_ptr)
+返回 true，即<strong>平台必须提供对 shared_ptr
+的无锁原子操作</strong>。C++ 标准不保证这一点！在许多平台上，对
+shared_ptr
+的原子操作实际上是基于锁的（内部使用互斥量）。如果原子操作有锁，那么整个数据结构就不再是无锁的了，违背了本章的目标。</p>
+<h4 id="方案-2手动实现分离引用计数-split-reference-counting">方案
+2：手动实现分离引用计数 (Split Reference Counting)</h4>
+<p>如果不能依赖无锁的 shared_ptr
+原子操作，我们就需要手动实现引用计数。</p>
+<p>挑战：直接在节点内放一个 <code>std::atomic&lt;int&gt; count</code>
+并不能完全解决问题。在 pop 中，存在一个微妙的竞争：初始化 count=1, 线程
+T1 创建局部指针读取 head 指向节点 N，线程 T2 也读取 head 指向 N,
+但是现在 count 并没有增加, 因为两个线程都只是读取 head,
+并没有去尝试修改所指节点的值, 也就没有机会去增加 count。现在 T1 成功 CAS
+将 head 指向 N-&gt;next，然后 T1 原子地递减 N 的 count 到 0 并 delete
+N。此时 T2 仍然持有指向 N 的指针，但 N 已被删除！</p>
+<p>解决方案：<strong>分离引用计数</strong>,
+将引用计数分为两部分，以区分“<strong>指针引用</strong>”和“<strong>内部访问引用</strong>”。</p>
+<ul>
+<li>外部计数 (<strong>External
+Count</strong>)：追踪有多少指针（<strong>head
+指针</strong>、<strong>其他节点的 next
+指针</strong>、<strong>线程临时持有的指针</strong>）指向该节点。
+<ul>
+<li>这个计数在每次读取节点指针时增加（例如，在 pop 中读取 head
+指针时增加）。</li>
+<li>在节点被成功从数据结构中移除（pop 成功 CAS 更新
+head）后，外部计数会减少，因为数据结构不再持有对该节点的引用。</li>
+</ul></li>
+<li>内部计数 (<strong>Internal
+Count</strong>)：追踪有多少线程正在<strong>内部访问</strong>该节点（例如，在
+pop 的 CAS
+循环中<strong>读取了该节点指针</strong>，<strong>准备访问</strong>其
+next）。
+<ul>
+<li>这个计数在每次线程准备访问节点时增加（例如，在 pop 中成功增加 head
+的外部计数后，准备访问该节点时增加）。</li>
+<li>在节点访问完成后减少。</li>
+</ul></li>
+</ul>
+<p>安全删除条件：一个节点只有在外部计数为 0 且 内部计数为 0
+时才能被安全删除。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_free_stack</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">counted_node_ptr</span>  <span class="comment">// 这是一个带外部计数的指针</span></span><br><span class="line">  {</span><br><span class="line">    <span class="type">int</span> external_count;  <span class="comment">// 维护的是 ptr 所指节点的外部计数</span></span><br><span class="line">    node* ptr;</span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span>   <span class="comment">// 这是节点结构</span></span><br><span class="line">  {</span><br><span class="line">    std::shared_ptr&lt;T&gt; data;</span><br><span class="line">    std::atomic&lt;<span class="type">int</span>&gt; internal_count;  <span class="comment">// 这是内部计数, 初始化为0</span></span><br><span class="line">    counted_node_ptr next;  <span class="comment">// 带外部计数的 next 指针</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">node</span>(T <span class="type">const</span>&amp; data_):</span><br><span class="line">      <span class="built_in">data</span>(std::<span class="built_in">make_shared</span>&lt;T&gt;(data_)),</span><br><span class="line">      <span class="built_in">internal_count</span>(<span class="number">0</span>)</span><br><span class="line">    {}</span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  std::atomic&lt;counted_node_ptr&gt; head;  <span class="comment">// 带外部计数的 head 指针</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">increase_head_count</span><span class="params">(counted_node_ptr&amp; old_counter)</span>  <span class="comment">// 增加 head 所指节点的外部计数</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    counted_node_ptr new_counter;  <span class="comment">// 声明一个新的计数器</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    {</span><br><span class="line">      new_counter = old_counter;</span><br><span class="line">      ++new_counter.external_count;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">while</span>(!head.<span class="built_in">compare_exchange_strong</span>(old_counter,new_counter));  <span class="comment">// 尝试更新 head</span></span><br><span class="line"></span><br><span class="line">    old_counter.external_count = new_counter.external_count;  <span class="comment">// 更新传入的 old_counter 的外部计数</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ~<span class="built_in">lock_free_stack</span>()</span><br><span class="line">  {</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">pop</span>());  <span class="comment">// 清空栈</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T <span class="type">const</span>&amp; data)</span>  <span class="comment">// push 操作</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    counted_node_ptr new_node;  <span class="comment">// 创建新节点</span></span><br><span class="line">    new_node.ptr=<span class="keyword">new</span> <span class="built_in">node</span>(data);  <span class="comment">// 初始化新节点</span></span><br><span class="line">    new_node.external_count=<span class="number">1</span>;   <span class="comment">// 外部计数初始化为1, 因为 head 会指向它</span></span><br><span class="line"></span><br><span class="line">    new_node.ptr-&gt;next=head.<span class="built_in">load</span>();  <span class="comment">// 设置 next 指针</span></span><br><span class="line">    <span class="keyword">while</span>(!head.<span class="built_in">compare_exchange_weak</span>(new_node.ptr-&gt;next,new_node));</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    counted_node_ptr old_head = head.<span class="built_in">load</span>();  <span class="comment">// 读取 head</span></span><br><span class="line">    <span class="keyword">for</span>(;;)</span><br><span class="line">    {</span><br><span class="line">      <span class="built_in">increase_head_count</span>(old_head);  <span class="comment">// 这里增加的 EC 代表的就是当前持有的这个 old_head 临时指针</span></span><br><span class="line">      node* <span class="type">const</span> ptr = old_head.ptr;  <span class="comment">// 获取节点指针, 只是方便地获取裸指针进行解引用。</span></span><br><span class="line">      <span class="keyword">if</span>(!ptr)</span><br><span class="line">      {</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">shared_ptr</span>&lt;T&gt;();</span><br><span class="line">      }</span><br><span class="line">      <span class="keyword">if</span>(head.<span class="built_in">compare_exchange_strong</span>(old_head,ptr-&gt;next))  <span class="comment">// 尝试更新 head</span></span><br><span class="line">      {</span><br><span class="line">        std::shared_ptr&lt;T&gt; res;</span><br><span class="line">        res.<span class="built_in">swap</span>(ptr-&gt;data); </span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="type">const</span> count_increase = old_head.external_count - <span class="number">2</span>;  <span class="comment">// 它代表在 CAS 成功移除 head 指针后，除了 head 指针和当前线程的临时引用之外，剩余的外部引用数量。这些主要是其他线程在 increase_head_count 中增加的临时外部引用。</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(ptr-&gt;internal_count.<span class="built_in">fetch_add</span>(count_increase)== -count_increase){ <span class="comment">// 节点最终被删除的时刻，是当最后一个持有（无论是外部还是内部）引用的线程，在释放其引用时，发现总计数（合并计算后体现在 internal_count 上）变为 0 的那一刻。</span></span><br><span class="line">          <span class="keyword">delete</span> ptr;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;  <span class="comment">// 返回弹出的数据</span></span><br><span class="line">      }</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span>(ptr-&gt;internal_count.<span class="built_in">fetch_sub</span>(<span class="number">1</span>)==<span class="number">1</span>) <span class="comment">// CAS 失败, 因为其他线程修改了 head, 准备重来一次</span></span><br><span class="line">      <span class="comment">// 而此时 ptr 仍然被当前线程持有, 所以要把它的内部计数减1</span></span><br><span class="line">      {</span><br><span class="line">        <span class="keyword">delete</span> ptr;  </span><br><span class="line">      }</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<p>总结</p>
+<p>使用 std::shared_ptr 进行无锁引用计数是最理想的，但依赖于平台对
+shared_ptr 原子操作的无锁支持。</p>
+<p>手动实现的分离引用计数是一种可行的替代方案，但极其复杂。核心难点是需要原子地同时操作指针和它的外部计数（通常需要
+DWCAS 支持才能无锁），并且需要仔细设计内部/外部计数的增减逻辑，以确保在
+CAS
+成功和失败路径下都能正确判断何时可以安全删除节点。这种复杂性是无锁内存管理的主要障碍之一。</p>
+<h3 id="应用于无锁栈上的内存模型">应用于无锁栈上的内存模型</h3>
+<p>在前面的小节中，我们构建了一个使用分离引用计数的无锁栈，并且所有原子操作都使用了默认的
+std::memory_order_seq_cst 内存顺序。虽然这样做保证了正确性（因为 seq_cst
+提供了最强的保证），但在性能敏感的无锁编程中，它可能是不必要且低效的。</p>
+<p>本节的目标是重新审视这个实现，并根据操作之间真正必要的依赖关系，尝试<strong>放松内存顺序要求</strong>（例如，使用
+acquire, release, relaxed），以期提高性能，同时维持正确性。</p>
+<blockquote>
+<p>放松内存顺序的基本方法是： 1.
+<strong>识别依赖</strong>关系：分析代码，找出哪些操作的结果（特别是内存写入）必须对其他线程的哪些操作（特别是内存读取）可见，以保证程序的逻辑正确性（避免数据竞争、保证读取到有效数据）。
+2.
+<strong>确定同步点</strong>：找出负责在线程间建立这种可见性保证的关键原子操作。
+3.
+选择<strong>最小顺序</strong>：为每个原子操作选择最弱（最宽松）的内存顺序标签，只要它能满足第1步中识别出的所有必要依赖关系。</p>
+</blockquote>
+<h4 id="分析-push-操作">分析 push 操作</h4>
+<p>核心操作：</p>
+<ul>
+<li>创建新节点 new_node (包含 data 和 next=nullptr)。</li>
+<li>new_node-&gt;ptr-&gt;next = head.load(…) (读取旧 head 以设置
+next)。</li>
+<li>head.compare_exchange_weak(…, new_head, …) (CAS 更新 head)。</li>
+</ul>
+<p>依赖关系：</p>
+<ul>
+<li><p>push -&gt; pop：当一个 pop 线程通过 increase_head_count 中的 CAS
+成功读取到 push 写入的 new_head 值时，它需要能够安全地访问
+new_head.ptr-&gt;data 和 new_head.ptr-&gt;next (这个 next 是在步骤 2
+中设置的)。</p></li>
+<li><p>这意味着 push 中对 new_node (包括其 data 和 next)
+的写入必须先行于 (happen-before) pop 线程对这些成员的读取。</p></li>
+</ul>
+<p>同步点：push 中的 head.compare_exchange_weak (CAS) 成功时，是
+new_node 对 pop 线程“可见”的时刻。这个 CAS 操作需要建立同步。</p>
+<p>内存顺序选择：</p>
+<ul>
+<li><p>head.compare_exchange_weak (成功)：为了与 pop 中的 acquire
+操作同步，这里需要 memory_order_release 语义。它确保在 CAS
+之前的所有写入（对 new_node 的初始化）对成功读取该值的 acquire
+操作是可见的。</p></li>
+<li><p>head.compare_exchange_weak (失败)：如果 CAS 失败，说明 head
+被修改了，push
+操作会继续循环。失败本身不需要与任何其他线程同步。可以使用
+memory_order_relaxed。</p></li>
+<li><p>head.load() (用于设置 next)：这次 load 发生在 release CAS
+之前。它的结果只用于设置 new_node-&gt;ptr-&gt;next 和作为 CAS 的
+expected
+值。它不需要从其他线程“获取”任何信息，也不需要“释放”任何信息。可以使用
+memory_order_relaxed。</p></li>
+</ul>
+<p>优化后的 push 实现如下： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T <span class="type">const</span>&amp; data)</span> </span>{</span><br><span class="line">  counted_node_ptr new_node;</span><br><span class="line">  new_node.ptr = <span class="keyword">new</span> <span class="built_in">node</span>(data);</span><br><span class="line">  new_node.external_count = <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// next 指针的设置读取 head 时使用 relaxed</span></span><br><span class="line">  new_node.ptr-&gt;next = head.<span class="built_in">load</span>(std::memory_order_relaxed); </span><br><span class="line">  <span class="comment">// CAS 循环：成功用 release，失败用 relaxed</span></span><br><span class="line">  <span class="keyword">while</span> (!head.<span class="built_in">compare_exchange_weak</span>(new_node.ptr-&gt;next, new_node,</span><br><span class="line">        std::memory_order_release, std::memory_order_relaxed));</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="分析-pop-操作">分析 pop 操作</h4>
+<p>pop 的逻辑更复杂，涉及多个原子操作和依赖关系。</p>
+<p>核心操作：</p>
+<ul>
+<li>old_head = head.load(…) (初始加载)。</li>
+<li>increase_head_count(old_head): 内部循环 CAS
+(head.compare_exchange_strong) 以增加 external_count。</li>
+<li>ptr = old_head.ptr。</li>
+<li>if (ptr == nullptr) … (空栈判断)。</li>
+<li>head.compare_exchange_strong(old_head, ptr-&gt;next, …) (主
+CAS，尝试移除节点)。
+<ul>
+<li>成功路径: res.swap(ptr-&gt;data),
+ptr-&gt;internal_count.fetch_add(count_increase, …) (更新内部计数),
+delete ptr (如果计数为0)。</li>
+<li>失败路径: ptr-&gt;internal_count.fetch_add(-1, …) (或 release_ref),
+delete ptr (如果计数为0)。</li>
+</ul></li>
+</ul>
+<p>依赖关系：</p>
+<ul>
+<li><p>pop &lt;- push: pop 需要看到 push 对 ptr-&gt;data 和 ptr-&gt;next
+的写入。</p></li>
+<li><p>pop (访问) &lt;- pop (删除): pop 线程 T1 在访问 ptr-&gt;next 或
+ptr-&gt;data 时，必须确保没有其他 pop 线程 T2 已经将 ptr 删除。</p></li>
+<li><p>pop (修改 ptr-&gt;data) -&gt; pop (删除 ptr): 对 ptr-&gt;data
+的修改 (通过 swap) 必须先行于对 ptr 的 delete 操作（由将引用计数减为 0
+的那个线程执行）。</p></li>
+</ul>
+<p>同步点与内存顺序选择：</p>
+<ul>
+<li>increase_head_count 中的 CAS:
+<ul>
+<li>目的：安全地读取 head 并增加外部计数，同时确保读取到的 ptr
+是有效的，并且能看到 push 写入的 ptr-&gt;next 和 ptr-&gt;data。</li>
+<li>顺序: 这个 CAS 读取 head。为了与 push 的 release CAS
+同步，它在成功时需要 memory_order_acquire
+语义。失败时可以<strong>relaxed</strong>。</li>
+</ul></li>
+<li>主 CAS (head.compare_exchange_strong(old_head, ptr-&gt;next, …)):
+<ul>
+<li>目的: 原子地将 head 指向下下个节点。</li>
+<li>依赖: 它需要读取 ptr-&gt;next。ptr-&gt;next 的可见性已经由
+increase_head_count 的 acquire CAS 保证了。</li>
+<li>同步: 这个 CAS 写入 head。这个写入需要与后续的 pop
+操作同步吗？不一定需要强同步，因为后续的 pop 会执行自己的 acquire
+操作。因此，这个 CAS 可以使用 memory_order_relaxed。</li>
+</ul></li>
+<li>internal_count.fetch_add(count_increase, …) (成功路径):
+<ul>
+<li>目的: 将外部计数转移到内部计数，并检查是否可以删除。</li>
+<li>依赖: 必须发生在 res.swap(ptr-&gt;data) 之后（序前）。</li>
+<li>同步: 如果这个 fetch_add 导致计数为 0，当前线程将执行 delete
+ptr。为了确保 swap 操作先行于 delete（即使在弱排序内存模型下），这个
+fetch_add 需要 memory_order_release 语义。它确保了在 fetch_add
+之前的所有内存操作（包括 swap）对于之后（在同一个线程中）的 delete
+操作是可见且有序的。</li>
+</ul></li>
+<li>internal_count.fetch_add(-1, …) (失败路径，或 release_ref):
+<ul>
+<li>目的: 减少当前线程持有的内部引用。如果计数变为 0，则删除节点。</li>
+<li>同步: 如果这个操作导致计数为 0，当前线程需要 delete
+ptr。删除操作需要确保能看到所有先前对该节点的操作。原文的最终实现（清单
+7.12）在这里使用了 memory_order_relaxed，但在 delete
+之前增加了一个额外的
+ptr-&gt;internal_count.load(std::memory_order_acquire)。</li>
+<li>理由 (推测): 可能是为了确保在执行 delete
+之前，确实获取了所有其他线程对该 internal_count 的 release
+修改（虽然这里没有明显的配对 release）。或者，这是一种防御性编程，确保在
+delete 前有一个 acquire
+屏障。这部分逻辑比较微妙，原文解释也略显模糊。但遵循最终代码是安全的。</li>
+</ul></li>
+</ul>
+<p>优化后的 pop 实现如下： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span> </span>{</span><br><span class="line">  counted_node_ptr old_head = head.<span class="built_in">load</span>(std::memory_order_relaxed); <span class="comment">// relaxed</span></span><br><span class="line">  <span class="keyword">for</span> (;;) {</span><br><span class="line">    <span class="built_in">increase_head_count</span>(old_head); <span class="comment">// 内部 CAS: acquire on success, relaxed on failure</span></span><br><span class="line">    node* <span class="type">const</span> ptr = old_head.ptr;</span><br><span class="line">    <span class="keyword">if</span> (!ptr) { <span class="keyword">return</span> std::<span class="built_in">shared_ptr</span>&lt;T&gt;(); }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 主 CAS 使用 relaxed</span></span><br><span class="line">    <span class="keyword">if</span> (head.<span class="built_in">compare_exchange_strong</span>(old_head, ptr-&gt;next, </span><br><span class="line">                                    std::memory_order_relaxed)) </span><br><span class="line">    {</span><br><span class="line">      std::shared_ptr&lt;T&gt; res;</span><br><span class="line">      res.<span class="built_in">swap</span>(ptr-&gt;data);</span><br><span class="line">      <span class="type">int</span> <span class="type">const</span> count_increase = old_head.external_count - <span class="number">2</span>;</span><br><span class="line">      <span class="comment">// 成功路径 fetch_add 使用 release</span></span><br><span class="line">      <span class="keyword">if</span> (ptr-&gt;internal_count.<span class="built_in">fetch_add</span>(count_increase, </span><br><span class="line">            std::memory_order_release) == -count_increase) </span><br><span class="line">      {</span><br><span class="line">        <span class="keyword">delete</span> ptr;</span><br><span class="line">      }</span><br><span class="line">      <span class="keyword">return</span> res;</span><br><span class="line">    } </span><br><span class="line">    <span class="comment">// 失败路径 fetch_add 使用 relaxed</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (ptr-&gt;internal_count.<span class="built_in">fetch_add</span>(<span class="number">-1</span>, </span><br><span class="line">               std::memory_order_relaxed) == <span class="number">1</span>) </span><br><span class="line">    {</span><br><span class="line">      <span class="comment">// 在 delete 前加一个 acquire load (来自清单 7.12)</span></span><br><span class="line">      ptr-&gt;internal_count.<span class="built_in">load</span>(std::memory_order_acquire); </span><br><span class="line">      <span class="keyword">delete</span> ptr;</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<p>总结:</p>
+<p>放松内存顺序是一项优化，目标是减少不必要的同步开销，提高性能。它需要非常仔细地分析操作之间的数据依赖和控制依赖，以确定最低要求的内存顺序。</p>
+<p>基本原则：</p>
+<ul>
+<li><p>如果一个写操作 W 的结果需要被另一个线程的读操作 R 看到，W
+通常需要 release (或 acq_rel, seq_cst)，R 通常需要 acquire (或 acq_rel,
+seq_cst, consume)。</p></li>
+<li><p>如果一个原子操作的结果只在当前线程内部使用，或者它不需要建立跨线程的先行关系，那么
+relaxed 通常是足够的。</p></li>
+<li><p>RMW 操作（如
+fetch_add）本身构成了释放序列的一部分，这有助于同步传递。</p></li>
+</ul>
+<p>复杂性：正确地推理和验证放松后的内存顺序极其困难，容易出错。相比之下，seq_cst
+虽然可能慢一些，但更容易保证正确性。因此，放松内存顺序应谨慎进行，并最好有充分的性能测试数据支持。</p>
+<h3 id="无锁的线程安全队列">无锁的线程安全队列</h3>
+<p>与栈的不同之处: - 栈 (LIFO)：push 和 pop
+都作用于<strong>同一个端点</strong>（head 指针）。主要挑战在于同步对
+head 的并发修改以及弹出节点的内存管理。</p>
+<ul>
+<li>队列 (FIFO)：
+<ul>
+<li>push 操作作用于尾部 (tail)。</li>
+<li>pop 操作作用于头部 (head)。</li>
+<li>新的挑战：需要确保对一端的修改（例如 push 修改了 tail
+或最后一个节点的 next）能够正确、安全地被另一端的操作（例如 pop 读取
+head-&gt;next）所观察到。</li>
+<li>潜在的优势：由于操作发生在不同端点，理论上 push 和 pop
+之间存在更大的并行可能性。</li>
+</ul></li>
+</ul>
+<h4 id="单生产者单消费者-spsc-的简单情况">单生产者/单消费者 (SPSC)
+的简单情况</h4>
+<p>如果队列严格限制为只有一个线程执行 push，一个线程执行
+pop，那么无锁实现可以非常简单（甚至比无锁栈更简单）。实现思路：</p>
+<ul>
+<li><p>使用哑节点 (Dummy Node)来解耦头尾。</p></li>
+<li><p>head 和 tail 都是原子指针
+(<code>std::atomic&lt;node*&gt;</code>)。</p></li>
+<li><p>push (生产者):</p>
+<ol type="1">
+<li>准备新节点 p 和数据 new_data。</li>
+<li>获取当前 old_tail = tail.load()。</li>
+<li>将 new_data 存入 old_tail-&gt;data（原子地或非原子地，取决于 data
+是否原子）。</li>
+<li>原子地设置 old_tail-&gt;next = p（需要 old_tail-&gt;next
+也是原子的，或者确保只有生产者修改它）。</li>
+<li>原子地更新 tail.store(p)。</li>
+</ol></li>
+<li><p>pop (消费者):</p>
+<ol type="1">
+<li>读取 old_head = head.load()。</li>
+<li>检查是否为空 (old_head == tail.load())。</li>
+<li>原子地更新 head.store(old_head-&gt;next)。</li>
+<li>读取 old_head-&gt;data。</li>
+<li>delete old_head (在 SPSC
+中是安全的，因为只有消费者会删除，生产者不会持有旧 head 的引用)。</li>
+</ol></li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lock_free_queue</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">node</span></span><br><span class="line">  {</span><br><span class="line">    std::shared_ptr&lt;T&gt; data;</span><br><span class="line">    node* next;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">node</span>():</span><br><span class="line">       <span class="built_in">next</span>(<span class="literal">nullptr</span>)</span><br><span class="line">    {}</span><br><span class="line">  };</span><br><span class="line"></span><br><span class="line">  std::atomic&lt;node*&gt; head;</span><br><span class="line">  std::atomic&lt;node*&gt; tail;</span><br><span class="line"></span><br><span class="line">  <span class="function">node* <span class="title">pop_head</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    node* <span class="type">const</span> old_head=head.<span class="built_in">load</span>();</span><br><span class="line">    <span class="keyword">if</span>(old_head==tail.<span class="built_in">load</span>())  <span class="comment">// 1</span></span><br><span class="line">    {</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    }</span><br><span class="line">    head.<span class="built_in">store</span>(old_head-&gt;next);</span><br><span class="line">    <span class="keyword">return</span> old_head;</span><br><span class="line">  }</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">lock_free_queue</span>():</span><br><span class="line">      <span class="built_in">head</span>(<span class="keyword">new</span> node),<span class="built_in">tail</span>(head.<span class="built_in">load</span>())</span><br><span class="line">  {}</span><br><span class="line"></span><br><span class="line">  <span class="built_in">lock_free_queue</span>(<span class="type">const</span> lock_free_queue&amp; other)=<span class="keyword">delete</span>;</span><br><span class="line">  lock_free_queue&amp; <span class="keyword">operator</span>=(<span class="type">const</span> lock_free_queue&amp; other)=<span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">  ~<span class="built_in">lock_free_queue</span>()</span><br><span class="line">  {</span><br><span class="line">    <span class="keyword">while</span>(node* <span class="type">const</span> old_head=head.<span class="built_in">load</span>())</span><br><span class="line">    {</span><br><span class="line">      head.<span class="built_in">store</span>(old_head-&gt;next);</span><br><span class="line">      <span class="keyword">delete</span> old_head;</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">  <span class="function">std::shared_ptr&lt;T&gt; <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    node* old_head=<span class="built_in">pop_head</span>();</span><br><span class="line">    <span class="keyword">if</span>(!old_head)</span><br><span class="line">    {</span><br><span class="line">      <span class="keyword">return</span> std::<span class="built_in">shared_ptr</span>&lt;T&gt;();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="type">const</span> <span class="title">res</span><span class="params">(old_head-&gt;data)</span></span>;  <span class="comment">// 2</span></span><br><span class="line">    <span class="keyword">delete</span> old_head;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(T new_value)</span></span></span><br><span class="line"><span class="function">  </span>{</span><br><span class="line">    <span class="function">std::shared_ptr&lt;T&gt; <span class="title">new_data</span><span class="params">(std::make_shared&lt;T&gt;(new_value))</span></span>;</span><br><span class="line">    node* p=<span class="keyword">new</span> node;  <span class="comment">// 3</span></span><br><span class="line">    node* <span class="type">const</span> old_tail=tail.<span class="built_in">load</span>();  <span class="comment">// 4</span></span><br><span class="line">    old_tail-&gt;data.<span class="built_in">swap</span>(new_data);  <span class="comment">// 5</span></span><br><span class="line">    old_tail-&gt;next=p;  <span class="comment">// 6</span></span><br><span class="line">    tail.<span class="built_in">store</span>(p);  <span class="comment">// 7</span></span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<p>SPSC 安全性分析：在严格的 SPSC
+约束下，上述实现是可以工作的。生产者只修改 tail 附近，消费者只修改 head
+附近，它们的操作通过 head == tail 检查和 next
+指针链条隐式同步。内存回收也简单。</p>
+<p>问题：现实世界很少是严格的 SPSC。我们需要
+MPMC（多生产者，多消费者）。</p>
+<h4 id="多生产者多消费者-mpmc-的复杂情况">多生产者/多消费者 (MPMC)
+的复杂情况</h4>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/language/">#language</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/1.%20%E7%BA%BF%E7%A8%8B%E7%AE%A1%E7%90%86/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">1. 线程管理</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/01/lang/CPP/%E7%8E%B0%E4%BB%A3C++/C++%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/2.%20%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">2. 线程间共享数据</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">6. 无锁并发数据结构设计</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">无锁并发数据结构的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-non-blocking-lock-free"><span class="nav-text">非阻塞数据结构
+(Non-blocking ≠ Lock-Free)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E9%94%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-lock-free"><span class="nav-text">无锁数据结构 (Lock-Free)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%AD%89%E5%BE%85%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-wait-free"><span class="nav-text">无等待数据结构 (Wait-Free)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E9%94%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E5%88%A9%E4%B8%8E%E5%BC%8A-why-pursue-lock-free"><span class="nav-text">无锁数据结构的利与弊
+(Why pursue Lock-Free?)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E9%94%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%A4%BA%E4%BE%8B"><span class="nav-text">无锁数据结构示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E9%94%81%E6%A0%88-lock-free-stack"><span class="nav-text">无锁栈 (Lock-Free Stack)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E9%94%81-push-%E6%93%8D%E4%BD%9C"><span class="nav-text">无锁 push 操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E9%94%81-pop-%E6%93%8D%E4%BD%9C"><span class="nav-text">无锁 pop 操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7%E5%88%86%E6%9E%90%E4%B8%8E%E6%80%BB%E7%BB%93"><span class="nav-text">安全性分析与总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E4%BD%BF%E7%94%A8%E6%97%A0%E9%94%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AE%A1%E7%90%86%E5%86%85%E5%AD%98"><span class="nav-text">停止内存泄露：使用无锁数据结构管理内存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%E4%BD%95%E6%97%B6%E5%8F%AF%E4%BB%A5%E5%AE%89%E5%85%A8%E5%88%A0%E9%99%A4"><span class="nav-text">核心问题：何时可以安全删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E8%8D%89%E7%8E%87%E7%9A%84%E5%B0%9D%E8%AF%95-%E5%9F%BA%E4%BA%8E%E5%85%A8%E5%B1%80%E8%AE%A1%E6%95%B0%E7%9A%84%E5%9B%9E%E6%94%B6"><span class="nav-text">一个草率的尝试:
+基于全局计数的回收</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AF%A5%E6%96%B9%E6%A1%88%E7%9A%84%E8%87%B4%E5%91%BD%E7%BC%BA%E9%99%B7%E9%AB%98%E4%BA%89%E7%94%A8%E4%B8%8B%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2"><span class="nav-text">该方案的致命缺陷：高争用下的内存泄露</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-1%E9%A3%8E%E9%99%A9%E6%8C%87%E9%92%88-hazard-pointers"><span class="nav-text">解决方案 1：风险指针 (Hazard
+Pointers)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BE%85%E5%8A%A9%E5%87%BD%E6%95%B0"><span class="nav-text">辅助函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="nav-text">性能问题与优化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%882-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0-reference-counting"><span class="nav-text">解决方案2: 引用计数
+(Reference Counting)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-1%E4%BD%BF%E7%94%A8-stdshared_ptr"><span class="nav-text">方案 1：使用 std::shared_ptr</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-2%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E5%88%86%E7%A6%BB%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0-split-reference-counting"><span class="nav-text">方案
+2：手动实现分离引用计数 (Split Reference Counting)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E4%BA%8E%E6%97%A0%E9%94%81%E6%A0%88%E4%B8%8A%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-text">应用于无锁栈上的内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90-push-%E6%93%8D%E4%BD%9C"><span class="nav-text">分析 push 操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90-pop-%E6%93%8D%E4%BD%9C"><span class="nav-text">分析 pop 操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E9%94%81%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%98%9F%E5%88%97"><span class="nav-text">无锁的线程安全队列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%94%9F%E4%BA%A7%E8%80%85%E5%8D%95%E6%B6%88%E8%B4%B9%E8%80%85-spsc-%E7%9A%84%E7%AE%80%E5%8D%95%E6%83%85%E5%86%B5"><span class="nav-text">单生产者&#x2F;单消费者 (SPSC)
+的简单情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%94%9F%E4%BA%A7%E8%80%85%E5%A4%9A%E6%B6%88%E8%B4%B9%E8%80%85-mpmc-%E7%9A%84%E5%A4%8D%E6%9D%82%E6%83%85%E5%86%B5"><span class="nav-text">多生产者&#x2F;多消费者 (MPMC)
+的复杂情况</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        186 posts in total
+                    </span>
+                    
+                        <span>
+                            578.6k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

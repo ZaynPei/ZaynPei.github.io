@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,62 +833,88 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>std::array 是在 C++11 中引入的一个容器模板，它封装了一个固定大小的数组。它结合了C风格数组的性能优势（静态分配、无额外开销）和STL容器的便利性与安全性。</p>
+			<p>std::array 是在 C++11
+中引入的一个容器模板，它封装了一个固定大小的数组。它结合了C风格数组的性能优势（静态分配、无额外开销）和STL容器的便利性与安全性。</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;array&gt;</span></span></span><br><span class="line">std::array&lt;T, N&gt; array_name;</span><br></pre></td></tr></table></figure></div>
 <ul>
 <li>T: 存储的元素类型 (例如 int, double, std::string)。</li>
 <li>N: 数组的大小，必须是一个<strong>编译时常量</strong>。</li>
 </ul>
-<h3 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h3><ol>
-<li><p>空间固定且<strong>内存连续</strong>：一旦<strong>声明之后大小就不能改变</strong>。这与 std::vector 不同，后者是动态大小的。并且, std::array&lt;T, N&gt; 的内存布局与 T[N] 完全相同。它不包含任何额外的元数据，比如虚函数表指针、大小变量等。它在内存中就是一块连续的、大小为 N * sizeof(T) 的空间。</p>
-</li>
-<li><p><strong>栈上分配</strong>：和C风格数组一样，如果作为局部变量声明，它通常在栈上分配内存，速度非常快。</p>
-</li>
+<h3 id="主要特性">主要特性</h3>
+<ol type="1">
+<li><p>空间固定且<strong>内存连续</strong>：一旦<strong>声明之后大小就不能改变</strong>。这与
+std::vector 不同，后者是动态大小的。并且, std::array&lt;T, N&gt;
+的内存布局与 T[N]
+完全相同。它不包含任何额外的元数据，比如虚函数表指针、大小变量等。它在内存中就是一块连续的、大小为
+N * sizeof(T) 的空间。</p></li>
+<li><p><strong>栈上分配</strong>：和C风格数组一样，如果作为局部变量声明，它通常在栈上分配内存，速度非常快。</p></li>
 <li><p>完整的容器接口：它表现得像一个标准的STL容器，提供了许多方便的成员函数：</p>
 <ul>
-<li><p>at(pos): 访问指定位置的元素，会进行<strong>边界检查</strong>。如果越界，会抛出 std::out_of_range 异常。</p>
-</li>
-<li><p>operator[]: 访问指定位置的元素，<strong>不进行边界检查</strong>（为了性能，与C风格数组行为一致）。</p>
-</li>
-<li><p>front() / back(): 访问第一个/最后一个元素。</p>
-</li>
-<li><p>size() / max_size(): 返回数组的大小。</p>
-</li>
-<li><p>empty(): 检查数组是否为空 (对于 std::array 来说，如果 N &gt; 0 则永远不为空)。</p>
-</li>
-<li><p>fill(value): 用<strong>一个指定的值</strong>填充<strong>整个数组</strong>。</p>
-</li>
-<li><p>begin() / end(): 提供<strong>迭代器</strong>支持，可以轻松与STL算法（如 std::sort）配合使用。</p>
-</li>
-</ul>
-</li>
+<li><p>at(pos):
+访问指定位置的元素，会进行<strong>边界检查</strong>。如果越界，会抛出
+std::out_of_range 异常。</p></li>
+<li><p>operator[]:
+访问指定位置的元素，<strong>不进行边界检查</strong>（为了性能，与C风格数组行为一致）。</p></li>
+<li><p>front() / back(): 访问第一个/最后一个元素。</p></li>
+<li><p>size() / max_size(): 返回数组的大小。</p></li>
+<li><p>empty(): 检查数组是否为空 (对于 std::array 来说，如果 N &gt; 0
+则永远不为空)。</p></li>
+<li><p>fill(value):
+用<strong>一个指定的值</strong>填充<strong>整个数组</strong>。</p></li>
+<li><p>begin() / end():
+提供<strong>迭代器</strong>支持，可以轻松与STL算法（如
+std::sort）配合使用。</p></li>
+</ul></li>
 </ol>
-<h3 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h3><p>std::array 的底层实现非常简单，它在内部只包含一个<strong>公开的、C风格的普通数组</strong>作为其唯一的非静态数据成员。标准库围绕这个内置数组提供了一系列<strong>成员函数</strong>（如 size(), at(), begin() 等），以赋予它现代容器的行为和安全性。</p>
+<h3 id="底层实现">底层实现</h3>
+<p>std::array
+的底层实现非常简单，它在内部只包含一个<strong>公开的、C风格的普通数组</strong>作为其唯一的非静态数据成员。标准库围绕这个内置数组提供了一系列<strong>成员函数</strong>（如
+size(), at(), begin() 等），以赋予它现代容器的行为和安全性。</p>
 <p>这个设计的关键在于，所有这些“包装”工作都在<strong>编译时完成</strong>，几乎不会产生任何运行时的性能开销。</p>
 <p>以下是一个简化的示例：</p>
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span> <span class="comment">// for size_t</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdexcept&gt;</span> <span class="comment">// for std::out_of_range</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span> <span class="comment">// for std::fill</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, std::<span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyArray</span> {</span><br><span class="line">    <span class="comment">// 核心：内部就是一个公开的C风格数组</span></span><br><span class="line">    <span class="comment">// 命名为 _data 以避免与用户代码冲突（标准库实现有自己的命名规则）</span></span><br><span class="line">    T _data[N];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 成员函数实现 ---</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// size()：返回大小。因为N是编译时常量，所以这个函数可以标记为 constexpr</span></span><br><span class="line">    <span class="function"><span class="keyword">constexpr</span> std::<span class="type">size_t</span> <span class="title">size</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> N;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// operator[]：直接访问内部数组，不进行边界检查</span></span><br><span class="line">    T&amp; <span class="keyword">operator</span>[](std::<span class="type">size_t</span> index) <span class="keyword">noexcept</span> {</span><br><span class="line">        <span class="keyword">return</span> _data[index];</span><br><span class="line">    }</span><br><span class="line">    <span class="type">const</span> T&amp; <span class="keyword">operator</span>[](std::<span class="type">size_t</span> index) <span class="type">const</span> <span class="keyword">noexcept</span> {</span><br><span class="line">        <span class="keyword">return</span> _data[index];</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// at()：访问内部数组，但带有边界检查</span></span><br><span class="line">    <span class="function">T&amp; <span class="title">at</span><span class="params">(std::<span class="type">size_t</span> index)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (index &gt;= N) {</span><br><span class="line">            <span class="keyword">throw</span> std::<span class="built_in">out_of_range</span>(<span class="string">"MyArray::at() index out of range"</span>);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> _data[index];</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">const</span> T&amp; <span class="title">at</span><span class="params">(std::<span class="type">size_t</span> index)</span> <span class="type">const</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (index &gt;= N) {</span><br><span class="line">            <span class="keyword">throw</span> std::<span class="built_in">out_of_range</span>(<span class="string">"MyArray::at() index out of range"</span>);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> _data[index];</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// begin() 和 end()：返回指向内部数组的指针，实现迭代器支持</span></span><br><span class="line">    <span class="function">T* <span class="title">begin</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> _data; <span class="comment">// 或者 &amp;_data[0]</span></span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">const</span> T* <span class="title">begin</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> _data;</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="function">T* <span class="title">end</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> _data + N; <span class="comment">// 指向数组末尾的后一个位置</span></span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">const</span> T* <span class="title">end</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">noexcept</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> _data + N;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// fill()：填充数组</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">fill</span><span class="params">(<span class="type">const</span> T&amp; value)</span> </span>{</span><br><span class="line">        std::<span class="built_in">fill</span>(<span class="built_in">begin</span>(), <span class="built_in">end</span>(), value);</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// ------------------- 使用示例 -------------------</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    MyArray&lt;<span class="type">int</span>, <span class="number">5</span>&gt; arr = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Size: "</span> &lt;&lt; arr.<span class="built_in">size</span>() &lt;&lt; std::endl;</span><br><span class="line">    arr[<span class="number">0</span>] = <span class="number">100</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> val : arr) { <span class="comment">// 可以使用范围for循环，因为有 begin() 和 end()</span></span><br><span class="line">        std::cout &lt;&lt; val &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">    }</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="聚合类型-Aggregate-Type-与初始化"><a href="#聚合类型-Aggregate-Type-与初始化" class="headerlink" title="聚合类型 (Aggregate Type) 与初始化"></a>聚合类型 (Aggregate Type) 与初始化</h3><p>std::array 被设计成一个聚合类型。在C++中，聚合类型大致是指<strong>没有用户定义的构造函数</strong>、<strong>没有私有或保护的非静态数据成员</strong>、<strong>没有基类</strong>、<strong>没有虚函数</strong>的类或结构体。</p>
-<p>因为 std::array 内部只有一个公开的C风格数组 T _data[N];，它符合聚合类型的定义。</p>
-<p>这使得我们可以使用大括号 {} 进行聚合初始化，就像初始化一个普通的C风格数组一样，非常直观。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::array&lt;<span class="type">int</span>, 3&gt; arr = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>}; <span class="comment">// 直接初始化内部的C风格数组</span></span><br></pre></td></tr></table></figure></div>
-
-<h3 id="零成本抽象-Zero-Cost-Abstraction"><a href="#零成本抽象-Zero-Cost-Abstraction" class="headerlink" title="零成本抽象 (Zero-Cost Abstraction)"></a>零成本抽象 (Zero-Cost Abstraction)</h3><p>这是 std::array 最重要的特性。这意味着你获得了更高的安全性（at()）、便利性（size()、迭代器）和类型安全，在开启<strong>编译器优化后</strong>，其<strong>性能与手写的C风格数组代码完全相同</strong>。</p>
+<h3 id="聚合类型-aggregate-type-与初始化">聚合类型 (Aggregate Type)
+与初始化</h3>
+<p>std::array
+被设计成一个聚合类型。在C++中，聚合类型大致是指<strong>没有用户定义的构造函数</strong>、<strong>没有私有或保护的非静态数据成员</strong>、<strong>没有基类</strong>、<strong>没有虚函数</strong>的类或结构体。</p>
+<p>因为 std::array 内部只有一个公开的C风格数组 T
+_data[N];，它符合聚合类型的定义。</p>
+<p>这使得我们可以使用大括号 {}
+进行聚合初始化，就像初始化一个普通的C风格数组一样，非常直观。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::array&lt;<span class="type">int</span>, 3&gt; arr = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>}; <span class="comment">// 直接初始化内部的C风格数组</span></span><br></pre></td></tr></table></figure></div></p>
+<h3 id="零成本抽象-zero-cost-abstraction">零成本抽象 (Zero-Cost
+Abstraction)</h3>
+<p>这是 std::array
+最重要的特性。这意味着你获得了更高的安全性（at()）、便利性（size()、迭代器）和类型安全，在开启<strong>编译器优化后</strong>，其<strong>性能与手写的C风格数组代码完全相同</strong>。</p>
 <p>如何实现？下面是几个关键点：</p>
 <ul>
-<li><p>size(): size() 函数返回的是<strong>模板参数 N</strong>，它是一个<strong>编译时常量</strong>。编译器在编译时就可以直接将 arr.size() 替换为具体数字（例如 5）。这个函数调用在最终的机器码中不存在(也就是说根本不存在这样一个size变量或者函数调用)</p>
-</li>
-<li><p>operator[], begin(), end(): 这些函数非常简单，通常只有一条返回语句。编译器可以轻易地进行<strong>内联</strong> (inlining)，即把<strong>函数调用替换为函数体本身</strong>。最终生成的汇编代码与直接操作C风格数组的指针或索引完全一样(没有额外的函数调用开销)。</p>
-</li>
-<li><p>范围for循环: for (auto&amp; element : arr)之所以能工作，是因为编译器会将其转换为基于迭代器的代码 for (auto it = arr.begin(); it != arr.end(); ++it)。由于 begin() 和 end() 会被内联，最终的循环代码与操作C风格数组的指针循环效率相同。</p>
-</li>
+<li><p>size(): size() 函数返回的是<strong>模板参数
+N</strong>，它是一个<strong>编译时常量</strong>。编译器在编译时就可以直接将
+arr.size() 替换为具体数字（例如
+5）。这个函数调用在最终的机器码中不存在(也就是说根本不存在这样一个size变量或者函数调用)</p></li>
+<li><p>operator[], begin(), end():
+这些函数非常简单，通常只有一条返回语句。编译器可以轻易地进行<strong>内联</strong>
+(inlining)，即把<strong>函数调用替换为函数体本身</strong>。最终生成的汇编代码与直接操作C风格数组的指针或索引完全一样(没有额外的函数调用开销)。</p></li>
+<li><p>范围for循环: for (auto&amp; element :
+arr)之所以能工作，是因为编译器会将其转换为基于迭代器的代码 for (auto it
+= arr.begin(); it != arr.end(); ++it)。由于 begin() 和 end()
+会被内联，最终的循环代码与操作C风格数组的指针循环效率相同。</p></li>
 </ul>
-<h3 id="类型系统与模板元编程"><a href="#类型系统与模板元编程" class="headerlink" title="类型系统与模板元编程"></a>类型系统与模板元编程</h3><p>td::array 的强大之处在于它将数组的大小 N 融入了类型系统。std::array&lt;int, 5&gt; 和 std::array&lt;int, 10&gt; 是完全不同的、不兼容的类型, 因为 N 是一个<strong>非类型模板参数</strong> (non-type template parameter)。</p>
+<h3 id="类型系统与模板元编程">类型系统与模板元编程</h3>
+<p>td::array 的强大之处在于它将数组的大小 N
+融入了类型系统。std::array&lt;int, 5&gt; 和 std::array&lt;int, 10&gt;
+是完全不同的、不兼容的类型, 因为 N 是一个<strong>非类型模板参数</strong>
+(non-type template parameter)。</p>
 <blockquote>
-<p>非类型模板参数是指模板参数不是一个类型，而是一个值（如整数、枚举值、指针等）。在 std::array 中，N 是一个 std::size_t 类型的非类型模板参数，表示数组的大小。</p>
+<p>非类型模板参数是指模板参数不是一个类型，而是一个值（如整数、枚举值、指针等）。在
+std::array 中，N 是一个 std::size_t
+类型的非类型模板参数，表示数组的大小。</p>
 </blockquote>
-<p>这使得我们可以在编译时捕获许多错误。例如，试图将一个 std::array&lt;int, 5&gt; 赋值给 std::array&lt;int, 10&gt; 会导致编译错误，而不是运行时错误。</p>
-<p>同时, 还可以防止数组退化：当把 std::array 传递给函数时，传递的是一个完整的对象，函数签名中包含了确切的大小信息。编译器可以检查类型匹配，不会再出现数组退化为指针、丢失大小信息的问题。</p>
+<p>这使得我们可以在编译时捕获许多错误。例如，试图将一个
+std::array&lt;int, 5&gt; 赋值给 std::array&lt;int, 10&gt;
+会导致编译错误，而不是运行时错误。</p>
+<p>同时, 还可以防止数组退化：当把 std::array
+传递给函数时，传递的是一个完整的对象，函数签名中包含了确切的大小信息。编译器可以检查类型匹配，不会再出现数组退化为指针、丢失大小信息的问题。</p>
 
 		</div>
 
@@ -927,7 +953,7 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/30/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/">
+				<a class="next" rel="next" href="/2025/09/30/web/Computer%20Network/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/%E7%BD%91%E7%BB%9C%E5%B1%82/">
 					<span class="title flex justify-center items-center">
 						<span class="post-nav-title-item truncate max-w-48">网络层</span>
 						<span class="post-nav-item">Next posts</span>
@@ -951,7 +977,9 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">array</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E6%80%A7"><span class="nav-text">主要特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-text">底层实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E7%B1%BB%E5%9E%8B-Aggregate-Type-%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">聚合类型 (Aggregate Type) 与初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%B6%E6%88%90%E6%9C%AC%E6%8A%BD%E8%B1%A1-Zero-Cost-Abstraction"><span class="nav-text">零成本抽象 (Zero-Cost Abstraction)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%A8%A1%E6%9D%BF%E5%85%83%E7%BC%96%E7%A8%8B"><span class="nav-text">类型系统与模板元编程</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E6%80%A7"><span class="nav-text">主要特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-text">底层实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E7%B1%BB%E5%9E%8B-aggregate-type-%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">聚合类型 (Aggregate Type)
+与初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%B6%E6%88%90%E6%9C%AC%E6%8A%BD%E8%B1%A1-zero-cost-abstraction"><span class="nav-text">零成本抽象 (Zero-Cost
+Abstraction)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%A8%A1%E6%9D%BF%E5%85%83%E7%BC%96%E7%A8%8B"><span class="nav-text">类型系统与模板元编程</span></a></li></ol>
 
 	</div>
 </div>
@@ -980,11 +1008,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

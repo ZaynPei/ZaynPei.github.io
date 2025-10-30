@@ -710,15 +710,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -828,181 +828,214 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>推荐系统（Recommender System）是一种信息过滤系统（Information Filtering System），其核心目标是解决在海量数据环境中用户与物品（Items）之间的信息过载（Information Overload）问题。系统通过建模用户偏好与物品属性，预测用户对于其未曾接触过的物品的偏好程度或评分，从而实现个性化推荐。</p>
-<h2 id="推荐系统的基本概念"><a href="#推荐系统的基本概念" class="headerlink" title="推荐系统的基本概念"></a>推荐系统的基本概念</h2><p>从数据来源、效果评估到商业目标和工程实践，推荐系统主要包括四个核心方面：</p>
-<h3 id="1-用户行为（User-Behaviors）——-推荐系统的信号与养料"><a href="#1-用户行为（User-Behaviors）——-推荐系统的信号与养料" class="headerlink" title="1. 用户行为（User Behaviors）—— 推荐系统的信号与养料"></a>1. 用户行为（User Behaviors）—— 推荐系统的信号与养料</h3><p>用户与推荐内容交互时产生的各种行为，是推荐系统赖以生存的数据信号，模型通过学习这些信号来理解用户的偏好。</p>
+			<p>推荐系统（Recommender System）是一种信息过滤系统（Information
+Filtering
+System），其核心目标是解决在海量数据环境中用户与物品（Items）之间的信息过载（Information
+Overload）问题。系统通过建模用户偏好与物品属性，预测用户对于其未曾接触过的物品的偏好程度或评分，从而实现个性化推荐。</p>
+<h2 id="推荐系统的基本概念">推荐系统的基本概念</h2>
+<p>从数据来源、效果评估到商业目标和工程实践，推荐系统主要包括四个核心方面：</p>
+<h3 id="用户行为user-behaviors-推荐系统的信号与养料">1. 用户行为（User
+Behaviors）—— 推荐系统的信号与养料</h3>
+<p>用户与推荐内容交互时产生的各种行为，是推荐系统赖以生存的数据信号，模型通过学习这些信号来理解用户的偏好。</p>
 <ul>
-<li><strong>点击（Click）</strong><ul>
+<li><strong>点击（Click）</strong>
+<ul>
 <li>定义：用户点击了推荐给他的某个物品（如一篇文章、一个视频、一件商品）。</li>
 <li>解读：最常见、最容易获取的行为信号，通常被认为是弱正反馈。表明用户对标题或封面图产生了兴趣，但不代表一定喜欢内容本身。</li>
-</ul>
-</li>
-<li><strong>点赞（Like）</strong><ul>
+</ul></li>
+<li><strong>点赞（Like）</strong>
+<ul>
 <li>定义：用户对内容按下了”赞”按钮。</li>
 <li>解读：比”点击”更强的正反馈信号，明确表达了用户对内容的认可和喜爱。</li>
-</ul>
-</li>
-<li><strong>收藏（Favorite / Collect）</strong><ul>
+</ul></li>
+<li><strong>收藏（Favorite / Collect）</strong>
+<ul>
 <li>定义：用户将内容加入到自己的收藏夹或列表中。</li>
 <li>解读：非常强的正反馈信号，意味着内容具有长期价值。</li>
-</ul>
-</li>
-<li><strong>转发（Share / Forward）</strong><ul>
+</ul></li>
+<li><strong>转发（Share / Forward）</strong>
+<ul>
 <li>定义：用户将内容分享到其他平台或发送给朋友。</li>
 <li>解读：最强的正反馈信号之一，用户愿意用自己的社交信誉为其背书。</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <blockquote>
 <p>小结：在构建推荐模型时，通常会给这些不同的行为赋予不同的权重（Weight），如”收藏”权重高于”点击”。</p>
 </blockquote>
 <hr>
-<h3 id="2-消费指标（Consumption-Metrics）——-衡量推荐算法好坏的尺子"><a href="#2-消费指标（Consumption-Metrics）——-衡量推荐算法好坏的尺子" class="headerlink" title="2. 消费指标（Consumption Metrics）—— 衡量推荐算法好坏的尺子"></a>2. 消费指标（Consumption Metrics）—— 衡量推荐算法好坏的尺子</h3><p>这些指标用于量化评估推荐系统在技术层面的表现，直接与用户行为挂钩。</p>
+<h3 id="消费指标consumption-metrics-衡量推荐算法好坏的尺子">2.
+消费指标（Consumption Metrics）—— 衡量推荐算法好坏的尺子</h3>
+<p>这些指标用于量化评估推荐系统在技术层面的表现，直接与用户行为挂钩。</p>
 <ul>
-<li><strong>点击率（Click-Through Rate, CTR）</strong><ul>
+<li><strong>点击率（Click-Through Rate, CTR）</strong>
+<ul>
 <li>定义：用户点击推荐内容的次数占总推荐曝光次数的比例。</li>
-<li>公式：<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CTR = 总点击次数 / 总曝光次数 × 100%</span><br></pre></td></tr></table></figure></div></li>
+<li>公式： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CTR = 总点击次数 / 总曝光次数 × 100%</span><br></pre></td></tr></table></figure></div></li>
 <li>解读：衡量推荐内容吸引力的核心指标，也是精排模型最常优化的目标之一。</li>
-</ul>
-</li>
-<li><strong>交互率（Engagement Rate）</strong><ul>
+</ul></li>
+<li><strong>交互率（Engagement Rate）</strong>
+<ul>
 <li>定义：用户与推荐内容发生”深度交互”的次数占总曝光次数的比例。</li>
-<li>公式：<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">总交互次数 = w1 × 点击数 + w2 × 点赞数 + w3 × 收藏数 + ...</span><br></pre></td></tr></table></figure></div></li>
+<li>公式： <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">总交互次数 = w1 × 点击数 + w2 × 点赞数 + w3 × 收藏数 + ...</span><br></pre></td></tr></table></figure></div></li>
 <li>解读：比 CTR 更全面，反映内容质量和用户满意度。</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <hr>
-<h3 id="3-北极星指标（North-Star-Metric）——-推荐系统服务的商业目标"><a href="#3-北极星指标（North-Star-Metric）——-推荐系统服务的商业目标" class="headerlink" title="3. 北极星指标（North Star Metric）—— 推荐系统服务的商业目标"></a>3. 北极星指标（North Star Metric）—— 推荐系统服务的商业目标</h3><p>北极星指标是指引整个产品方向的最高层商业目标，推荐系统的所有优化最终都应服务于提升北极星指标。</p>
+<h3 id="北极星指标north-star-metric-推荐系统服务的商业目标">3.
+北极星指标（North Star Metric）—— 推荐系统服务的商业目标</h3>
+<p>北极星指标是指引整个产品方向的最高层商业目标，推荐系统的所有优化最终都应服务于提升北极星指标。</p>
 <ul>
-<li><strong>用户规模（User Scale）</strong><ul>
+<li><strong>用户规模（User Scale）</strong>
+<ul>
 <li>定义：如日活跃用户数（DAU）、月活跃用户数（MAU）。</li>
 <li>解读：好的推荐系统应提升用户留存率，扩大用户规模。</li>
-</ul>
-</li>
-<li><strong>消费（Consumption）</strong><ul>
+</ul></li>
+<li><strong>消费（Consumption）</strong>
+<ul>
 <li>定义：用户在产品中消费内容的总量。</li>
 <li>解读：如总观看时长、总阅读时长/篇数、总播放时长/曲数、总成交金额（GMV）等。</li>
-</ul>
-</li>
-<li><strong>发布（Publishing / Creation）</strong><ul>
+</ul></li>
+<li><strong>发布（Publishing / Creation）</strong>
+<ul>
 <li>定义：内容平台上内容创作者的发布数量和活跃度。</li>
 <li>解读：推荐系统要服务好消费者，也要服务好创作者，激励持续发布高质量内容。</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <hr>
-<h3 id="4-实验流程（Experimentation-Process）——-科学迭代的必经之路"><a href="#4-实验流程（Experimentation-Process）——-科学迭代的必经之路" class="headerlink" title="4. 实验流程（Experimentation Process）—— 科学迭代的必经之路"></a>4. 实验流程（Experimentation Process）—— 科学迭代的必经之路</h3><p>用于验证新推荐算法或策略是否有效，并安全应用到全量用户。</p>
+<h3 id="实验流程experimentation-process-科学迭代的必经之路">4.
+实验流程（Experimentation Process）—— 科学迭代的必经之路</h3>
+<p>用于验证新推荐算法或策略是否有效，并安全应用到全量用户。</p>
 <ul>
-<li><strong>离线实验（Offline Experiment）</strong><ul>
+<li><strong>离线实验（Offline Experiment）</strong>
+<ul>
 <li>定义：在历史日志数据上进行模型训练和评估。</li>
-<li>步骤：将日志分为训练集和测试集，训练新模型并评估离线指标（如 AUC, Precision, Recall）。</li>
+<li>步骤：将日志分为训练集和测试集，训练新模型并评估离线指标（如 AUC,
+Precision, Recall）。</li>
 <li>优缺点：成本低、速度快、无风险，但与线上环境有差异。</li>
-</ul>
-</li>
-<li><strong>A/B 测试（A/B Testing）</strong><ul>
+</ul></li>
+<li><strong>A/B 测试（A/B Testing）</strong>
+<ul>
 <li>定义：将用户随机分组，线上同时运行不同算法，是验证算法效果的黄金标准。</li>
 <li>步骤：A 组用旧算法，B 组用新算法，比较线上指标。</li>
-</ul>
-</li>
-<li><strong>推全（Full Rollout / Deployment）</strong><ul>
+</ul></li>
+<li><strong>推全（Full Rollout / Deployment）</strong>
+<ul>
 <li>定义：AB 测试证明新算法更优后，逐步部署到全部用户。</li>
 <li>步骤：通常灰度发布，逐步扩大覆盖比例，监控系统指标。</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <hr>
-<h1 id="推荐系统链路"><a href="#推荐系统链路" class="headerlink" title="推荐系统链路"></a>推荐系统链路</h1><p>现代推荐系统采用多阶段排序（Multi-stage Ranking）架构，像漏斗一样分阶段筛选和排序，平衡效果与效率。</p>
-<h2 id="召回（Recall）"><a href="#召回（Recall）" class="headerlink" title="召回（Recall）"></a><strong>召回（Recall）</strong></h2><p>召回是整个推荐流程的第一步，也是效率要求最高的一步。</p>
+<h1 id="推荐系统链路">推荐系统链路</h1>
+<p>现代推荐系统采用多阶段排序（Multi-stage
+Ranking）架构，像漏斗一样分阶段筛选和排序，平衡效果与效率。</p>
+<h2 id="召回recall"><strong>召回（Recall）</strong></h2>
+<p>召回是整个推荐流程的第一步，也是效率要求最高的一步。 -
+目标：从海量物品库中快速筛选出与用户兴趣相关的候选集。此阶段追求“宁可错杀一千，不可放过一个”，重在覆盖率（召可回率），即确保用户可能感兴趣的物品尽量都在这个候选集里。
+- 输入：全量物品库（几万~上亿）。 - 输出：初步候选集（几千）。 -
+方法：多路召回策略, 即通常会综合使用多种简单策略来共同组成候选集。 -
+<strong>协同过滤</strong>(Collaborative
+Filtering)：基于“物以类聚，人以群分”的思想，例如“购买了A的用户也购买了B,
+给用户推荐他喜欢过的物品的相似物品”（Item-based）或“与您相似的用户喜欢C,
+给用户推荐与他相似用户喜欢的东西”（User-based）。 -
+<strong>基于向量的召回</strong>
+(Embedding-based)：目前最主流的方法。将用户和物品都表示为高维空间中的向量（Embedding）。通过高效的向量相似度检索（如
+FAISS、Annoy），快速找到与用户向量最接近的物品向量。例如经典的<strong>双塔模型</strong>
+(Two-Tower Model)。 -
+<strong>内容模型召回</strong>：根据物品本身的属性（如类别、标签、关键词）进行匹配。
+-
+<strong>热门物品或趋势召回</strong>：对于新用户或兴趣不明确的用户，推荐近期热门的物品。
+- 为何需要此步骤:
+直接对全量物品进行复杂排序的计算成本是无法接受的。召回阶段通过简单、高效的模型，将计算范围缩小到千量级，为后续更复杂的排序模型做好准备。</p>
+<h2 id="粗排coarse-ranking"><strong>粗排（Coarse Ranking）</strong></h2>
 <ul>
-<li>目标：从海量物品库中快速筛选出与用户兴趣相关的候选集。此阶段追求“宁可错杀一千，不可放过一个”，重在覆盖率（召可回率），即确保用户可能感兴趣的物品尽量都在这个候选集里。</li>
-<li>输入：全量物品库（几万~上亿）。</li>
-<li>输出：初步候选集（几千）。</li>
-<li>方法：多路召回策略, 即通常会综合使用多种简单策略来共同组成候选集。<ul>
-<li><strong>协同过滤</strong>(Collaborative Filtering)：基于“物以类聚，人以群分”的思想，例如“购买了A的用户也购买了B, 给用户推荐他喜欢过的物品的相似物品”（Item-based）或“与您相似的用户喜欢C, 给用户推荐与他相似用户喜欢的东西”（User-based）。</li>
-<li><strong>基于向量的召回</strong> (Embedding-based)：目前最主流的方法。将用户和物品都表示为高维空间中的向量（Embedding）。通过高效的向量相似度检索（如 FAISS、Annoy），快速找到与用户向量最接近的物品向量。例如经典的<strong>双塔模型</strong> (Two-Tower Model)。</li>
-<li><strong>内容模型召回</strong>：根据物品本身的属性（如类别、标签、关键词）进行匹配。</li>
-<li><strong>热门物品或趋势召回</strong>：对于新用户或兴趣不明确的用户，推荐近期热门的物品。</li>
-</ul>
-</li>
-<li>为何需要此步骤:<br>直接对全量物品进行复杂排序的计算成本是无法接受的。召回阶段通过简单、高效的模型，将计算范围缩小到千量级，为后续更复杂的排序模型做好准备。</li>
-</ul>
-<h2 id="粗排（Coarse-Ranking）"><a href="#粗排（Coarse-Ranking）" class="headerlink" title="粗排（Coarse Ranking）"></a><strong>粗排（Coarse Ranking）</strong></h2><ul>
 <li>目标：对召回候选集进行初步排序，，使用比召回更复杂、但比精排更简单的模型，进一步剔除相关性不高的物品，缩小候选集规模。</li>
 <li>输入：召回候选集（几千）。</li>
 <li>输出：更小的候选集（几百）。</li>
 <li>方法：简化机器学习模型（LR、GBDT、小型神经网络）。</li>
-<li>为何需要此步骤:<br>它是一个承上启下的“中间层”。精排模型虽然效果好，但计算开销大，直接处理几千个物品依然很慢。粗排模型作为一个轻量级的排序模型，可以快速地为精排阶段减负。</li>
+<li>为何需要此步骤:
+它是一个承上启下的“中间层”。精排模型虽然效果好，但计算开销大，直接处理几千个物品依然很慢。粗排模型作为一个轻量级的排序模型，可以快速地为精排阶段减负。</li>
 </ul>
-<h2 id="精排（Fine-Ranking）"><a href="#精排（Fine-Ranking）" class="headerlink" title="精排（Fine Ranking）"></a><strong>精排（Fine Ranking）</strong></h2><p>精排是整个推荐链路中最为核心和复杂的环节，直接决定了推荐效果的天花板。</p>
-<ul>
-<li>目标：精准排序。利用强大的、复杂的模型，对粗排筛选出的几百个物品进行精准的点击率（CTR）、转化率（CVR）等指标的预测，并按照<strong>预测分值进行排序</strong>。此阶段重在准确率（Precision）。</li>
-<li>输入：粗排候选集（几百）。</li>
-<li>输出：一个带有精确预测分数的、排序后的列表（几百物品）。</li>
-<li>方法：大规模深度学习模型（Wide &amp; Deep、DeepFM、DIN 等）。</li>
-<li>为何需要此步骤:<br>   在候选集规模已经大大减小的情况下，系统有充足的计算资源来运行复杂模型。这使得模型可以使用海量的特征，包括<strong>用户特征</strong>（年龄、性别、历史行为）、<strong>物品特征</strong>（类别、价格）、<strong>上下文特征</strong>（时间、地点）以及它们的交叉组合特征，从而做出最精准的判断。</li>
-</ul>
-<h2 id="重排（Re-ranking）"><a href="#重排（Re-ranking）" class="headerlink" title="重排（Re-ranking）"></a><strong>重排（Re-ranking）</strong></h2><ul>
-<li>目标：优化与多样性。在精排结果的基础上，进行最终的列表调整。重排考虑的不仅是单个物品的得分，而是整个列表呈现给用户时的整体体验。</li>
-<li>输入：精排列表（几百）。</li>
-<li>输出：最终列表（几十）。</li>
-<li>方法：<ul>
-<li>多样性（Diversity）：通过打散和插播策略，确保推荐结果中包含不同类别、不同风格的物品。例如，使用 MMR (Maximal Marginal Relevance) 算法，平衡物品的相关性和多样性。</li>
-<li>业务规则干预：推广新品、促销品，或者对某些物品进行降权（例如已购买的物品）。</li>
-<li>上下文感知：去除重复项，避免短时间内重复推荐。</li>
-<li>公平性（Fairness）：确保不同商家或内容创作者能获得合理的曝光机会。</li>
-</ul>
-</li>
-<li>为何需要此步骤:<br>   如果完全按照精排的预测分值排序，可能会出现结果高度相似（例如推荐一整排同款不同色的鞋子）、头部物品包揽所有流量、或忽略了新品曝光等问题。重排阶段就是为了解决这些问题，提升用户体验和满足业务需求。</li>
-</ul>
+<h2 id="精排fine-ranking"><strong>精排（Fine Ranking）</strong></h2>
+<p>精排是整个推荐链路中最为核心和复杂的环节，直接决定了推荐效果的天花板。
+-
+目标：精准排序。利用强大的、复杂的模型，对粗排筛选出的几百个物品进行精准的点击率（CTR）、转化率（CVR）等指标的预测，并按照<strong>预测分值进行排序</strong>。此阶段重在准确率（Precision）。
+- 输入：粗排候选集（几百）。 -
+输出：一个带有精确预测分数的、排序后的列表（几百物品）。 -
+方法：大规模深度学习模型（Wide &amp; Deep、DeepFM、DIN 等）。 -
+为何需要此步骤:
+在候选集规模已经大大减小的情况下，系统有充足的计算资源来运行复杂模型。这使得模型可以使用海量的特征，包括<strong>用户特征</strong>（年龄、性别、历史行为）、<strong>物品特征</strong>（类别、价格）、<strong>上下文特征</strong>（时间、地点）以及它们的交叉组合特征，从而做出最精准的判断。
+## <strong>重排（Re-ranking）</strong> -
+目标：优化与多样性。在精排结果的基础上，进行最终的列表调整。重排考虑的不仅是单个物品的得分，而是整个列表呈现给用户时的整体体验。
+- 输入：精排列表（几百）。 - 输出：最终列表（几十）。 - 方法： -
+多样性（Diversity）：通过打散和插播策略，确保推荐结果中包含不同类别、不同风格的物品。例如，使用
+MMR (Maximal Marginal Relevance) 算法，平衡物品的相关性和多样性。 -
+业务规则干预：推广新品、促销品，或者对某些物品进行降权（例如已购买的物品）。
+- 上下文感知：去除重复项，避免短时间内重复推荐。 -
+公平性（Fairness）：确保不同商家或内容创作者能获得合理的曝光机会。 -
+为何需要此步骤:
+如果完全按照精排的预测分值排序，可能会出现结果高度相似（例如推荐一整排同款不同色的鞋子）、头部物品包揽所有流量、或忽略了新品曝光等问题。重排阶段就是为了解决这些问题，提升用户体验和满足业务需求。</p>
 <hr>
-<h1 id="推荐系统的-AB-测试"><a href="#推荐系统的-AB-测试" class="headerlink" title="推荐系统的 AB 测试"></a>推荐系统的 AB 测试</h1><p>下列内容是在工业界进行大规模 A/B 测试时非常核心且高级的概念，反映了顶级互联网公司如何在高并发和快速迭代环境下科学、高效地优化产品和算法。</p>
-<h2 id="1-分层实验（Layered-Experiments）"><a href="#1-分层实验（Layered-Experiments）" class="headerlink" title="1. 分层实验（Layered Experiments）"></a>1. 分层实验（Layered Experiments）</h2><p>这是一种能够大幅提升实验效率的流量分配机制，其核心思想在于将互不干扰的实验叠加在同一批用户上。</p>
+<h1 id="推荐系统的-ab-测试">推荐系统的 AB 测试</h1>
+<p>下列内容是在工业界进行大规模 A/B
+测试时非常核心且高级的概念，反映了顶级互联网公司如何在高并发和快速迭代环境下科学、高效地优化产品和算法。</p>
+<h2 id="分层实验layered-experiments">1. 分层实验（Layered
+Experiments）</h2>
+<p>这是一种能够大幅提升实验效率的流量分配机制，其核心思想在于将互不干扰的实验叠加在同一批用户上。</p>
 <ul>
 <li><p>基本思想：一个推荐系统可以被拆分成不同的“模块”或“层面”，例如：</p>
 <ul>
 <li>UI 层：负责按钮颜色、字体大小等界面展示。</li>
 <li>召回策略层：负责从海量物料中捞取候选集。</li>
-<li>排序模型层：负责对候选集进行精准排序。</li>
-</ul>
-</li>
-</ul>
-<p>分层实验平台允许我们为这些不同的层面独立地开设实验。</p>
-<ul>
-<li><strong>同层互斥(Mutually Exclusive within a Layer)</strong>：在同一个层内，实验之间是互斥的。这意味着一个用户在某个时刻，只能被分配到该层的一个实验组中。例如，在“排序模型层”，一个用户要么看到A模型的结果，要么看到B模型的结果，不可能同时看到两者。流量在该层内被完整切分。</li>
-<li><strong>不同层正交 (Orthogonal between Layers)</strong>：在不同的层之间，实验是正交（独立）的。这意味着一个用户可以同时属于不同层的多个实验组。例如，一个用户可以同时是“UI层-红色按钮”实验组的成员，又是“排序模型层-新版模型B”实验组的成员。系统假设UI的改变和排序模型的改变是两个独立事件，它们的效果不会相互影响。</li>
+<li>排序模型层：负责对候选集进行精准排序。
+分层实验平台允许我们为这些不同的层面独立地开设实验。</li>
+</ul></li>
+<li><p><strong>同层互斥(Mutually Exclusive within a
+Layer)</strong>：在同一个层内，实验之间是互斥的。这意味着一个用户在某个时刻，只能被分配到该层的一个实验组中。例如，在“排序模型层”，一个用户要么看到A模型的结果，要么看到B模型的结果，不可能同时看到两者。流量在该层内被完整切分。</p></li>
+<li><p><strong>不同层正交 (Orthogonal between
+Layers)</strong>：在不同的层之间，实验是正交（独立）的。这意味着一个用户可以同时属于不同层的多个实验组。例如，一个用户可以同时是“UI层-红色按钮”实验组的成员，又是“排序模型层-新版模型B”实验组的成员。系统假设UI的改变和排序模型的改变是两个独立事件，它们的效果不会相互影响。</p></li>
 </ul>
 <blockquote>
 <p>优势：允许多个团队并行开展实验，大幅提升创新速度。</p>
 </blockquote>
-<h2 id="2-Holdout-机制（Holdback-实验）"><a href="#2-Holdout-机制（Holdback-实验）" class="headerlink" title="2. Holdout 机制（Holdback 实验）"></a>2. Holdout 机制（Holdback 实验）</h2><p>这是一种用于衡量长期、累积影响的宏观实验方法，其视角超越了单次A/B测试的短期收益。</p>
+<h2 id="holdout-机制holdback-实验">2. Holdout 机制（Holdback 实验）</h2>
+<p>这是一种用于衡量长期、累积影响的宏观实验方法，其视角超越了单次A/B测试的短期收益。</p>
 <ul>
-<li><strong>基本思想</strong>：从全部用户中，永久性地分出一小部分（例如 1%\<del>5%）作为“绝对对照组”或“Holdout 组”。这个组的用户将永远不会体验到任何新的推荐功能或算法优化，他们使用的始终是一个非常稳定、原始的版本。而剩下 95%</del>99% 的用户则会不断地体验到通过A/B测试胜出的新功能。</li>
-<li><strong>作用</strong>：<ul>
+<li><strong>基本思想</strong>：从全部用户中，永久性地分出一小部分（例如
+1%\~5%）作为“绝对对照组”或“Holdout
+组”。这个组的用户将永远不会体验到任何新的推荐功能或算法优化，他们使用的始终是一个非常稳定、原始的版本。而剩下
+95%~99% 的用户则会不断地体验到通过A/B测试胜出的新功能。</li>
+<li><strong>作用</strong>：
+<ul>
 <li>衡量部门的<strong>整体业务收益</strong>：单次的A/B测试衡量的是单个小改动的短期收益。但是，一个季度、一年下来，整个部门上线的几十上百个“胜出”的实验，它们累加起来的效果究竟有多大？会不会有些短期收益在长期来看会相互抵消，甚至产生负面作用（例如用户对某种策略产生疲劳）？</li>
 <li>步骤说明：通过在年底或季末比较“实验大盘用户”和“Holdout组用户”的核心业务指标（如留存率、总消费时长等），就可以清晰地衡量出，在这一整段时间里，整个推荐团队的所有努力共同创造的净业务价值。这为衡量团队的长期ROI（投资回报率）提供了最可靠的依据。</li>
+</ul></li>
+<li><strong>比喻</strong>：Holdout 组就像科学实验中的”空白对照组”,
+它为我们评估所有变量的“混合累积效应”提供了一个不变的基准。</li>
 </ul>
-</li>
-<li><strong>比喻</strong>：Holdout 组就像科学实验中的”空白对照组”, 它为我们评估所有变量的“混合累积效应”提供了一个不变的基准。</li>
-</ul>
-<h2 id="3-实验推全（Full-Rollout）与反转实验（Reverse-Experiment）"><a href="#3-实验推全（Full-Rollout）与反转实验（Reverse-Experiment）" class="headerlink" title="3. 实验推全（Full Rollout）与反转实验（Reverse Experiment）"></a>3. 实验推全（Full Rollout）与反转实验（Reverse Experiment）</h2><p>这是与实验生命周期管理相关的两个重要操作。</p>
-<h3 id="实验推全"><a href="#实验推全" class="headerlink" title="实验推全"></a><strong>实验推全</strong></h3><p> AB 测试胜出后，将新策略逐步推向全体用户，通常采用灰度发布。</p>
-<ul>
-<li>基本思想：当一个A/B测试（例如，新算法B vs. 老算法A）在经过足够长的时间和数据收集后，被验证为显著优于对照组时（例如，新算法B的点击率显著更高），决策者就会决定将这个新算法B的策略应用到100%的全体用户。这个过程就是“推全”。</li>
-<li>步骤说明：为了线上服务的稳定性，推全通常是逐步进行的（也称灰度发布），例如先推10%的流量，再到50%，最后到100%，并在此期间密切监控各项系统指标。</li>
-</ul>
-<h3 id="反转实验-Reverse-Experiment"><a href="#反转实验-Reverse-Experiment" class="headerlink" title="反转实验 (Reverse Experiment)"></a><strong>反转实验</strong> (Reverse Experiment)</h3><p>验证已上线老功能是否依然有效，或移除后是否有负面影响。</p>
-<ul>
-<li>基本思想：这是一种“回过头看”的实验，主要目的是验证已上线很久的老功能是否依然有效，或者说，移除它是否会带来损失。</li>
-<li>操作流程：假设“功能F”在一年已经全量上线了。现在，我们将以“全体用户（都有功能F）”作为基线，然后开启一个反向的AB测试：<br>A组（对照组）：保持现状，拥有功能F。<br>B组（实验组）：移除功能F，体验没有该功能的状态。</li>
-<li>为何需要此机制？<ul>
-<li>确认长期价值：验证该功能是否至今仍在创造价值。如果移除后，B组的核心指标显著下跌，说明该功能依然重要。</li>
-<li>清理“技术债务”：如果移除后，B组的指标没有任何变化，甚至有所提升，这说明该功能可能已经“过时”或产生了不易察觉的负面影响。这为工程师安全地移除老旧代码、简化系统提供了强有力的数据支持，避免产品功能无限膨胀和代码腐化。</li>
-</ul>
-</li>
-</ul>
-<p>参考论文: Tang, Diane, et al. <strong>“Overlapping experiment infrastructure: More, better, faster experimentation.”</strong> Proceedings of the 16th ACM SIGKDD international conference on Knowledge discovery and data mining. 2010. </p>
-<p>推荐系统的前世今生: <a class="link" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1EE421G7dg/">https://www.bilibili.com/video/BV1EE421G7dg/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h2 id="实验推全full-rollout与反转实验reverse-experiment">3.
+实验推全（Full Rollout）与反转实验（Reverse Experiment）</h2>
+<p>这是与实验生命周期管理相关的两个重要操作。</p>
+<h3 id="实验推全"><strong>实验推全</strong></h3>
+<p>AB 测试胜出后，将新策略逐步推向全体用户，通常采用灰度发布。 -
+基本思想：当一个A/B测试（例如，新算法B
+vs. 老算法A）在经过足够长的时间和数据收集后，被验证为显著优于对照组时（例如，新算法B的点击率显著更高），决策者就会决定将这个新算法B的策略应用到100%的全体用户。这个过程就是“推全”。
+-
+步骤说明：为了线上服务的稳定性，推全通常是逐步进行的（也称灰度发布），例如先推10%的流量，再到50%，最后到100%，并在此期间密切监控各项系统指标。
+### <strong>反转实验</strong> (Reverse Experiment)
+验证已上线老功能是否依然有效，或移除后是否有负面影响。 -
+基本思想：这是一种“回过头看”的实验，主要目的是验证已上线很久的老功能是否依然有效，或者说，移除它是否会带来损失。
+-
+操作流程：假设“功能F”在一年已经全量上线了。现在，我们将以“全体用户（都有功能F）”作为基线，然后开启一个反向的AB测试：
+A组（对照组）：保持现状，拥有功能F。
+B组（实验组）：移除功能F，体验没有该功能的状态。 - 为何需要此机制？ -
+确认长期价值：验证该功能是否至今仍在创造价值。如果移除后，B组的核心指标显著下跌，说明该功能依然重要。
+-
+清理“技术债务”：如果移除后，B组的指标没有任何变化，甚至有所提升，这说明该功能可能已经“过时”或产生了不易察觉的负面影响。这为工程师安全地移除老旧代码、简化系统提供了强有力的数据支持，避免产品功能无限膨胀和代码腐化。</p>
+<p>参考论文: Tang, Diane, et al. <strong>“Overlapping experiment
+infrastructure: More, better, faster experimentation.”</strong>
+Proceedings of the 16th ACM SIGKDD international conference on Knowledge
+discovery and data mining. 2010.</p>
+<p>推荐系统的前世今生: https://www.bilibili.com/video/BV1EE421G7dg/</p>
 
 		</div>
 
@@ -1061,7 +1094,13 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">推荐系统基础</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">推荐系统的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%EF%BC%88User-Behaviors%EF%BC%89%E2%80%94%E2%80%94-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%BF%A1%E5%8F%B7%E4%B8%8E%E5%85%BB%E6%96%99"><span class="nav-text">1. 用户行为（User Behaviors）—— 推荐系统的信号与养料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%B6%88%E8%B4%B9%E6%8C%87%E6%A0%87%EF%BC%88Consumption-Metrics%EF%BC%89%E2%80%94%E2%80%94-%E8%A1%A1%E9%87%8F%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E5%A5%BD%E5%9D%8F%E7%9A%84%E5%B0%BA%E5%AD%90"><span class="nav-text">2. 消费指标（Consumption Metrics）—— 衡量推荐算法好坏的尺子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8C%97%E6%9E%81%E6%98%9F%E6%8C%87%E6%A0%87%EF%BC%88North-Star-Metric%EF%BC%89%E2%80%94%E2%80%94-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%95%86%E4%B8%9A%E7%9B%AE%E6%A0%87"><span class="nav-text">3. 北极星指标（North Star Metric）—— 推荐系统服务的商业目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%9E%E9%AA%8C%E6%B5%81%E7%A8%8B%EF%BC%88Experimentation-Process%EF%BC%89%E2%80%94%E2%80%94-%E7%A7%91%E5%AD%A6%E8%BF%AD%E4%BB%A3%E7%9A%84%E5%BF%85%E7%BB%8F%E4%B9%8B%E8%B7%AF"><span class="nav-text">4. 实验流程（Experimentation Process）—— 科学迭代的必经之路</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E9%93%BE%E8%B7%AF"><span class="nav-text">推荐系统链路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AC%E5%9B%9E%EF%BC%88Recall%EF%BC%89"><span class="nav-text">召回（Recall）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%97%E6%8E%92%EF%BC%88Coarse-Ranking%EF%BC%89"><span class="nav-text">粗排（Coarse Ranking）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E6%8E%92%EF%BC%88Fine-Ranking%EF%BC%89"><span class="nav-text">精排（Fine Ranking）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E6%8E%92%EF%BC%88Re-ranking%EF%BC%89"><span class="nav-text">重排（Re-ranking）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84-AB-%E6%B5%8B%E8%AF%95"><span class="nav-text">推荐系统的 AB 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%88%86%E5%B1%82%E5%AE%9E%E9%AA%8C%EF%BC%88Layered-Experiments%EF%BC%89"><span class="nav-text">1. 分层实验（Layered Experiments）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Holdout-%E6%9C%BA%E5%88%B6%EF%BC%88Holdback-%E5%AE%9E%E9%AA%8C%EF%BC%89"><span class="nav-text">2. Holdout 机制（Holdback 实验）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%9E%E9%AA%8C%E6%8E%A8%E5%85%A8%EF%BC%88Full-Rollout%EF%BC%89%E4%B8%8E%E5%8F%8D%E8%BD%AC%E5%AE%9E%E9%AA%8C%EF%BC%88Reverse-Experiment%EF%BC%89"><span class="nav-text">3. 实验推全（Full Rollout）与反转实验（Reverse Experiment）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%8E%A8%E5%85%A8"><span class="nav-text">实验推全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E8%BD%AC%E5%AE%9E%E9%AA%8C-Reverse-Experiment"><span class="nav-text">反转实验 (Reverse Experiment)</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">推荐系统的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BAuser-behaviors-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%BF%A1%E5%8F%B7%E4%B8%8E%E5%85%BB%E6%96%99"><span class="nav-text">1. 用户行为（User
+Behaviors）—— 推荐系统的信号与养料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E6%8C%87%E6%A0%87consumption-metrics-%E8%A1%A1%E9%87%8F%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95%E5%A5%BD%E5%9D%8F%E7%9A%84%E5%B0%BA%E5%AD%90"><span class="nav-text">2.
+消费指标（Consumption Metrics）—— 衡量推荐算法好坏的尺子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%97%E6%9E%81%E6%98%9F%E6%8C%87%E6%A0%87north-star-metric-%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%95%86%E4%B8%9A%E7%9B%AE%E6%A0%87"><span class="nav-text">3.
+北极星指标（North Star Metric）—— 推荐系统服务的商业目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%B5%81%E7%A8%8Bexperimentation-process-%E7%A7%91%E5%AD%A6%E8%BF%AD%E4%BB%A3%E7%9A%84%E5%BF%85%E7%BB%8F%E4%B9%8B%E8%B7%AF"><span class="nav-text">4.
+实验流程（Experimentation Process）—— 科学迭代的必经之路</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E9%93%BE%E8%B7%AF"><span class="nav-text">推荐系统链路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AC%E5%9B%9Erecall"><span class="nav-text">召回（Recall）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%97%E6%8E%92coarse-ranking"><span class="nav-text">粗排（Coarse Ranking）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E6%8E%92fine-ranking"><span class="nav-text">精排（Fine Ranking）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%9A%84-ab-%E6%B5%8B%E8%AF%95"><span class="nav-text">推荐系统的 AB 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E5%AE%9E%E9%AA%8Clayered-experiments"><span class="nav-text">1. 分层实验（Layered
+Experiments）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#holdout-%E6%9C%BA%E5%88%B6holdback-%E5%AE%9E%E9%AA%8C"><span class="nav-text">2. Holdout 机制（Holdback 实验）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%8E%A8%E5%85%A8full-rollout%E4%B8%8E%E5%8F%8D%E8%BD%AC%E5%AE%9E%E9%AA%8Creverse-experiment"><span class="nav-text">3.
+实验推全（Full Rollout）与反转实验（Reverse Experiment）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%8E%A8%E5%85%A8"><span class="nav-text">实验推全</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1090,11 +1129,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

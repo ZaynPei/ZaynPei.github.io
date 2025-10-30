@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -833,34 +833,53 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p>该条款探讨了一种在特定情况下，可以替代“为左值和右值分别重载”这一常规做法的编码技巧。C++98 的一条重要准则是“避免按值传递用户定义类型”，而该条款则解释了在C++11的移动语义下，这条准则何时可以被“打破”。</p>
-<p>当一个函数需要持有其参数的一个副本时（例如，将其存入一个数据成员），在 C++11 中最常见的做法是提供两个重载版本：</p>
+			<p>该条款探讨了一种在特定情况下，可以替代“为左值和右值分别重载”这一常规做法的编码技巧。C++98
+的一条重要准则是“避免按值传递用户定义类型”，而该条款则解释了在C++11的移动语义下，这条准则何时可以被“打破”。</p>
+<p>当一个函数需要持有其参数的一个副本时（例如，将其存入一个数据成员），在
+C++11 中最常见的做法是提供两个重载版本：</p>
 <ul>
 <li>一个版本接受 const T&amp;（左值），并在函数体内复制它。</li>
-<li>另一个版本接受 T&amp;&amp;（右值），并在函数体内移动它。</li>
-</ul>
+<li>另一个版本接受 T&amp;&amp;（右值），并在函数体内移动它。
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 方案一：为左值和右值分别重载</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addName</span><span class="params">(<span class="type">const</span> std::string&amp; newName)</span> </span>{ names.<span class="built_in">push_back</span>(newName); }       <span class="comment">// 复制左值</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addName</span><span class="params">(std::string&amp;&amp; newName)</span>      </span>{ names.<span class="built_in">push_back</span>(std::<span class="built_in">move</span>(newName)); } <span class="comment">// 移动右值</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::vector&lt;std::string&gt; names;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>这种做法虽然正确且高效，但缺点是需要编写和维护两份几乎相同的代码。</p>
-<h3 id="按值传递的替代方案"><a href="#按值传递的替代方案" class="headerlink" title="按值传递的替代方案"></a>按值传递的替代方案</h3><p>条款41提出的替代方案是，编写一个单一的、按值传递的函数，并在函数体内 std::move 这个参数副本。</p>
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 方案二：按值传递</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addName</span><span class="params">(std::string newName)</span> </span>{ <span class="comment">// newName 是一个副本</span></span><br><span class="line">        names.<span class="built_in">push_back</span>(std::<span class="built_in">move</span>(newName)); <span class="comment">// 将副本移动到容器中</span></span><br><span class="line">    }</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::vector&lt;std::string&gt; names;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
-<p>这个方案的精妙之处在于它如何利用移动语义来处理不同类型的实参。</p>
+这种做法虽然正确且高效，但缺点是需要编写和维护两份几乎相同的代码。</li>
+</ul>
+<h3 id="按值传递的替代方案">按值传递的替代方案</h3>
+<p>条款41提出的替代方案是，编写一个单一的、按值传递的函数，并在函数体内
+std::move 这个参数副本。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 方案二：按值传递</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addName</span><span class="params">(std::string newName)</span> </span>{ <span class="comment">// newName 是一个副本</span></span><br><span class="line">        names.<span class="built_in">push_back</span>(std::<span class="built_in">move</span>(newName)); <span class="comment">// 将副本移动到容器中</span></span><br><span class="line">    }</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::vector&lt;std::string&gt; names;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+这个方案的精妙之处在于它如何利用移动语义来处理不同类型的实参。</p>
 <p>当传入一个左值时（例如 std::string name; w.addName(name);）：</p>
 <ul>
-<li>重载方案：const std::string&amp; 版本被调用。成本是 1 次复制（在 push_back 内部）。</li>
-<li>按值传递方案：形参 newName 通过复制构造函数从 name 创建。 (1 次复制); 在 push_back 内部，newName 被移动到 vector 中。(1 次移动). 总成本：1 次复制 + 1 次移动。</li>
+<li>重载方案：const std::string&amp; 版本被调用。成本是 1 次复制（在
+push_back 内部）。</li>
+<li>按值传递方案：形参 newName 通过复制构造函数从 name 创建。 (1
+次复制); 在 push_back 内部，newName 被移动到 vector 中。(1 次移动).
+总成本：1 次复制 + 1 次移动。</li>
 </ul>
-<p>当传入一个右值时（例如 w.addName(“hello”);）：</p>
-<ul>
-<li>重载方案：std::string&amp;&amp; 版本被调用。成本是 1 次移动（在 push_back 内部）。</li>
-<li>按值传递方案：形参 newName 通过移动构造函数从右值实参创建。(1 次移动); 在 push_back 内部，newName 被移动到 vector 中。(1 次移动). 总成本：2 次移动。</li>
-</ul>
-<p>因此, 与重载方案相比，按值传递方案在处理左值时多了一次移动，处理右值时也多了一次移动。</p>
-<h3 id="按值传递的适用条件"><a href="#按值传递的适用条件" class="headerlink" title="按值传递的适用条件"></a>按值传递的适用条件</h3><p>既然按值传递会带来额外的移动开销，那么只有在满足一系列严格条件时，它才是一个值得考虑的选项。这些条件都体现在条款的标题中：</p>
-<p><strong>形参是可复制的</strong> (Copyable)：如果参数是只移类型（如 std::unique_ptr），那么重载方案只需要写一个 T&amp;&amp; 版本即可（成本1次移动），而按值传递方案则需要2次移动，成本翻倍，因此不适用。</p>
-<p><strong>移动成本低廉</strong> (Cheap to Move)：按值传递方案的额外成本是一次移动。只有当这个移动操作非常廉价时（例如，对于 std::string 或 std::vector 等大多数标准容器），这笔额外开销才是可以接受的。</p>
-<p>形参一定会被复制 (Always Copied)：函数必须在所有代码路径上都确实需要这个参数的副本。如果函数中存在某个分支（例如一个检查失败的 if 语句）会提前返回而不使用该副本，那么按值传递方案中提前创建副本的开销就被浪费了。</p>
-<p>必须<strong>避免切片问题</strong> (Slicing Problem)：按值传递不适用于多态场景。如果你按值传递一个基类对象，那么当调用者传入一个派生类对象时，其派生类特有的部分将被“切掉”，这通常会导致非预期的行为。</p>
-<p>总之, 按值传递并非要颠覆 C++98 中“避免按值传递”的传统智慧。然而，在现代 C++ 中，对于那些可复制、移动成本低、总是需要被复制且不涉及多态的参数，按值传递提供了一种简洁的替代方案。它用一次额外的廉价移动操作，换取了更少的代码量和更简单的维护，避免了函数重载或模板带来的复杂性。</p>
+<p>当传入一个右值时（例如 w.addName(“hello”);）： -
+重载方案：std::string&amp;&amp; 版本被调用。成本是 1 次移动（在
+push_back 内部）。 - 按值传递方案：形参 newName
+通过移动构造函数从右值实参创建。(1 次移动); 在 push_back 内部，newName
+被移动到 vector 中。(1 次移动). 总成本：2 次移动。</p>
+<p>因此,
+与重载方案相比，按值传递方案在处理左值时多了一次移动，处理右值时也多了一次移动。</p>
+<h3 id="按值传递的适用条件">按值传递的适用条件</h3>
+<p>既然按值传递会带来额外的移动开销，那么只有在满足一系列严格条件时，它才是一个值得考虑的选项。这些条件都体现在条款的标题中：</p>
+<p><strong>形参是可复制的</strong> (Copyable)：如果参数是只移类型（如
+std::unique_ptr），那么重载方案只需要写一个 T&amp;&amp;
+版本即可（成本1次移动），而按值传递方案则需要2次移动，成本翻倍，因此不适用。</p>
+<p><strong>移动成本低廉</strong> (Cheap to
+Move)：按值传递方案的额外成本是一次移动。只有当这个移动操作非常廉价时（例如，对于
+std::string 或 std::vector
+等大多数标准容器），这笔额外开销才是可以接受的。</p>
+<p>形参一定会被复制 (Always
+Copied)：函数必须在所有代码路径上都确实需要这个参数的副本。如果函数中存在某个分支（例如一个检查失败的
+if
+语句）会提前返回而不使用该副本，那么按值传递方案中提前创建副本的开销就被浪费了。</p>
+<p>必须<strong>避免切片问题</strong> (Slicing
+Problem)：按值传递不适用于多态场景。如果你按值传递一个基类对象，那么当调用者传入一个派生类对象时，其派生类特有的部分将被“切掉”，这通常会导致非预期的行为。</p>
+<p>总之, 按值传递并非要颠覆 C++98
+中“避免按值传递”的传统智慧。然而，在现代 C++
+中，对于那些可复制、移动成本低、总是需要被复制且不涉及多态的参数，按值传递提供了一种简洁的替代方案。它用一次额外的廉价移动操作，换取了更少的代码量和更简单的维护，避免了函数重载或模板带来的复杂性。</p>
 
 		</div>
 
@@ -886,12 +905,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE42%20-%20%E8%80%83%E8%99%91%E7%BD%AE%E5%85%A5%E8%80%8C%E9%9D%9E%E6%8F%92%E5%85%A5/">
+				<a class="prev" rel="prev" href="/2025/09/24/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/makefile/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款42 ：考虑置入而非插入</span>
+						<span class="post-nav-title-item truncate max-w-48">Makefile</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -899,9 +918,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE39%20-%20%E8%80%83%E8%99%91%E9%92%88%E5%AF%B9%E4%B8%80%E6%AC%A1%E6%80%A7%E4%BA%8B%E4%BB%B6%E9%80%9A%E4%BF%A1%E4%BD%BF%E7%94%A8%E4%BB%A5%20void%20%E4%B8%BA%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E5%AE%9E%E5%8F%82%E7%9A%84%E6%9C%9F%E5%80%BC/">
+				<a class="next" rel="next" href="/2025/09/23/lang/CPP/Effective%20modern%20C++/%E5%BE%AE%E8%B0%83/%E6%9D%A1%E6%AC%BE42%20-%20%E8%80%83%E8%99%91%E7%BD%AE%E5%85%A5%E8%80%8C%E9%9D%9E%E6%8F%92%E5%85%A5/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">条款39 ：考虑针对一次性事件通信使用以 void 为模板型别实参的期值</span>
+						<span class="post-nav-title-item truncate max-w-48">条款42 ：考虑置入而非插入</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -952,11 +971,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>

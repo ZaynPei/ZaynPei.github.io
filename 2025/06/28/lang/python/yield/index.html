@@ -711,15 +711,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">18</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">143</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -813,7 +813,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>728 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>729 Words</span>
         </span>
     
     
@@ -833,34 +833,46 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<p><strong>yield</strong> 是 Python 中一个功能强大的关键字，它主要用于创建生成器 (Generator)。理解 yield 的关键在于理解生成器是如何工作的。简而言之，当一个函数包含 yield 关键字时，它就不再是一个普通的函数，而是一个生成器函数。</p>
+			<p><strong>yield</strong> 是 Python
+中一个功能强大的关键字，它主要用于创建生成器 (Generator)。理解 yield
+的关键在于理解生成器是如何工作的。简而言之，当一个函数包含 yield
+关键字时，它就不再是一个普通的函数，而是一个生成器函数。</p>
 <details class="green" data-header-exclude>
     <summary><i class="fa-solid fa-chevron-right"></i>生成器是一种特殊的迭代器 </summary>
     <div class="content markdown-body">
-      <p>与一次性计算并返回所有结果的普通函数不同，生成器函数会返回一个生成器对象。这个对象可以<strong>按需、逐个地“生成”结果</strong>，而不是一次性将所有结果都存储在内存中, 它是一种惰性求值的迭代器。</p>
+      <p>与一次性计算并返回所有结果的普通函数不同，生成器函数会返回一个生成器对象。这个对象可以<strong>按需、逐个地“生成”结果</strong>，而不是一次性将所有结果都存储在内存中,
+它是一种惰性求值的迭代器。</p>
 <ul>
-<li><p>普通函数 (return): 执行 -&gt; 计算所有结果 -&gt; 返回结果 -&gt; 结束。</p>
-</li>
-<li><p>生成器函数 (yield): 调用 -&gt; 返回一个生成器对象 (不执行代码) -&gt; 迭代时, 当执行到 yield才“产出”一个值并暂停 -&gt; 等待下一次迭代 -&gt; 从暂停处继续执行。</p>
-</li>
+<li><p>普通函数 (return): 执行 -&gt; 计算所有结果 -&gt; 返回结果 -&gt;
+结束。</p></li>
+<li><p>生成器函数 (yield): 调用 -&gt; 返回一个生成器对象 (不执行代码)
+-&gt; 迭代时, 当执行到 yield才“产出”一个值并暂停 -&gt; 等待下一次迭代
+-&gt; 从暂停处继续执行。</p></li>
 </ul>
 
     </div>
   </details>
-
-<h3 id="yield示例"><a href="#yield示例" class="headerlink" title="yield示例"></a>yield示例</h3><p>下面的<code>simple_generator</code>函数内部包含了 yield，所以它现在是一个生成器函数。</p>
+<h3 id="yield示例">yield示例</h3>
+<p>下面的<code>simple_generator</code>函数内部包含了
+yield，所以它现在是一个生成器函数。</p>
 <div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">simple_generator</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"生成器开始执行..."</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"生成器继续执行..."</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"生成器最后一次执行..."</span>)</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"生成器执行结束。"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用生成器函数，返回一个生成器对象</span></span><br><span class="line">my_gen = simple_generator()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(my_gen))</span><br><span class="line"><span class="built_in">print</span>(my_gen)</span><br></pre></td></tr></table></figure></div>
-<p>当执行上述代码时, 输出并不会包含<code>"生成器开始执行..."</code>等内部代码. 因为yield的存在, 它只是创建并返回了一个生成器对象，这个对象处于“待命”状态。</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;class 'generator'&gt;</span><br><span class="line">&lt;generator object simple_generator at 0x...&gt;</span><br></pre></td></tr></table></figure></div>
-<p>而当采用<code>next()</code>函数或者<code>for</code>循环时, 才能来驱动生成器执行并获取其产出的值。</p>
-<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重新创建一个生成器对象</span></span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> simple_generator():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"For 循环获取到的值: <span class="subst">{value}</span>"</span>)</span><br></pre></td></tr></table></figure></div>
-<p>输出结果如下:</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">生成器开始执行...</span><br><span class="line">For 循环获取到的值: 1</span><br><span class="line">生成器继续执行...</span><br><span class="line">For 循环获取到的值: 2</span><br><span class="line">生成器最后一次执行...</span><br><span class="line">For 循环获取到的值: 3</span><br><span class="line">生成器执行结束。</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="yield优势"><a href="#yield优势" class="headerlink" title="yield优势"></a>yield优势</h3><ul>
-<li>极高的内存效率: 这是 yield 最突出的优点。生成器按需生成值，在任何时刻只有一个值存在于内存中。对于处理大规模数据集、文件流或无穷序列，这是至关重要的。</li>
-<li>能够处理无限序列<br>由于其“懒加载”的特性，你可以轻松定义一个无限序列的生成器，这是列表或元组无法做到的。</li>
-<li>代码逻辑更清晰、简洁<br>对于需要维护内部状态的复杂迭代逻辑（例如，遍历一个树状结构），使用生成器函数通常比自己实现一个迭代器类（包含 <code>__iter__</code> 和 <code>__next__</code> 方法）要简单得多，代码也更具可读性。</li>
+<p>当执行上述代码时,
+输出并不会包含<code>"生成器开始执行..."</code>等内部代码.
+因为yield的存在,
+它只是创建并返回了一个生成器对象，这个对象处于“待命”状态。 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;class 'generator'&gt;</span><br><span class="line">&lt;generator object simple_generator at 0x...&gt;</span><br></pre></td></tr></table></figure></div>
+而当采用<code>next()</code>函数或者<code>for</code>循环时,
+才能来驱动生成器执行并获取其产出的值。 <div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重新创建一个生成器对象</span></span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> simple_generator():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"For 循环获取到的值: <span class="subst">{value}</span>"</span>)</span><br></pre></td></tr></table></figure></div> 输出结果如下:
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">生成器开始执行...</span><br><span class="line">For 循环获取到的值: 1</span><br><span class="line">生成器继续执行...</span><br><span class="line">For 循环获取到的值: 2</span><br><span class="line">生成器最后一次执行...</span><br><span class="line">For 循环获取到的值: 3</span><br><span class="line">生成器执行结束。</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="yield优势">yield优势</h3>
+<ul>
+<li>极高的内存效率: 这是 yield
+最突出的优点。生成器按需生成值，在任何时刻只有一个值存在于内存中。对于处理大规模数据集、文件流或无穷序列，这是至关重要的。</li>
+<li>能够处理无限序列
+由于其“懒加载”的特性，你可以轻松定义一个无限序列的生成器，这是列表或元组无法做到的。</li>
+<li>代码逻辑更清晰、简洁
+对于需要维护内部状态的复杂迭代逻辑（例如，遍历一个树状结构），使用生成器函数通常比自己实现一个迭代器类（包含
+<code>__iter__</code> 和 <code>__next__</code>
+方法）要简单得多，代码也更具可读性。</li>
 </ul>
 
 		</div>
@@ -887,12 +899,12 @@ mjx-container[display="true"] + br {
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/06/28/tools/docker/docker/">
+				<a class="prev" rel="prev" href="/2025/06/28/misc/GNU-LINUX/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">Docker介绍及应用</span>
+						<span class="post-nav-title-item truncate max-w-48">About GNU/Linux</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -900,9 +912,9 @@ mjx-container[display="true"] + br {
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2024/08/20/system/Old_OS/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%B9%E8%B1%A1/">
+				<a class="next" rel="next" href="/2025/06/28/tools/docker/docker/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">操作系统对象</span>
+						<span class="post-nav-title-item truncate max-w-48">Docker介绍及应用</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -953,11 +965,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        143 posts in total
+                        186 posts in total
                     </span>
                     
                         <span>
-                            309.4k words in total
+                            578.6k words in total
                         </span>
                     
                 </p>
