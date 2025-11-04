@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/30/misc/软技能/问题记录/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/30/misc/%E8%BD%AF%E6%8A%80%E8%83%BD/%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-30T13:27:54.959Z">
+<meta property="article:modified_time" content="2025-11-04T08:57:28.146Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            ZaynPei&#39;s Base - Redefine Your Self
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3"></h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-30 21:27:54</span>
+        <span class="mobile">2025-10-30 21:27:54</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-04 16:57:28</span>
+            <span class="mobile">2025-11-04 16:57:28</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.9k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>7 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h4 id="针对内存层面一种代码有好几种写法可能实现的功能都差不多但是性能可能会有很大的差异关于这点具体有什么要注意的地方">针对内存层面，一种代码有好几种写法，可能实现的功能都差不多，但是性能可能会有很大的差异，关于这点具体有什么要注意的地方</h4>
+<p>几乎所有 C++
+的<strong>性能差异</strong>，最终都归结于<strong>硬件</strong>（尤其是
+CPU
+Cache）是如何与我们的<strong>内存访问模式</strong>进行<strong>交互</strong>的。在现代
+C++ 中，“<strong>高性能</strong>程序 =
+<strong>贴合缓存的数据结构</strong> + 算法”。C++
+几乎是唯一一个允许你（也要求你）精细控制内存布局的现代语言。</p>
+<ol type="1">
+<li><strong>缓存为王</strong>：连续内存（std::vector） 碾压
+指针跳转（std::list）</li>
+</ol>
+<p>CPU
+从内存读取数据不是一个字节一个字节读的，而是以“缓存行”（<strong>Cache
+Line</strong>）为单位（通常是 64
+字节）来批量读取的。这是利用了空间局部性（Spatial Locality）：
+当你访问一个内存地址时，CPU 会自动把它和它后面相邻的 63
+个字节一起加载到高速缓存（L1 Cache）中。</p>
+<p>性能差异：<code>std::vector&lt;int&gt;</code>内存完全连续。当你遍历
+vector 时，第一次访问 v[0]，CPU 会把 v[0] 到 v[15]（假设 int 是 4
+字节，64/4=16）全部加载到缓存。接下来的 15 次访问将直接命中 L1
+缓存，速度极快（几乎 0 延迟）。</p>
+<p><code>std::list&lt;int&gt;</code>内存完全不连续。每个节点 Node 包含
+int value 和 Node* next。当你遍历 list 时，访问 node1，CPU
+加载了它。然后你需要通过 node1-&gt;next
+指针跳转到一个<strong>完全随机的内存地址</strong>去访问 node2。</p>
+<p>结果：vector 遍历是一次内存访问 + 15 次缓存命中。list 遍历是 16
+次“缓存未命中”（Cache Miss）。后者比前者慢 1~2 个数量级（10x ~
+100x）。</p>
+<p>结论：永远优先使用
+std::vector。只有当你需要在集合中间<strong>频繁地插入/删除</strong>（这会导致
+vector 移动大量元素）时，才考虑使用 std::list 或 std::map。</p>
+<ol start="2" type="1">
+<li><strong>堆栈之别</strong>：避免热循环中的内存分配</li>
+</ol>
+<p>栈（Stack）分配： int a[100];。速度极快。它仅仅是把<strong>栈顶指针
+rsp 向下移动几百个字节</strong>，这是一个单条 CPU 指令。
+堆（Heap）分配： int* a = new int[100];。速度非常慢。它需要调用
+<strong>malloc()</strong>，malloc
+必须去<strong>加锁</strong>（因为堆是全局共享的）、<strong>查找一个合适大小的空闲内存块</strong>（可能涉及复杂的算法,
+如果不足还涉及到系统调用 mmap 或
+sbrk）、记录元数据，最后才返回指针。</p>
+<p>结论：“不要在热循环（Hot Loop）中 new / delete”。</p>
+<p>如果一个函数需要一个<strong>临时缓冲区</strong>，优先使用<strong>栈</strong>（如果大小确定且不大，如
+std::array），或者在<strong>循环外 new</strong>
+一次，在循环内<strong>复用</strong>（Reuse）它。</p>
+<p>对于需要频繁创建和销毁的小对象（如金融数据包），使用“<strong>对象池</strong>”（Object
+Pool）或“<strong>内存池</strong>”（Memory Pool）来绕过
+malloc，这是高频交易和量化中非常常见的优化。 -
+这是一种“预先分配、循环使用”的自定义内存管理方案. 内存池 (Memory
+Pool)在启动前预分配 (Pre-allocation), 执行一次（或几次）巨大的
+malloc，从操作系统那里“批发”一大块连续的内存。接着把这块大内存切成 N
+个固定大小（例如，刚好能容纳一个“金融数据包”对象）的小块。 -
+然后通过一个空闲列表 (Free List),
+一个非常简单的数据结构（比如一个链表，称为“空闲列表”）把所有这些小块串起来。
+- 对象池是基于内存池的一种更上层的封装。内存池 (Memory
+Pool)只管理原始内存 (raw memory), 给你返回一个 void*
+指针。你需要自己负责在这块内存上构造对象（使用 placement new）。 -
+而对象池 (Object
+Pool)管理完整的对象。acquire()：它从池中拿出一个对象，这个对象可能已经构造好了（或者池会帮你调用构造函数）。release(obj)：你归还一个对象时，池可能会帮你调用它的析构函数（或者更常见的，调用一个
+reset() 方法将其重置为初始状态），然后将其放回空闲列表。</p>
+<ol type="1">
+<li><strong>拷贝之痛</strong>：const&amp;、移动语义（Move）和写时复制（COW）</li>
+</ol>
+<p>const&amp;： 对于“<strong>只读</strong>”的<strong>大对象</strong>（如
+std::string, std::vector），永远使用 <strong>const&amp;</strong>
+传参，避免不必要的深拷贝。</p>
+<p><strong>移动语义</strong>（Move）： 如果函数需要“接管”这个资源（例如
+SetData(std:string s) { this-&gt;s_ = s;
+}），那么使用按值传参（SetData(std::string s)）并 std::move（this-&gt;s_
+= std::move(s);）。这允许调用者自动选择拷贝或移动。</p>
+<p>写时复制（Copy-on-Write）： 这是一种旧的（C++11前）优化。例如，string
+s2 = s1。s2 不会立刻复制 s1 的数据，而是共享它。只有当 s2
+尝试修改数据时，它才会真正执行拷贝。</p>
+<p>注意： std::string 在 C++11 后放弃了 COW，因为 COW
+在多线程环境下需要原子引用计数，其开销（同步）比直接移动（Move）更大。</p>
+<h4 id="虚函数调用造成的-cache-miss">虚函数调用造成的 cache miss</h4>
+<p>虚函数（多态）的本质是在<strong>运行时</strong>才决定具体<strong>调用哪个函数</strong>。CPU
+无法在编译时或执行前提前知道确切的函数地址。这种运行时的不确定性破坏了
+CPU 缓存赖以高效工作的局部性原理，从而导致两种主要的 Cache Miss。</p>
+<p>首先，现代 CPU 内部的 L1 缓存通常被分为两种：</p>
+<ul>
+<li>L1d (Data
+Cache)：<strong>数据</strong>缓存。专门用于存储程序运行时需要<strong>读写的数据</strong>（例如变量、对象、vtable
+本身）。</li>
+<li>L1i (Instruction Cache)：<strong>指令</strong>缓存。专门用于存储
+<strong>CPU 即将执行的代码</strong>（即函数体内的机器指令）。</li>
+</ul>
+<p>这两种缓存是物理上分离的。</p>
+<ol type="1">
+<li><strong>数据缓存</strong>未命中 (Data Cache Miss)</li>
+</ol>
+<p>这是“查找函数地址”过程导致的。执行步骤：</p>
+<ul>
+<li>当调用 ptr-&gt;doWork() 时，CPU 必须执行一次间接查找。</li>
+<li>访问 ptr 指向的对象内存，读取其 vptr (虚函数表指针)。</li>
+<li>根据 vptr 的地址，跳转去访问对应的 vtable (虚函数表)。</li>
+<li>从 vtable 中取出 doWork() 的真实函数地址。</li>
+</ul>
+<p>问题所在：vptr 指向的 <strong>vtable</strong>
+通常位于内存中完全不同的区域（例如只读数据段），它和当前正在处理的对象数据在内存上不相邻。访问这个
+vtable 的操作很大概率不在 CPU 的 L1/L2 数据缓存中，导致 <strong>Data
+Cache Miss</strong>。CPU 必须暂停，去主内存 (RAM) <strong>读取
+vtable</strong>。</p>
+<ol start="2" type="1">
+<li><strong>指令缓存</strong>未命中 (Instruction Cache Miss)</li>
+</ol>
+<p>这是“跳转执行函数代码”过程导致的。执行步骤： CPU 成功获取了 doWork()
+的真实地址（例如，它现在知道要去执行 Derived2::doWork()）。</p>
+<p>问题所在：CPU 会将即将执行的指令（代码）加载到指令缓存 (Instruction
+Cache) 中。 如果 Derived2::doWork
+这个函数最近没有被执行过（例如，循环中上一次执行的是
+Derived1::doWork），它的代码就不在 L1i 缓存中，导致一次
+<strong>Instruction Cache Miss</strong>。CPU 必须再次暂停，去 L2/L3/RAM
+中把函数代码取回来。</p>
+<p>同时,
+假如如果程序（例如在一个循环中）交替调用不同的派生类实例（一会是
+Derived1，一会是 Derived2），CPU 的指令缓存就会“抖动” (Thrashing)。CPU
+刚加载了 Derived1::doWork 的代码，下次循环又要把它踢出去，换上
+Derived2::doWork 的代码（导致 Instruction Cache Miss）。</p>
+<p>这种无法预测的跳转目标也会导致严重的<strong>分支预测失败</strong>
+(Branch Misprediction)，其惩罚（清空 CPU 流水线）甚至比 Cache Miss
+更大。</p>
+
+		</div>
+
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/30/misc/%E8%BD%AF%E6%8A%80%E8%83%BD/%E9%9D%A2%E8%AF%95%E6%9D%82%E8%B0%88/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48"></span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title"></div>
+		<ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%92%88%E5%AF%B9%E5%86%85%E5%AD%98%E5%B1%82%E9%9D%A2%E4%B8%80%E7%A7%8D%E4%BB%A3%E7%A0%81%E6%9C%89%E5%A5%BD%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95%E5%8F%AF%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%9F%E8%83%BD%E9%83%BD%E5%B7%AE%E4%B8%8D%E5%A4%9A%E4%BD%86%E6%98%AF%E6%80%A7%E8%83%BD%E5%8F%AF%E8%83%BD%E4%BC%9A%E6%9C%89%E5%BE%88%E5%A4%A7%E7%9A%84%E5%B7%AE%E5%BC%82%E5%85%B3%E4%BA%8E%E8%BF%99%E7%82%B9%E5%85%B7%E4%BD%93%E6%9C%89%E4%BB%80%E4%B9%88%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-text">针对内存层面，一种代码有好几种写法，可能实现的功能都差不多，但是性能可能会有很大的差异，关于这点具体有什么要注意的地方</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E9%80%A0%E6%88%90%E7%9A%84-cache-miss"><span class="nav-text">虚函数调用造成的 cache miss</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        193 posts in total
+                    </span>
+                    
+                        <span>
+                            609.9k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

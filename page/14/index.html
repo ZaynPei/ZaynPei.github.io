@@ -750,7 +750,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -790,7 +790,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -805,6 +805,559 @@ mjx-container[display="true"] + br {
 			<div class="main-content">
 				<div class="home-content-container">
     <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/15/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE16%20-%20%E4%BF%9D%E8%AF%81%20const%20%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7/">
+                            条款16：保证 const 成员函数的线程安全性
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            mutable关键字
+mutable（意为“可变的”）是一个存储说明符关键字，它的唯一目的就是“突破
+const 限制”。
+我们知道，一个被 const 修饰的成员函数（例如 void myFunction()
+const;）向调用者承诺：“这个函数不会修改对象的任何成员变量。”. 然而, 因为
+mutable 用于修饰类的非静态数据成员, 一旦一个成员变量被声明为
+mutabl...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 15 2025 14:00:00 GMT+0800">
+                
+                    2025-09-15
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/15/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE16%20-%20%E4%BF%9D%E8%AF%81%20const%20%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7/">Read more<span class="seo-reader-text">条款16：保证 const 成员函数的线程安全性</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/15/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE14%20-%20%E5%8F%AA%E8%A6%81%E5%87%BD%E6%95%B0%E4%B8%8D%E4%BC%9A%E5%8F%91%E5%B0%84%E5%BC%82%E5%B8%B8%EF%BC%8C%E5%B0%B1%E4%B8%BA%E5%85%B6%E5%8A%A0%E4%B8%8A%20noexcept%20%E5%A3%B0%E6%98%8E/">
+                            条款14：只要函数不会发射异常，就为其加上 noexcept 声明
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            正如标题所指出的, noexcept
+是一个关键的函数接口规范，它能带来显著的编译器优化，并对移动语义的实现至关重要。
+
+在 C++11 之前，C++98 提供了异常规格（如 throw(SomeException) 或
+throw()），但这套机制要求开发者列出函数可能抛出的所有异常类型，这在实践中难以维护，且编译器通常不会严格检查其一致性，导致该特性最终被普遍弃用。实际上,
+开...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 15 2025 13:00:00 GMT+0800">
+                
+                    2025-09-15
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/15/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE14%20-%20%E5%8F%AA%E8%A6%81%E5%87%BD%E6%95%B0%E4%B8%8D%E4%BC%9A%E5%8F%91%E5%B0%84%E5%BC%82%E5%B8%B8%EF%BC%8C%E5%B0%B1%E4%B8%BA%E5%85%B6%E5%8A%A0%E4%B8%8A%20noexcept%20%E5%A3%B0%E6%98%8E/">Read more<span class="seo-reader-text">条款14：只要函数不会发射异常，就为其加上 noexcept 声明</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/15/algorithms/Computing%20Theory/Index/">
+                            计算理论简介
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            计算理论是计算机科学的基石，它试图从根本上回答三个关于“计算”这一过程的终极问题：
+
+能做什么？什么是算法？（可计算性, 不可判定性）
+用什么模型来做？（自动机与模型）
+能多快/多好地做？（复杂性）(本课程未涉及)
+
+这门学科本质上是数学的一个分支，它使用严谨的、抽象的数学模型来探索计算的本质、能力和极限
+该课程安排在大三秋冬学期, 参考课本为《Elements of the ...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 15 2025 12:00:00 GMT+0800">
+                
+                    2025-09-15
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/Computing-Theory/">Computing Theory</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/15/algorithms/Computing%20Theory/Index/">Read more<span class="seo-reader-text">计算理论简介</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/14/algorithms/Computing%20Theory/%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
+                            预备知识
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            集合 (Sets)
+基本定义与性质
+集合 (Set)：一个无序的元素集合 (An unordered collection of elements)
+。
+空集 (Empty set)：记作 Ø 。
+子集
+(Subset)：表示一个集合是否被另一个集合所包含。其严格定义为：S⊆T⇔(∀x∈S⇒x∈T)。任何集合都是其自身的子集
+。
+集合相等 (Equal
+Sets)：两个集合...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sun Sep 14 2025 21:00:00 GMT+0800">
+                
+                    2025-09-14
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/Computing-Theory/">Computing Theory</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/14/algorithms/Computing%20Theory/%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">Read more<span class="seo-reader-text">预备知识</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE10%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E9%99%90%E5%AE%9A%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE%E5%9E%8B%E5%88%AB%EF%BC%8C%E8%80%8C%E9%9D%9E%E4%B8%8D%E9%99%90%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE%E5%9E%8B%E5%88%AB/">
+                            条款10：优先选用限定作用域的枚举型别，而非不限作用域的枚举型别
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            C++98
+风格的枚举（现在称为不限作用域的枚举型别）存在两个主要缺陷。C++11
+引入的限定作用域的枚举型别（也称“枚举类”）则直接解决了这两个问题。
+了解枚举
+在 C++ 中，枚举 (Enumeration, 简称 enum)
+是一种用户自定义的数据类型，它允许我们为一组相关的整型常量赋予具有描述性的名称。
+使用枚举的主要目的是增强代码的可读性和类型安全，避免在代码中直接使用...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sun Sep 14 2025 21:00:00 GMT+0800">
+                
+                    2025-09-14
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE10%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E9%99%90%E5%AE%9A%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE%E5%9E%8B%E5%88%AB%EF%BC%8C%E8%80%8C%E9%9D%9E%E4%B8%8D%E9%99%90%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E6%9E%9A%E4%B8%BE%E5%9E%8B%E5%88%AB/">Read more<span class="seo-reader-text">条款10：优先选用限定作用域的枚举型别，而非不限作用域的枚举型别</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE9%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%88%AB%E5%90%8D%E5%A3%B0%E6%98%8E%EF%BC%8C%E8%80%8C%E9%9D%9E%20typedef/">
+                            条款9：优先选用别名声明，而非 typedef
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在 C++ 中，typedef 和 C++11 引入的“别名声明”（Alias
+Declaration）都用于创建类型同义词。例如，以下两行代码在功能上是完全等效的：
+12345// C++98 的做法typedef std::unique_ptr&lt;std::unordered_map&lt;std::string, std::string&gt;&gt; UPtrMapSS; [...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sun Sep 14 2025 21:00:00 GMT+0800">
+                
+                    2025-09-14
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE9%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%88%AB%E5%90%8D%E5%A3%B0%E6%98%8E%EF%BC%8C%E8%80%8C%E9%9D%9E%20typedef/">Read more<span class="seo-reader-text">条款9：优先选用别名声明，而非 typedef</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE8%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20nullptr,%20%E8%80%8C%E9%9D%9E%20NULL/">
+                            条款8：优先选用 nullptr, 而非 NULL 或者0
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            首先, 我们需要开门见山地指出, 0 和 NULL 都不具备指针类型,
+它们的本质是整数，只是依赖于上下文（Context）被“特殊看待”为空指针
+
+0 的类型是 int：它是一个整数字面常量。C++
+只是在语言层面做一个不得已的“变通”：仅在上下文强制要求指针的语境中，才将
+0
+勉强解释为空指针。但在重载决议等情况下，它的“真实身份”——int——会优先被匹配。
+NULL 的...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sun Sep 14 2025 20:00:00 GMT+0800">
+                
+                    2025-09-14
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/14/lang/CPP/Effective%20modern%20C++/%E7%8E%B0%E4%BB%A3C++/%E6%9D%A1%E6%AC%BE8%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20nullptr,%20%E8%80%8C%E9%9D%9E%20NULL/">Read more<span class="seo-reader-text">条款8：优先选用 nullptr, 而非 NULL 或者0</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
         
             <li class="home-article-item">
 
@@ -1042,567 +1595,11 @@ RTTI 并非没有代价（它会给对象增加额外的...
                 </div>
             </li>
         
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20-%20%E7%90%86%E8%A7%A3%20decltype/">
-                            条款3：理解 decltype
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            decltype 是 C++11 引入的一个非常重要的关键字. 作为一个类型说明符
-(type specifier), 它是 “declared type” (声明的类型) 的缩写, 也是 C++
-泛型编程（模板）和类型推导系统中至关重要的一块拼图。
-它的核心功能是：在编译时检查一个表达式，并“返回”该表达式所对应的确切类型，但并不会实际计算（执行）这个表达式。
-不过在介绍declt...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 13 2025 20:00:00 GMT+0800">
-                
-                    2025-09-13
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20-%20%E7%90%86%E8%A7%A3%20decltype/">Read more<span class="seo-reader-text">条款3：理解 decltype</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">
-                            条款 24：区分万能引用和右值引用
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            回忆左值（Lvalue）和右值（Rvalue）
-左值（Lvalue）表示一个有名字、可寻址、在表达式结束后仍然存在的对象。其特点是：
-
-可以出现在赋值语句的左边：x = 5;
-可以取地址：&amp;x
-通常是变量、数组元素、对象成员、函数形参等
-
-右值（Rvalue）表示一个临时值，通常在表达式中短暂存在，不能取地址。其特点是：
-
-只能出现在赋值语句的右边：x = 5;
-...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 13 2025 16:00:00 GMT+0800">
-                
-                    2025-09-13
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">Read more<span class="seo-reader-text">条款 24：区分万能引用和右值引用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20-%20%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
-                            条款2：理解 auto 型别推导
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            首先我们抛出这一讲的核心思想: auto
-类型推导几乎就是模板类型推导,
-除了稍后会介绍到的唯一区别之外
-两者概念性的转换
-这种对应关系可以通过一个概念性的转换来理解。例如,
-对于前一讲介绍的函数模板调用：
-1234template&lt;typename T&gt;void f(ParamType param);f(expr); // 编译器利用 expr 推导 T 和 Par...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 13 2025 12:00:00 GMT+0800">
-                
-                    2025-09-13
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20-%20%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">Read more<span class="seo-reader-text">条款2：理解 auto 型别推导</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE23%20-%20%20%E7%90%86%E8%A7%A3%20move%20%E5%92%8C%20forward/">
-                            条款 23：理解 std::move std::forward
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            移动语义 (Move Semantics) 和
-完美转发 (Perfect Forwarding) 是 C++11
-中引入的两个革命性特性，它们共同解决了 C++
-中长期存在的资源管理效率和泛型编程（模板）中的参数传递问题。
-移动语义 (Move Semantics)
-在 C++11
-之前，我们只有“拷贝语义”。当我们处理包含堆内存（如指针指向的数据、文件句柄、网络套接字等）的对...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 12 2025 22:00:00 GMT+0800">
-                
-                    2025-09-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE23%20-%20%20%E7%90%86%E8%A7%A3%20move%20%E5%92%8C%20forward/">Read more<span class="seo-reader-text">条款 23：理解 std::move std::forward</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE7%20-%20%E5%8C%BA%E5%88%AB%E4%BD%BF%E7%94%A8(%20)%E4%B8%8E%7B%20%7D%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1/">
-                            条款7：区别使用( )与{ }创建对象
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            复习初始化语法
-在 C++11 中, 进行对象初始化的语法大致可以分为三类: - 使用小括号, 如
-int x(10); - 使用大括号, 如 int x{10}; -
-使用等号, 如 int x = 10; 当然,
-很多情况下也可以使用一个等号和大括号来初始化对象,
-如：int z = { o } ;,
-下面的讨论我们将忽略这种”等号加大括号“语法，因为 C++
-通常会把它和...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 12 2025 22:00:00 GMT+0800">
-                
-                    2025-09-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE7%20-%20%E5%8C%BA%E5%88%AB%E4%BD%BF%E7%94%A8(%20)%E4%B8%8E%7B%20%7D%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1/">Read more<span class="seo-reader-text">条款7：区别使用( )与{ }创建对象</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
-                            条款1 ：理解模板型别推导
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            如果一个复杂系统的用户对于该系统的运作方式一无所知，然而却对其提供的服务表示满意，这就充分说明系统设计得好。如果从这样的角度来看，
-C++的模板型别推导取得了极大的成功。
-模板的型别推导，是现代C++最广泛应用的特性之一 ————
-auto的基础。也就是说，如果你对C++98
-推导模板型别的运作方式感觉满意，那么你也会自然而然地愉快接受C++11 中推导
-auto
-型别的运作方式...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 12 2025 12:00:00 GMT+0800">
-                
-                    2025-09-12
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">Read more<span class="seo-reader-text">条款1 ：理解模板型别推导</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C-map-set/">
-                            哈希 Hash
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            哈希函数对象 (Hash Functor) –
-std::hash
-std::hash 是 C++ 标准库中定义的一个类模板，位于 
-头文件中。它的主要作用是作为一个函数对象（Functor），为给定的数据类型计算一个唯一的、稳定的哈希值。
-从本质上讲，std::hash
-是一个提供了标准哈希计算接口的工具或者说算法(算子)。
-12345678910111213141516171...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Sep 03 2025 18:00:00 GMT+0800">
-                
-                    2025-09-03
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/cpp/">cpp</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C-map-set/">Read more<span class="seo-reader-text">哈希 Hash</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
     </ul>
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/13/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/15/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/13/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/15/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1630,11 +1627,11 @@ std::hash 是 C++ 标准库中定义的一个类模板，位于
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

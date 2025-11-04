@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-10-14T03:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-14T08:06:05.896Z">
+<meta property="article:modified_time" content="2025-10-31T03:24:23.849Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta name="twitter:card" content="summary">
@@ -718,7 +718,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -769,8 +769,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-14 16:06:05</span>
-            <span class="mobile">2025-10-14 16:06:05</span>
+            <span class="desktop">2025-10-31 11:24:23</span>
+            <span class="mobile">2025-10-31 11:24:23</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -827,9 +827,13 @@ mjx-container[display="true"] + br {
 
     
     
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.6k Words</span>
+        </span>
+    
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>1 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>6 Mins</span>
         </span>
     
     
@@ -844,7 +848,68 @@ mjx-container[display="true"] + br {
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			
+			<p>在 C 语言中，线程的创建和管理通常通过 POSIX
+线程库（pthread）来实现。</p>
+<h3 id="线程的生命周期管理">线程的生命周期管理</h3>
+<p>这部分API用于“启动”和“停止”并发任务。</p>
+<p><strong>线程创建</strong> (pthread_create) -
+功能：这是启动一个新线程的唯一方法。你可以把它想象成“发起一个并发的函数调用”。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_create</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">pthread_t</span> * thread,         <span class="comment">// [出参] 指向线程ID的指针，用于存储新线程的句柄</span></span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> <span class="type">pthread_attr_t</span> * attr, <span class="comment">// [入参] 线程的属性（如栈大小、调度策略），NULL为默认</span></span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">void</span> * (*start_routine)(<span class="type">void</span>*), <span class="comment">// [入参] 函数指针：新线程要执行的函数, 函数签名必须是 void* func(void*). 如果不是, 需要进行适当的转换</span></span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">void</span> * arg                    <span class="comment">// [入参] 传递给 start_routine 的（单个）参数, 无参时传 NULL</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure></div> -
+thread：这是一个“出参”。你传入一个pthread_t变量的地址，pthread_create会把新线程的ID（句柄）填入其中。你将来会用这个ID来join（等待）该线程。
+-
+start_routine：这是新线程的“main函数”。你告诉create：“请在一个新线程里执行这个函数”。
+-
+函数的返回值类型必须是void<em>，参数类型也必须是void</em>。这是C语言中实现“泛型函数指针”的一种方式。
+- 你可以在函数内部将void<em>参数转换为具体类型的指针，然后使用它。 -
+返回的void</em>值可以用来传递线程的结果，主线程可以通过pthread_join获取这个返回值。
+- void * 和 arg：这是C语言中实现“泛型”的技巧。 - start_routine
+必须是一个“接受void*参数，返回void*”的函数。 - arg
+则是要传递给start_routine的那个void*参数。 -
+返回值：成功返回0，失败返回错误码。</p>
+<p>如何传递多个参数？你不能直接传,
+标准做法是定义一个<strong>struct</strong>，把所有参数（如a和b）放进去，然后将这个struct的指针（&amp;args）强制<strong>转换为void</strong><em>作为arg传递。线程函数（mythread）接收到void
+</em>arg后，再将其强制转换回struct *来解包。</p>
+<p>例如, 创建一个新线程来执行 <code>threadFunc</code> 函数:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span>* <span class="title">threadFunc</span><span class="params">(<span class="type">void</span>* arg)</span> </span>{</span><br><span class="line">    <span class="type">int</span>* num = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>*&gt;(arg);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Thread number: "</span> &lt;&lt; *num &lt;&lt; std::endl;</span><br><span class="line">    <span class="type">char</span>* ch = <span class="built_in">static_cast</span>&lt;<span class="type">char</span>*&gt;(arg);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Thread character: "</span> &lt;&lt; *ch &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">pthread_t</span> thread;</span><br><span class="line">    <span class="type">int</span> threadArg1 = <span class="number">42</span>;</span><br><span class="line">    <span class="type">char</span> threadArg2 = <span class="string">'A'</span>;</span><br><span class="line">    <span class="comment">// 将多个参数打包到一个结构体中</span></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">ThreadArgs</span> {</span><br><span class="line">        <span class="type">int</span> a;</span><br><span class="line">        <span class="type">char</span> b;</span><br><span class="line">    } </span><br><span class="line">    ThreadArgs threadArg = {threadArg1, threadArg2};</span><br><span class="line">    <span class="comment">// 创建线程，传递结构体指针作为参数</span></span><br><span class="line">    <span class="built_in">pthread_create</span>(&amp;thread, <span class="literal">nullptr</span>, threadFunc, <span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(&amp;threadArg));</span><br><span class="line">    <span class="built_in">pthread_join</span>(thread, <span class="literal">nullptr</span>); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> <strong>线程完成/等待</strong> (pthread_join)
+功能：让一个线程（通常是主线程）阻塞（睡眠），直到另一个目标线程执行完毕。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_join</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">pthread_t</span> thread,     <span class="comment">// [入参] 你要等待的那个线程的ID（由 create 返回）</span></span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">void</span> **value_ptr      <span class="comment">// [出参] 一个指针，用于接收目标线程的返回值</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure></div> - thread：你要等待的目标。 - void
+**value_ptr：这是API中最令人困惑的部分，我们来拆解它： -
+目标线程的start_routine返回一个void <em>（这是它的“返回值”）。 -
+pthread_join函数需要将这个void </em>返回值写入到main函数的一个变量中。 -
+由于C语言中函数参数传递是“值传递”，如果你直接传入一个void
+*变量，pthread_join只能修改它的副本，无法修改main函数中的变量。 -
+因此，你需要传入这个变量的地址，即一个void
+**，这样pthread_join才能通过这个地址修改main函数中的变量。 - 例如：
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span>* retVal; <span class="comment">// 用于接收线程的返回值</span></span><br><span class="line"><span class="built_in">pthread_join</span>(thread, &amp;retVal); <span class="comment">// 传入 retVal 的地址（void **）</span></span><br></pre></td></tr></table></figure></div> - 返回值：成功返回0，失败返回错误码。</p>
+<p><strong>线程终止</strong> (pthread_exit)
+功能：这是终止<strong>当前线程</strong>的唯一方法。你可以在当前线程的任何地方调用它来结束线程的执行。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">pthread_exit</span><span class="params">(<span class="type">void</span> *value_ptr)</span></span>;</span><br></pre></td></tr></table></figure></div> -
+value_ptr：这是线程的“返回值”。当线程调用pthread_exit时，它可以传递一个void
+*值作为它的结果。这个值可以被其他线程通过pthread_join获取。 -
+注意：调用pthread_exit不会终止整个进程，只会终止当前线程。</p>
+<h3 id="互斥原语锁">互斥原语：锁</h3>
+<p>这组API用于解决竞态条件问题。</p>
+<p>功能：提供互斥（Mutual
+Exclusion），确保一个“临界区”在同一时间只被一个线程执行。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_mutex_lock</span><span class="params">(<span class="type">pthread_mutex_t</span> *mutex)</span></span>;  <span class="comment">// 加锁, 传入锁对象的指针</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_mutex_unlock</span><span class="params">(<span class="type">pthread_mutex_t</span> *mutex)</span></span>;</span><br></pre></td></tr></table></figure></div>
+-
+pthread_mutex_lock：尝试获取锁。如果锁已经被其他线程持有，调用线程将阻塞，直到锁可用。
+- pthread_mutex_unlock：释放锁。只有持有锁的线程才能调用此函数。 -
+返回值：成功返回0，失败返回错误码。</p>
+<p>注意, pthread_mutex_t是一个复杂的数据结构，必须在使用前初始化.
+可以使用以下两种方式初始化互斥锁: 1. 静态初始化: 用于全局或静态锁
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_mutex_t</span> mutex = PTHREAD_MUTEX_INITIALIZER;</span><br></pre></td></tr></table></figure></div> 2. 动态初始化: 用于堆上或栈上的锁 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_mutex_t</span> mutex;</span><br><span class="line"><span class="built_in">pthread_mutex_init</span>(&amp;mutex, <span class="literal">nullptr</span>); <span class="comment">// 第二个参数为锁属性，通常传入 nullptr 表示默认属性</span></span><br></pre></td></tr></table></figure></div> 例如,
+使用互斥锁保护临界区: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">pthread_mutex_t</span> mutex = PTHREAD_MUTEX_INITIALIZER; <span class="comment">// 静态初始化互斥锁</span></span><br><span class="line"><span class="type">int</span> sharedResource = <span class="number">0</span>; <span class="comment">// 共享资源</span></span><br><span class="line"><span class="function"><span class="type">void</span>* <span class="title">threadFunc</span><span class="params">(<span class="type">void</span>* arg)</span> </span>{</span><br><span class="line">    <span class="built_in">pthread_mutex_lock</span>(&amp;mutex); <span class="comment">// 加锁</span></span><br><span class="line">    <span class="comment">// 临界区开始</span></span><br><span class="line">    sharedResource++;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Shared Resource: "</span> &lt;&lt; sharedResource &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 临界区结束</span></span><br><span class="line">    <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex); <span class="comment">// 解锁</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="协作原语条件变量">协作原语：条件变量</h3>
+<p>这组API用于解决<strong>等待/通知</strong>（协作）问题。</p>
+<p>功能：允许一个线程睡眠（wait），直到某个“条件”为真，而另一个线程在使该“条件”为真后，<strong>通知</strong>（signal）睡眠的线程醒来。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_wait</span><span class="params">(<span class="type">pthread_cond_t</span> *cond, <span class="type">pthread_mutex_t</span> *mutex)</span></span>;  <span class="comment">// 等待条件变量, 传入条件变量和互斥锁的指针</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_signal</span><span class="params">(<span class="type">pthread_cond_t</span> *cond)</span></span>;</span><br></pre></td></tr></table></figure></div> - pthread_cond_wait(&amp;cond, &amp;lock)
+这一行代码会原子地执行以下三步： -
+释放传入的锁（&amp;lock）。（这允许“通知者”线程能有机会进入临界区去修改ready）
+- 使当前线程睡眠（等待&amp;cond上的信号）。 -
+（…当被唤醒后…）重新获取那个锁（&amp;lock），然后才从wait函数返回。 这里
+wait 和 signal 的标准模式是:
+条件变量必须和一个互斥锁（Mutex）配对使用，以保护“条件”本身（例如一个
+ready 标志） <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>等待者（Waiter）的代码：</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">pthread_mutex_lock</span>(&amp;lock);</span><br><span class="line"><span class="keyword">while</span> (ready == <span class="number">0</span>) { <span class="comment">// 必须是 while, 以防虚假唤醒</span></span><br><span class="line">    <span class="built_in">pthread_cond_wait</span>(&amp;cond, &amp;lock);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// ... 此刻, ready 必然为 1, 且我们持有锁 ...</span></span><br><span class="line"><span class="built_in">pthread_mutex_unlock</span>(&amp;lock);</span><br></pre></td></tr></table></figure></div> <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><figcaption><span>通知者（Signaler）的代码：</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">pthread_mutex_lock</span>(&amp;lock);</span><br><span class="line">ready = <span class="number">1</span>; <span class="comment">// 改变条件</span></span><br><span class="line"><span class="built_in">pthread_cond_signal</span>(&amp;cond); <span class="comment">// 唤醒一个等待者</span></span><br><span class="line"><span class="built_in">pthread_mutex_unlock</span>(&amp;lock);</span><br></pre></td></tr></table></figure></div></p>
 
 		</div>
 
@@ -903,7 +968,7 @@ mjx-container[display="true"] + br {
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">C风格线程的基本使用</div>
-		
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%AE%A1%E7%90%86"><span class="nav-text">线程的生命周期管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%E5%8E%9F%E8%AF%AD%E9%94%81"><span class="nav-text">互斥原语：锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E4%BD%9C%E5%8E%9F%E8%AF%AD%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="nav-text">协作原语：条件变量</span></a></li></ol>
 
 	</div>
 </div>
@@ -932,11 +997,11 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

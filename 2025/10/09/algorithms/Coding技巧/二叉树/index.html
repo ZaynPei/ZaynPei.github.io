@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/09/algorithms/coding技巧/二叉树/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/09/algorithms/Coding%E6%8A%80%E5%B7%A7/%E4%BA%8C%E5%8F%89%E6%A0%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-09T14:00:00.000Z">
+<meta property="article:modified_time" content="2025-11-04T06:30:31.879Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="algorithms">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            二叉树 | ZaynPei&#39;s Base
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">二叉树</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-09 22:00</span>
+        <span class="mobile">2025-10-09 22:00</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-04 14:30:31</span>
+            <span class="mobile">2025-11-04 14:30:31</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/algorithms/">algorithms</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/algorithms/">algorithms</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.6k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>14 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="二叉树">二叉树</h2>
+<p>二叉树是一种非常适合<strong>递归</strong>处理的数据结构,
+因为<strong>每个节点</strong>都可以看作是一个<strong>子树的根节点</strong>.</p>
+<h3 id="必须回答的三个核心问题递归的灵魂">必须回答的三个核心问题（递归的灵魂）</h3>
+<p>下面是二叉树递归的三个核心问题。每当你面对一个新的二叉树问题时，都要问自己这三个问题，从而设计出合适的递归函数。</p>
+<p><strong>递归边界</strong>：<strong>nullptr</strong>
+vs. <strong>叶子节点</strong>？ - if (root == nullptr)（空节点边界） -
+这是最常用、最健壮的边界,
+几乎所有二叉树递归都应该使用它作为<strong>基础边界条件</strong>(但不一定是唯一边界条件)。
+-
+含义：“我这个递归函数被要求去处理一个不存在的节点，我什么也不用做，直接
+return（或 return 0, return true 等默认值）。” -
+优点：它能统一处理所有情况，包括： - 整个树为空（dfs(head) 一开始 head
+就是 nullptr）。 - 一个节点只有左孩子（dfs(root-&gt;right) 时会触发）。
+- 一个节点是叶子节点（dfs(root-&gt;left) 和 dfs(root-&gt;right)
+都会触发）。 - if (root-&gt;left == nullptr &amp;&amp; root-&gt;right ==
+nullptr)（叶子节点边界） -
+这是极少数情况，只在问题逻辑必须<strong>在“叶子”处终止</strong>时才使用,
+但也需要额外加上 if (root == nullptr) 作为基础边界。 - 含义：“我这个 dfs
+函数在到达子节点时，就要停止‘递’，开始‘归’。” - 典型案例： - (112.
+路径总和)：你必须在叶子节点处判断 sum == targetSum，而不是在 nullptr
+处。 - (404. 左叶子之和)：你必须从父节点判断 parent-&gt;left 是
+一个叶子，才能累加。 - 结论：永远默认使用 if (root == nullptr)
+作为递归边界。
+只有当题目（如“路径总和”）明确<strong>要求你必须在叶子节点做判断</strong>时，才额外增加对叶子节点的判断。</p>
+<p><strong>返回类型</strong>: void vs. 有返回值？ - void dfs(…)
+(无返回值) - 含义：你不需要从子节点获取“答案”。 - 用途 1
+(自顶向下)：父节点向子节点传递信息。比如 dfs(root,
+currentSum)，父节点把“当前的路径和”传给子节点。 - 用途 2
+(外部变量)：你使用一个<strong>类成员变量或引用传递</strong>的变量来存储最终答案。
+-
+<code>void dfs(root, vector&lt;int&gt;&amp; path, vector&lt;vector&lt;int&gt;&gt;&amp; op)</code>,
+或者是类成员变量 <code>vector&lt;vector&lt;int&gt;&gt; results;</code>。
+- 在递归过程中不断更新 path，当到达叶子节点时，把 path 加入 results。 -
+典型案例： - <strong>回溯</strong> (113. 路径总和 II)：你需要一个 path
+变量一路传下去。 - 自顶向下 (129. 求根节点到叶节点数字之和)：dfs(root,
+currentNum * 10 + root-&gt;val)。 - T dfs(…) (有返回值，如 int, bool,
+TreeNode<em>)<br>
+-
+含义：父节点必须等到<strong>子节点的递归调用返回一个结果</strong>后，才能<strong>计算出父节点“自己”的结果</strong>。这是“<strong>自底向上</strong>”的核心。
+- 典型案例： - (104. 二叉树的最大深度)： - int dfs(root) - int leftDepth
+= dfs(root-&gt;left); - int rightDepth = dfs(root-&gt;right); -
+<code>return 1 + std::max(leftDepth, rightDepth);</code> -
+(父节点的答案依赖于子节点的答案) - (110. 平衡二叉树)：int
+dfs(root)（返回高度，如果-1则表示不平衡）。 - (236.
+最近公共祖先)：TreeNode</em> dfs(root, …)（返回 p 或 q 或 nullptr）。 -
+结论：问自己：“<strong>父节点的答案，是否依赖于子节点的计算结果</strong>？”
+- 是 <span class="math inline">→</span> 有返回值
+(<strong>自底向上</strong>)。 - 否 <span class="math inline">→</span>
+void (<strong>自顶向下</strong>，或使用<strong>外部变量</strong>)。</p>
+<p><strong>自顶向下</strong> (Top-Down) vs. <strong>自底向上</strong>
+(Bottom-Up)？ - 这是对上面“返回类型”的进一步理解。 - 自顶向下 (Pre-order
+/ 先序遍历) - 执行顺序：1. 处理 root <span class="math inline">→</span>
+2. 递归 left <span class="math inline">→</span> 3. 递归 right -
+含义：“继承”——父节点处理完自己的逻辑，然后把<strong>信息传递给子节点</strong>。
+- 代码模板 (104. 最大深度 - Top-Down 解法)： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> maxDepth = <span class="number">0</span>; <span class="comment">// 类成员变量或外部变量</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(TreeNode* node, <span class="type">int</span> currentDepth)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">nullptr</span>) {</span><br><span class="line">        maxDepth = std::<span class="built_in">max</span>(maxDepth, currentDepth);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="built_in">dfs</span>(node-&gt;left, currentDepth + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">dfs</span>(node-&gt;right, currentDepth + <span class="number">1</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> - 自底向上
+(Post-order / 后序遍历) - 执行顺序：1. 递归 left (拿结果) <span class="math inline">→</span> 2. 递归 right (拿结果) <span class="math inline">→</span> 3. 处理 root (汇总) -
+含义：“聚合”——父节点必须<strong>等待左右子树的结果</strong>，才能<strong>计算出自己的结果</strong>。
+- 代码模板 (104. 最大深度 - Bottom-Up 解法)： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">dfs</span><span class="params">(TreeNode* node)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">nullptr</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="type">int</span> leftDepth = <span class="built_in">dfs</span>(node-&gt;left);</span><br><span class="line">    <span class="type">int</span> rightDepth = <span class="built_in">dfs</span>(node-&gt;right);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> + std::<span class="built_in">max</span>(leftDepth, rightDepth);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> -
+一般来说，自底向上更常见，因为大多数二叉树问题都需要<strong>汇总子节点的结果</strong>来计算父节点的答案。
+-
+结论：问自己：“<strong>父节点的答案，是否依赖于子节点的计算结果</strong>？”
+- 是 <span class="math inline">→</span> 自底向上 (有返回值)。 - 否 <span class="math inline">→</span> 自顶向下 (void 或外部变量)。</p>
+<h3 id="二叉树的遍历">二叉树的遍历</h3>
+<p>二叉树的遍历主要有三种方式: 前序遍历 (Preorder), 中序遍历 (Inorder),
+后序遍历 (Postorder). 这三种遍历方式的区别在于访问节点的顺序不同,
+名称反映的是访问根节点的时机</p>
+<p>三种遍历都可以使用递归实现, 较为简单. 例如:</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 前序遍历 (根-左-右)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">preorder</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// 访问根节点</span></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);</span><br><span class="line">    <span class="comment">// 遍历左子树</span></span><br><span class="line">    <span class="built_in">preorder</span>(root-&gt;left, result);</span><br><span class="line">    <span class="comment">// 遍历右子树</span></span><br><span class="line">    <span class="built_in">preorder</span>(root-&gt;right, result);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>使用迭代实现时, 通常需要借助<strong>栈 (Stack)</strong>
+来<strong>手动模拟递归</strong>调用栈的行为.</p>
+<h4 id="迭代遍历">迭代遍历</h4>
+<p>对于前序遍历, 迭代实现相对简单, 只需要一个栈来辅助即可.</p>
+<p>不过需要注意的是, <strong>前序遍历</strong>中,
+我们需要<strong>先将右子节点入栈, 再将左子节点入栈</strong>,
+这样才能保证左子节点先被访问.(访问顺序和入栈顺序相反) <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">preorderIterative</span><span class="params">(TreeNode* root)</span> </span>{</span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) {</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    std::stack&lt;TreeNode*&gt; s;</span><br><span class="line">    s.<span class="built_in">push</span>(root); <span class="comment">// 1. 首先将根节点入栈</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!s.<span class="built_in">empty</span>()) {</span><br><span class="line">        TreeNode* node = s.<span class="built_in">top</span>(); <span class="comment">// 2. 取出栈顶元素</span></span><br><span class="line">        s.<span class="built_in">pop</span>();</span><br><span class="line">        result.<span class="built_in">push_back</span>(node-&gt;val); <span class="comment">// 3. 访问该节点（根）</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 关键：先将 右 子节点入栈，再将 左 子节点入栈</span></span><br><span class="line">        <span class="comment">// 这样能确保 左 子节点在 右 子节点之前被访问</span></span><br><span class="line">        <span class="keyword">if</span> (node-&gt;right != <span class="literal">nullptr</span>) {</span><br><span class="line">            s.<span class="built_in">push</span>(node-&gt;right);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (node-&gt;left != <span class="literal">nullptr</span>) {</span><br><span class="line">            s.<span class="built_in">push</span>(node-&gt;left);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<p>对于后序遍历, 迭代实现相对复杂一些,
+因为我们需要确保<strong>根节点在左右子节点之后被访问</strong>.
+这里有两种常见的做法: 1. 将后序遍历转换为“根-右-左”的前序遍历,
+然后再将<strong>结果反转</strong>. 2.
+<strong>使用一个栈和一个指针</strong>:
+通过一个指针来追踪上一个访问的节点,
+以判断当前节点的右子树是否已经被访问过. 这里我们展示第二种方法:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">postorderIterative</span><span class="params">(TreeNode* root)</span> </span>{</span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) {</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    std::stack&lt;TreeNode*&gt; s;</span><br><span class="line">    TreeNode* curr = root;</span><br><span class="line">    TreeNode* lastVisited = <span class="literal">nullptr</span>; <span class="comment">// 记录上一个访问的节点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (curr != <span class="literal">nullptr</span> || !s.<span class="built_in">empty</span>()) {</span><br><span class="line">        <span class="comment">// 1. 一直向左走, 将路径上的节点入栈</span></span><br><span class="line">        <span class="keyword">while</span> (curr != <span class="literal">nullptr</span>) {</span><br><span class="line">            s.<span class="built_in">push</span>(curr);</span><br><span class="line">            curr = curr-&gt;left;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 查看栈顶节点</span></span><br><span class="line">        TreeNode* node = s.<span class="built_in">top</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 判断右子树是否已经访问过</span></span><br><span class="line">        <span class="keyword">if</span> (node-&gt;right == <span class="literal">nullptr</span> || node-&gt;right == lastVisited) {</span><br><span class="line">            <span class="comment">// 如果没有右子树或右子树已经访问过, 则访问当前节点</span></span><br><span class="line">            result.<span class="built_in">push_back</span>(node-&gt;val);</span><br><span class="line">            s.<span class="built_in">pop</span>();</span><br><span class="line">            lastVisited = node; <span class="comment">// 更新上一个访问的节点</span></span><br><span class="line">            curr = <span class="literal">nullptr</span>; <span class="comment">// 防止再次进入左子树</span></span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            <span class="comment">// 如果有右子树且未访问过, 则转向右子树</span></span><br><span class="line">            curr = node-&gt;right;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 另一种更简单的方式是使用“前序遍历变形”方法:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">postorderIterative</span><span class="params">(TreeNode* root)</span> </span>{</span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) {</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    std::stack&lt;TreeNode*&gt; s;</span><br><span class="line">    s.<span class="built_in">push</span>(root);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!s.<span class="built_in">empty</span>()) {</span><br><span class="line">        TreeNode* node = s.<span class="built_in">top</span>();</span><br><span class="line">        s.<span class="built_in">pop</span>();</span><br><span class="line">        result.<span class="built_in">push_back</span>(node-&gt;val); <span class="comment">// 先访问根节点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 先将左子节点入栈, 再将右子节点入栈</span></span><br><span class="line">        <span class="keyword">if</span> (node-&gt;left != <span class="literal">nullptr</span>) {</span><br><span class="line">            s.<span class="built_in">push</span>(node-&gt;left);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (node-&gt;right != <span class="literal">nullptr</span>) {</span><br><span class="line">            s.<span class="built_in">push</span>(node-&gt;right);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最后反转结果以获得后序遍历顺序</span></span><br><span class="line">    std::<span class="built_in">reverse</span>(result.<span class="built_in">begin</span>(), result.<span class="built_in">end</span>());</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<p>对于中序遍历,
+我们需要模拟“一路向左，直到尽头；访问；然后转向右子树”的过程。</p>
+<ul>
+<li>使用一个 curr 指针指向当前节点，初始为 root。</li>
+<li>外层循环：只要 curr 不为空 或 栈不为空，就继续。
+<ul>
+<li>步骤 A (深入左子树)：while (curr !=
+nullptr)：只要当前节点不为空，说明它有（或它就是）一个需要稍后访问的“根”。
+<ul>
+<li>将其入栈（表示“我稍后会回来访问你”）。</li>
+<li>curr = curr-&gt;left;（继续深入左子树）。</li>
+</ul></li>
+<li>步骤 B (访问根并转向右)：当 while 循环结束时，curr
+必定为空，表示我们已到达最左侧的尽头。
+<ul>
+<li>此时从栈中弹出一个节点（这个节点是“左-根-右”中的根）。</li>
+<li>访问它（加入结果列表）。</li>
+<li>curr = popped_node-&gt;right;（将 curr
+指针转向该节点的右子树，准备在下一轮外层循环中处理右子树）。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">inorderIterative</span><span class="params">(TreeNode* root)</span> </span>{</span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">    std::stack&lt;TreeNode*&gt; s;</span><br><span class="line">    TreeNode* curr = root; <span class="comment">// 使用一个指针来追踪当前节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 循环条件：当前节点不为空（表示还有子树待处理）</span></span><br><span class="line">    <span class="comment">// 或者 栈不为空（表示还有已入栈的父节点待访问）</span></span><br><span class="line">    <span class="keyword">while</span> (curr != <span class="literal">nullptr</span> || !s.<span class="built_in">empty</span>()) {</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 1. 深入左子树：不断将当前节点入栈，并向左下方移动</span></span><br><span class="line">        <span class="comment">// 直到 curr 为空，表示到达了最左侧</span></span><br><span class="line">        <span class="keyword">while</span> (curr != <span class="literal">nullptr</span>) {</span><br><span class="line">            s.<span class="built_in">push</span>(curr);       <span class="comment">// 将路径上的“根”节点入栈</span></span><br><span class="line">            curr = curr-&gt;left;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 访问根节点：当curr为空时，从栈中弹出节点</span></span><br><span class="line">        <span class="comment">// 这是"左-根-右"中的"根"，也是最左侧的节点</span></span><br><span class="line">        curr = s.<span class="built_in">top</span>();</span><br><span class="line">        s.<span class="built_in">pop</span>();</span><br><span class="line">        result.<span class="built_in">push_back</span>(curr-&gt;val); <span class="comment">// 访问根节点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 转向右子树：将当前节点指向右子树</span></span><br><span class="line">        <span class="comment">// 在下一轮循环中，将对这个右子树重复“步骤1”</span></span><br><span class="line">        curr = curr-&gt;right;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></li>
+</ul></li>
+</ul></li>
+</ul>
+<h4 id="层序遍历-level-order">层序遍历 (Level-order)</h4>
+<p>还有一种遍历是层序遍历 (Level-order), 也称为广度优先遍历 (BFS).
+这是唯一的<strong>主流非递归解法</strong>。当你需要按层处理问题时，BFS
+是首选。</p>
+<p>层序遍历通常使用<strong>队列 (Queue)</strong> 来实现,
+通过逐层访问节点来实现. 实现代码如下: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">levelOrder</span>(TreeNode* root) {</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; results;</span><br><span class="line">        <span class="keyword">if</span>(!root) <span class="keyword">return</span> results;</span><br><span class="line"></span><br><span class="line">        queue&lt;TreeNode*&gt; que;  <span class="comment">// 使用队列来辅助层序遍历</span></span><br><span class="line">        que.<span class="built_in">push</span>(root);</span><br><span class="line">        <span class="keyword">while</span>(!que.<span class="built_in">empty</span>()){  <span class="comment">// 每层循环处理一层节点, 由上一层节点入队列</span></span><br><span class="line">            <span class="type">int</span> size = que.<span class="built_in">size</span>();</span><br><span class="line">            vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;size;i++){  <span class="comment">// 处理当前层的所有节点</span></span><br><span class="line">                TreeNode* node = que.<span class="built_in">front</span>();</span><br><span class="line">                path.<span class="built_in">push_back</span>(node-&gt;val);</span><br><span class="line">                que.<span class="built_in">pop</span>();</span><br><span class="line">                <span class="keyword">if</span>(node-&gt;left) que.<span class="built_in">push</span>(node-&gt;left);  <span class="comment">// 将下一层节点入队列</span></span><br><span class="line">                <span class="keyword">if</span>(node-&gt;right) que.<span class="built_in">push</span>(node-&gt;right);</span><br><span class="line">            }</span><br><span class="line">            results.<span class="built_in">push_back</span>(path);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> results;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> ### 二叉搜索树
+(BST)</p>
+<p>特点是: 对于每个节点, 左子树的所有节点值都小于该节点值,
+右子树的所有节点值都大于该节点值.</p>
+<p>一般使用中序遍历来处理二叉搜索树的问题,
+因为中序遍历会得到一个<strong>有序序列</strong>.</p>
+<h3 id="最近公共祖先-lca">最近公共祖先 (LCA)</h3>
+<p>最近公共祖先问题是二叉树中一个经典问题,
+其核心思想是使用递归来查找两个节点的公共祖先. 这是一个经典的自底向上
+(后序遍历) 递归。(LC 236) - dfs(root, p, q)
+函数的语义（返回值）是：“在以 root 为根的子树中，我能找到 p 还是 q
+还是它俩的 LCA？” - 如果找到了 p 或 q，返回对应的节点指针。 - 如果找到了
+LCA，返回 LCA 节点指针。 - 如果都没找到，返回 nullptr。
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">TreeNode* <span class="title">lowestCommonAncestor</span><span class="params">(TreeNode* root, TreeNode* p, TreeNode* q)</span> </span>{</span><br><span class="line">    <span class="comment">// 1. 边界: 空节点，或找到了 p 或 q</span></span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span> || root == p || root == q) {</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 递归 left (拿结果)</span></span><br><span class="line">    TreeNode* left_result = <span class="built_in">lowestCommonAncestor</span>(root-&gt;left, p, q);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 递归 right (拿结果)</span></span><br><span class="line">    TreeNode* right_result = <span class="built_in">lowestCommonAncestor</span>(root-&gt;right, p, q);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 处理 root (汇总)</span></span><br><span class="line">    <span class="comment">// 解释: p 和 q 分布在 root 的两侧，</span></span><br><span class="line">    <span class="comment">// 那么 root 就是 LCA</span></span><br><span class="line">    <span class="keyword">if</span> (left_result != <span class="literal">nullptr</span> &amp;&amp; right_result != <span class="literal">nullptr</span>) {</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    }<span class="keyword">else</span> <span class="keyword">if</span> (left_result != <span class="literal">nullptr</span>) { <span class="comment">// 只有左子树找到了 p 或 q</span></span><br><span class="line">        <span class="keyword">return</span> left_result;  <span class="comment">// 返回左子树的结果, 可能是 p, q, 或 LCA</span></span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="keyword">return</span> right_result;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="从构造二叉树">从…构造二叉树</h3>
+<p>从前序和中序遍历构造二叉树是一个经典问题,
+其核心思想是利用前序遍历确定根节点, 然后利用中序遍历划分左右子树. (LC
+105)</p>
+<h4 id="从前序和中序遍历构造二叉树">从前序和中序遍历构造二叉树</h4>
+<ul>
+<li>先序遍历 (Preorder): [ 根节点, [左子树…], [右子树…] ]
+<ul>
+<li>preorder 数组的第一个元素（preorder[0]）永远是整棵树的根节点
+(Root)。</li>
+</ul></li>
+<li>中序遍历 (Inorder): [ […左子树…], 根节点, […右子树…] ]
+<ul>
+<li>inorder 数组中根节点 (Root)
+的位置，恰好划分了哪些节点属于左子树，哪些节点属于右子树。</li>
+<li>根节点左边的所有元素都在左子树,
+根节点右边的所有元素都在右子树。</li>
+</ul></li>
+</ul>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; inorderMap; <span class="comment">// (步骤说明)：一个全局索引，用于追踪先序遍历数组</span></span><br><span class="line"><span class="type">int</span> preorderIndex;  <span class="comment">// 它始终指向下一个将被用作“根”的元素</span></span><br><span class="line"></span><br><span class="line"><span class="function">TreeNode* <span class="title">buildTreeHelper</span><span class="params">(<span class="type">const</span> vector&lt;<span class="type">int</span>&gt;&amp; preorder, <span class="type">int</span> inorderLeft, <span class="type">int</span> inorderRight)</span> </span>{</span><br><span class="line">    <span class="comment">// (步骤说明)：Base Case: </span></span><br><span class="line">    <span class="comment">// 如果左边界大于右边界，说明中序遍历的窗口为空，</span></span><br><span class="line">    <span class="comment">// 这是一个空子树。</span></span><br><span class="line">    <span class="keyword">if</span> (inorderLeft &gt; inorderRight) {</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 1. 找到并创建根节点 ---</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// (步骤说明)：根据先序遍历的性质，preorderIndex 指向的</span></span><br><span class="line">    <span class="comment">// 元素就是当前子树的根节点。</span></span><br><span class="line">    <span class="type">int</span> rootVal = preorder[preorderIndex];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// (步骤说明)：将 preorderIndex 后移，</span></span><br><span class="line">    <span class="comment">// 准备为接下来的左子树或右子树提供根节点。</span></span><br><span class="line">    preorderIndex++;</span><br><span class="line">    </span><br><span class="line">    TreeNode* root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(rootVal);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 2. 划分左右子树 ---</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// (步骤说明)：使用哈希表 O(1) 查找到根节点在中序遍历中的位置</span></span><br><span class="line">    <span class="type">int</span> inorderRootIndex = inorderMap[rootVal];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// --- 3. 递归构建左右子树 ---</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// (步骤说明)：递归构建左子树</span></span><br><span class="line">    <span class="comment">// 左子树的中序遍历范围是 [inorderLeft, inorderRootIndex - 1]</span></span><br><span class="line">    root-&gt;left = <span class="built_in">buildTreeHelper</span>(preorder, inorderLeft, inorderRootIndex - <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// (步骤说明)：递归构建右子树</span></span><br><span class="line">    <span class="comment">// 右子树的中序遍历范围是 [inorderRootIndex + 1, inorderRight]</span></span><br><span class="line">    root-&gt;right = <span class="built_in">buildTreeHelper</span>(preorder, inorderRootIndex + <span class="number">1</span>, inorderRight);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// (步骤说明)：返回构建完成的根节点</span></span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function">TreeNode* <span class="title">buildTree</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; preorder, vector&lt;<span class="type">int</span>&gt;&amp; inorder)</span> </span>{</span><br><span class="line">    <span class="comment">// (步骤说明)：初始化先序遍历的索引，从 0 (第一个元素) 开始</span></span><br><span class="line">    preorderIndex = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// (步骤说明)：构建中序遍历的 (值 -&gt; 索引) 映射， O(n)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; inorder.<span class="built_in">size</span>(); ++i) {</span><br><span class="line">        inorderMap[inorder[i]] = i;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// (步骤说明)：启动递归</span></span><br><span class="line">    <span class="comment">// 初始的中序遍历窗口是整个数组 [0, n-1]</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">buildTreeHelper</span>(preorder, <span class="number">0</span>, inorder.<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/algorithms/">#algorithms</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/09/algorithms/Coding%E6%8A%80%E5%B7%A7/%E7%BD%91%E6%A0%BC%E5%9B%BE/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">网格图 DFS 与 BFS</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/08/system/computer-architecture/RISC-V%20%E7%9A%84%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">RISC-V 的调用约定</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">二叉树</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E9%A1%BB%E5%9B%9E%E7%AD%94%E7%9A%84%E4%B8%89%E4%B8%AA%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%E9%80%92%E5%BD%92%E7%9A%84%E7%81%B5%E9%AD%82"><span class="nav-text">必须回答的三个核心问题（递归的灵魂）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-text">二叉树的遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86"><span class="nav-text">迭代遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86-level-order"><span class="nav-text">层序遍历 (Level-order)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88-lca"><span class="nav-text">最近公共祖先 (LCA)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-text">从…构造二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E5%89%8D%E5%BA%8F%E5%92%8C%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-text">从前序和中序遍历构造二叉树</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        193 posts in total
+                    </span>
+                    
+                        <span>
+                            609.9k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

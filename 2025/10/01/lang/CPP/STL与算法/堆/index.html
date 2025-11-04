@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-10-01T03:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-29T15:43:40.425Z">
+<meta property="article:modified_time" content="2025-10-30T12:51:23.170Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta name="twitter:card" content="summary">
@@ -718,7 +718,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -769,8 +769,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-29 23:43:40</span>
-            <span class="mobile">2025-10-29 23:43:40</span>
+            <span class="desktop">2025-10-30 20:51:23</span>
+            <span class="mobile">2025-10-30 20:51:23</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -818,12 +818,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.6k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.4k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>6 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>9 Mins</span>
         </span>
     
     
@@ -908,6 +908,38 @@ n), 因为需要重新调整堆结构。 - <code>top()</code>：返回堆顶元�
 因此在插入堆的时候, 如果直接插入 {num, freq} 这样的话, 堆会根据 num
 来排序, 这显然是不对的. 因此我们需要将 pair 的顺序反过来, 插入一个临时的
 {freq, num}, 这样堆就会根据 freq 来排序了.</p>
+<h3 id="on-建堆">O(N) 建堆</h3>
+<p>堆的构建可以通过两种主要方法完成：<strong>逐个插入元素</strong>和使用“<strong>堆化</strong>”过程。逐个插入元素的时间复杂度为
+O(N log N)，而使用堆化过程的时间复杂度为
+O(N)。下面介绍如何使用堆化过程来高效地构建堆。</p>
+<blockquote>
+<p>标准库中的 <code>std::make_heap</code> 函数,
+以及构造函数中直接传入迭代器起始位置都是使用堆化的方法将一个范围内的元素转换为堆结构，时间复杂度为
+O(N)。</p>
+</blockquote>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">sift_down</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; heap, <span class="type">int</span> n, <span class="type">int</span> rootIndex)</span> </span>{</span><br><span class="line">    <span class="comment">// 步骤说明：将当前根节点视为最大值</span></span><br><span class="line">    <span class="type">int</span> largest = rootIndex; </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 步骤说明：计算左右子节点的索引 (0-based 索引)</span></span><br><span class="line">    <span class="type">int</span> leftChild = <span class="number">2</span> * rootIndex + <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> rightChild = <span class="number">2</span> * rootIndex + <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：检查左子节点是否存在，并且是否大于当前最大值</span></span><br><span class="line">    <span class="keyword">if</span> (leftChild &lt; n &amp;&amp; heap[leftChild] &gt; heap[largest]) {</span><br><span class="line">        largest = leftChild;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：检查右子节点是否存在，并且是否大于当前最大值</span></span><br><span class="line">    <span class="keyword">if</span> (rightChild &lt; n &amp;&amp; heap[rightChild] &gt; heap[largest]) {</span><br><span class="line">        largest = rightChild;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：如果根节点不是最大的 (largest != rootIndex)</span></span><br><span class="line">    <span class="keyword">if</span> (largest != rootIndex) {</span><br><span class="line">        <span class="comment">// 步骤说明：将最大值交换到根节点</span></span><br><span class="line">        std::<span class="built_in">swap</span>(heap[rootIndex], heap[largest]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 步骤说明：由于交换，原根节点的值被“下沉”到了 largest 位置，</span></span><br><span class="line">        <span class="comment">// 必须递归地对以 largest 为根的新子树继续执行下沉操作。</span></span><br><span class="line">        <span class="built_in">sift_down</span>(heap, n, largest);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 否则，根节点已经是最大值，符合堆性质，停止操作。</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">build_heap</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; arr)</span> </span>{</span><br><span class="line">    <span class="type">int</span> n = arr.<span class="built_in">size</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 步骤说明：找到最后一个非叶子节点。</span></span><br><span class="line">    <span class="comment">// 在 0-based 索引中，最后一个元素是 n-1，</span></span><br><span class="line">    <span class="comment">// 其父节点索引是 floor((n-1 - 1) / 2) = floor(n / 2) - 1。</span></span><br><span class="line">    <span class="type">int</span> lastParent = (n / <span class="number">2</span>) - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤说明：从最后一个非叶子节点开始，自底向上，</span></span><br><span class="line">    <span class="comment">// 依次对每个节点执行“下沉”操作。</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = lastParent; i &gt;= <span class="number">0</span>; i--) {</span><br><span class="line">        <span class="built_in">sift_down</span>(arr, n, i);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>我们将一个数组（arr）视为一个“完全二叉树”。所有的叶子节点（在数组的后半部分，约
+N/2 个）天然地满足堆的定义（因为它们没有子节点）。</p>
+<p>我们从最后一个非叶子节点开始，向前遍历到根节点（arr[0]）。</p>
+<ul>
+<li>最后一个非叶子节点在数组中的索引是 (N/2) - 1。</li>
+<li>对遍历到的每个节点，执行一次
+<strong>sift-down（下滤）</strong>操作。
+<ul>
+<li>sift-down
+就是比较该节点与其子节点，如果不满足堆属性（例如最小堆中父节点比子节点大），就将它与较小的子节点交换，交换后，原节点
+i 的值（现在位于 left或right
+处）可能又小于了它新的子节点，因此必须递归地对 left 位置继续调用
+sift_down</li>
+</ul></li>
+</ul>
+<p>复杂度数学证明（O(N)）： - 假设堆的高度为 h（h ≈ log N）。 -
+堆中高度为 0 的节点（即叶子节点）有 N/2 个。它们不需要下滤，工作量为 0。
+- 堆中高度为 1 的节点（叶子的父节点）有 N/4 个。它们最多下滤 1 层。 -
+堆中高度为 2 的节点有 N/8 个。它们最多下滤 2 层… - 堆中高度为 h
+的节点（根节点）有 1 个。它最多下滤 h 层。 - 总工作量 S = (N/4 * 1) +
+(N/8 * 2) + (N/16 * 3) + … + (1 * h), 可以近似计算为 S ≈ N * (1/2 + 1/4
++ 1/8 + … ) = N * 1 = O(N)。</p>
 
 		</div>
 
@@ -966,7 +998,7 @@ n), 因为需要重新调整堆结构。 - <code>top()</code>：返回堆顶元�
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">堆</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86-heap"><span class="nav-text">堆 (Heap)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E9%A1%B6%E5%A0%86-dual-heaps"><span class="nav-text">对顶堆 (Dual Heaps)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E4%B8%AD%E5%85%83%E7%B4%A0%E6%98%AFpair"><span class="nav-text">堆中元素是pair</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86-heap"><span class="nav-text">堆 (Heap)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E9%A1%B6%E5%A0%86-dual-heaps"><span class="nav-text">对顶堆 (Dual Heaps)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E4%B8%AD%E5%85%83%E7%B4%A0%E6%98%AFpair"><span class="nav-text">堆中元素是pair</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#on-%E5%BB%BA%E5%A0%86"><span class="nav-text">O(N) 建堆</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -995,11 +1027,11 @@ n), 因为需要重新调整堆结构。 - <code>top()</code>：返回堆顶元�
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

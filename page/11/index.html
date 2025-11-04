@@ -750,7 +750,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -790,7 +790,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -805,6 +805,614 @@ mjx-container[display="true"] + br {
 			<div class="main-content">
 				<div class="home-content-container">
     <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/4.%20std%20call_once/">
+                            std::call_once 解决多线程数据共享
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在多线程环境中，我们经常会遇到一个需求：确保某段代码（通常是初始化代码）在整个程序的生命周期中，无论有多少个线程并发调用它，都只被执行一次。一个经典的例子就是线程安全的懒汉式单例模式
+(Lazy-Initialized Singleton)。 12345678910111213141516#include &lt;iostream&gt;class Singleton {public:  ...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 16:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/4.%20std%20call_once/">Read more<span class="seo-reader-text">std::call_once 解决多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/3.%20%E4%BA%92%E6%96%A5%E9%87%8F%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%A7%A3%E5%86%B3%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+                            互斥量和原子操作解决多线程数据共享
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在多个线程中共享数据时，需要注意线程安全问题。如果多个线程同时访问同一个变量，并且其中至少有一个线程对该变量进行了写操作，那么就会出现数据竞争问题。
+数据竞争可能会导致程序崩溃、产生未定义的结果，或者得到错误的结果。为了避免数据竞争问题，需要使用同步机制来确保多个线程之间对共享数据的访问是安全的。常见的同步机制包括互斥量、条件变量、原子操作等。
+互斥量
+问题的根源：竞争条件 (Race...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 13:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/3.%20%E4%BA%92%E6%96%A5%E9%87%8F%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%A7%A3%E5%86%B3%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">Read more<span class="seo-reader-text">互斥量和原子操作解决多线程数据共享</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90%E9%97%AE%E9%A2%98/">
+                            Thread线程库中的资源问题
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            在单线程程序中，对象的创建和销毁顺序是可预测的。但在多线程程序中，新线程的执行时机是不确定的。它可能在创建它的函数返回之前、之中或之后才真正开始运行。“数据未定义错误”的根源就是，程序员错误地假设了新线程会比它所需要的数据“死”得更早，但事实往往相反。
+下面这些问题的本质原因在于:
+线程的生命周期与其访问的数据的生命周期不匹配，导致线程访问了无效的内存
+数据未定义的情况
+传递临时变量...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 12:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90%E9%97%AE%E9%A2%98/">Read more<span class="seo-reader-text">Thread线程库中的资源问题</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
+                            Thread线程库的基本使用
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            C++11
+标准的发布是一个里程碑，它首次将线程支持纳入了标准库。这意味着开发者终于可以编写跨平台的、标准化的多线程程序了。
+在使用 std::thread 之前，必须包含头文件 :
+#include &lt;thread&gt;
+创建和启动线程
+在 C++11 中，创建一个 std::thread 对象的同时，新线程就已经开始执行了,
+同时主线程立即、不阻塞地继续往下执行,新线...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 11:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/language/CPP/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/%E7%8E%B0%E4%BB%A3C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1.%20Thread%E7%BA%BF%E7%A8%8B%E5%BA%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">Read more<span class="seo-reader-text">Thread线程库的基本使用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">
+                            条款36 ：如果异步是必要的，则指定 std::launch::async
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            该条款的核心论点是，std::async
+的默认启动策略虽然为标准库调度器提供了有用的灵活性，但也给程序员带来了不确定性，可能导致难以发现的bug。因此，当你确实需要函数必须异步执行时，就应该明确指定这一点。
+std::async 的启动策略
+std::async 可以接受一个启动策略参数，来控制任务的执行方式： -
+std::launch::async：此策略保证任务会在一个不同的...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 10:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE36%20-%20%E5%A6%82%E6%9E%9C%E5%BC%82%E6%AD%A5%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%8C%E5%88%99%E6%8C%87%E5%AE%9A%20std%20launch%20async/">Read more<span class="seo-reader-text">条款36 ：如果异步是必要的，则指定 std::launch::async</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
+                            条款35 ：优先选用基于任务而非基于线程的程序设计
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            该条款的核心观点是，当需要异步运行一个函数时，使用
+std::async 的基于任务 (task-based)
+的方法，通常优于直接使用 std::thread
+的基于线程 (thread-based) 的方法。
+基于线程 (Thread-based) 与
+std::thread
+std::thread 是 C++ 标准库中对操作系统线程 (Thread)
+的直接封装。线程可以...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Mon Sep 22 2025 10:00:00 GMT+0800">
+                
+                    2025-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/22/lang/CPP/Effective%20modern%20C++/%E5%B9%B6%E5%8F%91API/%E6%9D%A1%E6%AC%BE35%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%E5%9F%BA%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%80%8C%E9%9D%9E%E5%9F%BA%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">Read more<span class="seo-reader-text">条款35 ：优先选用基于任务而非基于线程的程序设计</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">
+                            GDB
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            使用gdb之前，要求对文件进行编译时增加-g参数，加了这个参数过后生成的编译文件会大一些，这是因为增加了gdb调试内容
+基础指令：
+-g：使用该参数编译可以执行文件，得到调试表。
+gdb ./a.out: 开始调试
+list/l： l 1 列出源码, 因为分页显示, 后续直接l即可
+b： b 20 在20行位置设置断点。
+run/r: 运行程序
+n/next: 下一条指令（会越...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sun Sep 21 2025 22:00:00 GMT+0800">
+                
+                    2025-09-21
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/system/">system</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/system/linux/">linux</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/system/">system</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/21/system/linux/Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/gdb/">Read more<span class="seo-reader-text">GDB</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
         
             <li class="home-article-item">
 
@@ -1053,560 +1661,11 @@ echo是回声命令, 用于将参数输出到标准输出
                 </div>
             </li>
         
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE34%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20lambda%20%E5%BC%8F%EF%BC%8C%E8%80%8C%E9%9D%9E%20std%20bind/">
-                            条款34：优先选用 lambda 式，而非 std bind
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            在 C++11 中，lambda 表达式几乎总是比 std::bind 更好的选择；到了
-C++14，std::bind 基本上已无用武之地。std::bind 是一个源自 C++98
-时代函数式编程思想的工具，虽然在 C++11
-标准库中被正式引入，但其设计与现代 C++ 的 lambda
-表达式相比，在多个方面都相形见绌。
-std::bind
-std::bind 是 C++1...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 19:00:00 GMT+0800">
-                
-                    2025-09-20
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE34%20-%20%E4%BC%98%E5%85%88%E9%80%89%E7%94%A8%20lambda%20%E5%BC%8F%EF%BC%8C%E8%80%8C%E9%9D%9E%20std%20bind/">Read more<span class="seo-reader-text">条款34：优先选用 lambda 式，而非 std bind</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE33%20-%20%E5%AF%B9%20auto&&%20%E5%9E%8B%E5%88%AB%E7%9A%84%E5%BD%A2%E5%8F%82%E4%BD%BF%E7%94%A8%20decltype,%20%E4%BB%A5%20std%20forward%20%E4%B9%8B/">
-                            条款33：对 auto&amp;&amp; 型别的形参使用 decltype, 以 std forward 之
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            该条款的核心是解决一个在 C++14 泛型 lambda
-中进行完美转发时遇到的具体语法问题。
-泛型lambda
-简单来说，泛型 Lambda (Generic Lambda) 是一种可以使用 auto
-关键字作为参数类型的 Lambda 表达式。这使得该 Lambda
-能够接受任意类型的参数，其行为类似于一个函数模板。
-
-在 C++14 之前，如果你想让一个 Lambda
-...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 17:00:00 GMT+0800">
-                
-                    2025-09-20
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE33%20-%20%E5%AF%B9%20auto&&%20%E5%9E%8B%E5%88%AB%E7%9A%84%E5%BD%A2%E5%8F%82%E4%BD%BF%E7%94%A8%20decltype,%20%E4%BB%A5%20std%20forward%20%E4%B9%8B/">Read more<span class="seo-reader-text">条款33：对 auto&amp;&amp; 型别的形参使用 decltype, 以 std forward 之</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE32%20-%20%E4%BD%BF%E7%94%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E6%8D%95%E8%8E%B7%E5%B0%86%E5%AF%B9%E8%B1%A1%E7%A7%BB%E5%85%A5%E9%97%AD%E5%8C%85/">
-                            条款32：使用初始化捕获将对象移入闭包
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            在 C++11 中，lambda 的捕获列表 [] 只能捕获在 lambda
-所在作用域内可见的变量，捕获方式只有两种：按值复制或按引用。这导致了一个问题：C++11
-无法直接将对象“移动”到闭包中。
-这个局限对两类对象影响很大：
-
-只移类型 (Move-only Types)：像
-std::unique_ptr、std::future 或 std::thread
-这样的类型，...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 13:00:00 GMT+0800">
-                
-                    2025-09-20
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE32%20-%20%E4%BD%BF%E7%94%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E6%8D%95%E8%8E%B7%E5%B0%86%E5%AF%B9%E8%B1%A1%E7%A7%BB%E5%85%A5%E9%97%AD%E5%8C%85/">Read more<span class="seo-reader-text">条款32：使用初始化捕获将对象移入闭包</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE31%20-%20%E9%81%BF%E5%85%8D%E9%BB%98%E8%AE%A4%E6%8D%95%E8%8E%B7%E6%A8%A1%E5%BC%8F/">
-                            条款31：避免默认捕获模式
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            lambda 表达式
-Lambda 表达式（Lambda
-Expression）是一种在需要函数的地方，可以就地定义匿名函数对象的便捷方式。它本质上是一个可调用的代码单元，可以像函数一样使用，但无需为其命名(当然也可以为其命名)。它允许你编写简短、内联的函数，特别适用于作为算法或异步调用的参数，从而让代码更简洁、更具表现力。
-为何需要 Lambda？
-在 C++11 之前，如果你想向...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Sep 20 2025 10:00:00 GMT+0800">
-                
-                    2025-09-20
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/20/lang/CPP/Effective%20modern%20C++/lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E6%9D%A1%E6%AC%BE31%20-%20%E9%81%BF%E5%85%8D%E9%BB%98%E8%AE%A4%E6%8D%95%E8%8E%B7%E6%A8%A1%E5%BC%8F/">Read more<span class="seo-reader-text">条款31：避免默认捕获模式</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE28%20-%20%E7%90%86%E8%A7%A3%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0/">
-                            条款 28 - 理解引用折叠
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            这一条款是对之前条款的理论原理呈现, 揭示了支撑万能引用和
-std::forward工作的底层核心机制。这个机制就是引用折叠
-(Reference Collapsing, 在之前的条款24中已有介绍)
-引用折叠会在四种语境中发生：模板实例化、auto 类型生成、创建和运用
-typedef 和别名声明，以及 decltype。
-详细内容请参考条款24。
-
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 23:00:00 GMT+0800">
-                
-                    2025-09-19
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE28%20-%20%E7%90%86%E8%A7%A3%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0/">Read more<span class="seo-reader-text">条款 28 - 理解引用折叠</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE29%20-%20%E5%81%87%E5%AE%9A%E7%A7%BB%E5%8A%A8%E6%93%8D%E4%BD%9C%E4%B8%8D%E5%AD%98%E5%9C%A8%E3%80%81%E6%88%90%E6%9C%AC%E9%AB%98%E3%80%81%E6%9C%AA%E4%BD%BF%E7%94%A8/">
-                            条款 29 - 假定移动操作不存在、成本高、未使用
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            该条款旨在为开发者对C++11移动语义的性能预期“降温”，提醒我们移动语义并非万能的性能优化选择。在编写代码时，尤其是在编写通用代码（如模板）时，更安全的做法是假定移动操作可能不存在、可能成本高昂，或者在特定上下文中可能不会被使用。
-移动语义是C++11的标志性特性，它允许编译器用成本低廉的移动操作来代替昂贵的复制操作，甚至在某些情况下，只需重新编译C++98的代码就能获得性能提升
-。然...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 23:00:00 GMT+0800">
-                
-                    2025-09-19
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE29%20-%20%E5%81%87%E5%AE%9A%E7%A7%BB%E5%8A%A8%E6%93%8D%E4%BD%9C%E4%B8%8D%E5%AD%98%E5%9C%A8%E3%80%81%E6%88%90%E6%9C%AC%E9%AB%98%E3%80%81%E6%9C%AA%E4%BD%BF%E7%94%A8/">Read more<span class="seo-reader-text">条款 29 - 假定移动操作不存在、成本高、未使用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE27%20-%20%E7%86%9F%E6%82%89%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/">
-                            条款 27 - 熟悉依万能引用型别进行重载的替代方案
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            条款26明确指出，对万能引用进行重载是一个坏主意，因为它过于“贪婪”，会意外地匹配到许多本意是想调用其他重载函数的调用。本条款则提供了多种替代方案，让我们可以在需要区分处理不同类型的同时，安全地使用万能引用的强大功能。
-简单的替代方案
-在介绍复杂技术之前，有几种简单的替代方法：
-
-舍弃重载，使用不同函数名：这是最简单的办法。与其重载
-logAndAdd(T&amp;&amp;) 和...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 19 2025 21:00:00 GMT+0800">
-                
-                    2025-09-19
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/language/">language</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/language/">language</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CPP/">CPP</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/09/19/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE27%20-%20%E7%86%9F%E6%82%89%E4%BE%9D%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%9E%8B%E5%88%AB%E8%BF%9B%E8%A1%8C%E9%87%8D%E8%BD%BD%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/">Read more<span class="seo-reader-text">条款 27 - 熟悉依万能引用型别进行重载的替代方案</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
     </ul>
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/10/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/12/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/10/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/12/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1634,11 +1693,11 @@ logAndAdd(T&amp;&amp;) 和...
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

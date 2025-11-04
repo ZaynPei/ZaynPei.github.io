@@ -750,7 +750,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -790,7 +790,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -805,6 +805,562 @@ mjx-container[display="true"] + br {
 			<div class="main-content">
 				<div class="home-content-container">
     <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20-%20%E7%90%86%E8%A7%A3%20decltype/">
+                            条款3：理解 decltype
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            decltype 是 C++11 引入的一个非常重要的关键字. 作为一个类型说明符
+(type specifier), 它是 “declared type” (声明的类型) 的缩写, 也是 C++
+泛型编程（模板）和类型推导系统中至关重要的一块拼图。
+它的核心功能是：在编译时检查一个表达式，并“返回”该表达式所对应的确切类型，但并不会实际计算（执行）这个表达式。
+不过在介绍declt...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sat Sep 13 2025 20:00:00 GMT+0800">
+                
+                    2025-09-13
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE3%20-%20%E7%90%86%E8%A7%A3%20decltype/">Read more<span class="seo-reader-text">条款3：理解 decltype</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">
+                            条款 24：区分万能引用和右值引用
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            回忆左值（Lvalue）和右值（Rvalue）
+左值（Lvalue）表示一个有名字、可寻址、在表达式结束后仍然存在的对象。其特点是：
+
+可以出现在赋值语句的左边：x = 5;
+可以取地址：&amp;x
+通常是变量、数组元素、对象成员、函数形参等
+
+右值（Rvalue）表示一个临时值，通常在表达式中短暂存在，不能取地址。其特点是：
+
+只能出现在赋值语句的右边：x = 5;
+...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sat Sep 13 2025 16:00:00 GMT+0800">
+                
+                    2025-09-13
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE24%20-%20%E5%8C%BA%E5%88%86%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">Read more<span class="seo-reader-text">条款 24：区分万能引用和右值引用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20-%20%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
+                            条款2：理解 auto 型别推导
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            首先我们抛出这一讲的核心思想: auto
+类型推导几乎就是模板类型推导,
+除了稍后会介绍到的唯一区别之外
+两者概念性的转换
+这种对应关系可以通过一个概念性的转换来理解。例如,
+对于前一讲介绍的函数模板调用：
+1234template&lt;typename T&gt;void f(ParamType param);f(expr); // 编译器利用 expr 推导 T 和 Par...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sat Sep 13 2025 12:00:00 GMT+0800">
+                
+                    2025-09-13
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/13/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE2%20-%20%E7%90%86%E8%A7%A3%20auto%20%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">Read more<span class="seo-reader-text">条款2：理解 auto 型别推导</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE23%20-%20%20%E7%90%86%E8%A7%A3%20move%20%E5%92%8C%20forward/">
+                            条款 23：理解 std::move std::forward
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            移动语义 (Move Semantics) 和
+完美转发 (Perfect Forwarding) 是 C++11
+中引入的两个革命性特性，它们共同解决了 C++
+中长期存在的资源管理效率和泛型编程（模板）中的参数传递问题。
+移动语义 (Move Semantics)
+在 C++11
+之前，我们只有“拷贝语义”。当我们处理包含堆内存（如指针指向的数据、文件句柄、网络套接字等）的对...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Sep 12 2025 22:00:00 GMT+0800">
+                
+                    2025-09-12
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8,%20%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/%E6%9D%A1%E6%AC%BE23%20-%20%20%E7%90%86%E8%A7%A3%20move%20%E5%92%8C%20forward/">Read more<span class="seo-reader-text">条款 23：理解 std::move std::forward</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE7%20-%20%E5%8C%BA%E5%88%AB%E4%BD%BF%E7%94%A8(%20)%E4%B8%8E%7B%20%7D%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1/">
+                            条款7：区别使用( )与{ }创建对象
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            复习初始化语法
+在 C++11 中, 进行对象初始化的语法大致可以分为三类: - 使用小括号, 如
+int x(10); - 使用大括号, 如 int x{10}; -
+使用等号, 如 int x = 10; 当然,
+很多情况下也可以使用一个等号和大括号来初始化对象,
+如：int z = { o } ;,
+下面的讨论我们将忽略这种”等号加大括号“语法，因为 C++
+通常会把它和...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Sep 12 2025 22:00:00 GMT+0800">
+                
+                    2025-09-12
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE7%20-%20%E5%8C%BA%E5%88%AB%E4%BD%BF%E7%94%A8(%20)%E4%B8%8E%7B%20%7D%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1/">Read more<span class="seo-reader-text">条款7：区别使用( )与{ }创建对象</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">
+                            条款1 ：理解模板型别推导
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            如果一个复杂系统的用户对于该系统的运作方式一无所知，然而却对其提供的服务表示满意，这就充分说明系统设计得好。如果从这样的角度来看，
+C++的模板型别推导取得了极大的成功。
+模板的型别推导，是现代C++最广泛应用的特性之一 ————
+auto的基础。也就是说，如果你对C++98
+推导模板型别的运作方式感觉满意，那么你也会自然而然地愉快接受C++11 中推导
+auto
+型别的运作方式...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Sep 12 2025 12:00:00 GMT+0800">
+                
+                    2025-09-12
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/CPP/">CPP</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/12/lang/CPP/Effective%20modern%20C++/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/%E6%9D%A1%E6%AC%BE1%20-%20%E7%90%86%E8%A7%A3%E6%A8%A1%E6%9D%BF%E5%9E%8B%E5%88%AB%E6%8E%A8%E5%AF%BC/">Read more<span class="seo-reader-text">条款1 ：理解模板型别推导</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C-map-set/">
+                            哈希 Hash
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            哈希函数对象 (Hash Functor) –
+std::hash
+std::hash 是 C++ 标准库中定义的一个类模板，位于 
+头文件中。它的主要作用是作为一个函数对象（Functor），为给定的数据类型计算一个唯一的、稳定的哈希值。
+从本质上讲，std::hash
+是一个提供了标准哈希计算接口的工具或者说算法(算子)。
+12345678910111213141516171...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Wed Sep 03 2025 18:00:00 GMT+0800">
+                
+                    2025-09-03
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/language/">language</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/language/">language</a>&nbsp;
+                        </li>
+                    
+                        <li>
+                            | 
+                            <a href="/tags/cpp/">cpp</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2025/09/03/lang/CPP/STL%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C-map-set/">Read more<span class="seo-reader-text">哈希 Hash</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+                </div>
+            </li>
         
             <li class="home-article-item">
 
@@ -1039,476 +1595,11 @@ model，开放式系统互联模型）是一个由国际标准化组织（ISO）
                 </div>
             </li>
         
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/18/">
-                            Dynamic Programming for MDP (18)
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            上一讲我们定义了MDP，并得到了一个核心的数学关系——贝尔曼方程 (Bellman
-Equation)，它描述了最优状态价值的递归性质。这一讲的核心问题是：我们如何通过计算来求解这些贝尔曼方程，从而最终找到最优策略
-π*？
-由于贝尔曼方程是一组非线性的联立方程，直接求解非常困难。因此，我们采用动态规划
-(Dynamic Programming)
-的思想，通过迭代的方式逐步逼近最优的...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Aug 30 2025 22:00:00 GMT+0800">
-                
-                    2025-08-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/18/">Read more<span class="seo-reader-text">Dynamic Programming for MDP (18)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/17/">
-                            Markov Decision Process, MDP(17)
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            强化学习任务通常使用马尔可夫决策过程（MDP）来描述。MDP
-是一个为具有不确定性的序贯决策问题提供数学模型的框架。其核心在于一个智能体（Agent）与环境（Environment）的持续交互：智能体感知当前状态，执行一个动作，环境随之转移到一个新的状态，并给予智能体一个奖励。这个循环不断持续，智能体的目标是学习一个最优策略，以最大化其长期累积奖励。
-
-所谓序贯决策，指的是决策者需要连...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Aug 30 2025 22:00:00 GMT+0800">
-                
-                    2025-08-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/30/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/17/">Read more<span class="seo-reader-text">Markov Decision Process, MDP(17)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/27/web/dns/">
-                            域名解析(DNS)
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            什么是 DNS？—— 互联网的“电话簿”
-DNS（Domain Name
-System，域名系统）是互联网一项核心的服务。它最基本的功能，就是将人类易于记忆的域名（例如
-www.google.com）翻译成计算机能够理解和处理的 IP 地址（例如
-142.251.42.196）。
-这个过程就如同查一本巨大的电话簿：
-
-姓名（域名）：www.google.com
-电话号码（IP...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
-                
-                    2025-08-27
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/web/">web</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/web/">web</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/27/web/dns/">Read more<span class="seo-reader-text">域名解析(DNS)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/27/web/cdn/">
-                            内容分发网络（CDN）
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            内容分发网络（Content Delivery Network,
-CDN）是一种构建在现有互联网基础之上的智能虚拟网络。它由分布在全球各地的大量边缘服务器（Edge
-Server）组成，旨在通过将网站内容缓存到离用户更近的服务器上，来更快速、更可靠地向用户交付内容。
-简单来说，CDN
-就像一个遍布全球的“快递网络”。当您访问一个网站时，如果没有
-CDN，您的请求需要直接发送到网站的...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
-                
-                    2025-08-27
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/web/">web</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/web/">web</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/27/web/cdn/">Read more<span class="seo-reader-text">内容分发网络（CDN）</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/27/system/computer-architecture/chapter2/">
-                            第二章：指令系统
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            第二章：指令系统
-这里是计算机体系结构指令系统的内容。
-
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
-                
-                    2025-08-27
-                
-            </span>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2025/08/27/system/computer-architecture/chapter2/">Read more<span class="seo-reader-text">第二章：指令系统</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/27/system/computer-architecture/chapter1/">
-                            第一章：基础概念
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            第一章：基础概念
-这里是计算机体系结构基础概念的内容。
-
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Aug 27 2025 14:57:08 GMT+0800">
-                
-                    2025-08-27
-                
-            </span>
-        </span>
-        
-        
-    </div>
-
-    <a href="/2025/08/27/system/computer-architecture/chapter1/">Read more<span class="seo-reader-text">第一章：基础概念</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
-                    <h3 class="home-article-title">
-                        <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/16/">
-                            Particle Filtering, Utility Theory(16)
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            
-                            我们已经学习了隐马尔可夫模型（HMMs），但当状态空间变得非常大或连续时，精确的前向算法在计算上变得不可行。粒子滤波提供了一种强大的近似推理方法来解决这个问题,
-是HMMs的“采样”版本。。
-粒子滤波
-粒子滤波的核心目标是，在一个动态系统中，根据一系列带噪音的、不完整的观测数据，实时地、近似地追踪一个我们无法直接看到的隐藏状态。
-它专门用于解决那些状态空间巨大或连续的问题，例如：
-...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Aug 26 2025 22:00:00 GMT+0800">
-                
-                    2025-08-26
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/AI/">AI</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/CS188/">CS188</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/08/26/ai/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI/CS188/16/">Read more<span class="seo-reader-text">Particle Filtering, Utility Theory(16)</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
     </ul>
 
     <div class="home-paginator px-7 py-5">
         <div class="paginator">
-	<a class="extend prev" rel="prev" href="/page/14/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/16/"><i class="fa-regular fa-angle-right"></i></a>
+	<a class="extend prev" rel="prev" href="/page/14/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/16/"><i class="fa-regular fa-angle-right"></i></a>
 </div>
   
     </div>
@@ -1536,11 +1627,11 @@ CDN，您的请求需要直接发送到网站的...
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

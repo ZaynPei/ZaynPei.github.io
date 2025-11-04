@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-02T14:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-21T11:53:13.180Z">
+<meta property="article:modified_time" content="2025-11-03T09:29:27.117Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="algorithms">
 <meta property="article:tag" content="动态规划">
@@ -719,7 +719,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -770,8 +770,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-21 19:53:13</span>
-            <span class="mobile">2025-10-21 19:53:13</span>
+            <span class="desktop">2025-11-03 17:29:27</span>
+            <span class="mobile">2025-11-03 17:29:27</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -813,12 +813,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>8.2k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>11.7k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>32 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>47 Mins</span>
         </span>
     
     
@@ -854,7 +854,7 @@ Conquer）有些相似，但不同之处在于，动态规划适用于子问题�
 <li><p>例如：在计算斐波那契数列时，F(5) 依赖 F(4) 和 F(3)，而 F(4) 依赖
 F(3) 和 F(2)。F(3) 就是一个被重复计算的重叠子问题。</p></li>
 </ul>
-<p>无后效性 (No Aftereffect)</p>
+<p><strong>无后效性</strong> (No Aftereffect)</p>
 <ul>
 <li>一旦某个阶段的状态确定，它就不会再被后续的决策所改变。<strong>当前状态只与之前的状态有关</strong>，而与之后的状态无关。我们做的每一个决策都是基于当前已有的信息，而不用担心未来的决策会反过来影响当前决策的正确性。</li>
 </ul>
@@ -904,7 +904,7 @@ dp[i-1]）都已经计算出来了。这通常意味着从小规模的问题向�
 如果没有计算过，就递归地去解决这个子问题，并将计算出的结果存入“记忆”中，以备后用。</p>
 <p>这个过程就像是从树的顶部（根节点，即原始问题）开始，向下探索到树的底部（叶子节点，即最小的子问题）。</p>
 <ol start="2" type="1">
-<li>自底向上 (Bottom-Up) 动态规划 — 表格法</li>
+<li><strong>自底向上</strong> (Bottom-Up) 动态规划 — 表格法</li>
 </ol>
 <p>这种方法也称为 表格法
 (Tabulation)。核心思想完全反过来，我们不从大问题开始，而是从能够直接求解的、<strong>最小的子问题开始</strong>。然后利用这些小问题的解，像搭积木一样，一步步地构建出更大问题的解，直到最终解决了我们想要的那个大问题。</p>
@@ -999,66 +999,6 @@ i-1 时) 已经被更新了。所以它存储的是
 <p>因此，dp[i] += dp[i-1] 就等价于： <span class="math display"><em>d</em><em>p</em>[<em>i</em>]<sub>新</sub> = <em>d</em><em>p</em>[<em>i</em>]<sub>旧</sub> + <em>d</em><em>p</em>[<em>i</em> − 1]<sub>新</sub></span></p>
 <p>这完美地实现了二维状态转移方程的功能，但只用了一个一维数组。</p>
 <h3 id="例题">例题</h3>
-<h4 id="例题1-最长递增子序列">例题1: 最长递增子序列</h4>
-<p>给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。</p>
-<p>子序列是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7]
-是数组 [0,3,1,6,2,2,7] 的子序列。</p>
-<p>示例 1：</p>
-<ul>
-<li>输入：nums = [10,9,2,5,3,7,101,18]</li>
-<li>输出：4, 因为最长递增子序列是 [2,3,7,101]，因此长度为 4 。</li>
-</ul>
-<p>示例 2：</p>
-<ul>
-<li>输入：nums = [0,1,0,3,2,3]</li>
-<li>输出：4, 因为最长递增子序列是 [0,1,2,3]，因此长度为 4 。</li>
-</ul>
-<p>示例 3：</p>
-<ul>
-<li>输入：nums = [7,7,7,7,7,7,7]</li>
-<li>输出：1, 因为最长递增子序列是 [7]，因此长度为 1 。</li>
-</ul>
-<details class="green" data-header-exclude>
-    <summary><i class="fa-solid fa-chevron-right"></i>答案及分析 </summary>
-    <div class="content markdown-body">
-      <p>这个问题的关键在于准确定义状态dp[i]的含义, 如果按照一般的dp[i] = 到 i
-的子数组（即 nums[0…i]）中最长递增子序列的长度, 那么在从 i 推进到 i+1
-的过程中丢失了至关重要的信息！这个信息就是：“构成 LIS
-的那个子序列，它的结尾元素是谁？也就是说, 我们假如只知道dp[i]=x,
-是无法推出dp[i+1]的, 因为我们并不知道结尾元素是哪个, 只有知道了结尾元素,
-才能判断是否能构成递增子序列.</p>
-<p>因此我们定义dp[i] = <strong>以 nums[i]
-这个元素结尾</strong>的最长递增子序列的长度,
-实现将“结尾元素”这个约束条件直接融入状态定义中</p>
-<p>假如我们还是坚持定义 dp_naive[i] = nums[0…i] 中的 LIS 长度呢?
-我们的目标是推导出 dp_naive[i] 和 dp_naive[i-1] 之间的关系。</p>
-<p>此时dp_naive[i] 的值有两种可能性：</p>
-<ul>
-<li><p>LIS 不包含 nums[i]：这种情况下，nums[0…i] 的 LIS 和 nums[0…i-1]
-的 LIS 是完全一样的。所以，dp_naive[i] = dp_naive[i-1]。</p></li>
-<li><p>LIS 包含 nums[i]：: 这种情况就复杂了。如果 LIS 包含 nums[i]，那么
-nums[i] 必然是这个 LIS 的最后一个元素。这个 LIS 的形式就是 […, a, b,
-nums[i]]。这意味着，我们需要在 nums[0…i-1] 中，找到一个以某个小于
-nums[i] 的数字结尾的、最长的递增子序列，然后把 nums[i]
-接在它后面。这个新的长度就是 (那个子序列的长度) + 1。</p></li>
-</ul>
-<p>我们把这两种可能性结合起来：dp_naive[i] = max( dp_naive[i-1], (在
-nums[0…i-1] 中以 &lt; nums[i] 的数结尾的 LIS 长度) + 1 )</p>
-<p>而后者, “在 nums[0…i-1] 中以 &lt; nums[i] 的数结尾的 LIS 长度”,
-这个东西，我们能从 dp_naive[i-1]
-这个单一的数字里得到吗？完全不能！所以为了计算这个值，我们别无选择，只能在计算
-dp_naive[i] 的时候，重新遍历 j 从 0 到 i-1，对于每一个
-j，我们都去计算“以 nums[j] 结尾的 LIS 长度”</p>
-<p>而为了计算 dp_naive[i]，被迫要去计算所有 j &lt; i 的<strong>“以
-nums[j] 结尾的 LIS 长度”</strong>,
-这不正是我们之前讨论的那个“最优”定义吗?</p>
-<p>所以，下次再遇到 DP 问题想不出状态定义时，可以问自己一个问题：“为了从
-dp[i] 推导出
-dp[i+1]，我需要哪些额外信息？我<strong>能不能把这些额外信息变成状态定义的一部分</strong>？”
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">lengthOfLIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> i,j;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> maxdp = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;n;i++){</span><br><span class="line">            <span class="comment">// dp[i]</span></span><br><span class="line">            <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">ddp</span><span class="params">(dp)</span></span>;</span><br><span class="line">            <span class="type">int</span> maxddp = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++){</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&gt;nums[j]) ddp[j]++;</span><br><span class="line">                <span class="keyword">else</span> ddp[j] = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span>(ddp[j]&gt;maxddp) maxddp = ddp[j];</span><br><span class="line">            }</span><br><span class="line">            dp[i] = maxddp;</span><br><span class="line">            <span class="keyword">if</span>(dp[i]&gt;maxdp) maxdp = dp[i];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> maxdp;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 也可以简化dp[i]的计算 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 尝试用更直接的方式计算 dp[i]</span></span><br><span class="line">dp[i] = <span class="number">1</span>; <span class="comment">// 先假设 nums[i] 自己构成一个长度为 1 的子序列</span></span><br><span class="line"><span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; i; j++) {</span><br><span class="line">    <span class="comment">// 检查是否可以接在 nums[j] 后面</span></span><br><span class="line">    <span class="keyword">if</span> (nums[i] &gt; nums[j]) {</span><br><span class="line">        <span class="comment">// 如果可以，dp[i] 就有可能是 dp[j] + 1</span></span><br><span class="line">        <span class="comment">// 我们要取所有可能性中的最大值</span></span><br><span class="line">        dp[i] = <span class="built_in">max</span>(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
-
-    </div>
-  </details>
 <h4 id="例题2-单词拆分">例题2: 单词拆分</h4>
 <p>给你一个字符串 s 和一个字符串列表 wordDict
 作为字典。如果可以利用字典中出现的一个或多个单词拼接出 s 则返回
@@ -1074,30 +1014,18 @@ true 解释: 返回 true 因为 “applepenapple” 可以由 “apple” “pen
     <summary><i class="fa-solid fa-chevron-right"></i>思路 1 </summary>
     <div class="content markdown-body">
       <p>采取动态规划的思路, 要解决s能否被组合, 我们得考虑比s更小的子问题,
-即s的子串是否能被组合. 基于此, 一个思路便产生了:
-dp[i][j]代表s[i:j]是否能被组合, 此时要求的就是dp[0][n-1],
-递推式是dp[i][j] = 存在k使得 dp[i][k]&amp;&amp;dp[k+1][j], i&lt;=k&lt;j
-或者 <strong>s[i:j]在wordDict中</strong>, 后者同样很重要 最后,
-我们要填的表相当于一个n*n的二维数组的上半部分 基本代码如下:
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">wordBreak</span><span class="params">(string s, vector&lt;string&gt;&amp; wordDict)</span> </span>{</span><br><span class="line">        <span class="type">size_t</span> n = s.<span class="built_in">length</span>();</span><br><span class="line">        <span class="type">int</span> max=<span class="number">0</span>, min=INT_MAX;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it = wordDict.<span class="built_in">begin</span>(); it!=wordDict.<span class="built_in">end</span>();it++){</span><br><span class="line">            <span class="keyword">if</span>(it-&gt;<span class="built_in">length</span>()&gt; max) max = it-&gt;<span class="built_in">length</span>();</span><br><span class="line">            <span class="keyword">if</span>(it-&gt;<span class="built_in">length</span>()&lt; min) min = it-&gt;<span class="built_in">length</span>();</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 1.定义dp</span></span><br><span class="line">        vector&lt;vector&lt;<span class="type">bool</span>&gt;&gt; dp{n, <span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(n, <span class="literal">false</span>)};</span><br><span class="line">        <span class="comment">// 2. 决定关系式: 求dp[0][n-1], dp[i][j] = 存在k使得 dp[i][k]&amp;&amp;dp[k+1][j], i&lt;=k&lt;j</span></span><br><span class="line">        <span class="type">int</span> i,j;</span><br><span class="line">        <span class="comment">// 3. 初始化初值</span></span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++){</span><br><span class="line">            <span class="function">string <span class="title">ss</span><span class="params">(<span class="number">1</span>,s[i])</span></span>;</span><br><span class="line">            <span class="keyword">auto</span> it = std::<span class="built_in">find</span>(wordDict.<span class="built_in">begin</span>(), wordDict.<span class="built_in">end</span>(), ss);</span><br><span class="line">            <span class="keyword">if</span>(it!=wordDict.<span class="built_in">end</span>()) dp[i][i] = <span class="literal">true</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 4. 构建递推</span></span><br><span class="line">        <span class="keyword">for</span>(i=n<span class="number">-2</span>;i&gt;=<span class="number">0</span>;i--){</span><br><span class="line">            <span class="keyword">for</span>(j=i<span class="number">+1</span>;j&lt;n;j++){</span><br><span class="line">                <span class="keyword">for</span>(<span class="type">int</span> k=i;k&lt;j;k++){</span><br><span class="line">                    <span class="keyword">if</span>(dp[i][k]&amp;&amp;dp[k<span class="number">+1</span>][j]) dp[i][j] = <span class="literal">true</span>;</span><br><span class="line">                }</span><br><span class="line">                <span class="keyword">if</span>(!dp[i][j]&amp;&amp;(j-i<span class="number">+1</span>)&gt;=min&amp;&amp;(j-i<span class="number">+1</span>)&lt;=max){</span><br><span class="line">                    <span class="keyword">auto</span> it = std::<span class="built_in">find</span>(wordDict.<span class="built_in">begin</span>(), wordDict.<span class="built_in">end</span>(), s.<span class="built_in">substr</span>(i,j-i<span class="number">+1</span>));</span><br><span class="line">                    <span class="keyword">if</span>(it!=wordDict.<span class="built_in">end</span>()) dp[i][j] = <span class="literal">true</span>;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][n<span class="number">-1</span>];</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
-
-    </div>
-  </details>
-<details class="blue" data-header-exclude>
-    <summary><i class="fa-solid fa-chevron-right"></i>思路 2 </summary>
-    <div class="content markdown-body">
-      <p>上一个思路如果考虑完备的话是没有问题,
-但是二维的dp表需要填充的内容很多, 我们真的需要这么多信息吗?
-答案是不需要, 我们只需要知道s[i:j]是否能被组合,
-而不关心s[i:j]的具体组合方式. 那我们是不是可以将dp表简化为一维,
-即dp[i]代表s[0:i]是否能被组合?</p>
-<p>再细细回想, 为了知道dp[i][j], 我们考虑了所有分段dp的信息,
-其中显然有冗余. 在上面的例子2中,
-applepenapple能够被有效拆分为applepen:apple和apple:penapple,这两种都是有效的组合,
-但其实只知道前者就足够了,
-因为后者可以由前者和wordDict中的pen拼接得到.</p>
-<p>因此, 我们可以定义一个一维的数组dp[i]表示字符串 s 中，长度为 i
-的前缀（即子串 s[0…i-1]）是否可以被字典中的单词拼接而成,
+即s的子串是否能被组合. 基于此, 一个思路便产生了: dp[i]
+代表s[0:i]是否能被wordDict中的单词组合而成. 那么为了推导dp[i],
+我们需要考虑所有可能的分段方式, 即s[0:j]和s[j+1:i]两部分的组合情况,
+只要存在某个j使得dp[j]为true且s[j+1:i]在wordDict中, 那么dp[i]就为true.
+当然, 还要考虑s[0:i]本身在wordDict中的情况. 基本代码如下:
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">wordBreak</span><span class="params">(string s, vector&lt;string&gt;&amp; wordDict)</span> </span>{</span><br><span class="line">       <span class="type">size_t</span> n = s.<span class="built_in">length</span>();</span><br><span class="line">       <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(n,<span class="literal">false</span>)</span></span>;</span><br><span class="line">       <span class="function">unordered_set&lt;string&gt; <span class="title">set</span><span class="params">(wordDict.begin(), wordDict.end())</span></span>;</span><br><span class="line">       dp[<span class="number">0</span>] = set.<span class="built_in">contains</span>(<span class="built_in">string</span>(<span class="number">1</span>, s[<span class="number">0</span>]))? <span class="literal">true</span>:<span class="literal">false</span>;</span><br><span class="line">       <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;n;i++){</span><br><span class="line">           <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;i;j++){</span><br><span class="line">               <span class="keyword">if</span>(dp[j]&amp;&amp;set.<span class="built_in">contains</span>(s.<span class="built_in">substr</span>(j<span class="number">+1</span>,i-j))){</span><br><span class="line">                   dp[i] = <span class="literal">true</span>;</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">               }</span><br><span class="line">           }</span><br><span class="line">           <span class="keyword">if</span>(set.<span class="built_in">contains</span>(s.<span class="built_in">substr</span>(<span class="number">0</span>,i<span class="number">+1</span>))) dp[i] = <span class="literal">true</span>;</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> dp[n<span class="number">-1</span>];</span><br><span class="line">   }</span><br></pre></td></tr></table></figure></div></p>
+<p>上面的解法将 dp[i] 含义定义为了下标 i 处的字符包含在内的子串 s[0:i]
+是否能被 wordDict 中的单词拼接而成。然而，这种定义导致在计算 dp[i]
+时，我们遍历后还需要额外检查 s[0:i] 本身是否在 wordDict
+中，这增加了不必要的复杂性。</p>
+<p>因此, 我们可以定义一个一维的数组dp[i]表示字符串 s 中，<strong>长度为
+i 的前缀</strong>（即子串 s[0…i-1]）是否可以被字典中的单词拼接而成,
 而dp[i]拆分为的两部分不必都是dp数组(从而造成冗余),如果满足以下两个条件，那么
 dp[i] 就可以是 true：</p>
 <ul>
@@ -1106,10 +1034,7 @@ dp[i] 就可以是 true：</p>
 <li>从 j 到 i 的这一段子串 s.substr(j, i-j)
 本身就是字典里的一个单词。</li>
 </ul>
-<p>相当于我们的状态转移方程右边有一项外界参数,
-通过引入它可以不必重复计算dp数组, 状态转移方程为: dp[i] = OR { dp[j]
-&amp;&amp; (s.substr(j, i-j) is in wordDict) } for all 0 &lt;= j &lt; i.
-<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">wordBreak</span><span class="params">(string s, vector&lt;string&gt;&amp; wordDict)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = s.<span class="built_in">length</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 将字典转为哈希集合，提高查询效率</span></span><br><span class="line">        <span class="comment">// std::find 在 vector 上是 O(N)，在 unordered_set 上是 O(1)</span></span><br><span class="line">        <span class="function">unordered_set&lt;string&gt; <span class="title">wordSet</span><span class="params">(wordDict.begin(), wordDict.end())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 定义 dp 数组，大小为 n+1</span></span><br><span class="line">        <span class="comment">// dp[i] 表示 s 的前 i 个字符能否被拼接</span></span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(n + <span class="number">1</span>, <span class="literal">false</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 初始化初值</span></span><br><span class="line">        <span class="comment">// dp[0] 表示空字符串，是合法的起点</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 构建递推</span></span><br><span class="line">        <span class="comment">// 外层循环遍历所有前缀长度 i，从 1 到 n</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) {</span><br><span class="line">            <span class="comment">// 内层循环遍历所有可能的分割点 j</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; ++j) {</span><br><span class="line">                <span class="comment">// 如果 dp[j] 为 true，并且 s[j...i-1] 是一个字典词</span></span><br><span class="line">                <span class="keyword">if</span> (dp[j] &amp;&amp; wordSet.<span class="built_in">count</span>(s.<span class="built_in">substr</span>(j, i - j))) {</span><br><span class="line">                    dp[i] = <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>; <span class="comment">// 找到了一个可行方案，无需再检查其他分割点 j</span></span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">wordBreak</span><span class="params">(string s, vector&lt;string&gt;&amp; wordDict)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = s.<span class="built_in">length</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 将字典转为哈希集合，提高查询效率</span></span><br><span class="line">        <span class="comment">// std::find 在 vector 上是 O(N)，在 unordered_set 上是 O(1)</span></span><br><span class="line">        <span class="function">unordered_set&lt;string&gt; <span class="title">wordSet</span><span class="params">(wordDict.begin(), wordDict.end())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 定义 dp 数组，大小为 n+1</span></span><br><span class="line">        <span class="comment">// dp[i] 表示 s 的前 i 个字符能否被拼接</span></span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">dp</span><span class="params">(n + <span class="number">1</span>, <span class="literal">false</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 初始化初值</span></span><br><span class="line">        <span class="comment">// dp[0] 表示空字符串，是合法的起点</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 构建递推</span></span><br><span class="line">        <span class="comment">// 外层循环遍历所有前缀长度 i，从 1 到 n</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) {</span><br><span class="line">            <span class="comment">// 内层循环遍历所有可能的分割点 j</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; ++j) {</span><br><span class="line">                <span class="comment">// 如果 dp[j] 为 true，并且 s[j...i-1] 是一个字典词</span></span><br><span class="line">                <span class="keyword">if</span> (dp[j] &amp;&amp; wordSet.<span class="built_in">count</span>(s.<span class="built_in">substr</span>(j, i - j))) {</span><br><span class="line">                    dp[i] = <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>; <span class="comment">// 找到了一个可行方案，无需再检查其他分割点 j</span></span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
 
     </div>
   </details>
@@ -1257,9 +1182,317 @@ num1，也可以是在凑成 j-num2 的基础上加上 num2… 由于我们对�
 <li>解决组合问题，应该外层遍历物品，内层遍历背包。这相当于固定物品，看它能对不同容量的背包做什么贡献。</li>
 <li>解决排列问题，应该外层遍历背包，内层遍历物品。这相当于固定目标（背包容量），看它可以由哪些物品作为最后一步凑成。</li>
 </ul>
-<h4 id="例题4-树形dp">例题4: 树形DP</h4>
-<p>树形DP是一类特殊的动态规划问题，通常用于解决树结构上的最优子结构问题。与传统的线性动态规划不同，树形DP需要考虑节点之间的层级关系和子树结构。例如Leetcode
-337题: 打家劫舍 III</p>
+<h4 id="二维-dp">二维 DP</h4>
+<h4 id="经典序列-dp-lcs-lis">经典序列 DP (LCS &amp; LIS)</h4>
+<p>专门处理两个（或一个）序列/字符串之间的关系。 - 最长公共子序列 (LCS,
+Longest Common Subsequence) - 最长递增子序列 (LIS, Longest Increasing
+Subsequence) - 编辑距离 (Edit Distance)</p>
+<p>这类问题的核心在于，<strong>状态定义通常涉及两个维度</strong>，分别对应<strong>两个序列的索引位置</strong>。通过比较这两个位置的元素，我们可以决定如何更新
+DP 表格，从而逐步构建出最终的解。</p>
+<h5 id="例题-最长公共子序列-lcs">例题: 最长公共子序列 (LCS)</h5>
+<p>给定两个字符串 text1 和
+text2，返回这两个字符串的最长公共子序列的长度。如果不存在公共子序列，返回
+0 。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">longestCommonSubsequence</span><span class="params">(string text1, string text2)</span> </span>{</span><br><span class="line">        <span class="type">int</span> m = text<span class="number">1.</span><span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> n = text<span class="number">2.</span><span class="built_in">size</span>();</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(m<span class="number">+1</span>,<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n<span class="number">+1</span>,<span class="number">0</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=m;i++){</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++){</span><br><span class="line">                <span class="keyword">if</span>(text1[i<span class="number">-1</span>]==text2[j<span class="number">-1</span>]){</span><br><span class="line">                    dp[i][j] = <span class="number">1</span>+dp[i<span class="number">-1</span>][j<span class="number">-1</span>];</span><br><span class="line">                }<span class="keyword">else</span>{</span><br><span class="line">                    dp[i][j] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i][j<span class="number">-1</span>]);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[m][n];</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div> 状态定义: dp[i][j]. 我们定义 dp[i][j] 表示 text1
+的前 i 个字符（即 text1[0…i-1]）与 text2 的前 j 个字符（即
+text2[0…j-1]）的最长公共子序列的长度。</p>
+<p>重点：</p>
+<ul>
+<li><p>dp 表的大小：如果 text1 长度为 m，text2 长度为
+n，我们需要一个大小为 (m+1) x (n+1) 的 dp 表。</p></li>
+<li><p>+1 的目的：dp[0][j] 和 dp[i][0]
+用来表示“空字符串”与另一个字符串的 LCS。</p>
+<ul>
+<li>dp[0][j]：text1 取前 0 个字符（空串）与 text2 前 j 个字符的
+LCS，结果显然是 0。</li>
+<li>dp[i][0]：text1 取前 i 个字符与 text2 前 0 个字符（空串）的
+LCS，结果也显然是 0。</li>
+<li>这种定义让我们的base case (基础情况) 变得非常清晰。</li>
+</ul></li>
+<li><p>状态转移方程: 要计算 dp[i][j]，我们需要观察 text1 的第 i
+个字符（即 text1[i-1]）和 text2 的第 j 个字符（即
+text2[j-1]）。这里只有两种情况：</p>
+<ul>
+<li><p>情况一：两个字符相等, if (text1[i-1] == text2[j-1]) -
+说明：我们找到了一个新的公共字符！例如，比较 “abc” 和 “adc” 时，我们发现
+c == c。 - 操作：这个新的公共字符 c 必然可以被包含在 LCS 中。当前的 LCS
+长度，等于 “ab” 和 “ad” 的 LCS 长度 再加 1。 - 对应到 dp 表：dp[i][j]
+等于 dp[i-1][j-1] (即 “ab” 和 “ad” 的LCS) + 1。 - 转移方程 (1)：dp[i][j]
+= 1 + dp[i-1][j-1]</p></li>
+<li><p>情况二：两个字符不相等, if (text1[i-1] != text2[j-1]) -
+说明：这两个字符无法同时作为公共子序列的结尾。例如，比较 “abc” 和 “ade”
+时，c != e。 - 操作：我们必须在 “abc” 和 “ade”
+中“丢弃”一个字符，然后<strong>取两种情况下的最优解</strong>（最大值）。
+- 丢弃 text1 的 c：我们去比较 “ab” 和 “ade”。对应 dp 表：dp[i-1][j] -
+丢弃 text2 的 e：我们去比较 “abc” 和 “ad”。对应 dp 表：dp[i][j-1] -
+例如：LCS(“abc”, “ade”) 应该等于 max(LCS(“ab”, “ade”), LCS(“abc”,
+“ad”))。 - 转移方程 (2)：dp[i][j] = max(dp[i-1][j], dp[i][j-1])</p></li>
+</ul></li>
+</ul>
+<p>为什么是一道 DP
+问题？我们要找“最长”的公共子序列。这暗示着我们要做出<strong>最优决策</strong>。当我们比较两个字符串
+text1 和 text2 时，例如 text1 = “abcde” 和 text2 =
+“ace”，我们从头开始看：</p>
+<ul>
+<li>‘a’ vs ‘a’：它们匹配。很好，LCS 至少为
+1。我们接下来该做什么？我们应该去求解 “bcde” 和 “ce” 的 LCS。</li>
+<li>‘b’ vs ‘c’：不匹配。我们现在有两个选择：跳过 ‘b’，去比较 “cde” 和
+“ce”; 跳过 ‘c’，去比较 “bcde” 和 “e”。</li>
+<li>我们发现，原问题 LCS(“abcde”, “ace”) 被分解为了 1 + LCS(“bcde”,
+“ce”)，而 LCS(“bcde”, “ce”) 又被分解为求解 LCS(“cde”, “ce”) 和
+LCS(“bcde”, “e”) 中的最大值…这就是“最优子结构”和“重叠子问题”，是 DP
+的完美应用场景。</li>
+</ul>
+<p>为什么要用二维 DP？与“最长递增子序列”（一维 DP）不同，LCS
+问题有两个变量在同时变化：text1 的索引 i 和 text2 的索引 j。
+因此，我们的 <strong>DP
+状态必须由这两个变量共同决定</strong>。这自然地导出了一个<strong>二维 dp
+表</strong>。</p>
+<h5 id="例题-最长递增子序列">例题: 最长递增子序列</h5>
+<p>给你一个整数数组 nums
+，找到其中最长严格递增子序列的长度。子序列是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7]
+是数组 [0,3,1,6,2,2,7] 的子序列。</p>
+<p>要计算 dp[i]（以 nums[i] 结尾的 LIS 长度），我们需要考虑 nums[i]
+能“接”在哪个子序列的后面。我们必须遍历 i 之前的所有元素 nums[j]（其中 j
+从 0 到 i-1）： - 如果 nums[i] &gt; nums[j]： -
+说明：这满足“严格递增”的要求。nums[i] 可以接在以 nums[j]
+结尾的那个递增子序列的后面。 - 操作：形成了一个新的、更长的、以 nums[i]
+结尾的子序列。它的长度是 dp[j] + 1 (即 …nums[j] 的序列长度 dp[j]，加上
+nums[i] 这个元素)。</p>
+<ul>
+<li>如果 nums[i] &lt;= nums[j]：
+<ul>
+<li>说明：nums[i] 不能接在以 nums[j] 结尾的子序列后面。</li>
+</ul></li>
+</ul>
+<p>dp[i] 的初始值是什么？ 任何一个元素 nums[i] 自身都可以构成一个长度为
+1 的子序列。所以 dp[i] 的保底值（基础情况）是 1。</p>
+<p>推导方程： dp[i] 应该是所有可能的 dp[j] + 1 (对于 j &lt; i 且 nums[i]
+&gt; nums[j]) 和它的保底值 1 之间，取一个最大值。</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">lengthOfLIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>{</span><br><span class="line">    <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// dp[i] 表示以 nums[i] 结尾的最长递增子序列的长度</span></span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> global_max_length = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; ++i) {</span><br><span class="line">        <span class="comment">// 1. 初始化：</span></span><br><span class="line">        <span class="comment">// 任何子序列的最小长度都是 1 (即 nums[i] 自身)</span></span><br><span class="line">        dp[i] = <span class="number">1</span>; </span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 状态转移：</span></span><br><span class="line">        <span class="comment">// 遍历 i 之前的所有元素 j</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; ++j) {</span><br><span class="line">            <span class="comment">// 如果 nums[i] &gt; nums[j]，说明 nums[i] 可以接在 nums[j] 后面</span></span><br><span class="line">            <span class="keyword">if</span> (nums[i] &gt; nums[j]) {</span><br><span class="line">                <span class="comment">// 我们要找一个最长的 dp[j] 来接</span></span><br><span class="line">                dp[i] = <span class="built_in">max</span>(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3. 更新全局答案：</span></span><br><span class="line">        <span class="comment">// 最终答案是所有 dp[i] 中的最大值</span></span><br><span class="line">        global_max_length = <span class="built_in">max</span>(global_max_length, dp[i]);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> global_max_length;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>方法2: 二分查找 + 贪心</p>
+<div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">lengthOfLIS</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>{</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; tails;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> num:nums){</span><br><span class="line">        <span class="keyword">auto</span> it = <span class="built_in">lower_bound</span>(tails.<span class="built_in">begin</span>(),tails.<span class="built_in">end</span>(),num);</span><br><span class="line">        <span class="keyword">if</span>(it==tails.<span class="built_in">end</span>()){</span><br><span class="line">            tails.<span class="built_in">push_back</span>(num);</span><br><span class="line">        }<span class="keyword">else</span>{</span><br><span class="line">            *it = num;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> tails.<span class="built_in">size</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+<p>核心思想：耐心排序 (Patience Sorting).
+这个算法的灵感来自于一种叫做“耐心排序”的纸牌游戏。 游戏规则：
+你有一堆乱序的牌（nums
+数组），你需要把它们一张张发到桌上的几个牌堆（tails 数组）里。</p>
+<ul>
+<li>规则 1：你一次拿一张牌 num。</li>
+<li>规则 2：你必须把 num 放到某个牌堆的顶部。你只能放在牌堆顶部 &gt;=
+num 的牌堆上。</li>
+<li>规则 3：如果你有多个选择（例如 num=3，牌堆顶部有 [2, 5,
+8]），你必须选择最左边的那个（即 5）。</li>
+<li>规则 4：如果 num 比所有牌堆的顶部都大（例如 num=10，牌堆顶部 [2, 5,
+8]），你必须在最右边新建一个牌堆。</li>
+</ul>
+<p>结论：当你发完所有牌后，桌上牌堆的数量就是 LIS 的长度。</p>
+<p>tails 数组是什么？tails
+数组就是这个游戏中，桌上所有牌堆顶部的牌的集合。</p>
+<p>tails[k] 存储的是 “牌堆 k” 的顶部卡片。由于规则 4，tails
+数组（即所有牌堆的顶部）必然是严格递增的。</p>
+<ul>
+<li>tails = [pile1_top, pile2_top, pile3_top, …]</li>
+</ul>
+<p>因为只有当 num 大于 所有
+顶牌时，才允许你新建牌堆（push_back），所以新牌堆的顶牌一定比所有旧顶牌都大。</p>
+<p>因为 tails 数组是严格递增的，所以我们可以使用二分查找来应用规则
+3。</p>
+<p>让我们把“游戏规则”翻译成“代码逻辑”：</p>
+<ul>
+<li>tails 数组：存储所有牌堆的顶部。</li>
+<li>遍历 nums 中每个 num：
+<ul>
+<li>二分查找：在 tails 数组中，找到第一个大于或等于 num 的位置 it (即
+std::lower_bound)。</li>
+<li>if (it == tails.end())：
+<ul>
+<li>游戏翻译：num 比所有牌堆的顶部都大（规则 4）。</li>
+<li>代码逻辑：在最右边新建一个牌堆。</li>
+<li>操作：tails.push_back(num)。</li>
+<li>结果：LIS 的长度增加了 1。</li>
+</ul></li>
+<li>if (it != tails.end())：
+<ul>
+<li>游戏翻译：我们找到了一个牌堆 *it (例如 5)，num (例如 3)
+可以放在它上面（规则 2 &amp; 3）。</li>
+<li>代码逻辑：用 num 替换掉 *it。</li>
+<li>操作：*it = num。</li>
+<li>结果：LIS 的长度没有变，但这个牌堆的顶部变小了（5 变成了 3）。</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>核心就是在更新tails数组时使用了二分查找,
+使得整体时间复杂度降为O(nlogn)</p>
+<h4 id="状态机-dp">状态机 DP</h4>
+<p>这是“入门 DP”中 dp[i] 的自然演进。在一维 DP（如打家劫舍）中，dp[i]
+的决策只依赖于 dp[i-1] 和 dp[i-2]。但在更复杂的问题中，dp[i]
+的决策不仅依赖于 i-1，还依赖于 <strong>i-1 所处的状态</strong>。</p>
+<p>例如“买卖股票(带冷冻期)”，在第 <span class="math inline"><em>i</em></span>
+天，你能做的操作（买、卖、持有不动）取决于你在第 <span class="math inline"><em>i</em> − 1</span>
+天是“持有股票”还是“未持有股票”, 未持有是在冷冻期还是不在冷冻期。状态机
+DP 就是用来解决这种“在不同状态间转换”的最优解问题。</p>
+<p>我们不再用一个简单的 dp[i] 来表示“到第 i
+天的最大收益”，因为这个信息不够。 我们使用 dp[i][j]，其中：</p>
+<ul>
+<li>i：代表时间（第 i 天，或考虑第 i 个元素）。</li>
+<li>j：代表在 <strong>i 时刻所处的状态</strong>（状态 j）。</li>
+<li>dp[i][j] 的值：表示在第 i 天，处于状态 j
+时，所能获得的最大收益（或最长长度、最少次数等）。</li>
+</ul>
+<p>解决状态机 DP 的“四部曲”: 这是一个几乎可以套用在所有状态机 DP
+问题上的标准流程。</p>
+<ul>
+<li>第 1 步：确定状态 (Define States)
+<ul>
+<li>问自己：“在任何一天 i，我可能处于哪些互斥的状况下？”</li>
+<li>例 (LC 122)：
+<ul>
+<li>状态 0：今天结束时，手里持有股票。</li>
+<li>状态 1：今天结束时，手里未持有股票。</li>
+</ul></li>
+</ul></li>
+<li>第 2 步：绘制状态转移图 (Draw the Diagram)
+<ul>
+<li>这是最关键的一步。画出状态（节点）和事件（带箭头的边）。</li>
+<li>例 (LC 122)：
+<ul>
+<li>状态 0 (未持有) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">买</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">入</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 1
+(持有)</li>
+<li>状态 1 (持有) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">卖</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">出</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 0
+(未持有)</li>
+<li>状态 0 (未持有) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">休</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">息</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 0
+(未持有)</li>
+<li>状态 1 (持有) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">休</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">息</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 1
+(持有)</li>
+</ul></li>
+</ul></li>
+<li>第 3 步：写出状态转移方程 (Write Equations), 把“图”翻译成“数学”。
+<ul>
+<li>dp[i][j] 的值，等于所有“能转移到 j 状态”的 i-1 状态的最大值。
+<ul>
+<li>dp[i][0] (今天未持有) = max(昨天就未持有，今天休息：dp[i-1][0],
+昨天持有，今天卖了：dp[i-1][1] + prices[i])</li>
+<li>dp[i][1] (今天持有) = max(昨天就持有，今天休息：dp[i-1][1],
+昨天未持有，今天买了：dp[i-1][0] - prices[i])</li>
+</ul></li>
+</ul></li>
+<li>第 4 步：确定 Base Cases (Initialize)
+<ul>
+<li>dp[0][0]：第 0 天，未持有 <span class="math inline">→</span> 利润为
+0。</li>
+<li>dp[0][1]：第 0 天，持有 <span class="math inline">→</span>
+意味着在第 0 天买了 <span class="math inline">→</span> 利润为
+-prices[0]。</li>
+</ul></li>
+</ul>
+<h5 id="经典示例lc-309-带冷冻期的股票">经典示例：LC 309
+(带冷冻期的股票)</h5>
+<p>题目：卖出股票后，你必须在第二天（冷冻期）休息，不能买入。</p>
+<p>第 1
+步：确定状态(这里的状态一定是<strong>采取行动之后</strong>处于的状态) -
+状态 0：持有 - 状态 1：未持有（今天刚卖出，处于冷冻期） - 状态
+2：未持有（不在冷冻期，可以买入） -
+说明：我们必须把“未持有”拆成两种状态，因为它们对明天的决策（能否买入）有影响。</p>
+<p>第 2 步：绘制状态转移图 - 状态 0 (持有) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">卖</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">出</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 1 (冷冻) -
+状态 1 (冷冻) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">休</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">息</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 2 (可买) -
+状态 2 (可买) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">买</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">入</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 0 (持有) -
+状态 0 (持有) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">休</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">息</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 0 (持有) -
+状态 2 (可买) <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="4.532ex" height="3.262ex" role="img" focusable="false" viewbox="0 -1359.7 2003.2 1441.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mover"><g data-mml-node="mstyle"><g data-mml-node="mo"><path data-c="2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z" transform="translate(1003.2,0)"/><svg width="1103.2" height="865" x="0" y="-182" viewbox="275.8 -182 1103.2 865"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z" transform="scale(2.127,1)"/></svg></g></g><g data-mml-node="mpadded" transform="translate(0,870.8) scale(0.707)"><g transform="translate(278,-200)"><g data-mml-node="mtext"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">休</text><text data-variant="normal" transform="translate(1000,0) scale(1,-1)" font-size="884px" font-family="serif">息</text></g><g data-mml-node="mspace" transform="translate(2000,0)"/></g></g></g></g></g></svg></mjx-container></span> 状态 2 (可买)</p>
+<p>第 3 步：状态转移方程 - dp[i][0] (持有) =
+max(昨天就持有：dp[i-1][0]昨天是“可买”，今天买了：dp[i-1][2] -
+prices[i]) - dp[i][1] (冷冻) = max(昨天持有，今天卖了：dp[i-1][0] +
+prices[i]) - dp[i][2] (可买) =
+max(昨天就是“可买”，今天休息：dp[i-1][2]昨天是“冷冻”，今天解冻了：dp[i-1][1])</p>
+<p>第 4 步：Base Cases - dp[0][0] = -prices[0] - dp[0][1] = 0 (第 0
+天不可能处于冷冻期) - dp[0][2] = 0 (第 0 天未持有)</p>
+<p>最终答案：max(dp[n-1][1], dp[n-1][2])
+(因为最后一天持有股票利润肯定不是最大的)。 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">maxProfit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; prices)</span> </span>{</span><br><span class="line">    <span class="type">int</span> n = prices.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span>(n&lt;=<span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(n,<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="number">3</span>,<span class="number">0</span>));</span><br><span class="line">    <span class="comment">// dp[i][0]: 第 i 天, 处于 "持有" 状态的最大利润</span></span><br><span class="line">    <span class="comment">// dp[i][1]: 第 i 天, 处于 "可买" (非冷冻期、未持有) 状态的最大利润</span></span><br><span class="line">    <span class="comment">// dp[i][2]: 第 i 天, 处于 "冷冻" 状态的最大利润</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = -prices[<span class="number">0</span>];   <span class="comment">// 持有</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">1</span>] = <span class="number">0</span>;       <span class="comment">// 可买</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">2</span>] = <span class="number">0</span>;   <span class="comment">// 冷冻期</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;n;i++){</span><br><span class="line">        dp[i][<span class="number">0</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">0</span>], dp[i<span class="number">-1</span>][<span class="number">1</span>]-prices[i]);</span><br><span class="line">        dp[i][<span class="number">1</span>] = <span class="built_in">max</span>(dp[i<span class="number">-1</span>][<span class="number">2</span>], dp[i<span class="number">-1</span>][<span class="number">1</span>]);</span><br><span class="line">        dp[i][<span class="number">2</span>] = dp[i<span class="number">-1</span>][<span class="number">0</span>]+prices[i];</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(dp[n<span class="number">-1</span>][<span class="number">1</span>],dp[n<span class="number">-1</span>][<span class="number">2</span>]);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="划分型-dp-partition-dp">划分型 DP (Partition DP)</h4>
+<p>核心思想：解决“将一个序列（数组/字符串）<strong>分割</strong>成若干段，以求最优解”的问题。例如：“将字符串分割为最少的美丽子字符串”、“将数组分割为
+k 段使最大和最小”。</p>
+<p>状态定义（递推）：通常有两种状态定义： - 不限段数 (如 LC 139)：dp[i]
+= 考虑前 <span class="math inline"><em>i</em></span> 个元素
+a[0…i-1]，将其分割的最优解（如 bool 能否分割，int 最小代价）。 - 限制
+<span class="math inline"><em>k</em></span> 段 (如 LC 410)：dp[k][i] =
+将前 <span class="math inline"><em>i</em></span> 个元素 a[0…i-1]
+分割成<strong>恰好</strong> <span class="math inline"><em>k</em></span>
+段的最优解。</p>
+<p>状态转移：枚举最后一段！这是划分型 DP 的灵魂。</p>
+<p>dp[i] 的值，是通过枚举<strong>最后一段的起点</strong> <span class="math inline"><em>j</em></span> 来确定的: <span class="math inline"><em>d</em><em>p</em>[<em>i</em>] = 最优(<em>d</em><em>p</em>[<em>j</em>] + cost(<em>j</em>, <em>i</em> − 1))</span>
+(其中 <span class="math inline">0 ≤ <em>j</em> &lt; <em>i</em></span>) -
+dp[j]：前 <span class="math inline"><em>j</em></span>
+个元素的最优解（子问题）。 - cost(j, i-1)：将 a[j…i-1]
+作为一个<strong>整体</strong>（最后一段）的代价/合法性。</p>
+<h4 id="区间-dp-interval-dp">区间 DP (Interval DP)</h4>
+<p>区间 DP
+主要用于解决“区间”或“子区间”相关的问题，通常涉及对一个序列（数组或字符串）进行划分、合并或计算某种属性。区间
+DP
+的核心在于<strong>状态定义</strong>和<strong>状态转移方程</strong>，它们通常基于区间的起点和终点。</p>
+<ul>
+<li>核心思想：当一个大区间 [i, j]
+的最优解，依赖于它内部的、更小的<strong>子区间</strong>（如 [i+1,
+j]、[i, j-1]、[i, k] 和 [k+1, j]）的最优解时，使用区间
+DP。这通常用于“合并”或“消除”问题，例如戳气球、合并石头、最长回文子序列。</li>
+<li>状态定义（递推）： dp[i][j] = 在闭区间[i, j] 上能获得的最优解。</li>
+<li>状态转移： 你需要思考<strong>最后一步操作</strong>。
+<ul>
+<li>情况 1 (<strong>两端</strong>相关)：如“最长回文子序列”，dp[i][j]
+的值依赖 dp[i+1][j-1]。</li>
+<li>情况 2 (<strong>枚举分割点</strong>)：如“戳气球”，dp[i][j] 的值依赖
+dp[i][k] + dp[k+1][j]。</li>
+</ul></li>
+<li>关键：遍历顺序 dp[i][j]
+依赖于更短的区间。所以你不能<code>for i ... for j ...</code>。
+你必须按照<strong>区间长度</strong> (len)来遍历： <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> len = <span class="number">1</span>; len &lt;= n; ++len) {</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= n - len; ++i) {</span><br><span class="line">        <span class="type">int</span> j = i + len - <span class="number">1</span>; <span class="comment">// 区间右端点</span></span><br><span class="line">        <span class="comment">// ... 计算 dp[i][j] ...</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<p>例如, 对于最大回文子序列问题: <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">longestPalindromeSubseq</span><span class="params">(string s)</span> </span>{</span><br><span class="line">    <span class="type">int</span> n = s.<span class="built_in">length</span>();</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 状态定义: dp[i][j] = s[i...j] 上的 LPS 长度</span></span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(n, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 递推顺序: 按照区间长度 len 从 1 到 n 遍历</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> len = <span class="number">1</span>; len &lt;= n; ++len) {</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 遍历所有可能的起始点 i</span></span><br><span class="line">        <span class="comment">// j 是由 i 和 len 决定的</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= n - len; ++i) {</span><br><span class="line">            <span class="type">int</span> j = i + len - <span class="number">1</span>; <span class="comment">// 区间的结束点</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3. Base Case: len = 1</span></span><br><span class="line">            <span class="keyword">if</span> (len == <span class="number">1</span>) {</span><br><span class="line">                dp[i][j] = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">continue</span>; <span class="comment">// 计算下一个区间</span></span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 4. 状态转移: len &gt; 1</span></span><br><span class="line">            <span class="keyword">if</span> (s[i] == s[j]) {</span><br><span class="line">                <span class="comment">// 情况一: s[i] == s[j]</span></span><br><span class="line">                <span class="comment">// dp[i][j] = dp[i+1][j-1] + 2</span></span><br><span class="line">                <span class="comment">// 注意: 当 len=2 时 (例如 "aa"), i+1 &gt; j-1</span></span><br><span class="line">                <span class="comment">// 此时 dp[i+1][j-1] (例如 dp[1][0]) 是 0 (因为 j &lt; i)</span></span><br><span class="line">                <span class="comment">// 所以 dp[i][j] = 0 + 2 = 2，是正确的。</span></span><br><span class="line">                dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                <span class="comment">// 情况二: s[i] != s[j]</span></span><br><span class="line">                dp[i][j] = <span class="built_in">max</span>(dp[i + <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 最终答案: dp[0][n-1]</span></span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>][n - <span class="number">1</span>];</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div> 第 1 步：状态定义</p>
+<ul>
+<li>dp[i][j]：表示字符串 s 在区间 [i, j]（即子串
+s[i…j]）上的最长回文子序列的长度。</li>
+<li>i 是区间的起始索引，j 是区间的结束索引。</li>
+</ul>
+<p>第 2 步：最终答案</p>
+<ul>
+<li>我们要求的是整个字符串 s 的 LPS，即 s[0…n-1] 的解。</li>
+<li>答案：dp[0][n-1]</li>
+</ul>
+<p>第 3 步：Base Case (递推的起点)</p>
+<ul>
+<li>我们需要从“最短的区间”开始。</li>
+<li>区间长度 len = 1：即 i == j 时，例如 dp[0][0] (“b”), dp[1][1]
+(“b”)。</li>
+<li>任何单个字符本身就是回文，长度为 1。</li>
+<li>Base Case: dp[i][i] = 1</li>
+</ul>
+<p>第 4 步：状态转移 (灵魂)</p>
+<ul>
+<li>我们要计算 dp[i][j]，此时区间长度 len &gt;
+1。我们只看这个区间的两个端点：s[i] 和 s[j]。</li>
+<li>情况一：两端字符相等 s[i] == s[j], 例如 s[i…j] = “a…a”
+<ul>
+<li>分析：太好了！s[i] 和 s[j] 可以作为回文序列的“外壳”。</li>
+<li>操作：LPS 的长度至少为 2（s[i] 和 s[j]）。</li>
+<li>子问题：我们只需要再知道内部区间 [i+1, j-1] 的 LPS 长度（即
+dp[i+1][j-1]）即可。</li>
+<li>转移方程 (1)：dp[i][j] = dp[i+1][j-1] + 2</li>
+</ul></li>
+<li>情况二：两端字符不等 s[i] != s[j]
+<ul>
+<li>例如：s[i…j] = “a…b”</li>
+<li>分析：s[i] 和 s[j] 不能同时作为回文的“外壳”。我们必须丢弃一个。</li>
+<li>操作：我们有两个选择，取其中能得到最长回文的那一个：
+<ul>
+<li>丢弃 s[i]：我们在区间 [i+1, j] 中寻找 LPS。解是 dp[i+1][j]。</li>
+<li>丢弃 s[j]：我们在区间 [i, j-1] 中寻找 LPS。解是 dp[i][j-1]。</li>
+</ul></li>
+<li>转移方程 (2)：dp[i][j] = max(dp[i+1][j], dp[i][j-1])</li>
+</ul></li>
+</ul>
+<h4 id="树形dp">树形DP</h4>
+<p>树形DP是一类特殊的动态规划问题，通常用于解决树结构上的最优子结构问题。与传统的线性动态规划不同，树形DP需要考虑节点之间的层级关系和子树结构。</p>
+<p>且树形DP通常采用后序遍历的方式进行状态转移，因为每个节点的状态依赖于其子节点的状态。这样还会导致树形DP通常依旧使用递归实现，而不是迭代保存dp表这样的做法.</p>
+<p>例题: 在二叉树上“打家劫舍”，不能偷相邻（父子）的。 分析：对于一个节点
+root，它的最优解依赖于 root-&gt;left 和 root-&gt;right
+的最优解。(Leetcode 337题) <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">unordered_map&lt;TreeNode*,<span class="type">int</span>&gt; map;  <span class="comment">// 来缓存已经计算过的节点结果</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">rob</span><span class="params">(TreeNode* root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span>(root==<span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(map.<span class="built_in">contains</span>(root)) <span class="keyword">return</span> map[root];  <span class="comment">// 如果已经计算过，直接返回缓存结果</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> max1 = <span class="built_in">rob</span>(root-&gt;left)+<span class="built_in">rob</span>(root-&gt;right);    <span class="comment">// 不偷 root, 取左右子树的和</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 偷 root, 则不能偷左右子节点, 转而偷左右子节点的子节点</span></span><br><span class="line">    <span class="type">int</span> max2 = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(root-&gt;left!=<span class="literal">nullptr</span>) max2+=<span class="built_in">rob</span>(root-&gt;left-&gt;left)+<span class="built_in">rob</span>(root-&gt;left-&gt;right);</span><br><span class="line">    <span class="keyword">if</span>(root-&gt;right!=<span class="literal">nullptr</span>) max2+=<span class="built_in">rob</span>(root-&gt;right-&gt;left)+<span class="built_in">rob</span>(root-&gt;right-&gt;right);</span><br><span class="line">    max2 += root-&gt;val;  <span class="comment">// 加上 root 的值</span></span><br><span class="line"></span><br><span class="line">    map[root] = <span class="built_in">max</span>(max1,max2);  <span class="comment">// 缓存结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(max1,max2);  <span class="comment">// 返回结果</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
 
 		</div>
 
@@ -1322,7 +1555,8 @@ num1，也可以是在凑成 j-num2 的基础上加上 num2… 由于我们对�
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">动态规划(Dynamic Programming)</div>
-		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="nav-text">适用条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="nav-text">解题步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%A8%A1%E5%BC%8F"><span class="nav-text">两种模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E9%99%8D%E4%B8%80%E7%BB%B4"><span class="nav-text">二维降一维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E9%A2%981-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97"><span class="nav-text">例题1: 最长递增子序列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E9%A2%982-%E5%8D%95%E8%AF%8D%E6%8B%86%E5%88%86"><span class="nav-text">例题2: 单词拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E9%A2%983-0-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="nav-text">例题3: 0-1背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E9%99%8D%E4%B8%80%E7%BB%B4-1"><span class="nav-text">二维降一维</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B40-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="nav-text">二维0-1背包问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="nav-text">完全背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85%E4%B8%AD%E7%9A%84%E6%8E%92%E5%88%97%E5%92%8C%E7%BB%84%E5%90%88%E9%97%AE%E9%A2%98"><span class="nav-text">完全背包中的排列和组合问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E9%A2%984-%E6%A0%91%E5%BD%A2dp"><span class="nav-text">例题4: 树形DP</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="nav-text">适用条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="nav-text">解题步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%A8%A1%E5%BC%8F"><span class="nav-text">两种模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E9%99%8D%E4%B8%80%E7%BB%B4"><span class="nav-text">二维降一维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E9%A2%982-%E5%8D%95%E8%AF%8D%E6%8B%86%E5%88%86"><span class="nav-text">例题2: 单词拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E9%A2%983-0-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="nav-text">例题3: 0-1背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E9%99%8D%E4%B8%80%E7%BB%B4-1"><span class="nav-text">二维降一维</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B40-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="nav-text">二维0-1背包问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="nav-text">完全背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85%E4%B8%AD%E7%9A%84%E6%8E%92%E5%88%97%E5%92%8C%E7%BB%84%E5%90%88%E9%97%AE%E9%A2%98"><span class="nav-text">完全背包中的排列和组合问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4-dp"><span class="nav-text">二维 DP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E5%BA%8F%E5%88%97-dp-lcs-lis"><span class="nav-text">经典序列 DP (LCS &amp; LIS)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-lcs"><span class="nav-text">例题: 最长公共子序列 (LCS)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97"><span class="nav-text">例题: 最长递增子序列</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%9C%BA-dp"><span class="nav-text">状态机 DP</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E7%A4%BA%E4%BE%8Blc-309-%E5%B8%A6%E5%86%B7%E5%86%BB%E6%9C%9F%E7%9A%84%E8%82%A1%E7%A5%A8"><span class="nav-text">经典示例：LC 309
+(带冷冻期的股票)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%92%E5%88%86%E5%9E%8B-dp-partition-dp"><span class="nav-text">划分型 DP (Partition DP)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%BA%E9%97%B4-dp-interval-dp"><span class="nav-text">区间 DP (Interval DP)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%91%E5%BD%A2dp"><span class="nav-text">树形DP</span></a></li></ol></li></ol>
 
 	</div>
 </div>
@@ -1351,11 +1585,11 @@ num1，也可以是在凑成 j-num2 的基础上加上 num2… 由于我们对�
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

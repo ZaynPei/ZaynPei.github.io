@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-10-01T03:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-29T15:44:36.053Z">
+<meta property="article:modified_time" content="2025-10-30T12:26:31.088Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta name="twitter:card" content="summary">
@@ -718,7 +718,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -769,8 +769,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-29 23:44:36</span>
-            <span class="mobile">2025-10-29 23:44:36</span>
+            <span class="desktop">2025-10-30 20:26:31</span>
+            <span class="mobile">2025-10-30 20:26:31</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -818,12 +818,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>23k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>23.2k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>82 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>83 Mins</span>
         </span>
     
     
@@ -846,10 +846,32 @@ mjx-container[display="true"] + br {
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+-------------------+  (高地址)</span><br><span class="line">|      内核空间     |  &lt;- 内核专用地址空间, 用户态进程无法访问</span><br><span class="line">+-------------------+ </span><br><span class="line">|       栈 (Stack)  |  &lt;- 向下增长 (Grows Down)</span><br><span class="line">|        ...        |</span><br><span class="line">| (未使用的虚拟内存) |</span><br><span class="line">|        ...        |</span><br><span class="line">+===================+  &lt;- 当前的 "分断" (Program Break)  &lt;-- 堆的顶部</span><br><span class="line">|       堆 (Heap)   |  &lt;- 向上增长 (Grows Up)</span><br><span class="line">|        ...        |</span><br><span class="line">| (未使用的虚拟内存) |</span><br><span class="line">|        ...        |</span><br><span class="line">+-------------------+</span><br><span class="line">|    全局/静态数据  |  &lt;- 固定大小</span><br><span class="line">+-------------------+</span><br><span class="line">|       代码段      |  &lt;- 固定大小</span><br><span class="line">+-------------------+  (低地址)</span><br></pre></td></tr></table></figure></div> 也就是说,
 在进程的虚拟地址空间中不仅有<strong>用户</strong>代码和数据,
 还有操作系统<strong>内核的代码和数据</strong>。但用户态进程只能访问属于自己的那部分地址空间（代码段、数据段、堆和栈），无法访问内核空间。</p>
-<p>而且,
-不同进程的虚拟内存中的内核空间会映射到<strong>同一块物理内存</strong>区域,
-这样可以节省内存开销, 并且方便操作系统进行系统调用和中断处理。
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">───────────────────────────────         高地址</span><br><span class="line">|         内核空间 (Kernel Space)   |  ← 所有进程共享</span><br><span class="line">|         内核代码、数据结构、PCB   |</span><br><span class="line">|         页表、内核模块、驱动等    |</span><br><span class="line">───────────────────────────────  ← 通常在内核地址 KERNEL_BASE（如 0xFFFF_8000_0000_0000）</span><br><span class="line">|         用户空间 (User Space)    |  ← 每个进程独立</span><br><span class="line">|         代码段 / 堆 / 栈 / mmap区 |</span><br><span class="line">|         用户程序和数据           |    低地址</span><br><span class="line">───────────────────────────────</span><br></pre></td></tr></table></figure></div></p>
+<p>对于内核空间, 其基本组成分为两部分: - <strong>全局共享</strong>区
+(Shared &amp; Static Area) -
+这部分内存在<strong>所有进程的虚拟地址空间</strong>中都是<strong>一样</strong>的，并且它们指向<strong>相同的物理内存</strong>。
+- 内核代码 (.text)：
+<strong>操作系统本身的代码</strong>，如系统调用处理函数、switch()
+函数、调度器、驱动程序等。 - 内核全局数据 (.data, .bss)： - 进程列表
+(Process List)： 一个全局的链表或数组，串联了所有的 PCB。 - PCB
+结构体本身： PCB（如 Linux 的
+task_struct）本身通常也存储在这里（或者在内核动态分配的内存中）。 -
+其他全局数据（如物理内存管理信息、文件表等）。</p>
+<ul>
+<li><strong>进程专属区</strong> (Per-Process Area)
+<ul>
+<li>这部分在虚拟地址空间中可能处于特定范围，但每个进程的这部分虚拟地址，都指向完全<strong>不同的物理内存</strong>。</li>
+<li>主要是内核栈 (Kernel Stack)：
+<ul>
+<li>进程 A 的内核栈 (K-Stack A)</li>
+<li>进程 B 的内核栈 (K-Stack B)</li>
+<li>…等等。</li>
+</ul></li>
+<li>OS 在创建进程 A 时，会从物理内存中分配一块作为 A 的内核栈;
+在创建进程 B 时，会从物理内存中分配另一块作为 B 的内核栈。</li>
+</ul></li>
+</ul>
+<p>其基本结构如下所示：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">+-------------------+  (高地址)</span><br><span class="line">|      内核空间       |  &lt;- 内核专用地址空间, 用户态进程无法访问</span><br><span class="line">|  +---------------+ |</span><br><span class="line">|  |  进程 A 内核栈 | |  &lt;- 进程 A 的内核栈 (K-Stack A)</span><br><span class="line">|  +---------------+ |</span><br><span class="line">|  +---------------+ |</span><br><span class="line">|  |  进程 B 内核栈 | |  &lt;- 进程 B 的内核栈 (K-Stack B)</span><br><span class="line">|  +---------------+ |</span><br><span class="line">|       ...          |</span><br><span class="line">|     进程列表       |  &lt;- 全局的 PCB 列表</span><br><span class="line">|    内核代码和数据   |  &lt;- 全局共享的内核代码和数据</span><br><span class="line">+-------------------+</span><br></pre></td></tr></table></figure></div>
 <h3 id="虚拟地址空间的由来">虚拟地址空间的由来</h3>
 <p>早期的计算机系统中,
 操作系统加载在物理内存的低地址，唯一的运行程序（进程）加载在它之后.
@@ -2081,7 +2103,8 @@ malloc(10 * 32 + 8)（假设 8 字节用于存储长度）, 假设获取到的�
 <strong>析构</strong>：delete[]
 操作符会首<strong>先去读取那个“cookie”</strong>（例如，在 arr
 指针之前的几个字节），发现数组长度是 10。然后，它会进入一个循环，从
-arr[9] 到 arr[0] 逆序调用 10 次析构函数（~MyClass()）。</p>
+arr[9] 到 arr[0] <strong>反向调用 10
+次析构函数</strong>（~MyClass()）。</p>
 <ul>
 <li><strong>释放</strong>：在所有对象都被析构后，它会调用 operator
 delete[] 来释放整个内存块（包括存储”cookie”的那几个字节）。</li>
@@ -2301,11 +2324,11 @@ Windows）如何运作</span></a></li></ol></li></ol></li></ol>
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-09-03T10:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-27T12:33:19.133Z">
+<meta property="article:modified_time" content="2025-11-04T02:30:30.545Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="language">
 <meta property="article:tag" content="cpp">
@@ -719,7 +719,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -770,8 +770,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-27 20:33:19</span>
-            <span class="mobile">2025-10-27 20:33:19</span>
+            <span class="desktop">2025-11-04 10:30:30</span>
+            <span class="mobile">2025-11-04 10:30:30</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -843,12 +843,12 @@ std::hash</h3>
 <p>它的形式如上, 我们可以为不同的数据类型实例化它,
 从而实现传入某个类型的数据, 返回计算得到的哈希值(size_t). 它也重载了
 operator()并返回一个 size_t
-类型的哈希值，使其可以像函数一样被调用。例如，std::hash<std::string>()(“hello”)
-会返回字符串 “hello” 的哈希值。</std::string></p>
+类型的哈希值，使其可以像函数一样被调用。例如，<code>std::hash&lt;std::string&gt;()("hello")</code>
+会返回字符串 “hello” 的哈希值。</p>
 <blockquote>
-<p>std::hash<std::string>()(“hello”)是创建一个临时哈希对象并调用它的operator()函数,
+<p><code>std::hash&lt;std::string&gt;()("hello")</code>是创建一个临时哈希对象并调用它的operator()函数,
 等价于
-<code>auto hasher = std::hash&lt;std::string&gt;{}; size_t value = hasher("hello");</code></std::string></p>
+<code>auto hasher = std::hash&lt;std::string&gt;{}; size_t value = hasher("hello");</code></p>
 </blockquote>
 <h4 id="如何使用-stdhash">如何使用 std::hash</h4>
 <p>std::hash
@@ -907,7 +907,8 @@ std::unordered_set，可以快速得到一个不含重复元素的集合。
 <ol type="1">
 <li>插入元素：
 <ul>
-<li>insert(key): 插入一个新元素。如果元素已存在，则插入失败, 返回一个
+<li><strong>insert</strong>(key):
+插入一个新元素。如果元素已存在，则插入失败, 返回一个
 pair，包含指向该元素的迭代器和一个布尔值表示插入是否成功。</li>
 <li>emplace(args…):
 直接在容器内构造一个新元素，避免不必要的拷贝或移动。</li>
@@ -922,7 +923,8 @@ end()。</li>
 </ul></li>
 <li>删除元素：
 <ul>
-<li>erase(key): 删除<strong>指定值</strong>的元素。</li>
+<li><strong>erase</strong>(key):
+删除<strong>指定值</strong>的元素。</li>
 <li>clear(): 清空集合中的所有元素。</li>
 </ul></li>
 <li>获取集合信息：
@@ -975,12 +977,14 @@ int, char 等基本类型都是可以的, 但是 vector 不可以作为 key 类�
 insert({key, value}): 插入一个新的键值对，如果键已存在则插入失败。 -
 <strong>operator[key]</strong>:
 <strong>访问</strong>或<strong>插入</strong>键对应的值。如果键不存在，会插入一个默认值。
-3. 删除键值对： - erase(key): 删除<strong>指定键</strong>的键值对。 -
-clear(): 清空映射中的所有键值对。 4. 获取映射信息： - size():
+3. 删除键值对： - <strong>erase(key)</strong>:
+删除<strong>指定键</strong>的键值对。 - clear():
+清空映射中的所有键值对。 4. 获取映射信息： - size():
 返回映射中键值对的数量。 - empty(): 检查映射是否为空。 5. 迭代访问： -
 begin() 和 end(): 返回指向映射开头和结尾的迭代器，用于遍历所有键值对。 -
-范围 for 循环也可以直接用于遍历。此时每个元素是一个 std::pair&lt;const
-Key, T&gt;, 可以通过 first 和 second 访问键和值。</p>
+<strong>范围 for 循环</strong>也可以直接用于遍历。此时每个元素是一个
+<code>std::pair&lt;const Key, T&gt;</code>, 可以通过 first 和 second
+访问键和值。</p>
 <p>下面是一个简单的示例，展示了如何使用 std::unordered_map：
 <div class="code-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 unordered_map，键为字符串，值为整数</span></span><br><span class="line">    std::unordered_map&lt;std::string, <span class="type">int</span>&gt; wordCount;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入键值对</span></span><br><span class="line">    wordCount[<span class="string">"apple"</span>] = <span class="number">2</span>;</span><br><span class="line">    wordCount[<span class="string">"banana"</span>] = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新键值对</span></span><br><span class="line">    wordCount[<span class="string">"apple"</span>] += <span class="number">1</span>;  <span class="comment">// apple 的计数变为 3</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取map的信息</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Total unique words: "</span> &lt;&lt; wordCount.<span class="built_in">size</span>() &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">"Is map empty? "</span> &lt;&lt; (wordCount.<span class="built_in">empty</span>() ? <span class="string">"Yes"</span> : <span class="string">"No"</span>) &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查键是否存在</span></span><br><span class="line">    <span class="keyword">if</span> (wordCount.<span class="built_in">find</span>(<span class="string">"banana"</span>) != wordCount.<span class="built_in">end</span>()) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Banana count: "</span> &lt;&lt; wordCount[<span class="string">"banana"</span>] &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 contains (C++20)</span></span><br><span class="line">    <span class="keyword">if</span> (wordCount.<span class="built_in">contains</span>(<span class="string">"orange"</span>)) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Orange count: "</span> &lt;&lt; wordCount[<span class="string">"orange"</span>] &lt;&lt; std::endl;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Orange not found."</span> &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历所有键值对</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; pair : wordCount) {</span><br><span class="line">        std::cout &lt;&lt; pair.first &lt;&lt; <span class="string">": "</span> &lt;&lt; pair.second &lt;&lt; std::endl;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 删除一个键值对</span></span><br><span class="line">    wordCount.<span class="built_in">erase</span>(<span class="string">"banana"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></p>
 
@@ -1075,11 +1079,11 @@ std::hash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a cl
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

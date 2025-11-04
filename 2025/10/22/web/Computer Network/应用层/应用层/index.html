@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-10-22T15:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-23T03:26:19.702Z">
+<meta property="article:modified_time" content="2025-11-02T15:22:22.820Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="computer network">
@@ -719,7 +719,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">186</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -770,8 +770,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-10-23 11:26:19</span>
-            <span class="mobile">2025-10-23 11:26:19</span>
+            <span class="desktop">2025-11-02 23:22:22</span>
+            <span class="mobile">2025-11-02 23:22:22</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -813,12 +813,12 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>14.2k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>14.5k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>50 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>51 Mins</span>
         </span>
     
     
@@ -1688,6 +1688,22 @@ Internal Server Error, 503 Service Unavailable。</p>
 <p>不过,
 浏览器通常不会直接显示状态码，而是以更友好的方式（如特定的错误页面）告知用户。例如，看到“找不到页面”通常对应
 404 状态码 。</p>
+<h4 id="https">HTTPS</h4>
+<p>HTTPS (HyperText Transfer Protocol Secure) 是 HTTP
+的<strong>安全版本</strong>，它通过在 HTTP
+之上添加一层加密机制来保护数据传输的安全性。 HTTPS 使用
+<strong>SSL/TLS</strong> (安全套接字层/传输层安全协议)
+来实现加密和身份验证。</p>
+<p>HTTPS 的TLS 握手过程大致如下： 1. 客户端发起连接： 浏览器向服务器发起
+HTTPS 连接请求。 2. 服务器响应并发送证书：
+服务器返回其数字证书，包含公钥和身份信息。 3. 客户端验证证书：
+浏览器验证服务器证书的合法性（如是否由受信任的 CA 签发，是否过期等）。
+4. 生成会话密钥：
+浏览器生成一个随机的对称加密密钥，并使用服务器的公钥对其加密后发送给服务器。
+5. 服务器解密会话密钥： 服务器使用其私钥解密，获得对称加密密钥。 6.
+加密通信开始：
+双方使用该对称密钥进行加密通信，确保数据在传输过程中不被窃听或篡改。 7.
+连接关闭： 通信结束后，双方关闭连接。</p>
 <h3 id="使用-cookie-在服务器上记录信息">使用 Cookie
 在服务器上记录信息</h3>
 <p>早期的万维网应用主要是用户查看存放在不同服务器上的静态文档。为了简化服务器的设计，HTTP
@@ -1903,7 +1919,7 @@ Expires 时间），然后将缓存中的副本返回给主机 。</p></li>
 		<div class="toc-title">On this page</div>
 		<div class="page-title">应用层</div>
 		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%B9%E5%BC%8F%E5%92%8C%E5%AF%B9%E7%AD%89%E6%96%B9%E5%BC%8F"><span class="nav-text">客户&#x2F;服务器方式和对等方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%B9%E5%BC%8F-clientserver-cs"><span class="nav-text">客户&#x2F;服务器方式 (Client&#x2F;Server,
-C&#x2F;S)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%AD%89%E6%96%B9%E5%BC%8F-peer-to-peer-p2p"><span class="nav-text">对等方式 (Peer-to-Peer, P2P)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E5%8D%8F%E8%AE%AE-dhcp"><span class="nav-text">动态主机配置协议 (DHCP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-text">动态主机配置协议的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dhcp-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-text">DHCP 的工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ip-%E5%9C%B0%E5%9D%80%E7%A7%9F%E7%BA%A6%E7%9A%84%E6%9B%B4%E6%96%B0-%E7%BB%AD%E7%BA%A6"><span class="nav-text">IP 地址租约的更新 (续约)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dhcp-%E4%B8%AD%E7%BB%A7%E4%BB%A3%E7%90%86"><span class="nav-text">DHCP 中继代理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns"><span class="nav-text">域名系统(DNS)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dns-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">DNS 的基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E7%BB%93%E6%9E%84"><span class="nav-text">因特网的域名结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">因特网的域名服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-text">因特网的域名解析过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns-%E7%BC%93%E5%AD%98%E4%B8%8E%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4-ttl"><span class="nav-text">DNS 缓存与生存时间 (TTL)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91-www"><span class="nav-text">万维网 (WWW)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6-url"><span class="nav-text">统一资源定位符 (URL)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91%E6%96%87%E6%A1%A3"><span class="nav-text">万维网文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE-http"><span class="nav-text">超文本传输协议 (HTTP)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#http-%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F"><span class="nav-text">HTTP 的连接方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#http-%E7%9A%84%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="nav-text">HTTP 的报文格式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-cookie-%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E8%AE%B0%E5%BD%95%E4%BF%A1%E6%81%AF"><span class="nav-text">使用 Cookie
+C&#x2F;S)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%AD%89%E6%96%B9%E5%BC%8F-peer-to-peer-p2p"><span class="nav-text">对等方式 (Peer-to-Peer, P2P)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E5%8D%8F%E8%AE%AE-dhcp"><span class="nav-text">动态主机配置协议 (DHCP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-text">动态主机配置协议的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dhcp-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-text">DHCP 的工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ip-%E5%9C%B0%E5%9D%80%E7%A7%9F%E7%BA%A6%E7%9A%84%E6%9B%B4%E6%96%B0-%E7%BB%AD%E7%BA%A6"><span class="nav-text">IP 地址租约的更新 (续约)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dhcp-%E4%B8%AD%E7%BB%A7%E4%BB%A3%E7%90%86"><span class="nav-text">DHCP 中继代理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9Fdns"><span class="nav-text">域名系统(DNS)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dns-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">DNS 的基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E7%BB%93%E6%9E%84"><span class="nav-text">因特网的域名结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">因特网的域名服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-text">因特网的域名解析过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns-%E7%BC%93%E5%AD%98%E4%B8%8E%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4-ttl"><span class="nav-text">DNS 缓存与生存时间 (TTL)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91-www"><span class="nav-text">万维网 (WWW)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6-url"><span class="nav-text">统一资源定位符 (URL)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91%E6%96%87%E6%A1%A3"><span class="nav-text">万维网文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE-http"><span class="nav-text">超文本传输协议 (HTTP)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#http-%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F"><span class="nav-text">HTTP 的连接方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#http-%E7%9A%84%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="nav-text">HTTP 的报文格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#https"><span class="nav-text">HTTPS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-cookie-%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E8%AE%B0%E5%BD%95%E4%BF%A1%E6%81%AF"><span class="nav-text">使用 Cookie
 在服务器上记录信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">基本工作原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%87%E7%BB%B4%E7%BD%91%E7%BC%93%E5%AD%98%E4%B8%8E%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">万维网缓存与代理服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#web-%E7%BC%93%E5%AD%98%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">Web 缓存的基本工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-text">缓存一致性问题</span></a></li></ol></li></ol></li></ol>
 
 	</div>
@@ -1933,11 +1949,11 @@ C&#x2F;S)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" hr
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        186 posts in total
+                        193 posts in total
                     </span>
                     
                         <span>
-                            578.6k words in total
+                            609.9k words in total
                         </span>
                     
                 </p>

@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="ZaynPei">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://zaynpei.github.io/2025/10/30/system/computer-architecture/cpu虚拟化/cpu虚拟化/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://zaynpei.github.io/2025/10/30/system/computer-architecture/CPU%E8%99%9A%E6%8B%9F%E5%8C%96/CPU%E8%99%9A%E6%8B%9F%E5%8C%96/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-10-30T08:06:20.615Z">
+<meta property="article:modified_time" content="2025-10-30T11:48:30.702Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zaynpei.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icons%E7%81%AF%E5%A1%94.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icons%E7%81%AF%E5%A1%94.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            ZaynPei&#39;s Base - Redefine Your Self
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+            
+                
+                    <link rel="stylesheet" href="/css/custom.css">
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css" rel="stylesheet">
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"zaynpei.github.io","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"default","dark":"a11y-dark"},"font":{"enable":true,"family":"'JetBrains Mono', monospace","url":"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"}},"toc":{"enable":true,"max_depth":6,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]},"font":{"enable":true,"url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css","family":"'LXGW WenKai', sans-serif"}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":true,"family":"'LXGW WenKai', sans-serif","url":"https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@1.320/style.css"},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"For ourselves","subtitle":{"text":["For yourself"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"ai":{"path":"docs/ai/","icon":"fa-regular fa-robot"},"algorithms":{"path":"docs/algorithms/","icon":"fa-regular fa-code"},"language":{"path":"docs/lang/","icon":"fa-regular fa-language"},"system":{"path":"docs/system/","icon":"fa-regular fa-desktop"},"web":{"path":"docs/web/","icon":"fa-regular fa-globe"},"misc":{"path":"docs/misc/","icon":"fa-regular fa-boxes-stacked"},"tools":{"path":"docs/tools/","icon":"fa-regular fa-wrench"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/6/25 13:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/icons%E7%81%AF%E5%A1%94.png" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                ZaynPei&#39;s Base
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/ai/"
+                                        >
+                                    <i class="fa-regular fa-robot fa-fw"></i>
+                                    AI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/algorithms/"
+                                        >
+                                    <i class="fa-regular fa-code fa-fw"></i>
+                                    ALGORITHMS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/lang/"
+                                        >
+                                    <i class="fa-regular fa-language fa-fw"></i>
+                                    LANGUAGE
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/system/"
+                                        >
+                                    <i class="fa-regular fa-desktop fa-fw"></i>
+                                    SYSTEM
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/web/"
+                                        >
+                                    <i class="fa-regular fa-globe fa-fw"></i>
+                                    WEB
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/misc/"
+                                        >
+                                    <i class="fa-regular fa-boxes-stacked fa-fw"></i>
+                                    MISC
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/docs/tools/"
+                                        >
+                                    <i class="fa-regular fa-wrench fa-fw"></i>
+                                    TOOLS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/ai/"
+                        >
+                            <span>
+                                AI
+                            </span>
+                            
+                                <i class="fa-regular fa-robot fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/algorithms/"
+                        >
+                            <span>
+                                ALGORITHMS
+                            </span>
+                            
+                                <i class="fa-regular fa-code fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/lang/"
+                        >
+                            <span>
+                                LANGUAGE
+                            </span>
+                            
+                                <i class="fa-regular fa-language fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/system/"
+                        >
+                            <span>
+                                SYSTEM
+                            </span>
+                            
+                                <i class="fa-regular fa-desktop fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/web/"
+                        >
+                            <span>
+                                WEB
+                            </span>
+                            
+                                <i class="fa-regular fa-globe fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/misc/"
+                        >
+                            <span>
+                                MISC
+                            </span>
+                            
+                                <i class="fa-regular fa-boxes-stacked fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/docs/tools/"
+                        >
+                            <span>
+                                TOOLS
+                            </span>
+                            
+                                <i class="fa-regular fa-wrench fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">193</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3"></h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/redefine-avatar.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">ZaynPei</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv6</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-10-30 16:06:20</span>
+        <span class="mobile">2025-10-30 16:06:20</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-10-30 19:48:30</span>
+            <span class="mobile">2025-10-30 19:48:30</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>7.9k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>28 Mins</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>这一章关注的是 CPU 虚拟化化技术, 也就是操作系统如何通过进程管理来实现
+CPU 资源的虚拟化.</p>
+<h3 id="进程">进程</h3>
+<p>用户希望同时运行多个程序（浏览器、邮件、游戏…），但物理计算机通常只有少量（例如1个或4个）CPU。操作系统如何欺骗用户，让他们感觉自己拥有（几乎）无限多的CPU，可以同时运行上百个程序？</p>
+<p>解决方案：<strong>虚拟化CPU</strong> (Virtualizing the CPU).
+操作系统通过<strong>时分共享（Time
+Sharing）</strong>技术来实现这一点：</p>
+<ul>
+<li>它让一个进程在CPU上运行一小段时间（一个<strong>时间片</strong>）。</li>
+<li>然后，它停止这个进程，保存它的状态。</li>
+<li>接着，它恢复另一个进程的状态，让另一个进程运行一小段时间。</li>
+</ul>
+<p>这个过程（停止一个，启动另一个）被称为<strong>上下文切换</strong>（Context
+Switch）。通过在多个进程之间极快地来回切换，操作系统创造了所有进程同时在运行的<strong>假象</strong>（Illusion）。</p>
+<p>开销：代价是性能。每个进程的运行速度都会减慢，因为它们只能分时共享CPU。</p>
+<blockquote>
+<p>机制（Mechanism）与策略（Policy）的分离:
+本章提出了一个贯穿全书的核心设计原则： - 机制
+(Mechanism)：实现某个功能的<strong>底层方法或协议</strong>。 -
+回答“如何（How）”：例如，操作系统如何执行一次上下文切换？（这需要保存寄存器、切换页表等）。
+- 策略 (Policy)：在操作系统中<strong>做出决策的算法</strong>或智能。 -
+回答“哪个（Which）”：例如，现在有10个就绪进程，操作系统应该选择哪个进程来运行？（这就是调度策略）。</p>
+<p>分离的好处：将两者分离（模块化）是优秀的软件设计。这意味着我们可以改变策略（例如，从“轮转”调度改为“优先级”调度）而无需重新设计底层的“上下文切换”机制。</p>
+</blockquote>
+<h4 id="进程的构成">进程的构成</h4>
+<p>要虚拟化CPU，OS首先必须理解一个进程是由什么组成的。 -
+非正式定义：进程 = 运行中的程序。 - 正式定义：进程 =
+<strong>程序在运行时的机器状态</strong>（Machine State）。</p>
+<p>机器状态包括： - <strong>内存</strong>（地址空间）： -
+程序<strong>代码</strong>（指令）。 -
+程序<strong>数据</strong>（全局变量、堆、栈）。 -
+<strong>寄存器</strong>（Registers）： - 通用寄存器（如EAX,
+EBX）：用于<strong>计算</strong>。 - <strong>特殊</strong>寄存器： -
+程序计数器
+(<strong>PC</strong>)：最重要的，记录着“当前执行到哪条指令了”。 -
+<strong>栈指针</strong> (Stack Pointer)：管理函数调用栈。 -
+<strong>I/O状态</strong>： -
+例如，当前打开的文件列表（<strong>文件描述符</strong>）。</p>
+<p>对于任何的进程,
+都要有一组通用的、OS必须提供的用于管理进程的API（即“<strong>系统调用”的抽象</strong>）：
+- <strong>创建</strong> (Create)：启动一个新进程（例如，双击图标）。 -
+销毁 (Destroy)：强制终止一个进程（例如，任务管理器中的“结束任务”）。 -
+等待 (Wait)：一个进程（通常是父进程）等待另一个进程（子进程）执行完毕。
+- 其他控制 (Miscellaneous
+Control)：例如，暂停（Suspend）和恢复（Resume）进程。 - 状态
+(Status)：获取进程信息（例如，它运行了多久）。</p>
+<h4 id="进程创建的详细步骤">进程创建的详细步骤</h4>
+<p>在“双击图标”这个简单的动作背后，OS所做的复杂工作：</p>
+<ol type="1">
+<li><strong>加载</strong>（Load）代码和静态数据：
+<ul>
+<li>OS从<strong>磁盘</strong>上的<strong>可执行文件</strong>（例如
+a.out）中读取程序的指令和已初始化的全局变量。</li>
+<li>将这些字节<strong>加载到物理内存</strong>中，并为它们设置好进程的地址空间。</li>
+<li>（提示：现代OS是“惰性”加载的，即只在需要时才通过页错误加载，但这将在内存虚拟化章节详述。）</li>
+</ul></li>
+<li>创建和初始化<strong>栈</strong>（Stack）：
+<ul>
+<li>OS必须为进程分配一块内存作为其运行时栈（用于局部变量、函数参数等）。</li>
+<li>OS会将命令行参数（argc, argv）填入这个栈的底部，以便 main
+函数可以访问它们。</li>
+</ul></li>
+<li>创建和初始化<strong>堆</strong>（Heap）：
+<ul>
+<li>OS为进程分配一小块内存作为堆（用于 malloc()）。</li>
+<li>当程序请求更多内存时，堆可以增长。</li>
+</ul></li>
+<li>初始化I/O：
+<ul>
+<li>OS执行其他I/O相关的设置。</li>
+<li>（在UNIX中）默认打开三个文件描述符：0（标准输入）、1（标准输出）、2（标准错误）。</li>
+</ul></li>
+<li>启动进程：
+<ul>
+<li>OS将<strong>进程的状态</strong>设置为“<strong>就绪</strong>”（Ready），并将其放入就绪队列中。</li>
+<li>当CPU空闲时，<strong>调度</strong>程序从就绪队列中选择一个进程来运行。</li>
+<li>CPU的程序计数器（PC）被设置为指向程序的入口点（即 main()
+函数）。</li>
+<li>进程开始运行。</li>
+</ul></li>
+</ol>
+<h4 id="进程状态">进程状态</h4>
+<p>一个进程在其生命周期中，并不会总是在运行。它会在几种核心状态之间切换：</p>
+<ul>
+<li>运行（Running）：
+<ul>
+<li>定义：进程当前正在CPU上执行指令。</li>
+<li>数量：在一个<strong>单核CPU</strong>上，<strong>任何时刻最多只有1个进程处于此状态</strong>。</li>
+</ul></li>
+<li>就绪（Ready）：
+<ul>
+<li>定义：进程已经准备好运行，但被OS（调度程序）暂停了，正在<strong>等待轮到它使用CPU</strong>。</li>
+<li>数量：可以有多个进程在此状态（在“就绪队列”中排队）。</li>
+</ul></li>
+<li>阻塞（Blocked）（也叫睡眠，Sleeping）：
+<ul>
+<li>定义：进程无法运行，即使给它CPU也没用。它在<strong>等待某个外部事件</strong>发生（例如，等待<strong>磁盘I/O</strong>完成、等待<strong>网络数据</strong>包、等待一个<strong>锁</strong>）。</li>
+<li>数量：可以有多个进程在此状态。</li>
+</ul></li>
+</ul>
+<p>运行 -&gt;
+就绪：进程的“时间片”用完了，被OS取消调度（Descheduled）。</p>
+<p>就绪 -&gt;
+运行：OS的调度程序选择了这个进程，将其调度（Scheduled）上CPU。</p>
+<p>运行 -&gt; 阻塞：进程主动发起了一个缓慢的操作（例如 read()
+磁盘），它必须等待。</p>
+<p>阻塞 -&gt;
+就绪：进程等待的事件已完成（例如，磁盘I/O完成了，发送了一个中断）。该进程不能直接变为“运行”，它必须先进入“就绪”队列，等待调度程序选择它。</p>
+<h4 id="操作系统的数据结构">操作系统的数据结构</h4>
+<p>为了管理进程，操作系统维护了一些关键的数据结构：</p>
+<ul>
+<li><strong>进程控制块（Process Control Block, PCB）</strong>：
+<ul>
+<li><strong>每个进程</strong>都有一个对应的PCB，包含该进程的所有信息。</li>
+<li>所有 PCB 都存在于内核空间的一块全局数据结构中（例如 Linux 的
+task_struct 链表）</li>
+<li>它存储了该进程的所有上下文信息，包括：
+<ul>
+<li><strong>进程状态</strong>（就绪、运行、阻塞）。</li>
+<li>程序计数器（<strong>PC</strong>）的值。</li>
+<li>CPU<strong>寄存器</strong>的值。</li>
+<li><strong>内存管理信息</strong>（页表、段表等）。</li>
+<li><strong>I/O状态信息</strong>（打开的文件、设备等）。</li>
+</ul></li>
+</ul></li>
+<li><strong>进程列表</strong>（Process List）：
+<ul>
+<li>OS维护一个（或多个）列表，用于跟踪所有的进程。例如，一个“就绪队列”和一个“阻塞队列”。</li>
+<li>这些队列本质上是<strong>指向一系列 PCB</strong>（或
+task_struct）的<strong>指针</strong>集合</li>
+<li><strong>就绪队列（Ready Queue）</strong>：
+<ul>
+<li>定义：所有就绪状态的进程都在这个队列中等待CPU。</li>
+<li>实现：通常使用链表或队列数据结构。</li>
+</ul></li>
+<li><strong>阻塞队列（Blocked Queue）</strong>：
+<ul>
+<li>定义：所有阻塞状态的进程都在这个队列中等待某个事件。</li>
+<li>实现：通常使用链表或队列数据结构。</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>这些数据结构就保存在内存的<strong>内核空间</strong>中,
+内核空间是<strong>全局唯一</strong>的,
+在<strong>不同进程的地址空间共享</strong>,
+以便于操作系统高效地管理和调度进程。</p>
+<h3 id="进程api">进程API</h3>
+<h3 id="机制受限直接执行">机制：受限直接执行</h3>
+<p>根据上文介绍, 如何提供有许多CPU的假象？基本思想是时分共享（Time
+Sharing）：运行一个进程一会儿，再运行另一个一会儿。</p>
+<p>但在实现上，这带来了两个根本性的、相互冲突的挑战：</p>
+<ul>
+<li><strong>性能（Performance）</strong>：要快。进程的代码应该尽可能直接在硬件CPU上运行，任何操作系统的介入（Overhead）都会拖慢它。</li>
+<li><strong>控制（Control）</strong>：要安全。操作系统必须始终保持对机器的控制权。它<strong>不能允许一个进程为所欲为</strong>（例如，访问不属于它的内存、独占CPU不放手、或操作硬件）。</li>
+</ul>
+<p>关键问题：如何高效、可控地虚拟化CPU？操作系统如何在实现高性能（让进程直接运行）的同时，保持对系统的完全控制（限制进程的行为）？</p>
+<p>本章提出的解决方案叫做<strong>受限直接执行</strong>（Limited Direct
+Execution, <strong>LDE</strong>）。</p>
+<p>“直接执行（Direct Execution）”（为了性能）：</p>
+<ul>
+<li>OS将程序代码加载到内存。</li>
+<li>OS将CPU的程序计数器（PC）指向程序的 main() 函数。</li>
+<li>进程的指令直接在物理CPU上运行。</li>
+<li>优点：速度快，几乎等同于裸机性能。</li>
+</ul>
+<p>“受限（Limited）”（为了<strong>控制</strong>）： -
+上述“直接执行”有两个致命问题，LDE必须解决它们。</p>
+<h4 id="lde的问题1如何执行受限制的操作">LDE的问题1：如何执行受限制的操作？</h4>
+<p>如果一个进程在“直接执行”时，想做一件“危险”的事（比如读写磁盘、分配内存），该怎么办？如果允许它做，它就能绕过OS的所有保护（例如，读取其他进程的文件）。</p>
+<p>解决方案：<strong>双模式</strong>操作（Dual-Mode
+Operation），这是硬件和OS的精妙协作。</p>
+<p><strong>硬件支持</strong>：用户模式 vs. 内核模式</p>
+<ul>
+<li>用户模式 (User Mode)：这是CPU的“受限”模式。
+<ul>
+<li>限制：在此模式下，CPU<strong>禁止执行“特权指令</strong>（Privileged
+Instructions）”（如
+DisableInterrupts、Halt、磁盘I/O指令、修改陷阱表等）。</li>
+<li>谁用：所有用户程序（如浏览器、游戏）都在此模式下运行。</li>
+</ul></li>
+<li>内核模式 (Kernel
+Mode)（也叫<strong>特权模式</strong>）：CPU的“全能”模式。
+<ul>
+<li>限制：没有限制。可以执行所有指令，访问所有内存和硬件。</li>
+<li>谁用：只有操作系统（OS Kernel）在此模式下运行。</li>
+</ul></li>
+</ul>
+<p><strong>协作机制</strong>：<strong>系统调用</strong>（System
+Call）</p>
+<p>问题：运行在“用户模式”的进程，如何请求“内核模式”的OS帮它执行一次I/O操作？系统调用（System
+Call）。机制为： - TRAP
+指令：<strong>硬件</strong>提供一条特殊的<strong>trap（陷阱）指令</strong>。
+- <strong>C库封装</strong>：程序员调用的 read() 或 open()
+并非系统调用本身，而是一个C库函数。这个函数负责： -
+把<strong>参数</strong>（如文件名、缓冲区地址）放到<strong>约定的寄存器或栈</strong>上。
+-
+把“<strong>系统调用号</strong>”（例如，5代表open）放到一个<strong>特定寄存器</strong>。
+- 执行 TRAP 指令。 - TRAP 的原子操作：TRAP 指令会自动、原子地： -
+将CPU模式从用户模式<strong>切换到内核模式</strong>。 -
+保存当前进程的上下文（PC、寄存器等）到内核栈（Kernel Stack）。 -
+跳转到OS内核中一个<strong>预先指定的处理函数</strong>。</p>
+<ul>
+<li>RETURN-FROM-TRAP 指令：
+<ul>
+<li>当OS处理完毕，它会执行return-from-trap指令。</li>
+<li>这条指令原子地：
+<ul>
+<li>恢复进程的上下文。</li>
+<li>将CPU模式从内核模式切换回用户模式。</li>
+<li>跳转回用户程序（TRAP指令的下一条），继续执行。</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><strong>OS的职责</strong>：陷阱表（<strong>Trap Table</strong>）</p>
+<p>问题：TRAP 指令如何知道该跳转到OS的哪段代码？通过陷阱表（Trap
+Table）。流程为：</p>
+<ul>
+<li><p>OS在启动时（在内核模式下）创建一个<strong>陷阱表</strong>（一个<strong>函数指针数组</strong>），并使用特权指令告诉硬件：“陷阱表在内存地址X处”。</p>
+<ul>
+<li>例如，OS设置
+<code>表[索引 128] = sys_call_handler</code>，<code>表[索引 14] = page_fault_handler</code>
+等。</li>
+</ul></li>
+<li><p>当用户进程执行TRAP（例如，系统调用号为128）时，硬件自动查找该表，并将控制权交给
+<strong>sys_call_handler</strong>。</p></li>
+<li><p>关键：<strong>用户进程无法指定跳转地址</strong>，它只能<strong>触发陷阱</strong>，由硬件和OS预设的陷阱表来决定后续流程，从而保证了<strong>受保护的控制权转移</strong>（Protected
+Control Transfer）。</p></li>
+</ul>
+<h4 id="lde的问题2如何在进程之间切换">LDE的问题2：如何在进程之间切换？</h4>
+<p>问题：如果一个进程陷入了无限循环（while(1){}），它既不进行系统调用，也不出错，那么它将永远“直接执行”下去。OS（它没在运行）如何才能重新夺回CPU的控制权，去调度其他进程？</p>
+<p>方案一：<strong>协作方式</strong>（Cooperative） -
+思想：OS相信进程会“合作”。 -
+机制：<strong>进程必须主动</strong>、定期地<strong>调用 yield()</strong>
+系统调用，“自愿”放弃CPU。 -
+缺陷：致命的缺陷。一个恶意或有bug的进程（无限循环）将饿死所有其他进程，并搞垮整个系统。唯一的解决方案就是<strong>重启</strong>。</p>
+<p>方案二：<strong>非协作方式</strong>（Preemptive） -
+思想：OS不相信任何进程，它必须能<strong>强制</strong>（Preemptively）<strong>夺回控制权</strong>。
+- 硬件支持：<strong>时钟中断</strong>（Timer Interrupt）。 -
+OS在启动时（在内核模式下）启动一个<strong>硬件时钟设备</strong>（Timer）。
+- OS使用特权指令对时钟编程：“请每隔 10
+毫秒（一个时间片）给我发送一个中断（Interrupt）”。 - OS启动用户进程A。 -
+… 10毫秒后 … -
+时钟硬件“叮”的一声，<strong>强制</strong>产生一个<strong>中断</strong>，这<strong>无论进程A在做什么</strong>。这个中断的行为和
+TRAP 一模一样： - CPU模式从用户模式切换到内核模式。 -
+保存进程A的上下文。 - 跳转到OS的“时钟中断处理程序”（地址由陷阱表指定）。
+- OS 重新获得了 CPU 的控制权！ -
+OS的时钟中断处理程序会调用调度程序（Scheduler）。调度程序（Policy）决定：“进程A的时间片用完了，现在该运行进程B了”。
+- OS执行上下文切换（Context Switch）。</p>
+<p>通过时钟中断，OS可以<strong>强制</strong>从任何进程手中夺回CPU控制权，从而实现真正的多任务处理。</p>
+<h4 id="核心机制上下文切换-context-switch">核心机制：上下文切换 (Context
+Switch)</h4>
+<p>上下文切换是OS停止进程A并启动进程B的底层机制。时序：</p>
+<ul>
+<li>（A在用户模式） 运行… -&gt; 时钟中断
+<ul>
+<li>也可以是其他中断（I/O中断、系统调用等）触发上下文切换，但时钟中断是最常见的。</li>
+</ul></li>
+<li>（硬件） 自动将A的<strong>用户寄存器</strong>（PC, flags,
+eax…）保存到A的<strong>内核栈</strong>上,
+也就是保存了A在用户态下的执行状态.</li>
+<li>（硬件） 切换到内核模式，跳转到“时钟中断处理程序”。
+<ul>
+<li>此时寄存器中保存的值变成了内核模式下的值, 即A的内核寄存器.</li>
+</ul></li>
+<li>（OS） OS的C代码运行… 调用调度程序… 决定从A切换到B。</li>
+<li>（OS） OS调用 switch() 汇编例程。</li>
+<li>（switch()） 明确地将A的<strong>内核寄存器</strong>（esp,
+ebp…）保存到A的<strong>进程控制块</strong>（PCB）中。
+<ul>
+<li>使得A的内核态执行状态被保存, 在下次切换回A时可以恢复.</li>
+<li>内核态执行状态包括内核栈指针等, 以便内核代码可以正确运行.</li>
+</ul></li>
+<li>（switch()）
+明确地从<strong>B的PCB</strong>中恢复<strong>B的内核寄存器</strong>。</li>
+<li>（switch()） 切换内核栈！CPU的栈指针现在指向B的内核栈。
+<ul>
+<li>因为上次B被切换出去时,
+硬件已经把<strong>B的用户寄存器</strong>保存到<strong>B的内核栈</strong>上了,
+这里有B的返回地址.</li>
+</ul></li>
+<li>（switch()） 执行 ret
+指令，此时它返回的是B上次调用switch时的位置。</li>
+<li>（OS） OS（现在在B的上下文中）执行 return-from-trap。</li>
+<li>（硬件） 自动从B的内核栈中恢复B的用户寄存器。</li>
+<li>（B在用户模式） 恢复运行…</li>
+</ul>
+<p><strong>两种寄存器</strong>保存/恢复： - 用户态 &lt;-&gt; 内核态（由
+trap / return-from-trap
+触发）：硬件自动保存/恢复<strong>用户寄存器</strong>到<strong>内核栈</strong>。
+- 用户寄存器指的是进程在用户态下的寄存器状态。 -
+这里主要保护的是<strong>用户程序的执行状态</strong>（PC, 通用寄存器等）,
+使得用户程序返回后可以无缝地继续执行. - 进程A &lt;-&gt; 进程B（由
+switch()
+触发）：OS软件明确保存/恢复<strong>内核寄存器</strong>到<strong>PCB</strong>。
+- 内核寄存器指的是进程在内核态下的寄存器状态。 -
+这里主要保护的是<strong>内核态下的执行状态</strong>（esp, ebp等）,
+使得内核代码可以在不同进程间切换时保持正确的栈状态。</p>
+<p>总之,
+<strong>受限直接执行</strong>（LDE）是实现<strong>CPU虚拟化</strong>的基石。它完美地平衡了性能和控制：
+- 性能（Direct
+Execution）：进程大部分时间都在用户模式下<strong>直接运行在CPU</strong>上。
+-
+控制（Limited）：OS通过在启动时设置<strong>陷阱表</strong>和<strong>时钟中断</strong>，为CPU“宝宝防护”（Baby-proofing）。
+- 系统调用（TRAP）：允许进程受控地请求内核服务（如I/O）。 -
+时钟中断（Interrupt）：确保OS能强制地（非协作地）夺回CPU控制权，以实现时分共享。</p>
+<p>通过这套机制，OS得以安全、高效地在多个进程间切换，创造了“多个CPU”的假象。</p>
+<h3 id="进程调度">进程调度</h3>
+<p>这一章开启了“调度策略（Policy）”部分的讨论。在第6章中，我们学习了实现CPU虚拟化所需的机制（Mechanism）——受限直接执行、上下文切换等。现在，本章关注的是：当机制就位后，操作系统该如何决策（Policy）？</p>
+<p>我们引入了两个关键的、且常常相互冲突的性能指标： -
+指标1：<strong>周转时间</strong> (Turnaround Time) -
+定义：任务从<strong>到达系统</strong>到<strong>系统完成</strong>所花费的<strong>总时间</strong>
+- 公式：<span class="math inline"><em>T</em><sub>周转时间</sub> = <em>T</em><sub>完成时间</sub> − <em>T</em><sub>到达时间</sub></span>
+- 目标：最小化平均周转时间（提升系统吞吐量）。 -
+指标2：<strong>响应时间</strong> (Response Time) -
+定义：任务从<strong>到达系统</strong>到<strong>首次运行</strong>所花费的时间。
+- 公式：<span class="math inline"><em>T</em><sub>响应时间</sub> = <em>T</em><sub>首次运行时间</sub> − <em>T</em><sub>到达时间</sub></span>
+- 目标：最小化平均响应时间（提升系统<strong>交互性</strong>）。</p>
+<h4 id="常见策略">常见策略</h4>
+<p>策略一：<strong>先进先出</strong> (First-In-First-Out, FIFO) -
+策略：也称为“先到先服务 (FCFS)”。按任务到达的顺序进行调度。 -
+行为：这是一个<strong>非抢占式</strong>（Non-preemptive）算法。一旦一个工作开始运行，它会一直运行直到完成（基于假设3）。
+- <strong>护航效应</strong> (Convoy
+Effect)：FIFO的核心问题。一个“重量级”（长耗时）的任务（如A）会堵塞住所有“轻量级”（短耗时）的任务（如B,
+C），导致平均周转时间急剧恶化。</p>
+<p>策略二：<strong>最短任务优先</strong> (Shortest Job First, SJF) -
+策略：<strong>非抢占式</strong>。从<strong>所有等待的任务中</strong>，选择<strong>运行时间最短</strong>的那个任务，并运行它直到完成。
+- 目标：明确为了解决FIFO的“护航效应”。 - 评价:
+在“所有任务同时到达”的假设下，SJF是最优的。 - 假设任务非同时到达： - A在
+<span class="math inline"><em>t</em> = 0</span> 到达 (运行100s)。 - B, C
+在 <span class="math inline"><em>t</em> = 10</span> 到达 (各运行10s)。 -
+调度过程： - <span class="math inline"><em>t</em> = 0</span>
+时，只有A在，OS运行A。 - <span class="math inline"><em>t</em> = 10</span> 时，B,
+C到达。但因为SJF是非抢占式的，OS必须等待A（它还在运行）完成。 - <span class="math inline"><em>t</em> = 100</span> 时，A完成, OS从B,
+C中选择（都是10s），运行B。 - <span class="math inline"><em>t</em> = 110</span> 时，B完成, 运行C。 - <span class="math inline"><em>t</em> = 120</span> 时，C完成。 - 周转时间：A =
+(100 - 0) = 100s；B = (110 - 10) = 100s；C = (120 - 10) = 110s。 -
+平均周转时间 = (100 + 100 + 110) / 3 = 103.33s。 -
+结论：<strong>护航效应</strong>又回来了！因为非抢占，一个<strong>先到的长任务</strong>（A）依然会堵塞后到的短任务（B,
+C）。</p>
+<p>策略三：<strong>最短完成时间优先</strong> (Shortest Time to
+Completion First, STCF) -
+策略：也称为<strong>抢占式最短任务优先</strong> (PSJF)。 -
+行为：这是一个<strong>抢占式</strong>（Preemptive）算法。每当一个新任务到达时，调度程序会比较“<strong>新任务的运行时间</strong>”和“<strong>当前任务的剩余运行时间</strong>”。如果新任务更短，OS会立即抢占（Preempt）当前任务，转而运行新任务。
+- 评价: STCF在周转时间这个指标上是“最优”的。 -
+问题：STCF虽然周转时间短，但<strong>交互性</strong>（响应时间）可能很差。例如
+A (5s), B (5s), C (5s) 同时到达, 执行顺序是 A -&gt; B -&gt; C,
+B的响应时间是5s, C的响应时间是10s, 这对交互式系统来说是不可接受的.</p>
+<p>策略四：<strong>轮转</strong> (Round-Robin, <strong>RR</strong>) -
+策略：<strong>抢占式</strong>。RR维护一个<strong>任务队列</strong>。它运行<strong>队列头部</strong>的任务，但只运行<strong>一个固定的时间片</strong>（Time
+Slice）（例如1s）。 - 如果任务在时间片内完成，OS将其移出队列。 -
+如果任务在时间片结束时仍未完成，OS<strong>抢占</strong>它，将其<strong>移到队列尾部</strong>，然后调度队列头部的新任务。</p>
+<ul>
+<li>评价（A=5s, B=5s, C=5s; 时间片=1s）：
+<ul>
+<li>调度顺序：A, B, C, A, B, C, A, B, C, …</li>
+<li>响应时间：A=0s, B=1s, C=2s。平均 = (0+1+2)/3 = 1s。（非常好！）</li>
+<li>周转时间：A在13s完成, B在14s完成, C在15s完成。平均 = (13+14+15)/3 =
+14s。（非常糟糕！）</li>
+</ul></li>
+<li>结论：RR在响应时间上表现出色，但在周转时间上却很糟糕。这是因为RR频繁地切换任务，导致每个任务完成所需的总时间增加。</li>
+<li>RR 和 STCF 的结合: 我们可以将 STCF 的 “最短剩余时间优先”策略与 RR
+的时间片机制结合起来。也就是说, 每当一个新任务到达时,
+如果它的运行时间小于当前任务的剩余时间, 则立即抢占当前任务. 否则,
+当前任务继续<strong>运行直到时间片结束</strong>.
+这样可以在一定程度上兼顾周转时间和响应时间.
+<ul>
+<li>但是这是不现实的.
+我们可能永远无法准确知道一个新任务的运行时间到底是多少.
+因为任务的运行时间往往是不可预测的.</li>
+</ul></li>
+</ul>
+<p>对比上述策略: - SJF/STCF：优化周转时间，但牺牲了响应时间（不公平）。
+- RR：优化响应时间，但牺牲了周转时间（很公平）。</p>
+<p>也就是说,
+性能（周转时间）和公平（响应时间）在调度中往往是相互冲突的。</p>
+<p>并且从 RR 策略可以看出, 核心权衡是时间片长度 - 短时间片（例如 1ms）：
+- 优点：响应时间极好。 - 缺点：<strong>上下文切换</strong>（Context
+Switch）的开销（Overhead）占比过高。如果上下文切换本身要 1ms，那么CPU
+50% 的时间都浪费在了切换上，而不是做有效工作。</p>
+<ul>
+<li>长时间片（例如 100ms）：
+<ul>
+<li>优点：上下文切换的开销被<strong>摊销</strong>（Amortized）了，CPU效率高。</li>
+<li>缺点：响应时间变差。</li>
+</ul></li>
+<li>结论：时间片是一个权衡（Trade-off）。它必须<strong>远大于上下文切换的开销</strong>，但又必须<strong>足够短以保证系统的响应性</strong>。</li>
+</ul>
+<h4 id="调度策略-多级反馈队列-multilevel-feedback-queue-mlfq">调度策略:
+多级反馈队列 (Multilevel Feedback Queue, MLFQ)</h4>
+<p>在上面，我们遇到了一个核心的“权衡（Trade-off）”：</p>
+<ul>
+<li>SJF/STCF 策略能实现最优的周转时间（吞吐量高）。</li>
+<li>RR（轮转） 策略能实现最优的响应时间（交互性好）。</li>
+</ul>
+<p>但SJF/STCF有一个致命缺陷：它需要预知未来，即OS必须提前知道每个工作的总运行时间，这在现实中是不可能的。</p>
+<p>本章介绍的<strong>多级反馈队列</strong>（MLFQ）就是为了解决这个“无法预知未来”的问题而设计的。</p>
+<p>MLFQ的核心思想：<strong>从历史中学习</strong>（Learn from history）。
+MLFQ不再试图“预知”未来，而是通过<strong>观察一个进程“过去”的行为</strong>，来<strong>预测它“未来”的行为</strong>，并动态地<strong>调整其优先级</strong>。</p>
+<p>MLFQ不是一个队列，而是<strong>多个不同优先级的队列</strong>。它的调度逻辑基于下列规则：</p>
+<ul>
+<li><p>规则1： 如果 A 的优先级 &gt; B 的优先级，运行 A（抢占
+B）。</p></li>
+<li><p>规则2： 如果 A 的优先级 = B 的优先级，轮转运行 A 和 B。</p></li>
+<li><p>规则3：
+工作进入系统时，放在<strong>最高优先级</strong>（最上层队列）。</p></li>
+<li><p>规则4：
+一旦工作用完了其在<strong>某一层中的时间配额</strong>，就降低其优先级。</p></li>
+<li><p>规则5：
+经过<strong>一段时间S</strong>，就将系统中所有工作重新加入<strong>最高优先级队列</strong>。</p></li>
+</ul>
+<p>它通过这套复杂的规则，同时实现了两个看似矛盾的目标： -
+（近似SJF）：新任务（短任务）在最高优先级被执行，周转时间短。 -
+（近似RR）：交互式任务（I/O型）保持在高优先级，并进行轮转，响应时间快。</p>
+<h4 id="多处理器调度高级">多处理器调度（高级）</h4>
+<p>在前面几章，我们所有的讨论都基于单CPU模型。但现代计算机（甚至手机）都有多个CPU（“核”）。单CPU的调度策略（如SJF,
+MLFQ）还能用吗？多CPU带来了哪些全新的问题？我们需要什么新机制或新策略？</p>
+<h5 id="多处理器带来的三大新挑战">多处理器带来的三大新挑战</h5>
+<p>与单CPU系统相比，多处理器系统引入了三个必须理解的根本性挑战。</p>
+<p>挑战一：硬件背景与<strong>缓存一致性</strong></p>
+<ul>
+<li>单CPU缓存：在单CPU系统中，缓存（Cache）是CPU的私有小内存，它利用时间局部性和空间局部性来加速内存访问。它对OS是透明的，且总能保证正确性。</li>
+<li>多CPU缓存：在多CPU系统中，<strong>每个CPU都有各自的私有缓存</strong>，但它们共享同一个主内存。</li>
+</ul>
+<p>问题：缓存一致性（Cache Coherence）： - 进程在 CPU 1
+上运行，从内存地址 A 读取值 D。CPU 1 的缓存中存有 A=D。 - 进程修改 A
+的值为 D’。CPU 1
+只更新了它自己的缓存（A=D’）。为了速度，它不会立即写回主内存。 -
+（上下文切换） 进程被<strong>迁移</strong>（Migrate）到 CPU 2 上运行。 -
+进程在 CPU 2 上尝试读取地址 A。 - CPU 2 在自己的缓存中找不到
+A，于是它去主内存中读取，读到了旧的、过时的值 D，而不是正确的 D’。 -
+结果：程序出错！</p>
+<p>硬件解决方案：现代多核硬件通过<strong>总线窥探</strong>（Bus
+Snooping）等机制自动解决了这个问题。当 CPU 1 更新其缓存中的 A
+时，<strong>硬件会广播</strong>一个消息，通知其他CPU（如 CPU
+2）“使无效（Invalidate）”或“更新（Update）”它们自己缓存中的 A 的副本。
+&gt;
+还有别的解决方案，如<strong>目录式缓存一致性</strong>（Directory-Based
+Cache
+Coherence），它通过一个中心目录来跟踪哪些缓存行被哪些CPU缓存，适用于大规模多核/分布式系统</p>
+<p>结论：硬件保证了“一致性”，即任何CPU读取内存地址 A
+都会获得其最新的值。</p>
+<p>挑战二：<strong>同步</strong>（Synchronization）</p>
+<p>问题：既然硬件保证了“缓存一致性”，我们（OS或应用程序）还需要担心并发问题吗？答案：绝对需要！</p>
+<ul>
+<li>硬件一致性只保证了“<strong>一次内存读/写操作</strong>”的原子性。它不能保证<strong>多条指令的原子性</strong>。</li>
+<li>示例：
+<ul>
+<li>CPU 1 上的线程T1执行 tmp = head;</li>
+<li>CPU 2 上的线程T2同时执行 tmp = head;</li>
+<li>（由于硬件一致性）T1和T2都正确地读到了相同的 head 值。</li>
+<li>T1继续执行，释放了head指向的节点。</li>
+<li>T2也继续执行，再次释放了同一个节点（head指向的节点）。</li>
+<li>结果：竞态条件（Race Condition），导致重复释放、数据损坏。</li>
+</ul></li>
+</ul>
+<p>结论：只要多个CPU（线程）共享数据结构（如队列、链表、计数器），就必须使用<strong>互斥原语</strong>（例如锁）来保护“临界区”。</p>
+<p>挑战三：<strong>缓存亲和度</strong> (Cache Affinity)</p>
+<p>问题：当一个进程在 CPU 1 上运行时，它会在 <strong>CPU 1
+的缓存</strong>中建立起大量的“热”状态（它最近使用的指令和数据）。</p>
+<ul>
+<li>如果下次该进程再次在 CPU 1
+上运行，它会非常快（因为所需数据已在缓存中）。</li>
+<li>如果它被迁移到 CPU 2 上运行，它会非常慢（CPU 2
+的缓存是“冷”的，它必须<strong>从主内存重新加载所有数据</strong>）。</li>
+</ul>
+<p>结论：调度程序应该尽可能地将<strong>一个进程保持在同一个CPU</strong>上运行，以利用缓存亲和度。</p>
+<h5 id="多处理器调度策略">多处理器调度策略</h5>
+<p>多处理器调度策略必须同时解决上述三个挑战。以下是两种常见的策略：</p>
+<p>解决方案一：<strong>单队列多处理器调度</strong> (Single Queue
+Multiprocessor Scheduling), 这是最简单的方案。 - 机制： -
+只有<strong>一个全局的</strong>“就绪队列”。 -
+当<strong>一个CPU空闲</strong>时，它会<strong>锁定</strong>（lock）这个全局队列,
+从队列中取出“最好”的进程, 再<strong>解锁</strong>（unlock）队列,
+然后运行该进程。</p>
+<ul>
+<li>优点：
+<ul>
+<li>简单：重用了所有单CPU的调度逻辑（如SJF, MLFQ）。</li>
+<li>负载均衡（Load
+Balancing）：自动且完美。只要队列里有工作，就绝不会有CPU空闲。</li>
+</ul></li>
+<li>缺点：
+<ul>
+<li>可扩展性（Scalability）极差：那个全局锁成为了系统瓶颈。假设有32个CPU，它们会（在每个时间片结束时）疯狂地争抢这一把锁。CPU越多，在“<strong>等待锁”上浪费的时间</strong>就越多，真正“干活”的时间就越少。</li>
+<li>缓存亲和度极差：当进程A运行完一个时间片后，它被放回全局队列。下一个空闲的CPU（可能是
+CPU 1，也可能是 CPU
+5）会把它取走。进程会<strong>随机地在所有CPU之间“迁移</strong>（Migrate）”或“弹跳（Bounce）”，导致缓存亲和度被完全破坏。</li>
+</ul></li>
+</ul>
+<p>解决方案二：<strong>多队列多处理器调度</strong> (Multiple Queue
+Multiprocessor Scheduling), 为解决SQMS的缺点而设计。 - 机制： -
+<strong>每个CPU</strong>都有一个自己的私有“<strong>就绪队列</strong>”。
+-
+当<strong>一个新进程</strong>（A）进入系统时，OS会（基于<strong>某种策略</strong>）将其<strong>永久地分配给一个队列</strong>（例如
+CPU 0 的队列）。 - 常见的策略有：<strong>轮转分配</strong>（Round-Robin
+Assignment）（第一个进程给 CPU 0，第二个给 CPU
+1，依此类推）；或<strong>基于负载的分配</strong>（Load-Based
+Assignment）（将新进程分配给当前负载最轻的CPU）。 -
+每个CPU只从自己的私有队列中取工作来运行（例如，CPU 0 只运行 CPU 0
+队列中的任务）。</p>
+<ul>
+<li>优点：
+<ul>
+<li>可扩展性（Scalability）极好：CPU之间零共享（或极少共享）, CPU 0
+取工作不需要和 CPU 1 竞争锁, 锁的争抢问题被彻底解决。</li>
+<li>缓存亲和度（Cache Affinity）极好：进程A被分配到 CPU 0
+队列后，它永远只会在 CPU 0 上运行。它的缓存亲和度得到了完美的保障。</li>
+</ul></li>
+<li>缺点：
+<ul>
+<li>负载不均（Load Imbalance）：这是MQMS引入的新的、根本性的问题。示例：
+<ul>
+<li>CPU 0 的队列：{A, B, C, D}</li>
+<li>CPU 1 的队列：{E}</li>
+<li>CPU 1 很快完成了E，然后进入<strong>空闲（Idle）</strong>状态。</li>
+<li>CPU 0 却还在忙碌地处理A, B, C, D。</li>
+<li>结果：系统利用率低下，且A, B, C, D的响应时间很差，而 CPU 1
+却在“无所事事”。</li>
+</ul></li>
+</ul></li>
+<li>解决MQMS的负载不均：迁移 (Migration)
+<ul>
+<li>机制：工作窃取 (Work Stealing). 当一个CPU（例如 CPU
+1）的<strong>队列变空</strong>时，它会主动地去“偷看”其他CPU的队列。如果它发现
+CPU 0 的队列“过满”（例如有4个工作），CPU 1
+就会“窃取”一个（或一半）工作（例如D）到自己的队列中来运行。</li>
+<li>新的权衡：“偷看”的频率：
+<ul>
+<li>太频繁：导致CPU间争抢“目标队列锁”，又回到了SQMS的可扩展性问题。</li>
+<li>太不频繁：导致负载不均持续存在。</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>多处理器调度没有完美的答案。它是一个在可扩展性、缓存亲和度和负载均衡之间的复杂权衡（Trade-off）。</p>
+<p>现在的多核操作系统（如Linux,
+Windows）通常采用<strong>多队列调度</strong>，并结合<strong>工作窃取</strong>等机制，以在实际应用中取得良好的性能表现。</p>
+
+		</div>
+
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/10/30/system/computer-architecture/%E5%B9%B6%E5%8F%91/%E5%B9%B6%E5%8F%91/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48"></span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/10/24/lang/CPP/%E5%B8%B8%E7%94%A8%E5%BA%93/%E6%97%B6%E9%97%B4%E5%BA%93_chrono/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48"></span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title"></div>
+		<ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B"><span class="nav-text">进程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%9E%84%E6%88%90"><span class="nav-text">进程的构成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E7%9A%84%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4"><span class="nav-text">进程创建的详细步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="nav-text">进程状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">操作系统的数据结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8Bapi"><span class="nav-text">进程API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%88%B6%E5%8F%97%E9%99%90%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8C"><span class="nav-text">机制：受限直接执行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#lde%E7%9A%84%E9%97%AE%E9%A2%981%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E5%8F%97%E9%99%90%E5%88%B6%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-text">LDE的问题1：如何执行受限制的操作？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lde%E7%9A%84%E9%97%AE%E9%A2%982%E5%A6%82%E4%BD%95%E5%9C%A8%E8%BF%9B%E7%A8%8B%E4%B9%8B%E9%97%B4%E5%88%87%E6%8D%A2"><span class="nav-text">LDE的问题2：如何在进程之间切换？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2-context-switch"><span class="nav-text">核心机制：上下文切换 (Context
+Switch)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-text">进程调度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%AD%96%E7%95%A5"><span class="nav-text">常见策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5-%E5%A4%9A%E7%BA%A7%E5%8F%8D%E9%A6%88%E9%98%9F%E5%88%97-multilevel-feedback-queue-mlfq"><span class="nav-text">调度策略:
+多级反馈队列 (Multilevel Feedback Queue, MLFQ)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E8%B0%83%E5%BA%A6%E9%AB%98%E7%BA%A7"><span class="nav-text">多处理器调度（高级）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E5%B8%A6%E6%9D%A5%E7%9A%84%E4%B8%89%E5%A4%A7%E6%96%B0%E6%8C%91%E6%88%98"><span class="nav-text">多处理器带来的三大新挑战</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="nav-text">多处理器调度策略</span></a></li></ol></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+            <div class="customize-info my-1">AI是新时代的灯塔</div>
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">ZaynPei</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        193 posts in total
+                    </span>
+                    
+                        <span>
+                            609.9k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>
